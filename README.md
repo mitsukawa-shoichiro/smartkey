@@ -16,5 +16,7 @@
 　⇒環境構築に必要なTool等を格納
 
 ## ブランチ
-main: releaseブランチ  
-develop: 開発ブランチ
+- main  
+　⇒releaseブランチ  
+- develop  
+　⇒開発ブランチ
