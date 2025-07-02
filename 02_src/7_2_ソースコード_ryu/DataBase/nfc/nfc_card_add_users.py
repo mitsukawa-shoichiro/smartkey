@@ -5,7 +5,7 @@ from smartcard.Exceptions import NoCardException
 from smartcard.util import toHexString
 import time
 
-timestamp = int(time.time()) 
+
 POLL = [0x00, 0xFF, 0xFF, 0x01, 0x00]    # FeliCa polling
 API  = "http://127.0.0.1:5000/api/users/add_user"   # バックエンドAPI
 DEDUP_WINDOW = 2.0                       # 同一カード N 秒内無視
@@ -29,7 +29,7 @@ def sender():
             "role": user_role,
             "card_id": idm,
             "card_name": card_name,
-            "timestamp":time.time(),
+            "timestamp":int(time.time()) ,
             }
         print(f"カードID: {idm}")
         print(f"タイムスタンプ: {time.time()}")
