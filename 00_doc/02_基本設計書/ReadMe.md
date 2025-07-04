@@ -103,5 +103,7 @@
 - [SESAME5使い方](https://note.com/xh_ichikawa/n/nd5ceb0b60cfe)
 - [PaSoRi RC-S300をPythonで扱う](https://qiita.com/tomo_9180/items/5305a888e373416af5d2)
 - [PythonGUI](https://qiita.com/run1000dori/items/61dc715ddaad54505a29)
+- [APIを使ってSesame4を施錠解錠する](https://qiita.com/run1000dori/items/61dc715ddaad54505a29)
+
 
 
