@@ -3,7 +3,6 @@ import login
 import index
 import card
 
-
 def main(page: ft.Page):
     page.title = "ドア開閉システム"
     #login_user = {"name": None}
