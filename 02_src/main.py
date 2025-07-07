@@ -2,6 +2,7 @@ import flet as ft
 import login
 import index
 import card
+import accesslogs
 
 def main(page: ft.Page):
     page.title = "ドア開閉システム"
@@ -14,8 +15,8 @@ def main(page: ft.Page):
             page.views.append(index.index_view(page))
         elif page.route == "/card":
             page.views.append(card.cardView(page))
-        # elif page.route == "/logs":
-        #     page.views.append(log_manage_view())
+        elif page.route == "/logs":
+            page.views.append(accesslogs.accesslogs(page))
         page.update()
 
     page.on_route_change = route_change
