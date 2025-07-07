@@ -1,7 +1,7 @@
 import flet as ft
 import login
 import index
-import sample
+import card
 
 
 def main(page: ft.Page):
@@ -13,8 +13,8 @@ def main(page: ft.Page):
             page.views.append(login.login(page))
         elif page.route == "/index":
             page.views.append(index.index_view(page))
-        elif page.route == "/sample":
-            page.views.append(sample.sample(page))
+        elif page.route == "/card":
+            page.views.append(card.cardView(page))
         # elif page.route == "/logs":
         #     page.views.append(log_manage_view())
         page.update()
