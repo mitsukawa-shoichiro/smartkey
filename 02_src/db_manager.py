@@ -50,3 +50,12 @@ def findLog(card_name,method,timestamp,eventtype):
     logs = cursor.fetchall()
     conn.close()
     return logs
+
+def findByCardName(card_name):
+    # カード名でカード情報を取得
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM card WHERE card_name LIKE ?", (f"%{card_name}%",))
+    cards = cursor.fetchall()
+    conn.close()
+    return cards
