@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS access_logs (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     method VARCHAR(32) NOT NULL,
     card_id INTEGER,
+    eventtype Integer,
     foreign key(card_id) references card(card_id)
 )
 ''')
