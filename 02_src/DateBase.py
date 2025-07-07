@@ -9,8 +9,8 @@ c = conn.cursor()
 c.execute('PRAGMA foreign_keys = ON;')
 
 # テーブルを削除（存在していれば）
-# c.execute("DROP TABLE IF EXISTS access_logs")
-# c.execute("DROP TABLE IF EXISTS card")
+c.execute("DROP TABLE IF EXISTS access_logs")
+c.execute("DROP TABLE IF EXISTS card")
 
 
 # テーブル作成
@@ -19,14 +19,14 @@ CREATE TABLE card (
     card_id INTEGER PRIMARY KEY AUTOINCREMENT,
     card_name TEXT NOT NULL,
     card_number TEXT NOT NULL,
-    register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+    register_date TIMESTAMP DEFAULT (datetime('now', 'localtime'))
+    )
 ''')
 
 c.execute('''
 CREATE TABLE access_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    timestamp TIMESTAMP DEFAULT (datetime('now', 'localtime')),
     method VARCHAR(32) NOT NULL,
     card_id INTEGER,
     eventtype INTEGER,
