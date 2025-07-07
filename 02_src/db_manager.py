@@ -24,7 +24,10 @@ def findAllLog():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM access_logs")
+    cursor.execute("""
+                   SELECT id,card.card_name,method,timestamp,eventtype 
+                   FROM access_logs JOIN card ON access_logs.card_id = card.card_id
+                   """)
     logs = cursor.fetchall()
     conn.close()
     return logs

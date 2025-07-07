@@ -15,7 +15,7 @@ def main(page: ft.Page):
             page.views.append(index.index_view(page))
         elif page.route == "/card":
             page.views.append(card.cardView(page))
-        elif page.route == "/logs":
+        elif page.route == "/accesslogs":
             page.views.append(accesslogs.accesslogs(page))
         page.update()
 
