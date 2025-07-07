@@ -40,4 +40,3 @@ c.execute("INSERT INTO access_logs (card_id, method, eventtype) VALUES (?, ?, ?)
 
 conn.commit()
 conn.close()
-print("データベース初期化完了！")
