@@ -15,7 +15,7 @@ def findAllCard():
 def deleteByIds(ids):
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-    cur.executemany("DELETE FROM card WHERE id = ?", [(i,) for i in ids])
+    cur.executemany("DELETE FROM card WHERE card_id = ?", [(i,) for i in ids])
     conn.commit()
     conn.close()
 
