@@ -26,8 +26,27 @@ def findAllLog():
 
     cursor.execute("""
                    SELECT id,card.card_name,method,timestamp,eventtype 
-                   FROM access_logs JOIN card ON access_logs.card_id = card.card_id
+                   FROM access_logs JOIN card ON access_logs.card_id = card.card_id 
                    """)
+    logs = cursor.fetchall()
+    conn.close()
+    return logs
+
+def findLog(card_name,method,timestamp,eventtype):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    card_name = f"%{card_name}%"
+    method = f"%{method}%"
+    timestamp = f"%{timestamp}%"
+    eventtype = f"%{eventtype}%"
+    
+    cursor.execute("""
+                   SELECT id,card.card_name,method,timestamp,eventtype 
+                   FROM access_logs JOIN card ON access_logs.card_id = card.card_id 
+                   WHERE card.card_name LIKE ? AND method LIKE ? 
+                   AND timestamp LIKE ? AND CAST(access_logs.eventtype AS TEXT) LIKE ?
+                   """,(card_name,method,timestamp,eventtype))
     logs = cursor.fetchall()
     conn.close()
     return logs
