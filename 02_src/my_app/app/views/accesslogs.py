@@ -1,29 +1,28 @@
 import flet as ft
 import app.models.db_manager as db
-from datetime import datetime
 
 
 def accesslogs(page: ft.Page):
     
     page.title = "ログ閲覧画面"
     
-    cardname = ft.TextField(label="カード名")
-    method = ft.TextField(label="認証方式")
+    searchcardname = ft.TextField(label="カード名")
+    searchmethod = ft.TextField(label="認証方式")
     startdate = ft.DatePicker(label="開始日時")
     enddate = ft.DatePicker(label="終了日時")
-    eventtype = ft.dropdown(label="入室/退室の区別", options=[
-        ft.dropdown.Option("選択してください", value=""),
-        ft.dropdown.Option("入室", value="0"),
-        ft.dropdown.Option("退室", value="1"),
+    searcheventtype = ft.Dropdown(label="入室/退室の区別", options=[
+        ft.Dropdown.Option("選択してください", value=""),
+        ft.Dropdown.Option("入室", value="0"),
+        ft.Dropdown.Option("退室", value="1"),
     ])
     
     def search_logs(e):
         
-        search_cardname = cardname.value
-        search_method = method.value
+        search_cardname = searchcardname.value
+        search_method = searchmethod.value
         search_startdate = startdate.value
         search_enddate = enddate.value
-        search_eventtype = eventtype.value
+        search_eventtype = searcheventtype.value
 
         logs = db.findLog(search_cardname, search_method, search_startdate, search_enddate, search_eventtype)
 
@@ -32,18 +31,18 @@ def accesslogs(page: ft.Page):
             id, cardname, method,timestamp, eventtype = log
             event_str = "入室" if eventtype == 0 else "退室"
             
-        table.rows.append(
-            ft.DataRow(
-                cells=[
-                    ft.DataCell(ft.Text(str(id))),
-                    ft.DataCell(ft.Text(cardname)),
-                    ft.DataCell(ft.Text(method)),
-                    ft.DataCell(ft.Text(timestamp)),
-                    ft.DataCell(ft.Text(event_str)),
-                ]
+            table.rows.append(
+                ft.DataRow(
+                    cells=[
+                        ft.DataCell(ft.Text(str(id))),
+                        ft.DataCell(ft.Text(cardname)),
+                        ft.DataCell(ft.Text(method)),
+                        ft.DataCell(ft.Text(timestamp)),
+                        ft.DataCell(ft.Text(event_str)),
+                    ]
+                )
             )
-        )
-        
+
         page.update()
 
     search_btn = ft.ElevatedButton("検索", on_click=search_logs)
