@@ -8,23 +8,21 @@ def accesslogs(page: ft.Page):
     
     searchcardname = ft.TextField(label="カード名")
     searchmethod = ft.TextField(label="認証方式")
-    startdate = ft.DatePicker(label="開始日時")
-    enddate = ft.DatePicker(label="終了日時")
-    searcheventtype = ft.Dropdown(label="入室/退室の区別", options=[
-        ft.Dropdown.Option("選択してください", value=""),
-        ft.Dropdown.Option("入室", value="0"),
-        ft.Dropdown.Option("退室", value="1"),
-    ])
+    
+    searcheventtype = ft.Dropdown(label="入室/退室の区別")
+    searcheventtype.options = [
+        ft.DropdownOption("0", "入室"),
+        ft.DropdownOption("1", "退室"),
+    ]
     
     def search_logs(e):
         
         search_cardname = searchcardname.value
         search_method = searchmethod.value
-        search_startdate = startdate.value
-        search_enddate = enddate.value
+       
         search_eventtype = searcheventtype.value
 
-        logs = db.findLog(search_cardname, search_method, search_startdate, search_enddate, search_eventtype)
+        logs = db.findLog(search_cardname, search_method, search_eventtype)
 
         table.rows.clear()
         for log in logs:
@@ -100,6 +98,12 @@ def accesslogs(page: ft.Page):
     return ft.View(
             "/accesslogs",
             [
+                ft.Column([
+                    searcheventtype,
+                    searchcardname,
+                    searchmethod,
+                    search_btn,
+                ]),
                 table,
                 
                 ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
