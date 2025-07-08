@@ -1,5 +1,5 @@
 import flet as ft
-from router import route
+from app.views.router import route
 
 def main(page: ft.Page):
     page.title = "ドア開閉システム"

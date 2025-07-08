@@ -1,5 +1,5 @@
 import flet as ft
-import db_manager as db
+import models.db_manager as db
 from datetime import datetime
 
 
