@@ -1,9 +1,10 @@
 import flet as ft
 import app.models.db_manager as db
 
-
 def cardView(page: ft.Page):
-    page.title = "DataTable + Checkbox 削除"
+    page.title = "card管理画面"
+
+    username = ft.TextField(label="ユーザー名" , on_submit=lambda e: search(e))
 
     checkbox_refs = {}  # id: checkbox
     selected_ids = []
@@ -71,10 +72,34 @@ def cardView(page: ft.Page):
         page.snack_bar.open = True
         load_table()
 
+    def search(e):
+        card_name = username.value.strip()
+       
+        cards = db.findByCardName(card_name)
+        table.rows.clear()
+        for card_id, card_name, card_number, register_date in cards:
+            cb = ft.Checkbox()
+            checkbox_refs[card_id] = cb
+            table.rows.append(
+                ft.DataRow(
+                    cells=[
+                        ft.DataCell(ft.Text(str(card_id))),
+                        ft.DataCell(ft.Text(card_name)),
+                        ft.DataCell(ft.Text(card_number)),
+                        ft.DataCell(ft.Text(register_date)),
+                        ft.DataCell(cb),
+                    ]
+                )
+            )
+        page.update()
+        
     load_table()
+
     return ft.View(
             "/card",
             [
+                username,
+                ft.ElevatedButton("検索", on_click=search),
                 table,
                 ft.ElevatedButton("選択した行を削除", on_click=open_confirm_dialog),
                 ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
