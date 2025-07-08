@@ -44,28 +44,17 @@ def findLog(card_name,method,eventtype):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
-    card_name = f"%{card_name}%"
-    method = f"%{method}%"
+    # カード名、認証方式、イベントタイプでアクセスログを検索
+    # card_nameとmethodは部分一致検索、eventtypeは完全一致検索
+    # COALESCEを使用して、eventtypeがNoneの場合は全てのeventtypeを対象とする
+    logs = cursor.execute("""
+                          SELECT id, card.card_name, method, timestamp, eventtype 
+                          FROM access_logs JOIN card ON access_logs.card_id = card.card_id 
+                          WHERE card.card_name LIKE ? AND method LIKE ? 
+                          AND COALESCE(?, access_logs.eventtype) = access_logs.eventtype
+                          """, (f"%{card_name}%", f"%{method}%", eventtype)
+                          ).fetchall()
     
-    if eventtype is None:
-        query = """
-            SELECT id, card.card_name, method, timestamp, eventtype
-            FROM access_logs 
-            JOIN card ON access_logs.card_id = card.card_id 
-            WHERE card.card_name LIKE ? AND method LIKE ?
-        """
-        params = (card_name, method)
-    else:
-        query = """
-            SELECT id, card.card_name, method, timestamp, eventtype
-            FROM access_logs 
-            JOIN card ON access_logs.card_id = card.card_id 
-            WHERE card.card_name LIKE ? AND method LIKE ? 
-            AND access_logs.eventtype LIKE ?
-        """
-        params = (card_name, method, f"%{eventtype}%")
-    cursor.execute(query, params)
-    logs = cursor.fetchall()
     conn.close()
     return logs
 
