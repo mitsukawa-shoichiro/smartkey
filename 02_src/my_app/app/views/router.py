@@ -1,8 +1,8 @@
 import flet as ft
-import login
-import index
-import card
-import accesslogs
+import app.views.login as login
+import app.views.index as index
+import app.views.card as card
+import app.views.accesslogs as accesslogs
 
 def route(page: ft.Page):
     
@@ -10,9 +10,9 @@ def route(page: ft.Page):
         page.title = "ドア開閉システム"
         page.views.clear()
         if page.route == "/":
-            page.views[login.login(page)]
+            page.views.append(login.login(page))
         elif page.route == "/index":
-            page.views[index.index_view(page)]
+            page.views.append(index.index_view(page))
         elif page.route == "/card":
             page.views.append(card.cardView(page))
         elif page.route == "/accesslogs":

@@ -1,5 +1,5 @@
 import flet as ft
-import models.db_manager as db
+import app.models.db_manager as db
 
 
 def cardView(page: ft.Page):

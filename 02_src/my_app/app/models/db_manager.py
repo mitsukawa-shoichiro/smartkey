@@ -1,7 +1,15 @@
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "database.db")
+dir_path = os.path.dirname(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)
+        )
+    )
+)
+
+DB_PATH = os.path.join(dir_path, "db", "database.db")
 
 def findAllCard():
     # 全てのカード情報を取得
