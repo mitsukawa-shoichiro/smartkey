@@ -221,18 +221,21 @@ def accesslogs(page: ft.Page):
             )
         )
     )
-    page.add(
-        ft.Column(
-            controls=[card],
-            alignment=ft.MainAxisAlignment.CENTER,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            expand=True,
-        )
-    )
+   
     
     return ft.View(
         "/accesslogs",
-        controls=[
+        padding=20,
+        bgcolor=ft.Colors.WHITE,
+        vertical_alignment=ft.MainAxisAlignment.START,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        spacing=20,
+       
+        
+        # 画面のコントロール
+        # ここにコントロールを追加していく
+         controls=[
+            
             toggle_btn,
             search_area,
             show_all_btn,
