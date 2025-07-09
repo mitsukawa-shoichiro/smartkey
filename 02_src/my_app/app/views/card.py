@@ -24,8 +24,6 @@ def cardView(page: ft.Page):
             spacing=3,
         ), 
         actions=[
-            ft.TextButton("キャンセル", on_click=lambda e: page.close(edit_dialog)),
-            ft.TextButton("保存", on_click=lambda e: confirm_edit(e)),
         ],
         
     )
@@ -90,6 +88,10 @@ def cardView(page: ft.Page):
             ],
             spacing=10,
         )
+        edit_dialog.actions = [
+            ft.TextButton("キャンセル", on_click=lambda e: page.close(edit_dialog)),
+            ft.TextButton("保存", data = card_id, on_click=lambda e: confirm_edit(e)),
+        ]
         page.open(edit_dialog)
 
     def confirm_delete(e):
