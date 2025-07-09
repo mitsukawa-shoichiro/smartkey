@@ -88,3 +88,12 @@ def updateCardName(card_id, new_name):
     cursor.execute("UPDATE card SET card_name = ? WHERE card_id = ?", (new_name, card_id))
     conn.commit()
     conn.close()
+
+def findCardNameById(card_id):
+    # カードIDからカード名を取得
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT card_name FROM card WHERE card_id = ?", (card_id,))
+    card_name = cursor.fetchone()
+    conn.close()
+    return card_name[0]

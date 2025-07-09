@@ -16,6 +16,20 @@ def cardView(page: ft.Page):
         actions_alignment=ft.MainAxisAlignment.END,
     )
 
+    edit_dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("カード名編集"),
+        content=ft.Column(
+            
+            spacing=3,
+        ), 
+        actions=[
+            ft.TextButton("キャンセル", on_click=lambda e: page.close(edit_dialog)),
+            ft.TextButton("保存", on_click=lambda e: confirm_edit(e)),
+        ],
+        
+    )
+
     table = ft.DataTable(
         columns=[
             
@@ -45,7 +59,7 @@ def cardView(page: ft.Page):
                         ft.DataCell(ft.Text(card_number)),
                         ft.DataCell(ft.Text(register_date)),
                         ft.DataCell(cb),
-                        ft.DataCell(ft.TextButton("カード名編集"))
+                        ft.DataCell(ft.TextButton(text="カード名編集",data=card_id, on_click = open_edit_dialog)),
                     ]
                 )
             )
@@ -67,10 +81,30 @@ def cardView(page: ft.Page):
         ]
         page.open(confirm_dialog)
 
+    def open_edit_dialog(e):
+        card_id = e.control.data
+        
+        edit_dialog.content = ft.Column(
+            [
+                ft.TextField(label="カード名", value=db.findCardNameById(card_id), data = card_id, autofocus=True, on_submit=lambda e: confirm_edit(e)),
+            ],
+            spacing=10,
+        )
+        page.open(edit_dialog)
+
     def confirm_delete(e):
         db.deleteByIds(selected_ids)
         page.close(confirm_dialog)
         snack = ft.SnackBar(ft.Text("削除しました"))
+        page.open(snack)
+        load_table()
+
+    def confirm_edit(e):
+        card_id = e.control.data
+        new_card_name = edit_dialog.content.controls[0].value
+        db.updateCardName(card_id, new_card_name)
+        page.close(edit_dialog)
+        snack = ft.SnackBar(ft.Text("カード名を更新しました"))
         page.open(snack)
         load_table()
 
@@ -90,7 +124,7 @@ def cardView(page: ft.Page):
                         ft.DataCell(ft.Text(card_number)),
                         ft.DataCell(ft.Text(register_date)),
                         ft.DataCell(cb),
-                        ft.DataCell(ft.TextButton("カード名編集"))
+                        ft.DataCell(ft.TextButton(text="カード名編集",data=card_id, on_click = open_edit_dialog)),
                     ]
                 )
             )
