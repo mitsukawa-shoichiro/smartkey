@@ -132,34 +132,29 @@ def accesslogs(page: ft.Page):
         page.update()
 
     search_btn = ft.ElevatedButton("検索", on_click=search_logs)
+    
+    def show_all_logs(e):
+        load_table()
 
+    show_all_btn = ft.ElevatedButton("全件表示", on_click=show_all_logs)
     startdate_btn = ft.ElevatedButton(text = "開始日を選択", on_click=lambda e: open_datepicker(start_date))
     enddate_btn = ft.ElevatedButton(text = "終了日を選択", on_click=lambda e: open_datepicker(end_date))
     
     table = ft.DataTable(
-        # width=1500,
-        # bgcolor=ft.Colors.LIGHT_BLUE_50,
-        # border=ft.border.all(2, ft.Colors.BLACK),
-        # border_radius=10,
-        # vertical_lines=ft.border.BorderSide(3, ft.Colors.BLACK),
-        # horizontal_lines=ft.border.BorderSide(1, ft.Colors.BLACK),
-        # sort_column_index=0,
-        # sort_ascending=True,
-        # heading_row_height=100,
-        # data_row_color={ft.ControlState.HOVERED: "0x30FF0000"},
-        # show_checkbox_column=True,
-        # divider_thickness=0,
-        # column_spacing=200,
-        
+        bgcolor=ft.Colors.LIGHT_BLUE_50,
+        heading_row_color=ft.Colors.BLUE_100,
+        column_spacing=100,
+        border=ft.border.all(1, ft.Colors.GREY_400),
+        border_radius=12,                          
+        heading_row_height=50,
         columns=[
-            
-            ft.DataColumn(ft.Text("ログID")),
-            ft.DataColumn(ft.Text("カード名")),
-            ft.DataColumn(ft.Text("認証方式")),
-            ft.DataColumn(ft.Text("入室/退室の日時")),
-            ft.DataColumn(ft.Text("")),
+            ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
+            ft.DataColumn(ft.Text("カード名", weight="bold", size=14)),
+            ft.DataColumn(ft.Text("認証方式", weight="bold", size=14)),
+            ft.DataColumn(ft.Text("入退室の日時", weight="bold", size=14)),
+            ft.DataColumn(ft.Text("区分", weight="bold", size=14)),
         ],
-        rows=[],
+        rows=[]
     )
      
     def load_table():
@@ -189,34 +184,60 @@ def accesslogs(page: ft.Page):
 
     page.overlay.append(start_date)
     page.overlay.append(end_date)
+    
+     # 検索エリアの Column（非表示で初期化）
+    search_area = ft.Column(
+        controls=[
+            searchcardname,
+            ft.Row([startdate_btn, start_date, start_hour, start_minute], spacing=10),
+            ft.Row([enddate_btn, end_date, end_hour, end_minute], spacing=10),
+            ft.Row([searchmethod, searcheventtype], spacing=10),
+            search_btn,
+        ],
+        visible=False
+    )
 
-    return ft.View(
-            "/accesslogs",
-            [
-                ft.Column([
-                    searchcardname,
-                    ft.Row([
-                    startdate_btn,
-                    start_date,
-                    start_hour,
-                    start_minute,
-                ], spacing=10),
-                
-                ft.Row([
-                    enddate_btn,
-                    end_date,
-                    end_hour,
-                    end_minute,
-                ], spacing=10),
-                ft.Row([
-                    searchmethod,
-                    searcheventtype,
-                ], spacing=10),
-                search_btn,
-                table,
-                ]),
-                ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
-                
+    # トグルボタンで表示/非表示切り替え
+    def toggle_search_area(e):
+        search_area.visible = not search_area.visible
+        toggle_btn.text = "検索オプションを隠す" if search_area.visible else "🔍 検索オプション表示"
+        page.update()
+
+    toggle_btn = ft.ElevatedButton("🔍 検索オプションを表示", on_click=toggle_search_area)
+    
+    card = ft.Card(
+        content=ft.Container(
+            padding=20,
+            width=1000,
+            alignment=ft.alignment.center,
+            border_radius=12,
+
+            content=ft.Column([
+                ft.Text("入/退室ログ閲覧画面", size=24, weight="bold"),
+                table
             ],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=20,
+            )
         )
+    )
+    page.add(
+        ft.Column(
+            controls=[card],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            expand=True,
+        )
+    )
+    
+    return ft.View(
+        "/accesslogs",
+        controls=[
+            toggle_btn,
+            search_area,
+            show_all_btn,
+            card,
+            ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
+        ]
+    )
  
