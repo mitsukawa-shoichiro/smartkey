@@ -83,8 +83,19 @@ def findByCardName(card_name):
 
 def updateCardName(card_id, new_name):
     # カード名を更新
+    print("updateCardName:", card_id, new_name)
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("UPDATE card SET card_name = ? WHERE card_id = ?", (new_name, card_id))
     conn.commit()
     conn.close()
+
+def findCardNameById(card_id):
+    # カードIDからカード名を取得
+    print("findCardNameById:", card_id)
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT card_name FROM card WHERE card_id = ?", (card_id,))
+    card_name = cursor.fetchone()
+    conn.close()
+    return card_name[0]
