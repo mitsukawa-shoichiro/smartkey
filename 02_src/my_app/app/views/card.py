@@ -24,6 +24,7 @@ def cardView(page: ft.Page):
             ft.DataColumn(ft.Text("カード番号")),
             ft.DataColumn(ft.Text("登録日")),
             ft.DataColumn(ft.Text("選択")),
+            ft.DataColumn(ft.Text("")),
         ],
         rows=[],
     )
@@ -44,6 +45,7 @@ def cardView(page: ft.Page):
                         ft.DataCell(ft.Text(card_number)),
                         ft.DataCell(ft.Text(register_date)),
                         ft.DataCell(cb),
+                        ft.DataCell(ft.TextButton("カード名編集"))
                     ]
                 )
             )
@@ -53,8 +55,8 @@ def cardView(page: ft.Page):
         nonlocal selected_ids
         selected_ids = [card_id for card_id, cb in checkbox_refs.items() if cb.value]
         if not selected_ids:
-            page.snack_bar = ft.SnackBar(ft.Text("何も選択されていません"))
-            page.snack_bar.open = True
+            snack = ft.SnackBar(ft.Text("何も選択されていません"))
+            page.open(snack)
             page.update()
             return
 
@@ -68,8 +70,8 @@ def cardView(page: ft.Page):
     def confirm_delete(e):
         db.deleteByIds(selected_ids)
         page.close(confirm_dialog)
-        page.snack_bar = ft.SnackBar(ft.Text("削除しました"))
-        page.snack_bar.open = True
+        snack = ft.SnackBar(ft.Text("削除しました"))
+        page.open(snack)
         load_table()
 
     def search(e):
@@ -88,6 +90,7 @@ def cardView(page: ft.Page):
                         ft.DataCell(ft.Text(card_number)),
                         ft.DataCell(ft.Text(register_date)),
                         ft.DataCell(cb),
+                        ft.DataCell(ft.TextButton("カード名編集"))
                     ]
                 )
             )
