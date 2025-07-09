@@ -1,14 +1,22 @@
+from datetime import datetime
 import flet as ft
 import app.models.db_manager as db
-import datetime
+
 
 def accesslogs(page: ft.Page):
     
+    snack = ft.SnackBar(
+           content=ft.Text("", color=ft.Colors.WHITE),
+           bgcolor=ft.Colors.RED_400,
+           duration=2000
+        )
+    page.snack_bar = snack
+    
     def change_date(e):
-        selected_date = start_date.value
-        startdate_btn.text = f"{selected_date.strftime('%Y-%m-%d')}"
-        selected_date = end_date.value
-        enddate_btn.text = f"{selected_date.strftime('%Y-%m-%d')}"
+        if start_date.value:
+            startdate_btn.text = f"{start_date.value.strftime('%Y-%m-%d')}"
+        if end_date.value:
+            enddate_btn.text = f"{end_date.value.strftime('%Y-%m-%d')}"
         page.update()
         
     page.locale_configuration = ft.LocaleConfiguration(
@@ -46,23 +54,57 @@ def accesslogs(page: ft.Page):
         ft.DropdownOption("1", "退室"),
     ]
         
-    def get_datetime(date_picker, hour_dropdown, minute_dropdown):
-        if date_picker.value is None or hour_dropdown.value is None or minute_dropdown.value is None:
+    def get_datetime(date_picker, hour_dropdown, minute_dropdown,is_start=True):
+        
+        date = date_picker.value
+        hour = hour_dropdown.value if hour_dropdown.value not in (None, "") else None
+        minute = minute_dropdown.value if minute_dropdown.value not in (None, "") else None
+        
+        if date is None and (hour is not None or minute is not None):
+            
+            snack.content = ft.Text("日付を選択してください")
+            page.open(snack)
+            page.update()
             return None
-        # 日付と時刻を結合してdatetimeオブジェクトを作成
-        time_str = f"{hour_dropdown.value}:{minute_dropdown.value}:00"
-        datetime_str = f"{date_picker.value} {time_str}"
+
+        elif date is not None and hour is None and minute is not None:
+            snack.content = ft.Text("時間を選択してください")
+            page.open(snack)
+            page.update()
+            return None
+        
+        elif date is None:
+            return None
+        
+        if hour is None and minute is None:
+            hour = "00" if is_start else "23"
+            minute = "00" if is_start else "59"
+            second = "00" if is_start else "59"
+
+        else:
+            hour = hour if hour is not None else "00"
+            minute = minute if minute is not None else "00"
+            second = "00"
+            
+        datetime_str = f"{date.strftime('%Y-%m-%d')} {hour}:{minute}:{second}"
         return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-    
+
     def search_logs(e):
         
-        search_cardname = searchcardname.value
-        search_method = searchmethod.value
-        search_eventtype = searcheventtype.value
-        
-        start_dt = get_datetime(start_date, start_hour, start_minute)
-        end_dt = get_datetime(end_date, end_hour, end_minute)
+        search_method = searchmethod.value.strip() if searchmethod.value else None
+        search_cardname = searchcardname.value.strip() if searchcardname.value else None
+        search_eventtype = int(searcheventtype.value.strip()) if searcheventtype.value else None
 
+        
+        start_dt = get_datetime(start_date, start_hour, start_minute,is_start=True)
+        end_dt = get_datetime(end_date, end_hour, end_minute,is_start=False)
+
+        if start_dt and end_dt and end_dt < start_dt:
+            snack.content = ft.Text("終了日時は開始日時以降にしてください")
+            page.open(snack)
+            page.update()
+            return
+    
         logs = db.findLog(search_cardname, search_method, search_eventtype,start_dt,end_dt)
 
         table.rows.clear()
