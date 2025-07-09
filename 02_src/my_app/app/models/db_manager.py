@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from datetime import datetime, timedelta
 
 dir_path = os.path.dirname(
     os.path.dirname(
@@ -40,10 +41,22 @@ def findAllLog():
     conn.close()
     return logs
 
-def findLog(card_name,method,eventtype):
+def findLog(card_name,method,eventtype,start_datetime, end_datetime):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
+    now = datetime.now()
+    
+    card_name = f"%{card_name}%" if card_name else "%"
+    method = f"%{method}%" if method else "%"
+
+    start_datetime = start_datetime or (now - timedelta(days=365))
+    end_datetime = end_datetime or now
+
+    start_datetime_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+    print("end:", end_datetime_str)
     # カード名、認証方式、イベントタイプでアクセスログを検索
     # card_nameとmethodは部分一致検索、eventtypeは完全一致検索
     # COALESCEを使用して、eventtypeがNoneの場合は全てのeventtypeを対象とする
@@ -51,8 +64,9 @@ def findLog(card_name,method,eventtype):
                           SELECT id, card.card_name, method, timestamp, eventtype 
                           FROM access_logs JOIN card ON access_logs.card_id = card.card_id 
                           WHERE card.card_name LIKE ? AND method LIKE ? 
-                          AND COALESCE(?, access_logs.eventtype) = access_logs.eventtype
-                          """, (f"%{card_name}%", f"%{method}%", eventtype)
+                          AND (? IS NULL OR access_logs.eventtype = ?) 
+                          AND access_logs.timestamp BETWEEN ? AND ?
+                          """, (card_name,method, eventtype, eventtype, start_datetime_str, end_datetime_str)
                           ).fetchall()
     
     conn.close()
