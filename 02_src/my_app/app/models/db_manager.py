@@ -80,3 +80,11 @@ def findByCardName(card_name):
     cards = cursor.fetchall()
     conn.close()
     return cards
+
+def updateCardName(card_id, new_name):
+    # カード名を更新
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE card SET card_name = ? WHERE card_id = ?", (new_name, card_id))
+    conn.commit()
+    conn.close()
