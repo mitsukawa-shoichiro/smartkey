@@ -3,6 +3,8 @@ import app.views.login as login
 import app.views.index as index
 import app.views.card as card
 import app.views.accesslogs as accesslogs
+import app.views.register as register
+import threading
 
 def route(page: ft.Page):
     
@@ -17,5 +19,10 @@ def route(page: ft.Page):
             page.views.append(card.cardView(page))
         elif page.route == "/accesslogs":
             page.views.append(accesslogs.accesslogs(page))
+        elif page.route == "/register":
+            page.views.append(register.registering(page))
+            threading.Thread(target=lambda: register.run_async_delayed_transition(page)).start()
+        elif page.route == "/register/input":
+            page.views.append(register.register_input(page))
         page.update()
     page.on_route_change = page_route_change
