@@ -192,7 +192,7 @@ def accesslogs(page: ft.Page):
                 ft.Row([searchcardname, searchmethod, searcheventtype], spacing=20),
                 ft.Row([ft.Text("開始日時:", width=80), startdate_btn, start_hour, start_minute], spacing=10),
                 ft.Row([ft.Text("終了日時:", width=80), enddate_btn, end_hour, end_minute], spacing=10),
-                ft.Row([search_btn, clear_btn,show_all_btn], alignment=ft.MainAxisAlignment.END, spacing=20),
+                ft.Row([search_btn,show_all_btn], alignment=ft.MainAxisAlignment.END, spacing=20),
             ],
             spacing=15,
             horizontal_alignment=ft.CrossAxisAlignment.START
