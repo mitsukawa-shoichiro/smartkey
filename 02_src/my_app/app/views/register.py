@@ -26,8 +26,7 @@ def register_input(page: ft.Page):
     
     add_confirm_dialog = ft.AlertDialog(
         modal=True, 
-        
-    )
+        )
     card_number = random.randint(1000000000, 9999999999)  # デモ用のランダムなカード番号
 
     def open_add_confirm_dialog(e):
@@ -35,7 +34,7 @@ def register_input(page: ft.Page):
         add_confirm_dialog.content = ft.Text(f"ユーザー名: {card_name.value}、カードの種類: {card_name_type.value} を登録しますか？")
         add_confirm_dialog.actions = [
             ft.TextButton("はい", on_click=lambda e: execute_register(e)),
-            ft.TextButton("いいえ", autofocus=True, on_click=lambda e: page.go("/register/input")),
+            ft.TextButton("いいえ", autofocus=True, on_click=lambda e: page.close(add_confirm_dialog)),
         ]
         page.open(add_confirm_dialog)
 
@@ -50,7 +49,7 @@ def register_input(page: ft.Page):
     def execute_register(e):
         
         db.insertCard((card_name.value + '_' + card_name_type.value), card_number)
-        print("カード登録処理を実行")
+        
         page.close(add_confirm_dialog)
         complete_add_confirm_dialog(e)
 
