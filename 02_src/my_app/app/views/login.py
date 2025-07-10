@@ -1,28 +1,45 @@
 
 import flet as ft
+import json
+import os
 
+def load_accounts():
+    dir_path = os.path.dirname(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)
+        )
+    )
+)
 
+    ACCOUNT_PATH = os.path.join(dir_path,"config", "account.json")
+    with open(ACCOUNT_PATH) as f:
+        return json.load(f)
+    
 def login(page: ft.Page):
     page.title = "ログイン画面"
 
-    username = ft.TextField(label="ユーザー名" , autofocus=True, on_submit=lambda e: page.go("/index"))
-    # username = ft.TextField(label="ユーザー名", autofocus=True, on_submit=lambda e: password.focus())
+    # username = ft.TextField(label="ユーザー名" , autofocus=True, on_submit=lambda e: page.go("/index"))
+    username = ft.TextField(label="ユーザー名", autofocus=True, on_submit=lambda e: password.focus())
 
-    password = ft.TextField(label="パスワード", password=True, on_submit=lambda e: page.go("/index"))
-    # password = ft.TextField(label="パスワード", password=True, on_submit=lambda e: do_login(e))
+    # password = ft.TextField(label="パスワード", password=True, on_submit=lambda e: page.go("/index"))
+    password = ft.TextField(label="パスワード", password=True, on_submit=lambda e: do_login(e))
     msg = ft.Text("")
     def do_login(e):
-        if username.value == "admin" and password.value == "password":
-            msg.value = "ログイン成功"
-            page.go("/index")
+        for account in load_accounts():
+            if account["username"] == username.value and account["password"] == password.value:
+                msg.value = "ログイン成功"
+                page.go("/index")
+                page.update()
+                return
             
-            
-        else:
-            msg.value = "ログイン失敗"
-            page.update()
-            username.focus()
-    login_btn = ft.ElevatedButton("ログイン", on_click=lambda e: page.go("/index"))
-    # login_btn = ft.ElevatedButton("ログイン", on_click=do_login)
+            else:
+                msg.value = "ログイン失敗"
+                page.update()
+                username.focus()
+    
+    # login_btn = ft.ElevatedButton("ログイン", on_click=lambda e: page.go("/index"))
+    login_btn = ft.ElevatedButton("ログイン", on_click=do_login)
 
     return ft.View(
             "/",
