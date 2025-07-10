@@ -97,3 +97,11 @@ def findCardNameById(card_id):
     card_name = cursor.fetchone()
     conn.close()
     return card_name[0]
+
+def insertCard(card_name, card_number):
+    # カードを新規登録
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO card (card_name, card_number) VALUES (?, ?)", (card_name, card_number))
+    conn.commit()
+    conn.close()
