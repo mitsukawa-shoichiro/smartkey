@@ -26,13 +26,27 @@ def login(page: ft.Page):
 
     return ft.View(
             "/",
-            [
-                ft.Text("ログイン", style="headlineMedium"),
-                username,
-                password,
-                login_btn,
-                msg,
-            ],
-        )
-
-    
+        controls=[
+            ft.Container(
+                content=ft.Column(
+                    [
+                        ft.Text("ログイン", style="headlineMedium"),
+                        username,
+                        password,
+                        login_btn,
+                        msg,
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=20,
+                ),
+                width=400,
+                height=300,
+                padding=30,
+                alignment=ft.alignment.center,
+                margin=ft.Margin(0, -100, 0, 0),
+            )
+        ],
+        vertical_alignment=ft.MainAxisAlignment.CENTER, 
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+    )
