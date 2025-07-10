@@ -56,7 +56,6 @@ def findLog(card_name,method,eventtype,start_datetime, end_datetime):
     start_datetime_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
     end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
-    print("end:", end_datetime_str)
     # カード名、認証方式、イベントタイプでアクセスログを検索
     # card_nameとmethodは部分一致検索、eventtypeは完全一致検索
     # COALESCEを使用して、eventtypeがNoneの場合は全てのeventtypeを対象とする
