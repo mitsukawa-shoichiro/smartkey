@@ -6,17 +6,45 @@ import random
 
 
 def registering(page: ft.Page):
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.title = "ICカード情報読み込み中"
+
+    loading_text = ft.Text("ICカード情報読み込み中", size=60, text_align=ft.TextAlign.CENTER)
+    loading_spinner = ft.CupertinoActivityIndicator(
+                radius=50,
+                color=ft.Colors.LIGHT_BLUE_ACCENT,
+                animating=True,
+            )
+    
+
+
     return ft.View(
-        "/register",
-        [
-            ft.Text("登録中...", style="headlineMedium"),
-        ]
-    )
+            "/home",
+            controls=[
+                ft.Container(
+                    expand=True,
+                    alignment=ft.alignment.center,
+                    content=ft.Column(
+                        controls=[
+                            ft.Container(content=loading_text, padding=10),
+                            ft.Container(content=loading_spinner),
+                            
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        tight=True,
+                    ),
+                )
+            ],
+        )
+
+    
 
 async def delayed_transition(page: ft.Page):
-    for count in range(1):
+    for count in range(2):
         print(f"{count + 1}回目のチェック")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(5)
     page.go("/register/input")
 
 def run_async_delayed_transition(page):
@@ -55,6 +83,7 @@ def register_input(page: ft.Page):
 
     card_name = ft.TextField(label="ユーザー名", autofocus=True, on_submit= lambda e: card_name_type.focus())
     card_name_type = ft.TextField(label="カードの種類", value="ICカード", on_submit= lambda e: open_add_confirm_dialog(e))
+    
     
     return ft.View(
         "/register/input",
