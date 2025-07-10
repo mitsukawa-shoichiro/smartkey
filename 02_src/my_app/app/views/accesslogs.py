@@ -42,11 +42,11 @@ def accesslogs(page: ft.Page):
     hours = [str(i).zfill(2) for i in range(24)]
     minutes = [str(i).zfill(2) for i in range(0, 60, 1)]
     
-    start_hour = ft.Dropdown(label="何時", options=[ft.DropdownOption(h, h) for h in hours],width=100)
-    start_minute = ft.Dropdown(label="何分", options=[ft.DropdownOption(m, m) for m in minutes],width=100)
+    start_hour = ft.Dropdown(label="何時", options=[ft.DropdownOption(h, h) for h in hours],width=100,text_style=ft.TextStyle(size=12))
+    start_minute = ft.Dropdown(label="何分", options=[ft.DropdownOption(m, m) for m in minutes],width=100,text_style=ft.TextStyle(size=12))
 
-    end_hour = ft.Dropdown(label="何時", options=[ft.DropdownOption(h, h) for h in hours],width=100)
-    end_minute = ft.Dropdown(label="何分", options=[ft.DropdownOption(m, m) for m in minutes],width=100)
+    end_hour = ft.Dropdown(label="何時", options=[ft.DropdownOption(h, h) for h in hours],width=100,text_style=ft.TextStyle(size=12))
+    end_minute = ft.Dropdown(label="何分", options=[ft.DropdownOption(m, m) for m in minutes],width=100,text_style=ft.TextStyle(size=12))
 
     searcheventtype = ft.Dropdown(label="入室/退室")
     searcheventtype.options = [
@@ -186,14 +186,21 @@ def accesslogs(page: ft.Page):
     page.overlay.append(end_date)
     
      # 検索エリアの Column（非表示で初期化）
-    search_area = ft.Column(
-        controls=[
-            searchcardname,
-            ft.Row([startdate_btn, start_date, start_hour, start_minute], spacing=10),
-            ft.Row([enddate_btn, end_date, end_hour, end_minute], spacing=10),
-            ft.Row([searchmethod, searcheventtype], spacing=10),
-            search_btn,
-        ],
+    search_area = ft.Container(
+        content=ft.Column(
+            [
+                ft.Row([searchcardname, searchmethod, searcheventtype], spacing=20),
+                ft.Row([ft.Text("開始日時:", width=80), startdate_btn, start_hour, start_minute], spacing=10),
+                ft.Row([ft.Text("終了日時:", width=80), enddate_btn, end_hour, end_minute], spacing=10),
+                ft.Row([search_btn, clear_btn,show_all_btn], alignment=ft.MainAxisAlignment.END, spacing=20),
+            ],
+            spacing=15,
+            horizontal_alignment=ft.CrossAxisAlignment.START
+        ),
+        padding=20,
+        bgcolor=ft.Colors.GREY_100,
+        border_radius=12,
+        width=800,
         visible=False
     )
 
@@ -214,7 +221,10 @@ def accesslogs(page: ft.Page):
 
             content=ft.Column([
                 ft.Text("入/退室ログ閲覧画面", size=24, weight="bold"),
-                table
+                toggle_btn,
+                search_area,
+                table,
+                ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
             ],
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=20,
@@ -235,12 +245,7 @@ def accesslogs(page: ft.Page):
         # 画面のコントロール
         # ここにコントロールを追加していく
          controls=[
-            
-            toggle_btn,
-            search_area,
-            show_all_btn,
             card,
-            ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
         ]
     )
  
