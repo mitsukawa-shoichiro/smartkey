@@ -249,7 +249,7 @@ def accesslogs(page: ft.Page):
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         spacing=20,
        
-        
+       
         # 画面のコントロール
          controls=[
             card,

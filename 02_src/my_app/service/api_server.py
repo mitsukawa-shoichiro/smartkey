@@ -54,7 +54,9 @@ def receive_card(card_id):
     if current_state == CardReaderState.AUTHENTICATING:
         if(db_manager.check_card(card_id)):
             unlock()
-
+    
+    elif current_state == CardReaderState.REGISTERING:
+        get_card()
 
 def unlock():
     server_dir = os.path.dirname(os.path.abspath(__file__))
