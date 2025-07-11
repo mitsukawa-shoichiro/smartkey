@@ -55,6 +55,7 @@ def register_input(page: ft.Page):
     add_confirm_dialog = ft.AlertDialog(
         modal=True, 
         )
+    
     card_number = random.randint(1000000000, 9999999999)  # デモ用のランダムなカード番号
 
     def open_add_confirm_dialog(e):
@@ -66,9 +67,27 @@ def register_input(page: ft.Page):
         ]
         page.open(add_confirm_dialog)
 
+    def open_cancel_confirm_dialog(e):
+        add_confirm_dialog.title = ft.Text("キャンセル確認")
+        add_confirm_dialog.content = ft.Text("登録をキャンセルしますか？")
+        add_confirm_dialog.actions = [
+            ft.TextButton("はい", on_click=lambda e: complete_cancel_confirm_dialog(e)),
+            ft.TextButton("いいえ", autofocus=True, on_click=lambda e: page.close(add_confirm_dialog)),
+        ]
+        page.open(add_confirm_dialog)
+
     def complete_add_confirm_dialog(e):
         add_confirm_dialog.title = ft.Text("登録完了")
         add_confirm_dialog.content = ft.Text("カードの登録が完了しました。")
+        add_confirm_dialog.actions = [
+            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/index")),
+        ]
+        page.open(add_confirm_dialog)
+
+    def complete_cancel_confirm_dialog(e):
+        page.close(add_confirm_dialog)
+        add_confirm_dialog.title = ft.Text("キャンセル完了")
+        add_confirm_dialog.content = ft.Text("カードの登録がキャンセルされました。")
         add_confirm_dialog.actions = [
             ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/index")),
         ]
@@ -93,6 +112,7 @@ def register_input(page: ft.Page):
             card_name,
             card_name_type,
             ft.ElevatedButton("登録", on_click=lambda e: open_add_confirm_dialog(e)),
-            ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
+            ft.ElevatedButton("キャンセル", on_click=lambda e: open_cancel_confirm_dialog(e), color=ft.Colors.RED),
+            # ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
         ]
     )
