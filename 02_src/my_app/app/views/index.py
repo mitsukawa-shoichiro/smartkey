@@ -67,7 +67,7 @@ def index_view(page: ft.Page):
         content=ft.TextButton(
             text="ログアウト",
             icon=ft.Icons.LOGOUT,
-            on_click=lambda e: page.go("/login"),
+            on_click=lambda e: page.go("/"),
             style=ft.ButtonStyle(
                 padding=ft.padding.symmetric(horizontal=20, vertical=10),
                 shape=ft.RoundedRectangleBorder(radius=10),
