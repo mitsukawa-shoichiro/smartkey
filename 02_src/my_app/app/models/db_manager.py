@@ -56,7 +56,6 @@ def findLog(card_name,method,eventtype,start_datetime, end_datetime):
     start_datetime_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
     end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
-    print("end:", end_datetime_str)
     # カード名、認証方式、イベントタイプでアクセスログを検索
     # card_nameとmethodは部分一致検索、eventtypeは完全一致検索
     # COALESCEを使用して、eventtypeがNoneの場合は全てのeventtypeを対象とする
@@ -97,3 +96,11 @@ def findCardNameById(card_id):
     card_name = cursor.fetchone()
     conn.close()
     return card_name[0]
+
+def insertCard(card_name, card_number):
+    # カードを新規登録
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO card (card_name, card_number) VALUES (?, ?)", (card_name, card_number))
+    conn.commit()
+    conn.close()

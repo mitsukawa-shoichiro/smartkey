@@ -1,33 +1,23 @@
 import flet as ft
 import app.models.db_manager as db
 
+# card管理画面
 def cardView(page: ft.Page):
     page.title = "card管理画面"
 
-    username = ft.TextField(label="ユーザー名" , on_submit=lambda e: search(e))
+    # チェックボックスの参照を保持する辞書
+    checkbox_refs = {}
 
-    checkbox_refs = {}  # id: checkbox
+    # 選択されたカードのIDを保持するリスト  
     selected_ids = []
 
-    confirm_dialog = ft.AlertDialog(
+    dialog = ft.AlertDialog(
         modal=True,
-        title=ft.Text("削除の確認"),
-        content=ft.Text(""),
-        actions_alignment=ft.MainAxisAlignment.END,
     )
+    # ユーザー名の入力フィールド
+    username = ft.TextField(label="カード名", autofocus=True, on_submit=lambda e: search(e))
 
-    edit_dialog = ft.AlertDialog(
-        modal=True,
-        title=ft.Text("カード名編集"),
-        content=ft.Column(
-            
-            spacing=3,
-        ), 
-        actions=[
-        ],
-        
-    )
-
+    # カードの一覧を表示するためのテーブル
     table = ft.DataTable(
         columns=[
             
@@ -41,6 +31,7 @@ def cardView(page: ft.Page):
         rows=[],
     )
 
+    # テーブルの行をロードする関数
     def load_table():
         checkbox_refs.clear()
         table.rows.clear()
@@ -63,53 +54,77 @@ def cardView(page: ft.Page):
             )
         page.update()
 
+    # 選択した行を削除するための確認ダイアログを開く関数
     def open_confirm_dialog(e):
+        
         nonlocal selected_ids
         selected_ids = [card_id for card_id, cb in checkbox_refs.items() if cb.value]
+        
         if not selected_ids:
-            snack = ft.SnackBar(ft.Text("何も選択されていません"))
-            page.open(snack)
-            page.update()
-            return
+            dialog.title = ft.Text("削除の確認")
+            dialog.content = ft.Text("削除する行が選択されていません。")
+            dialog.actions = [
+                ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+            ]
+            page.open(dialog)
+            
+        else:
+            dialog.title = ft.Text("削除の確認")
+            dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しますか？")
+            dialog.actions = [
+                ft.TextButton("キャンセル", on_click=lambda e: page.close(dialog)),
+                ft.TextButton("はい", on_click=confirm_delete),
+            ]
+            page.open(dialog)
 
-        confirm_dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しますか？")
-        confirm_dialog.actions = [
-            ft.TextButton("キャンセル", on_click=lambda e: page.close(confirm_dialog)),
-            ft.TextButton("はい", on_click=confirm_delete),
-        ]
-        page.open(confirm_dialog)
-
+    # カード名を編集するためのダイアログを開く関数
     def open_edit_dialog(e):
         card_id = e.control.data
-        
-        edit_dialog.content = ft.Column(
+        dialog.title = ft.Text("カード名編集")
+        dialog.content = ft.Column(
             [
-                ft.TextField(label="カード名", value=db.findCardNameById(card_id), data = card_id, autofocus=True, on_submit=lambda e: confirm_edit(e)),
+                ft.TextField(label="カード名", value=db.findCardNameById(card_id), data = card_id, autofocus=True, on_submit=lambda e: confirm_edit(e),),
+            
             ],
-            spacing=10,
+            height=80,
+            
         )
-        edit_dialog.actions = [
-            ft.TextButton("キャンセル", on_click=lambda e: page.close(edit_dialog)),
+        dialog.actions = [
+            ft.TextButton("キャンセル", on_click=lambda e: page.close(dialog)),
             ft.TextButton("保存", data = card_id, on_click=lambda e: confirm_edit(e)),
         ]
-        page.open(edit_dialog)
+        page.open(dialog)
 
+    # 削除の確認ダイアログのアクション
     def confirm_delete(e):
         db.deleteByIds(selected_ids)
-        page.close(confirm_dialog)
-        snack = ft.SnackBar(ft.Text("削除しました"))
-        page.open(snack)
+        page.close(dialog)
         load_table()
+        dialog.title = ft.Text("削除完了")
+        dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しました。")
+        dialog.actions = [
+            ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+        ]
+        page.open(dialog)
 
+    # カード名を編集するためのダイアログのアクション
     def confirm_edit(e):
         card_id = e.control.data
-        new_card_name = edit_dialog.content.controls[0].value
+        new_card_name = dialog.content.controls[0].value
         db.updateCardName(card_id, new_card_name)
-        page.close(edit_dialog)
-        snack = ft.SnackBar(ft.Text("カード名を更新しました"))
-        page.open(snack)
+        page.close(dialog)
+        # 編集後のテーブルを再読み込み
         load_table()
 
+        # ダイアログを更新して完了メッセージを表示
+        dialog.title = ft.Text("編集完了")
+        dialog.content = ft.Text(f"カード名を '{new_card_name}' に変更しました  。")
+        dialog.actions = [
+            ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+        ]
+        page.open(dialog)
+        
+    # 検索ボタンのクリックイベント
     def search(e):
         card_name = username.value.strip()
        
@@ -133,13 +148,18 @@ def cardView(page: ft.Page):
         page.update()
         
     load_table()
+    scroll_table = ft.Column(
+        controls=[table],
+        scroll=ft.ScrollMode.ALWAYS,
+        expand=True
+    )
 
     return ft.View(
             "/card",
             [
                 username,
                 ft.ElevatedButton("検索", on_click=search),
-                table,
+                scroll_table,
                 ft.ElevatedButton("選択した行を削除", on_click=open_confirm_dialog),
                 ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
                 
