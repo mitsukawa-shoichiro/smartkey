@@ -2,11 +2,18 @@ import flet as ft
 import asyncio
 import app.models.db_manager as db
 import requests
-# デモのために乱数を使用
-import random
+from app.utils.thread_state import thread_handle, stop_event
 
 
 def registering(page: ft.Page):
+    global stop_event, thread_handle
+
+    def stop_loop(e):
+
+        stop_event.set()
+        print("停止フラグを送信しました")
+        page.go("/index")
+
     url = "http://127.0.0.1:5000/api/card/set_state"
     data = {"state": "registering"}
     response = requests.post(url, json=data)
@@ -24,6 +31,18 @@ def registering(page: ft.Page):
         animating=True,
     )
 
+    stop_btn = ft.Container(
+        content=ft.TextButton(
+            text="キャンセル",
+            icon=ft.Icons.STOP,
+            on_click=stop_loop,
+            style=ft.ButtonStyle(
+                padding=ft.padding.symmetric(horizontal=20, vertical=10),
+                shape=ft.RoundedRectangleBorder(radius=10),
+
+            )
+        )
+    )
     return ft.View(
         "/home",
         controls=[
@@ -34,6 +53,7 @@ def registering(page: ft.Page):
                     controls=[
                         ft.Container(content=loading_text, padding=10),
                         ft.Container(content=loading_spinner),
+                        stop_btn
 
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
@@ -46,24 +66,23 @@ def registering(page: ft.Page):
 
 
 async def delayed_transition(page: ft.Page):
+
+    global stop_event
+
     requests.get("http://127.0.0.1:5000/api/card/get_card",
                  params={"card_id": "0"})
-    while True:
-        i = 0
-
+    while not stop_event.is_set():
         res = requests.get("http://127.0.0.1:5000/api/card/get_card")
         card_id = res.json().get("card_id", "0")
         print("カードID：", card_id)
         if card_id != None:
-            print("抜けます")
+
+            url = "http://127.0.0.1:5000/api/card/set_state"
+            data = {"state": "authenticating"}
+            requests.post(url, json=data)
+            page.go("/register/input")
             break
-        await asyncio.sleep(3)
-        print(i)
-        i += 1
-    url = "http://127.0.0.1:5000/api/card/set_state"
-    data = {"state": "authenticating"}
-    requests.post(url, json=data)
-    page.go("/register/input")
+        await asyncio.sleep(0.5)
 
 
 def run_async_delayed_transition(page):
@@ -78,7 +97,6 @@ def register_input(page: ft.Page):
     res = requests.get(
         "http://127.0.0.1:5000/api/card/get_card")
     card_number = res.json().get("card_id", "0")
-    print("カード番号：", card_number)
 
     def open_add_confirm_dialog(e):
         add_confirm_dialog.title = ft.Text("カード登録の確認")
