@@ -1,5 +1,11 @@
 # APIドキュメント
 
+## 使用方法  
+1. `main.py` を実行してください。  
+2. 必要なライブラリが不足している場合は、以下のコマンドでインストールしてください：  
+   ```bash
+   pip install -r requirements.txt
+   ```
 ## 最も基本的な使い方（Python例）
 
 ```python
