@@ -1,4 +1,8 @@
 # APIドキュメント
+JavaScriptを運行するために、node.jsが必要です。
+## libインストール
+- npm install axios node-aes-cmac
+- pip install -r requirements.txt
 
 ## 使用方法  
 1. `main.py` を実行してください。  
