@@ -95,6 +95,35 @@ def run_async_delayed_transition(page):
 
 
 def register_input(page: ft.Page):
+    page.vertical_alignment = ft.MainAxisAlignment.START
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+    button_column = ft.Column(
+        controls=[
+            ft.ElevatedButton(
+                "登録",
+                icon=ft.Icons.CHECK,
+                width=200,
+                style=ft.ButtonStyle(
+                    shape=ft.RoundedRectangleBorder(radius=6),
+                ),
+                on_click=lambda e: open_add_confirm_dialog(e),
+            ),
+            ft.ElevatedButton(
+                "キャンセル",
+                icon=ft.Icons.ARROW_BACK,
+                width=200,
+                color=ft.Colors.RED,
+                style=ft.ButtonStyle(
+                    shape=ft.RoundedRectangleBorder(radius=6),
+                ),
+                on_click=lambda e: open_cancel_confirm_dialog(e),
+            ),
+        ],
+        spacing=20,
+        alignment=ft.MainAxisAlignment.START,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+    )
 
     add_confirm_dialog = ft.AlertDialog(
         modal=True,
@@ -153,21 +182,35 @@ def register_input(page: ft.Page):
         complete_add_confirm_dialog(e)
 
     card_name = ft.TextField(
-        label="ユーザー名", autofocus=True, on_submit=lambda e: card_name_type.focus())
+        label="ユーザー名", autofocus=True, width=320, border_radius=8, on_submit=lambda e: card_name_type.focus())
     card_name_type = ft.TextField(
-        label="カードの種類", value="ICカード", on_submit=lambda e: open_add_confirm_dialog(e))
+        label="カードの種類", width=320, border_radius=8, on_submit=lambda e: open_add_confirm_dialog(e))
 
     return ft.View(
         "/register/input",
-        [
-            ft.Text("カード登録画面", style="headlineMedium"),
-            ft.Text("カード名を入力してください"),
-            card_name,
-            card_name_type,
-            ft.ElevatedButton(
-                "登録", on_click=lambda e: open_add_confirm_dialog(e)),
-            ft.ElevatedButton("キャンセル", on_click=lambda e: open_cancel_confirm_dialog(
-                e), color=ft.Colors.RED),
-            # ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
+        controls=[
+            ft.Row(  # 横方向の中央寄せ用
+                controls=[
+                    ft.Container(
+                        content=ft.Column(
+                            controls=[
+                                ft.Text("ユーザー登録", size=28,
+                                        weight=ft.FontWeight.BOLD),
+                                card_name,
+                                card_name_type,
+                                ft.Container(height=20),
+                                button_column,
+                            ],
+                            spacing=40,
+                            alignment=ft.MainAxisAlignment.START,
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        ),
+                        margin=ft.margin.only(top=120),
+                        width=400,
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,  # 横中央
+                expand=True,
+            )
         ]
     )
