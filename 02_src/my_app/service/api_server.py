@@ -50,6 +50,11 @@ def get_card():
     return jsonify({"card_id": card_id})
 
 
+
+@app.route('/api/check_alive', methods=['GET'])
+def check_alive():
+    return jsonify({"alive": "true"})
+
 def receive_card(card_id):
     if current_state == CardReaderState.AUTHENTICATING:
         if(db_manager.check_card(card_id)):
