@@ -12,6 +12,10 @@ def registering(page: ft.Page):
 
         stop_event.set()
         print("停止フラグを送信しました")
+        url = "http://127.0.0.1:5000/api/card/set_state"
+        data = {"state": "authenticating"}
+        res = requests.post(url, json=data)
+        print("set_stateの返り値：", res.json())
         page.go("/index")
 
     url = "http://127.0.0.1:5000/api/card/set_state"
@@ -79,10 +83,11 @@ async def delayed_transition(page: ft.Page):
 
             url = "http://127.0.0.1:5000/api/card/set_state"
             data = {"state": "authenticating"}
-            requests.post(url, json=data)
+            res = requests.post(url, json=data)
+            print("set_stateの返り値：", res.json())
             page.go("/register/input")
             break
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(1)
 
 
 def run_async_delayed_transition(page):
