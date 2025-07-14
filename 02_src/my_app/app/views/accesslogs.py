@@ -1,10 +1,14 @@
 from datetime import datetime
+from datetime import time
 import flet as ft
 import app.models.db_manager as db
 
 # ログ閲覧画面
 def accesslogs(page: ft.Page):
 
+    start_text = ft.TextField(label="開始日時テキスト", width=200, height=48)
+    end_text = ft.TextField(label="終了日時テキスト", width=200, height=48)
+    
     dialog = ft.AlertDialog(
         modal=True,
     )
@@ -12,24 +16,19 @@ def accesslogs(page: ft.Page):
     def change_start_date(e):
         if start_date.value:
             startdate_btn.text = f"{start_date.value.strftime('%Y-%m-%d')}"
+            start_time.open = True
+            page.dialog = start_time
+            update_start_textbox()
             page.update()
         
     def change_end_date(e):
         if end_date.value:
             enddate_btn.text = f"{end_date.value.strftime('%Y-%m-%d')}"
+            end_time.open = True
+            page.dialog = end_time
+            update_end_textbox()
             page.update()
-        
-    # 時刻の入力値を変換するフォーマット
-    def change_start_time(e):
-        if start_time.value:
-            starttime_btn.text = f"{start_time.value.strftime('%H:%M')}"
-            page.update()
-        
-    def change_end_time(e):
-        if end_time.value:
-            endtime_btn.text = f"{end_time.value.strftime('%H:%M')}"
-            page.update()
-        
+
     # 日付入力のロケール設定
     page.locale_configuration = ft.LocaleConfiguration(
         supported_locales=[
@@ -42,7 +41,7 @@ def accesslogs(page: ft.Page):
     page.title = "ログ閲覧画面"
 
     # 検索フィールドの定義
-    searchcardname = ft.TextField(label="カード名",width=200,height=40)
+    searchcardname = ft.TextField(label="カード名",width=200,height=48)
     searchmethod = ft.Dropdown(label="認証方式")
     searchmethod.options = [
         ft.DropdownOption("カード", "カード"),
@@ -52,41 +51,39 @@ def accesslogs(page: ft.Page):
     start_date = ft.DatePicker(on_change=change_start_date)
     end_date = ft.DatePicker(on_change=change_end_date)
 
-    start_time = ft.TimePicker(on_change=change_start_time)
-    end_time = ft.TimePicker(on_change=change_end_time)
+    start_time = ft.TimePicker(value=time(0, 0), on_dismiss=lambda e: update_start_textbox())
+    end_time = ft.TimePicker(value=time(23, 59), on_dismiss=lambda e: update_end_textbox())
 
     searcheventtype = ft.Dropdown(label="入室/退室")
     searcheventtype.options = [
         ft.DropdownOption("0", "入室"),
         ft.DropdownOption("1", "退室"),
     ]
-
-    # 入力された日付と時刻を結合してdatetimeオブジェクトを生成する関数
-    def get_datetime(date_picker, time_picker, is_start=True):
-
-        date = date_picker.value
-        time = time_picker.value
-
-        if date is None and time is not None:
-
-            dialog.title = ft.Text("エラー")
-            dialog.content = ft.Text("日付が選択されていません。")
-            dialog.actions = [
-                ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
-            ]
-            page.open(dialog)
+    
+    def parse_datetime_from_text(text_value):
+        try:
+            return datetime.strptime(text_value.strip(), "%Y-%m-%d %H:%M:%S")
+        except Exception:
             return None
         
-        elif date is None:
+    def get_start_datetime():
+        dt = parse_datetime_from_text(start_text.value)
+        if dt:
+            return dt
+        elif start_date.value and start_time.value:
+            return datetime.combine(start_date.value, start_time.value)
+        else:
             return None
-        
-        if time is None:
-            hour = 0 if is_start else 23
-            minute = 0 if is_start else 59
-            second = 0 if is_start else 59
-            time = datetime.strptime(f"{hour}:{minute}:{second}", "%H:%M:%S").time()
 
-        return datetime.combine(date, time)
+    def get_end_datetime():
+        dt = parse_datetime_from_text(end_text.value)
+        if dt:
+            return dt
+        elif end_date.value and end_time.value:
+            t = end_time.value.replace(second=59)
+            return datetime.combine(end_date.value, t)
+        else:
+            return None
 
     # 検索結果を表示するためのテーブル
     def search_logs(e):
@@ -95,10 +92,9 @@ def accesslogs(page: ft.Page):
         search_cardname = searchcardname.value.strip() if searchcardname.value else None
         search_eventtype = int(searcheventtype.value.strip()) if searcheventtype.value else None
 
-        start_dt = get_datetime(start_date, start_time,is_start=True)
-        end_dt = get_datetime(end_date, end_time,is_start=False)
+        start_dt = get_start_datetime(start_date, start_time)
+        end_dt = get_end_datetime(end_date, end_time)
 
-        # 入力された日時の検証
         if start_dt and end_dt and end_dt < start_dt:
             dialog.title = ft.Text("エラー")
             dialog.content = ft.Text("終了日時が開始日時以降にされていません。")
@@ -107,7 +103,7 @@ def accesslogs(page: ft.Page):
             ]
             page.open(dialog)
             return
-    
+        
         logs = db.findLog(search_cardname, search_method, search_eventtype,start_dt,end_dt)
 
         table.rows.clear()
@@ -141,14 +137,31 @@ def accesslogs(page: ft.Page):
     
     def show_all_logs(e):
         load_table()
+    
+    def update_start_textbox():
+        if start_date.value and start_time.value:
+            dt = datetime.combine(start_date.value, start_time.value)
+            start_text.value = dt.strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            start_text.value = ""
+        page.update()
+
+    def update_end_textbox():
+        if end_date.value and end_time.value:
+            dt = datetime.combine(end_date.value, end_time.value)
+            end_text.value = dt.strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            end_text.value = ""
+        page.update()
+    
+    start_date.on_change = change_start_date
+    end_date.on_change = change_end_date
 
     # ボタン定義
     search_btn = ft.ElevatedButton("検索", on_click=search_logs)
     show_all_btn = ft.ElevatedButton("全件表示", on_click=show_all_logs)
-    startdate_btn = ft.ElevatedButton(text = "開始日を選択", on_click=lambda e: open_datepicker(start_date))
-    enddate_btn = ft.ElevatedButton(text = "終了日を選択", on_click=lambda e: open_datepicker(end_date))
-    starttime_btn = ft.ElevatedButton(text="開始時刻を選択", on_click=lambda e: open_timepicker(start_time))
-    endtime_btn = ft.ElevatedButton(text="終了時刻を選択", on_click=lambda e: open_timepicker(end_time))
+    startdate_btn = ft.ElevatedButton(text = "開始日時を選択", on_click=lambda e: open_datepicker(start_date))
+    enddate_btn = ft.ElevatedButton(text = "終了日時を選択", on_click=lambda e: open_datepicker(end_date))
 
     # テーブル定義
     table = ft.DataTable(
@@ -203,8 +216,8 @@ def accesslogs(page: ft.Page):
         content=ft.Column(
             [
                 ft.Row([searchcardname, searchmethod, searcheventtype], spacing=20),
-                ft.Row([ft.Text("開始日時:", width=80), startdate_btn, starttime_btn], spacing=10),
-                ft.Row([ft.Text("終了日時:", width=80), enddate_btn, endtime_btn], spacing=10),
+                ft.Row([ft.Text("開始日時:", width=80), startdate_btn, start_text], spacing=10),
+                ft.Row([ft.Text("終了日時:", width=80), enddate_btn, end_text], spacing=10),
                 ft.Row([search_btn,show_all_btn], alignment=ft.MainAxisAlignment.END, spacing=20),
             ],
             spacing=15,
