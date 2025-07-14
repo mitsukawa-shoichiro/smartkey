@@ -4,30 +4,31 @@ import app.models.db_manager as db
 
 # ログ閲覧画面
 def accesslogs(page: ft.Page):
-    
-    # エラーメッセージ用のスナックバー定義
-    snack = ft.SnackBar(
-           content=ft.Text("", color=ft.Colors.WHITE),
-           bgcolor=ft.Colors.RED_400,
-           duration=2000
-        )
-    page.snack_bar = snack
-    
+
+    dialog = ft.AlertDialog(
+        modal=True,
+    )
     # 日付の入力値を変換するフォーマット
-    def change_date(e):
+    def change_start_date(e):
         if start_date.value:
             startdate_btn.text = f"{start_date.value.strftime('%Y-%m-%d')}"
+            page.update()
+        
+    def change_end_date(e):
         if end_date.value:
             enddate_btn.text = f"{end_date.value.strftime('%Y-%m-%d')}"
-        page.update()
-    
+            page.update()
+        
     # 時刻の入力値を変換するフォーマット
-    def change_time(e):
+    def change_start_time(e):
         if start_time.value:
             starttime_btn.text = f"{start_time.value.strftime('%H:%M')}"
+            page.update()
+        
+    def change_end_time(e):
         if end_time.value:
             endtime_btn.text = f"{end_time.value.strftime('%H:%M')}"
-        page.update()
+            page.update()
         
     # 日付入力のロケール設定
     page.locale_configuration = ft.LocaleConfiguration(
@@ -48,12 +49,12 @@ def accesslogs(page: ft.Page):
         ft.DropdownOption("Web", "Web"),
     ]
     
-    start_date = ft.DatePicker(on_change=change_date)
-    end_date = ft.DatePicker(on_change=change_date)
+    start_date = ft.DatePicker(on_change=change_start_date)
+    end_date = ft.DatePicker(on_change=change_end_date)
 
-    start_time = ft.TimePicker(on_change=change_time)
-    end_time = ft.TimePicker(on_change=change_time)
-    
+    start_time = ft.TimePicker(on_change=change_start_time)
+    end_time = ft.TimePicker(on_change=change_end_time)
+
     searcheventtype = ft.Dropdown(label="入室/退室")
     searcheventtype.options = [
         ft.DropdownOption("0", "入室"),
@@ -68,9 +69,12 @@ def accesslogs(page: ft.Page):
 
         if date is None and time is not None:
 
-            snack.content = ft.Text("日付を選択してください")
-            page.open(snack)
-            page.update()
+            dialog.title = ft.Text("エラー")
+            dialog.content = ft.Text("日付が選択されていません。")
+            dialog.actions = [
+                ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+            ]
+            page.open(dialog)
             return None
         
         elif date is None:
@@ -96,19 +100,22 @@ def accesslogs(page: ft.Page):
 
         # 入力された日時の検証
         if start_dt and end_dt and end_dt < start_dt:
-            snack.content = ft.Text("終了日時は開始日時以降にしてください")
-            page.open(snack)
-            page.update()
+            dialog.title = ft.Text("エラー")
+            dialog.content = ft.Text("終了日時が開始日時以降にされていません。")
+            dialog.actions = [
+                ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+            ]
+            page.open(dialog)
             return
     
         logs = db.findLog(search_cardname, search_method, search_eventtype,start_dt,end_dt)
 
-        scroll_table.rows.clear()
+        table.rows.clear()
         for log in logs:
             id, cardname, method,timestamp, eventtype = log
             event_str = "入室" if eventtype == 0 else "退室"
             
-            scroll_table.rows.append(
+            table.rows.append(
                 ft.DataRow(
                     cells=[
                         ft.DataCell(ft.Text(str(id))),
@@ -144,19 +151,13 @@ def accesslogs(page: ft.Page):
     endtime_btn = ft.ElevatedButton(text="終了時刻を選択", on_click=lambda e: open_timepicker(end_time))
 
     # テーブル定義
-    scroll_table = ft.DataTable(
-        bgcolor=ft.Colors.LIGHT_BLUE_50,
-        heading_row_color=ft.Colors.BLUE_100,
-        column_spacing=100,
-        border=ft.border.all(1, ft.Colors.GREY_400),
-        border_radius=12,                          
-        heading_row_height=50,
+    table = ft.DataTable(
         columns=[
-            ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
-            ft.DataColumn(ft.Text("カード名", weight="bold", size=14)),
-            ft.DataColumn(ft.Text("認証方式", weight="bold", size=14)),
-            ft.DataColumn(ft.Text("入退室の日時", weight="bold", size=14)),
-            ft.DataColumn(ft.Text("区分", weight="bold", size=14)),
+                    ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
+                    ft.DataColumn(ft.Text("カード名", weight="bold", size=14)),
+                    ft.DataColumn(ft.Text("認証方式", weight="bold", size=14)),
+                    ft.DataColumn(ft.Text("入退室の日時", weight="bold", size=14)),
+                    ft.DataColumn(ft.Text("区分", weight="bold", size=14)),
         ],
         rows=[]
     )
@@ -164,7 +165,7 @@ def accesslogs(page: ft.Page):
     # テーブルの行をロードする関数
     def load_table():
 
-        scroll_table.rows.clear()
+        table.rows.clear()
         logs = db.findAllLog()
         for id, card_name, method, timestamp, eventtype in logs:
         
@@ -172,7 +173,7 @@ def accesslogs(page: ft.Page):
                 event_str = "入室"
             elif eventtype == 1:
                 event_str = "退室"
-            scroll_table.rows.append(
+            table.rows.append(
                 ft.DataRow(
                     cells=[
                         ft.DataCell(ft.Text(id)),
@@ -186,7 +187,11 @@ def accesslogs(page: ft.Page):
         page.update()
         
     load_table()
-
+    scroll_table = ft.Column(
+    controls=[table],
+    scroll=ft.ScrollMode.ALWAYS,
+    expand=True
+    )
     # 日付と時刻の入力フィールド
     page.overlay.append(start_date)
     page.overlay.append(end_date)
@@ -219,40 +224,15 @@ def accesslogs(page: ft.Page):
         page.update()
 
     toggle_btn = ft.ElevatedButton("🔍 検索オプションを表示", on_click=toggle_search_area)
-    
-    card = ft.Card(
-        content=ft.Container(
-            padding=20,
-            width=1000,
-            alignment=ft.alignment.center,
-            border_radius=12,
-
-            content=ft.Column([
-                ft.Text("入/退室ログ閲覧画面", size=24, weight="bold"),
-                toggle_btn,
-                search_area,
-                scroll_table,
-                ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
-            ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=20,
-            )
-        )
-    )
    
-    
     return ft.View(
         "/accesslogs",
-        padding=20,
-        bgcolor=ft.Colors.WHITE,
-        vertical_alignment=ft.MainAxisAlignment.START,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        spacing=20,
-       
-       
-        # 画面のコントロール
          controls=[
-            card,
+            ft.Text("入/退室ログ閲覧画面", size=24, weight="bold"),
+            toggle_btn,
+            search_area,
+            scroll_table,
+            ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
         ]
     )
  
