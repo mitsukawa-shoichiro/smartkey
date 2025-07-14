@@ -2,25 +2,50 @@ import flet as ft
 import app.models.db_manager as db
 
 # card管理画面
+
+
 def cardView(page: ft.Page):
     page.title = "card管理画面"
 
     # チェックボックスの参照を保持する辞書
     checkbox_refs = {}
 
-    # 選択されたカードのIDを保持するリスト  
+    # 選択されたカードのIDを保持するリスト
     selected_ids = []
 
     dialog = ft.AlertDialog(
         modal=True,
     )
     # ユーザー名の入力フィールド
-    username = ft.TextField(label="カード名", autofocus=True, on_submit=lambda e: search(e))
+
+    card_name = ft.TextField(label="カード名検索", autofocus=True,
+                             on_submit=lambda e: search(e))
+    search_btn = ft.ElevatedButton(
+        content=ft.Icon(ft.Icons.SEARCH, size=30, color=ft.Colors.WHITE),
+        on_click=lambda e: search(e),
+        width=40,
+        height=48,
+        bgcolor=ft.Colors.LIGHT_BLUE,
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(
+                radius=0),
+            padding=ft.padding.all(0)
+        ),
+    )
+
+    search_zone = ft.Row(
+        controls=[
+            card_name,
+            search_btn
+        ],
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=0
+    )
 
     # カードの一覧を表示するためのテーブル
     table = ft.DataTable(
         columns=[
-            
+
             ft.DataColumn(ft.Text("ID")),
             ft.DataColumn(ft.Text("名前")),
             ft.DataColumn(ft.Text("カード番号")),
@@ -48,7 +73,8 @@ def cardView(page: ft.Page):
                         ft.DataCell(ft.Text(card_number)),
                         ft.DataCell(ft.Text(register_date)),
                         ft.DataCell(cb),
-                        ft.DataCell(ft.TextButton(text="カード名編集",data=card_id, on_click = open_edit_dialog)),
+                        ft.DataCell(ft.TextButton(text="カード名編集",
+                                    data=card_id, on_click=open_edit_dialog)),
                     ]
                 )
             )
@@ -56,10 +82,11 @@ def cardView(page: ft.Page):
 
     # 選択した行を削除するための確認ダイアログを開く関数
     def open_confirm_dialog(e):
-        
+
         nonlocal selected_ids
-        selected_ids = [card_id for card_id, cb in checkbox_refs.items() if cb.value]
-        
+        selected_ids = [card_id for card_id,
+                        cb in checkbox_refs.items() if cb.value]
+
         if not selected_ids:
             dialog.title = ft.Text("削除の確認")
             dialog.content = ft.Text("削除する行が選択されていません。")
@@ -67,7 +94,7 @@ def cardView(page: ft.Page):
                 ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
             ]
             page.open(dialog)
-            
+
         else:
             dialog.title = ft.Text("削除の確認")
             dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しますか？")
@@ -83,15 +110,17 @@ def cardView(page: ft.Page):
         dialog.title = ft.Text("カード名編集")
         dialog.content = ft.Column(
             [
-                ft.TextField(label="カード名", value=db.findCardNameById(card_id), data = card_id, autofocus=True, on_submit=lambda e: confirm_edit(e),),
-            
+                ft.TextField(label="カード名", value=db.findCardNameById(
+                    card_id), data=card_id, on_submit=lambda e: confirm_edit(e),),
+
             ],
             height=80,
-            
+
         )
         dialog.actions = [
             ft.TextButton("キャンセル", on_click=lambda e: page.close(dialog)),
-            ft.TextButton("保存", data = card_id, on_click=lambda e: confirm_edit(e)),
+            ft.TextButton("保存", data=card_id,
+                          on_click=lambda e: confirm_edit(e)),
         ]
         page.open(dialog)
 
@@ -118,16 +147,17 @@ def cardView(page: ft.Page):
 
         # ダイアログを更新して完了メッセージを表示
         dialog.title = ft.Text("編集完了")
-        dialog.content = ft.Text(f"カード名を '{new_card_name}' に変更しました  。")
+        dialog.content = ft.Text(
+            f"カード名を '{card_id}'から'{new_card_name}' に変更しました  。")
         dialog.actions = [
             ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
         ]
         page.open(dialog)
-        
+
     # 検索ボタンのクリックイベント
     def search(e):
-        card_name = username.value.strip()
-       
+        card_name = search_zone.controls[0].value
+        print(card_name)
         cards = db.findByCardName(card_name)
         table.rows.clear()
         for card_id, card_name, card_number, register_date in cards:
@@ -141,12 +171,17 @@ def cardView(page: ft.Page):
                         ft.DataCell(ft.Text(card_number)),
                         ft.DataCell(ft.Text(register_date)),
                         ft.DataCell(cb),
-                        ft.DataCell(ft.TextButton(text="カード名編集",data=card_id, on_click = open_edit_dialog)),
+                        ft.DataCell(ft.TextButton(text="カード名編集",
+                                    data=card_id, on_click=open_edit_dialog)),
                     ]
                 )
             )
         page.update()
-        
+
+    def reflesh(e):
+        search_zone.controls[0].value = ""
+        load_table()
+
     load_table()
     scroll_table = ft.Column(
         controls=[table],
@@ -155,14 +190,13 @@ def cardView(page: ft.Page):
     )
 
     return ft.View(
-            "/card",
-            [
-                username,
-                ft.ElevatedButton("検索", on_click=search),
-                scroll_table,
-                ft.ElevatedButton("選択した行を削除", on_click=open_confirm_dialog),
-                ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
-                
-            ],
-        )
-   
+        "/card",
+        [
+            search_zone,
+            ft.ElevatedButton("リセット", on_click=lambda e: reflesh(e)),
+            scroll_table,
+            ft.ElevatedButton("選択した行を削除", on_click=open_confirm_dialog),
+            ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
+
+        ],
+    )
