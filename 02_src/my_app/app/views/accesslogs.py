@@ -6,8 +6,8 @@ import app.models.db_manager as db
 # ログ閲覧画面
 def accesslogs(page: ft.Page):
 
-    start_text = ft.TextField(label="開始日時テキスト", width=200, height=48)
-    end_text = ft.TextField(label="終了日時テキスト", width=200, height=48)
+    start_text = ft.TextField(label="開始日時", width=200, height=48)
+    end_text = ft.TextField(label="終了日時", width=200, height=48)
     
     dialog = ft.AlertDialog(
         modal=True,
@@ -38,7 +38,7 @@ def accesslogs(page: ft.Page):
 
     # 検索フィールドの定義
     searchcardname = ft.TextField(label="カード名",width=200,height=48)
-    searchmethod = ft.Dropdown(label="認証方式")
+    searchmethod = ft.DropdownM2(label="認証   方式",value=None,width=85,height=45)
     searchmethod.options = [
         ft.DropdownOption("カード", "カード"),
         ft.DropdownOption("Web", "Web"),
@@ -50,7 +50,7 @@ def accesslogs(page: ft.Page):
     start_time = ft.TimePicker(value=time(0, 0), on_change=lambda e: update_start_textbox())
     end_time = ft.TimePicker(value=time(23, 59), on_change=lambda e: update_end_textbox())
 
-    searcheventtype = ft.Dropdown(label="入室/退室")
+    searcheventtype = ft.DropdownM2(label="入室/  退室",value=None,width=85,height=45)
     searcheventtype.options = [
         ft.DropdownOption("0", "入室"),
         ft.DropdownOption("1", "退室"),
@@ -58,7 +58,7 @@ def accesslogs(page: ft.Page):
         
     # 検索結果を表示するためのテーブル
     def search_logs(e):
-        
+        print(searchmethod.value,searcheventtype.value)
         search_method = searchmethod.value.strip() if searchmethod.value else None
         search_cardname = searchcardname.value.strip() if searchcardname.value else None
         search_eventtype = int(searcheventtype.value.strip()) if searcheventtype.value else None
@@ -66,8 +66,8 @@ def accesslogs(page: ft.Page):
         end_dt = None
         
         if start_text.value != "" and end_text.value != "":
-            start_dt = datetime.strptime(start_text.value + ":00","%Y-%m-%d %H:%M:%S")
-            end_dt = datetime.strptime(end_text.value + ":59","%Y-%m-%d %H:%M:%S")
+            start_dt = datetime.combine(start_date.value, start_time.value).replace(second=0)
+            end_dt = datetime.combine(end_date.value, end_time.value).replace(second=59)
 
             if start_dt and end_dt and end_dt < start_dt:
                 dialog.title = ft.Text("エラー")
@@ -112,7 +112,19 @@ def accesslogs(page: ft.Page):
     
     def show_all_logs(e):
         load_table()
-    
+        
+    def reset_dropdown(e):
+        searchcardname.value = ""
+        searchmethod.value = None
+        searcheventtype.value = None
+        start_text.value = ""
+        end_text.value = ""
+        start_date.value = None
+        end_date.value = None
+        start_time.value = time(0,0)
+        end_time.value = time(23,59)
+        page.update()
+        
     def update_start_textbox():
         if start_date.value and start_time.value:
             dt = datetime.combine(start_date.value, start_time.value)
@@ -137,8 +149,8 @@ def accesslogs(page: ft.Page):
     show_all_btn = ft.ElevatedButton("全件表示", on_click=show_all_logs)
     startdate_btn = ft.ElevatedButton(text = "開始日時を選択", on_click=lambda e: open_datepicker(start_date))
     enddate_btn = ft.ElevatedButton(text = "終了日時を選択", on_click=lambda e: open_datepicker(end_date))
-
-    # テーブル定義
+    reset_btn = ft.ElevatedButton("リセット", on_click=reset_dropdown)
+    # テーブル定義  
     table = ft.DataTable(
         columns=[
                     ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
@@ -193,7 +205,7 @@ def accesslogs(page: ft.Page):
                 ft.Row([searchcardname, searchmethod, searcheventtype], spacing=20),
                 ft.Row([ft.Text("開始日時:", width=80), startdate_btn, start_text], spacing=10),
                 ft.Row([ft.Text("終了日時:", width=80), enddate_btn, end_text], spacing=10),
-                ft.Row([search_btn,show_all_btn], alignment=ft.MainAxisAlignment.END, spacing=20),
+                ft.Row([search_btn,show_all_btn, reset_btn], alignment=ft.MainAxisAlignment.END, spacing=20),
             ],
             spacing=15,
             horizontal_alignment=ft.CrossAxisAlignment.START
