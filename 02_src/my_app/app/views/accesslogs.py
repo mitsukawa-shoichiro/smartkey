@@ -148,7 +148,7 @@ def accesslogs(page: ft.Page):
     show_all_btn = ft.ElevatedButton("全件表示", on_click=show_all_logs)
     startdate_btn = ft.ElevatedButton(text = "開始日時を選択", on_click=lambda e: open_datepicker(start_date))
     enddate_btn = ft.ElevatedButton(text = "終了日時を選択", on_click=lambda e: open_datepicker(end_date))
-    reset_btn = ft.ElevatedButton("リセット", on_click=reset_dropdown)
+    reset_btn = ft.ElevatedButton("検索欄をクリア", on_click=reset_dropdown)
     # テーブル定義  
     table = ft.DataTable(
         columns=[
@@ -210,7 +210,7 @@ def accesslogs(page: ft.Page):
             horizontal_alignment=ft.CrossAxisAlignment.START
         ),
         padding=20,
-        bgcolor=ft.Colors.GREY_100,
+        bgcolor=ft.Colors.WHITE,
         border_radius=12,
         width=800,
         visible=False
@@ -219,7 +219,7 @@ def accesslogs(page: ft.Page):
     # トグルボタンで表示/非表示切り替え
     def toggle_search_area(e):
         search_area.visible = not search_area.visible
-        toggle_btn.text = "検索オプションを隠す" if search_area.visible else "🔍 検索オプション表示"
+        toggle_btn.text = "検索オプションを閉じる" if search_area.visible else "🔍 検索オプションを開く"
         page.update()
 
     toggle_btn = ft.ElevatedButton("🔍 検索オプションを表示", on_click=toggle_search_area)
@@ -227,10 +227,12 @@ def accesslogs(page: ft.Page):
     return ft.View(
         "/accesslogs",
          controls=[
-            ft.Text("入/退室ログ閲覧画面", size=24, weight="bold"),
+            ft.Text("入/退室ログ閲覧画面",size=30, weight=ft.FontWeight.BOLD),
             toggle_btn,
             search_area,
+            ft.Container(height=30),
             scroll_table,
-            ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
-        ]
+            ft.ElevatedButton("🔙", on_click=lambda e: page.go("/index")),
+        ],
+          padding=ft.Padding(left=120, top=20, right=0, bottom=20)
     )
