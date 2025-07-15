@@ -1,0 +1,20 @@
+2025-07-15 17:13:26 [INFO] flet:371 - Assets path configured: C:\Users\h-ryu\Documents\GitHub\smartkey\02_src\my_app\assets
+2025-07-15 17:13:26 [INFO] flet:61 - Starting up TCP server on localhost:53698
+2025-07-15 17:13:26 [INFO] flet:171 - Flet app has started...
+2025-07-15 17:13:26 [INFO] flet:131 - App URL: tcp://localhost:53698
+2025-07-15 17:13:26 [INFO] flet_desktop:62 - Starting Flet View app...
+2025-07-15 17:13:26 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\h-ryu\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flet_desktop\app\flet\flet.exe
+2025-07-15 17:13:26 [INFO] flet_desktop:88 - Flet View found in: C:\Users\h-ryu\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flet_desktop\app\flet\flet.exe
+2025-07-15 17:13:26 [INFO] flet:240 - App session started
+2025-07-15 17:13:26 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=ZeroDivisionError('division by zero')>
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.1520.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\h-ryu\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "c:\Users\h-ryu\Documents\GitHub\smartkey\02_src\my_app\app\views\router.py", line 11, in page_route_change
+    print(1/0)
+          ~^~
+ZeroDivisionError: division by zero

@@ -4,6 +4,14 @@ import os
 import time
 import sys
 
+# region logs
+# logs ディレクトリのパスを sys.path に追加
+LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if LOGS_PATH not in sys.path:
+    sys.path.insert(0, LOGS_PATH)
+import logs.log_config_service
+# endregion
+
 def start_api_server():
     """APIサーバーを起動"""
     server_dir = os.path.dirname(os.path.abspath(__file__))
