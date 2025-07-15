@@ -32,6 +32,15 @@ def cardView(page: ft.Page):
             padding=ft.padding.all(0)
         ),
     )
+    reset_btn = ft.ElevatedButton(content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
+                                  on_click=lambda e: reflesh(e),
+                                  width=60,
+                                  height=30,
+                                  style=ft.ButtonStyle(
+        shape=ft.RoundedRectangleBorder(
+            radius=1000),
+        padding=ft.padding.all(0)
+    ),)
 
     search_zone = ft.Row(
         controls=[
@@ -41,6 +50,15 @@ def cardView(page: ft.Page):
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=0
     )
+    search_zone_row = ft.Row(
+        controls=[
+            search_zone,
+            reset_btn,
+        ],
+        alignment=ft.MainAxisAlignment.START,
+        spacing=300
+
+    )
 
     # カードの一覧を表示するためのテーブル
     table = ft.DataTable(
@@ -48,7 +66,7 @@ def cardView(page: ft.Page):
 
             ft.DataColumn(ft.Text("ID")),
             ft.DataColumn(ft.Text("名前")),
-            ft.DataColumn(ft.Text("カード番号")),
+            # ft.DataColumn(ft.Text("カード番号")),
             ft.DataColumn(ft.Text("登録日")),
             ft.DataColumn(ft.Text("選択")),
             ft.DataColumn(ft.Text("")),
@@ -68,9 +86,9 @@ def cardView(page: ft.Page):
             table.rows.append(
                 ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(str(card_id))),
+                        ft.DataCell(ft.Text(f"{card_id:07d}")),
                         ft.DataCell(ft.Text(card_name)),
-                        ft.DataCell(ft.Text(card_number)),
+                        # ft.DataCell(ft.Text(card_number)),
                         ft.DataCell(ft.Text(register_date)),
                         ft.DataCell(cb),
                         ft.DataCell(ft.TextButton(text="カード名編集",
@@ -163,12 +181,13 @@ def cardView(page: ft.Page):
         for card_id, card_name, card_number, register_date in cards:
             cb = ft.Checkbox()
             checkbox_refs[card_id] = cb
+
             table.rows.append(
                 ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(str(card_id))),
+                        ft.DataCell(ft.Text(f"{card_id:07d}")),
                         ft.DataCell(ft.Text(card_name)),
-                        ft.DataCell(ft.Text(card_number)),
+                        # ft.DataCell(ft.Text(card_number)),
                         ft.DataCell(ft.Text(register_date)),
                         ft.DataCell(cb),
                         ft.DataCell(ft.TextButton(text="カード名編集",
@@ -189,14 +208,25 @@ def cardView(page: ft.Page):
         expand=True
     )
 
+    title_zone = ft.Row(
+        controls=[
+            ft.Text("カード一覧", size=30, weight=ft.FontWeight.BOLD),
+            ft.ElevatedButton("行を削除", on_click=open_confirm_dialog),
+        ],
+        spacing=510
+    )
+
     return ft.View(
         "/card",
-        [
-            search_zone,
-            ft.ElevatedButton("リセット", on_click=lambda e: reflesh(e)),
+        controls=[
+            search_zone_row,
+            title_zone,
+            ft.Container(height=30),
             scroll_table,
-            ft.ElevatedButton("選択した行を削除", on_click=open_confirm_dialog),
             ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
 
         ],
+        padding=ft.Padding(left=120, top=20, right=0, bottom=20)
+
+
     )
