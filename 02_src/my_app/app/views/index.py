@@ -1,4 +1,5 @@
 import flet as ft
+import requests
 
 
 def index_view(page: ft.Page):
@@ -62,7 +63,55 @@ def index_view(page: ft.Page):
         alignment=ft.alignment.center,
         padding=ft.padding.only(top=30)
     )
+    SESAME_ID = "11200413-0002-0611-3F00-9200FFFFFFFF"
+    API_KEY = "O3R8DiaBCR2CD8mi10ibR9yT5OMqZHByaDmSCmnT"
 
+    def get_battery():
+        url = f"https://app.candyhouse.co/api/sesame2/{SESAME_ID}"
+        headers = {"x-api-key": API_KEY}
+        resp = requests.get(url, headers=headers)
+        resp.raise_for_status()
+        return int(resp.json().get("batteryPercentage", -1))
+    
+    
+    try:
+        battery = get_battery()
+    except Exception as e:
+        battery = None
+        print("取得エラー:", e)
+       
+    if 80 <= battery <= 100:
+        battery_icon = ft.Icon(ft.Icons.BATTERY_FULL, size=24, color=ft.Colors.GREEN)
+        battery_text = ft.Text(f"{battery}%", size=16, color=ft.Colors.BLUE_GREY_700)
+    elif 50 < battery < 80:
+        battery_icon = ft.Icon(ft.Icons.BATTERY_5_BAR, size=24, color=ft.Colors.GREEN)
+        battery_text = ft.Text(f"{battery}%", size=16, color=ft.Colors.BLUE_GREY_700)
+    elif 20 < battery <= 50:
+        battery_icon = ft.Icon(ft.Icons.BATTERY_3_BAR, size=24, color=ft.Colors.ORANGE)
+        battery_text = ft.Text(f"{battery}%", size=16, color=ft.Colors.BLUE_GREY_700)
+    elif battery <= 20:
+        battery_icon = ft.Icon(ft.Icons.BATTERY_1_BAR, size=24, color=ft.Colors.RED)
+        battery_text = ft.Text(f"{battery}%", size=16, color=ft.Colors.BLUE_GREY_700)
+        
+    battery_card = ft.Card(
+        content=ft.Container(
+            width=200, 
+            padding=10,
+            content=ft.Column(
+                controls=[
+                    ft.Text("sesameバッテリー残量", size=18, weight=ft.FontWeight.BOLD),
+                    ft.Row(
+                        controls=[battery_icon, battery_text],
+                        spacing=10,
+                        alignment=ft.MainAxisAlignment.START
+                    )
+                ],
+            spacing=10,
+            )
+        ),
+        elevation=2,
+    )
+    
     logout_button = ft.Container(
         content=ft.TextButton(
             text="ログアウト",
@@ -80,6 +129,14 @@ def index_view(page: ft.Page):
     return ft.View(
         "/index",
         controls=[
+            ft.Row(
+                controls=[
+                    battery_card 
+                ],
+                alignment=ft.MainAxisAlignment.START,  
+                vertical_alignment=ft.CrossAxisAlignment.START,  
+            ),
+
             ft.Container(
                 expand=True,
                 alignment=ft.alignment.center,
