@@ -58,7 +58,6 @@ def accesslogs(page: ft.Page):
         
     # 検索結果を表示するためのテーブル
     def search_logs(e):
-        print(searchmethod.value,searcheventtype.value)
         search_method = searchmethod.value.strip() if searchmethod.value else None
         search_cardname = searchcardname.value.strip() if searchcardname.value else None
         search_eventtype = int(searcheventtype.value.strip()) if searcheventtype.value else None
