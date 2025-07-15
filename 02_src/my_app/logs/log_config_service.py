@@ -21,7 +21,7 @@ file_hdl = logging.handlers.TimedRotatingFileHandler(
     LOG_PATH, when="midnight", backupCount=10, encoding="utf-8"
 )
 file_hdl.setFormatter(formatter)
-file_hdl.setLevel(logging.WARNING)         
+file_hdl.setLevel(logging.DEBUG)         
 
 # ---- コンソールハンドラー ----
 console_hdl = logging.StreamHandler(sys.stdout)
@@ -29,7 +29,7 @@ console_hdl.setFormatter(formatter)
 console_hdl.setLevel(logging.DEBUG)  
 
 # # ---- ルートロガーの設定 ----
-root = logging.getLogger("service")
+root = logging.getLogger()
 root.setLevel(logging.DEBUG)
 root.addHandler(file_hdl)
 root.addHandler(console_hdl)

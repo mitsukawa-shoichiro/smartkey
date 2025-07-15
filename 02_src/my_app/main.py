@@ -2,7 +2,7 @@ import flet as ft
 from app.views.router import route
 import sys
 import os
-
+import logging
 # region logs
 # logs ディレクトリのパスを sys.path に追加
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'logs'))
@@ -18,5 +18,7 @@ def main(page: ft.Page):
     page.title = "ドア開閉システム"
     route(page)
     page.go("/")
+    
+    logging.info("フロントが起動されました")
     
 ft.app(target=main)

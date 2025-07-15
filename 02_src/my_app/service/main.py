@@ -1,9 +1,11 @@
 # Windowsサービスのエントリーポイント
+from ast import Import
+import logging
 import subprocess
 import os
 import time
 import sys
-
+import logging
 # region logs
 # logs ディレクトリのパスを sys.path に追加
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -16,6 +18,8 @@ def start_api_server():
     """APIサーバーを起動"""
     server_dir = os.path.dirname(os.path.abspath(__file__))
     api_server_path = os.path.join(server_dir, "api_server.py")
+    
+    
     print("APIサーバーを起動中...")
     return subprocess.Popen([sys.executable, api_server_path])
 
@@ -29,12 +33,17 @@ def start_card_reader():
 def main():
     print("システムを起動中...")
     
+    
+    
     # APIサーバーを起動
     api_process = start_api_server()
     time.sleep(1)  # APIサーバーの起動を待つ
     
     # カードリーダーを起動
     card_process = start_card_reader()
+    
+    
+    logging.info("APIサーバーが起動されました")
     
     print("システムが正常に起動しました！")
     print("APIサーバー: http://127.0.0.1:5000")
