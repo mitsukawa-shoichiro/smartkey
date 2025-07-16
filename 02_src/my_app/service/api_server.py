@@ -7,6 +7,8 @@ import os
 import time
 import subprocess
 from nfcutils.card_scan import scan_card
+from utils.sesame import open_sesame
+
 
 class CardReaderState(Enum):
     REGISTERING = "registering"      # カード登録状態
@@ -64,14 +66,15 @@ def receive_card(card_id):
         get_card()
 
 def unlock():
-    server_dir = os.path.dirname(os.path.abspath(__file__))
-    sesami_path = os.path.join(server_dir, "utils", "sesami.js")
-    result = subprocess.run(
-        ["node", sesami_path],
-        capture_output=True,
-        text=True,
-        check=True
-    )
+    # server_dir = os.path.dirname(os.path.abspath(__file__))
+    # sesami_path = os.path.join(server_dir, "utils", "sesame.py")
+    # result = subprocess.run(
+    #     ["node", sesami_path],
+    #     capture_output=True,
+    #     text=True,
+    #     check=True
+    # )
+    open_sesame()
     time.sleep(6) 
 
 if __name__ == '__main__':
