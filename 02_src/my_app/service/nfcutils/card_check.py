@@ -6,6 +6,17 @@ from smartcard.util import toHexString
 import time
 import sys
 import os
+import logging
+
+# region logs
+# logs ディレクトリのパスを sys.path に追加
+LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+if LOGS_PATH not in sys.path:
+    sys.path.insert(0, LOGS_PATH)
+import logs.log_config_service
+# endregion
+
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
