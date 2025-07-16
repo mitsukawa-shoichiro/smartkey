@@ -85,15 +85,6 @@ def check_card(cardIDM):
     finally:
         conn.close()
 
-def gain_card_id_with_card_name(cardname):
-    #カードネームをもとに、カードIDを取得します。
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT card_id FROM card WHERE card_name=card_name")
-    card_id=cursor.fetchone()
-    conn.close()
-    print(card_id)
-    
 
 
 def insert_card_id(card_id):
