@@ -88,7 +88,7 @@ def accesslogs(page: ft.Page):
             table.rows.append(
                 ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(str(id))),
+                        # ft.DataCell(ft.Text(str(id))),
                         ft.DataCell(ft.Text(cardname)),
                         ft.DataCell(ft.Text(method)),
                         ft.DataCell(ft.Text(timestamp)),
@@ -149,10 +149,17 @@ def accesslogs(page: ft.Page):
     startdate_btn = ft.ElevatedButton(text = "開始日時を選択", on_click=lambda e: open_datepicker(start_date))
     enddate_btn = ft.ElevatedButton(text = "終了日時を選択", on_click=lambda e: open_datepicker(end_date))
     reset_btn = ft.ElevatedButton("検索欄をクリア", on_click=reset_dropdown)
+    back_btn = ft.TextButton("🔙", on_click=lambda e: page.go("/index"),
+                    style=ft.ButtonStyle(
+                        padding=ft.padding.symmetric(horizontal=20, vertical=10),
+                        text_style=ft.TextStyle(size=20),
+                        shape=ft.RoundedRectangleBorder(radius=10),overlay_color=ft.Colors.BLUE_100,
+                    ),
+                )
     # テーブル定義  
     table = ft.DataTable(
         columns=[
-                    ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
+                    # ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("カード名", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("認証方式", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("入退室の日時", weight="bold", size=14)),
@@ -175,7 +182,7 @@ def accesslogs(page: ft.Page):
             table.rows.append(
                 ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(id)),
+                        # ft.DataCell(ft.Text(id)),
                         ft.DataCell(ft.Text(card_name)),
                         ft.DataCell(ft.Text(method)),
                         ft.DataCell(ft.Text(timestamp)),
@@ -210,7 +217,7 @@ def accesslogs(page: ft.Page):
             horizontal_alignment=ft.CrossAxisAlignment.START
         ),
         padding=20,
-        bgcolor=ft.Colors.WHITE,
+        bgcolor=ft.Colors.GREY_200,
         border_radius=12,
         width=800,
         visible=False
@@ -232,7 +239,7 @@ def accesslogs(page: ft.Page):
             search_area,
             ft.Container(height=30),
             scroll_table,
-            ft.ElevatedButton("🔙", on_click=lambda e: page.go("/index")),
+            back_btn,
         ],
-          padding=ft.Padding(left=120, top=20, right=0, bottom=20)
+          padding=ft.Padding(left=140, top=20, right=0, bottom=20)
     )
