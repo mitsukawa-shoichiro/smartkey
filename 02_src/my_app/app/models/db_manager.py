@@ -95,7 +95,7 @@ def findCardNameById(card_id):
     cursor.execute("SELECT card_name FROM card WHERE card_id = ?", (card_id,))
     card_name = cursor.fetchone()
     conn.close()
-    return card_name[0]
+    return card_name
 
 def insertCard(card_name, card_number):
     # カードを新規登録
@@ -104,3 +104,44 @@ def insertCard(card_name, card_number):
     cursor.execute("INSERT INTO card (card_name, card_number) VALUES (?, ?)", (card_name, card_number))
     conn.commit()
     conn.close()
+
+
+def gainCardIDwithCardname(card_name):
+
+    #カードネームをもとに、カードIDを取得します。
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT card_id FROM card WHERE card_name= ?", (card_name,))                                                  
+    card_id=cursor.fetchall()
+    conn.close()
+    print(card_id)
+    return card_id
+    
+
+
+def insert_card_id(card_id):
+   #カードIDをaccess_logsテーブルに挿入します。
+   conn = sqlite3.connect(DB_PATH)
+   cursor = conn.cursor()
+   cursor.execute("INSERT INTO access_logs (method, card_id, eventtype) VALUES(?,?,?)", ('Web', card_id, '0'))
+   conn.commit()
+   conn.close()
+
+
+def delete_lines():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM access_logs WHERE (id>1)")
+    conn.commit()
+    conn.close
+
+
+# endregion
+if __name__ == '__main__':
+
+    # print("カード:", get_cards())
+    # print("アクセスログ:", get_access_logs())
+    # print("カード情報付きアクセスログ:", get_access_logs_with_card_info())
+    insert_card_id(1)
+    gainCardIDwithCardname("sample")
+    delete_lines()
