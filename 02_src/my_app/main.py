@@ -11,6 +11,8 @@ if LOGS_PATH not in sys.path:
 import logs.log_config_app
 # endregion
 
+
+
 def main(page: ft.Page):
     page.window.width = 1024
     page.window.height = 768

@@ -16,24 +16,21 @@ if LOGS_PATH not in sys.path:
 import logs.log_config_service
 # endregion
 
-
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-import api_server
+CARDSYS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if CARDSYS_PATH not in sys.path:
+    sys.path.insert(0, CARDSYS_PATH)
+from card_sys import receive_card
 
 POLL = [0x00, 0xFF, 0xFF, 0x01, 0x00]    # FeliCaポーリング
 
-
 event_q = queue.Queue()
-
 
 def sender():
     """非同期送信スレッド、ポーリングをブロックしない"""
     while True:
         idm = event_q.get()
         try:
-            api_server.receive_card(idm)
+            receive_card(idm)
             print("送信成功")
             
         except Exception as e:
@@ -67,13 +64,12 @@ def reader_loop():
                     conn.disconnect()
                     
             except NoCardException:
-
                 conn.disconnect()
             except Exception as e:
                 print(f"カードリーダー {i+1} でエラー:", e)
                 continue
         
-        time.sleep(0.5)  # CPU負荷軽減
+        time.sleep(1)  # CPU負荷軽減
 
 if __name__ == "__main__":
     threading.Thread(target=sender, daemon=True).start()

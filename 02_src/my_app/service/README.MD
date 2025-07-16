@@ -1,50 +1,46 @@
-# APIドキュメント
-JavaScriptを運行するために、node.jsが必要です。
-## libインストール
-- npm install axios node-aes-cmac
-- pip install -r requirements.txt
+# card_sys.py 利用方法
 
-## 使用方法  
-1. `main.py` を実行してください。  
-2. 必要なライブラリが不足している場合は、以下のコマンドでインストールしてください：  
-   ```bash
-   pip install -r requirements.txt
-   ```
-## 最も基本的な使い方（Python例）
+## 概要
+`card_sys.py` はカードリーダーの状態管理、カードIDの取得、認証・登録処理、解錠操作などを行うモジュールです。
 
-```python
-import requests
+## 主な関数
+- `set_state(state: str)`
+  - カードリーダーの状態を設定します。
+  - 引数: `"registering"` または `"authenticating"`
+  - 返り値: 現在の状態文字列
 
-# 状態を設定
-url = "http://127.0.0.1:5000/api/card/set_state"
-data = {"state": "registering"}
-response = requests.post(url, json=data)
-print("set_stateの返り値：", response.json())
+- `get_state() -> str`
+  - 現在のカードリーダー状態を取得します。
+  - 返り値: 状態文字列
 
-# カードIDを取得
-url2 = "http://127.0.0.1:5000/api/card/get_card"
-response2 = requests.get(url2)
-print("get_cardの返り値：", response2.json())
-```
+- `get_card() -> str`
+  - カードIDを読み取ります。
+  - 返り値: カードID（失敗時は空文字列）
 
----
+- `receive_card(card_id: str)`
+  - 現在の状態に応じてカードIDを処理します。
+  - 認証状態なら認証、登録状態なら登録処理を行います。
 
-## 1. 状態設定
-- **エンドポイント**: /api/card/set_state
-- **メソッド**: POST
-- **パラメータ**: { "state": "registering" | "authenticating" }
-- **返り値**: { "state": "registering" | "authenticating" }
+- `unlock()`
+  - 解錠操作を実行します。
 
-## 2. 状態取得
-- **エンドポイント**: /api/card/get_state
-- **メソッド**: GET
-- **返り値**: { "state": "registering" | "authenticating" }
+# 使い方例
+## import方法
+if SERVICE_PATH not in sys.path:
 
-## 3. カードID取得（NFCリーダー）
-- **エンドポイント**: /api/card/get_card
-- **メソッド**: GET
-- **返り値**: { "card_id": "xxxxxx" }
+   sys.path.insert(0, SERVICE_PATH)
+    
+from service import card_sys
 
----
+## 状態を「登録」に設定
+card_sys.set_state("registering")
 
+## 状態を取得
+state = card_sys.get_state()
+
+## カードIDを取得
+card_id = card_sys.get_card()
+
+## 状態を「認証」に設定
+card_sys.set_state("authenticating")
 
