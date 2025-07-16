@@ -1,24 +1,49 @@
+import logs.log_config_app
 import flet as ft
 from app.views.router import route
 import sys
 import os
 import logging
+import json
+from flet.core.page import Page
+# オリジナルのメソッドを退避
+_orig = Page._Page__on_page_change_event
+
+
+def _patched_on_page_change_event(self, data):
+    try:
+        # ここで元の実装を呼び出す
+        return _orig(self, data)
+    except TypeError as e:
+        # "'int' object is not iterable" による例外のみ無視
+        if "'int' object is not iterable" in str(e):
+            return
+        # それ以外なら再度例外を投げる
+        raise
+
+
+# マングリングされた名前で上書き
+setattr(Page, "_Page__on_page_change_event", _patched_on_page_change_event)
+
+
 # region logs
 # logs ディレクトリのパスを sys.path に追加
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'logs'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
-import logs.log_config_app
 # endregion
 
+
 def main(page: ft.Page):
+    print(Page._Page__on_page_change_event)
     page.window.width = 1024
     page.window.height = 768
     page.window.resizable = False
     page.title = "ドア開閉システム"
     route(page)
     page.go("/")
-    
+
     logging.info("フロントが起動されました")
-    
+
+
 ft.app(target=main)
