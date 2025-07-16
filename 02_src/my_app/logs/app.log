@@ -7,3 +7,12 @@
 2025-07-15 17:23:29 [INFO] flet_desktop:88 - Flet View found in: C:\Users\h-ryu\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
 2025-07-15 17:23:30 [INFO] flet:240 - App session started
 2025-07-15 17:23:30 [INFO] root:22 - フロントが起動されました
+2025-07-15 17:43:49 [INFO] flet:371 - Assets path configured: C:\Users\h-ryu\Documents\GitHub\smartkey\02_src\my_app\assets
+2025-07-15 17:43:49 [INFO] flet:61 - Starting up TCP server on localhost:55719
+2025-07-15 17:43:49 [INFO] flet:171 - Flet app has started...
+2025-07-15 17:43:49 [INFO] flet:131 - App URL: tcp://localhost:55719
+2025-07-15 17:43:49 [INFO] flet_desktop:62 - Starting Flet View app...
+2025-07-15 17:43:49 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\h-ryu\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2025-07-15 17:43:49 [INFO] flet_desktop:88 - Flet View found in: C:\Users\h-ryu\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2025-07-15 17:43:49 [INFO] flet:240 - App session started
+2025-07-15 17:43:49 [INFO] root:22 - フロントが起動されました

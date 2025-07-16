@@ -42,7 +42,6 @@ def main():
     # カードリーダーを起動
     card_process = start_card_reader()
     
-    
     logging.info("APIサーバーが起動されました")
     
     print("システムが正常に起動しました！")

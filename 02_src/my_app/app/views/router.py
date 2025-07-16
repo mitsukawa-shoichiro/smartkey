@@ -8,7 +8,6 @@ import threading
 from app.utils.thread_state import thread_handle, stop_event
 def route(page: ft.Page):
     def page_route_change(e):
-        
         page.title = "ドア開閉システム"
         page.views.clear()
         if page.route == "/":
