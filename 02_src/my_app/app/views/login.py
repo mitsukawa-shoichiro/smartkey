@@ -24,17 +24,27 @@ def login(page: ft.Page):
 
     # password = ft.TextField(label="パスワード", password=True, on_submit=lambda e: page.go("/index"))
     password = ft.TextField(label="パスワード", password=True, on_submit=lambda e: do_login(e))
-    msg = ft.Text("")
+    
+    msg = ft.Text("", color=ft.Colors.RED)
+    msg_container = ft.Container(
+        visible=False,
+        content=msg,
+        bgcolor=ft.Colors.RED_50,
+        border=ft.border.all(1, ft.Colors.RED),
+        padding=10,
+        border_radius=ft.border_radius.all(5),
+    )
+    
     def do_login(e):
         for account in load_accounts():
             if account["username"] == username.value and account["password"] == password.value:
-                msg.value = "ログイン成功"
                 page.go("/index")
                 page.update()
                 return
             
             else:
-                msg.value = "ログイン失敗"
+                msg.value = "ログインIDまたはパスワードが間違っています。"
+                msg_container.visible = True
                 page.update()
                 username.focus()
     
@@ -48,10 +58,10 @@ def login(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("ログイン", style="headlineMedium"),
+                        msg_container,
                         username,
                         password,
                         login_btn,
-                        msg,
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,

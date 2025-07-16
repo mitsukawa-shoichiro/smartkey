@@ -3,3 +3,4 @@
 *.db
 **/app.log
 **/service.log
+.cursor
