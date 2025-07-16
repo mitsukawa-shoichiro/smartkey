@@ -241,5 +241,5 @@ def accesslogs(page: ft.Page):
             scroll_table,
             back_btn,
         ],
-          padding=ft.Padding(left=140, top=20, right=0, bottom=20)
+          padding=ft.Padding(left=100, top=20, right=0, bottom=20)
     )
