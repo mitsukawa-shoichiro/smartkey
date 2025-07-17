@@ -72,7 +72,7 @@ def insert_card_id(card_id):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO access_logs (method, card_id, eventtype) VALUES(?,?,?)", ('Web', card_id, '0'))
+        "INSERT INTO access_logs (method, card_id, eventtype) VALUES(?,?,?)", ('カード', card_id, '0'))
     conn.commit()
     conn.close()
 
