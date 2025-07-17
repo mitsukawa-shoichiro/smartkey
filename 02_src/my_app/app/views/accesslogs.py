@@ -65,8 +65,10 @@ def accesslogs(page: ft.Page):
         end_dt = None
         
         if start_text.value != "" and end_text.value != "":
-            start_dt = datetime.combine(start_date.value, start_time.value).replace(second=0)
-            end_dt = datetime.combine(end_date.value, end_time.value).replace(second=59)
+            start_dt = datetime.strptime(start_text.value, "%Y-%m-%d %H:%M")
+            start_dt = start_dt.replace(second=0)
+            end_dt = datetime.strptime(end_text.value, "%Y-%m-%d %H:%M")
+            end_dt = end_dt.replace(second=59)
 
             if start_dt and end_dt and end_dt < start_dt:
                 dialog.title = ft.Text("エラー")
@@ -79,6 +81,7 @@ def accesslogs(page: ft.Page):
         
         logs = db.find_log(search_cardname, search_method, search_eventtype,start_dt,end_dt)
 
+        print(start_dt,end_dt)
         table.rows.clear()
         for log in logs:
             id, cardname, method,timestamp, eventtype = log
@@ -88,10 +91,10 @@ def accesslogs(page: ft.Page):
                 ft.DataRow(
                     cells=[
                         # ft.DataCell(ft.Text(str(id))),
-                        ft.DataCell(ft.Text(cardname)),
-                        ft.DataCell(ft.Text(method)),
-                        ft.DataCell(ft.Text(timestamp)),
-                        ft.DataCell(ft.Text(event_str)),
+                        ft.DataCell(ft.Text(cardname,width=130)),
+                        ft.DataCell(ft.Text(method,width=80)),
+                        ft.DataCell(ft.Text(timestamp,width=150)),
+                        ft.DataCell(ft.Text(event_str,width=80)),
                     ]
                 )
             )
@@ -129,6 +132,7 @@ def accesslogs(page: ft.Page):
             start_text.value = dt.strftime("%Y-%m-%d %H:%M")
         else:
             start_text.value = ""
+        print(start_text.value)
         page.update()
 
     def update_end_textbox():
@@ -137,6 +141,7 @@ def accesslogs(page: ft.Page):
             end_text.value = dt.strftime("%Y-%m-%d %H:%M")
         else:
             end_text.value = ""
+        print(end_text.value)
         page.update()
     
     start_date.on_change = change_start_date
