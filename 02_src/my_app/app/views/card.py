@@ -1,5 +1,5 @@
-import flet as ft
 import app.models.db_manager as db
+import flet as ft
 
 # card管理画面
 
@@ -16,7 +16,17 @@ def cardView(page: ft.Page):
     dialog = ft.AlertDialog(
         modal=True,
     )
-    # ユーザー名の入力フィールド
+
+    column = ft.Column(
+        controls=[],
+        spacing=16,
+        expand=True,
+    )
+
+    radio_group = ft.RadioGroup(
+        content=column,
+        on_change=lambda e: print(f"選ばれたID: {radio_group.value}")
+    )
 
     card_name = ft.TextField(label="カード名検索", autofocus=True,
                              on_submit=lambda e: search(e))
@@ -34,11 +44,12 @@ def cardView(page: ft.Page):
     )
     reset_btn = ft.ElevatedButton(content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
                                   on_click=lambda e: reflesh(e),
+                                  bgcolor=ft.Colors.RED_50,
                                   width=60,
                                   height=30,
                                   style=ft.ButtonStyle(
         shape=ft.RoundedRectangleBorder(
-            radius=1000),
+            radius=0),
         padding=ft.padding.all(0)
     ),)
 
@@ -56,7 +67,7 @@ def cardView(page: ft.Page):
             reset_btn,
         ],
         alignment=ft.MainAxisAlignment.START,
-        spacing=300
+        spacing=50
 
     )
 
@@ -68,31 +79,38 @@ def cardView(page: ft.Page):
             ft.DataColumn(ft.Text("名前")),
             # ft.DataColumn(ft.Text("カード番号")),
             ft.DataColumn(ft.Text("登録日")),
-            ft.DataColumn(ft.Text("選択")),
-            ft.DataColumn(ft.Text("")),
+            ft.DataColumn(ft.ElevatedButton(
+                "行を削除", on_click=lambda e: open_confirm_dialog(e), style=ft.ButtonStyle(
+                    shape=ft.RoundedRectangleBorder(
+                        radius=0),)))
         ],
         rows=[],
     )
 
     # テーブルの行をロードする関数
     def load_table():
+        cards = db.find_all_card()
         checkbox_refs.clear()
         table.rows.clear()
-        cards = db.find_all_card()
+        column.controls.clear()
+        column.controls.append(ft.Container(height=-2))
+        column.controls.append(ft.ElevatedButton(text="カード名編集",
+                                                 data=radio_group.value, on_click=open_edit_dialog, style=ft.ButtonStyle(
+                                                     shape=ft.RoundedRectangleBorder(
+                                                         radius=0),)))
 
         for card_id, card_name, card_number, register_date in cards:
             cb = ft.Checkbox()
+            column.controls.append(ft.Radio(value=str(card_id)))
+
             checkbox_refs[card_id] = cb
             table.rows.append(
                 ft.DataRow(
                     cells=[
                         ft.DataCell(ft.Text(f"{card_id:07d}")),
                         ft.DataCell(ft.Text(card_name)),
-                        # ft.DataCell(ft.Text(card_number)),
                         ft.DataCell(ft.Text(register_date)),
                         ft.DataCell(cb),
-                        ft.DataCell(ft.TextButton(text="カード名編集",
-                                    data=card_id, on_click=open_edit_dialog)),
                     ]
                 )
             )
@@ -124,12 +142,14 @@ def cardView(page: ft.Page):
 
     # カード名を編集するためのダイアログを開く関数
     def open_edit_dialog(e):
-        card_id = e.control.data
+        card_id = int(radio_group.value)
         dialog.title = ft.Text("カード名編集")
+        card_name = db.find_card_name_by_id(
+            card_id)
         dialog.content = ft.Column(
             [
-                ft.TextField(label="カード名", value=db.find_card_name_by_id(
-                    card_id), data=card_id, on_submit=lambda e: confirm_edit(e),),
+                ft.TextField(
+                    label="カード名", value=card_name[0], data=card_id, on_submit=lambda e: confirm_edit(e),),
 
             ],
             height=80,
@@ -178,20 +198,26 @@ def cardView(page: ft.Page):
         print(card_name)
         cards = db.find_by_card_name(card_name)
         table.rows.clear()
+        column.controls.clear()
+        column.controls.append(ft.Container(height=-2))
+        column.controls.append(ft.ElevatedButton(text="カード名編集",
+                                                 data=radio_group.value, on_click=open_edit_dialog, style=ft.ButtonStyle(
+                                                     shape=ft.RoundedRectangleBorder(
+                                                         radius=0),)))
         for card_id, card_name, card_number, register_date in cards:
             cb = ft.Checkbox()
             checkbox_refs[card_id] = cb
+
+            column.controls.append(ft.Radio(value=str(card_id)))
 
             table.rows.append(
                 ft.DataRow(
                     cells=[
                         ft.DataCell(ft.Text(f"{card_id:07d}")),
                         ft.DataCell(ft.Text(card_name)),
-                        # ft.DataCell(ft.Text(card_number)),
                         ft.DataCell(ft.Text(register_date)),
                         ft.DataCell(cb),
-                        ft.DataCell(ft.TextButton(text="カード名編集",
-                                    data=card_id, on_click=open_edit_dialog)),
+
                     ]
                 )
             )
@@ -201,32 +227,32 @@ def cardView(page: ft.Page):
         search_zone.controls[0].value = ""
         load_table()
 
-    load_table()
+    table_radio_box = ft.Row([
+        table,
+        ft.Container(width=0),  # テーブルとラジオボタンの間のスペース
+        radio_group
+    ], vertical_alignment=ft.CrossAxisAlignment.START)
+
     scroll_table = ft.Column(
-        controls=[table],
+        controls=[table_radio_box],
         scroll=ft.ScrollMode.ALWAYS,
         expand=True
     )
 
-    title_zone = ft.Row(
-        controls=[
-            ft.Text("カード一覧", size=30, weight=ft.FontWeight.BOLD),
-            ft.ElevatedButton("行を削除", on_click=open_confirm_dialog),
-        ],
-        spacing=510
-    )
+    load_table()
 
     return ft.View(
         "/card",
         controls=[
             search_zone_row,
-            title_zone,
-            ft.Container(height=30),
+            ft.Text("カード一覧", size=30, weight=ft.FontWeight.BOLD),
+            ft.Container(height=10),
             scroll_table,
+            ft.Container(height=10),
             ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
 
         ],
-        padding=ft.Padding(left=120, top=20, right=0, bottom=20)
+        padding=ft.Padding(left=120, top=20, right=0, bottom=50)
 
 
     )
