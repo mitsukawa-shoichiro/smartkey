@@ -78,7 +78,7 @@ def cardView(page: ft.Page):
     def load_table():
         checkbox_refs.clear()
         table.rows.clear()
-        cards = db.findAllCard()
+        cards = db.find_all_card()
 
         for card_id, card_name, card_number, register_date in cards:
             cb = ft.Checkbox()
@@ -128,7 +128,7 @@ def cardView(page: ft.Page):
         dialog.title = ft.Text("カード名編集")
         dialog.content = ft.Column(
             [
-                ft.TextField(label="カード名", value=db.findCardNameById(
+                ft.TextField(label="カード名", value=db.find_card_name_by_id(
                     card_id), data=card_id, on_submit=lambda e: confirm_edit(e),),
 
             ],
@@ -144,7 +144,7 @@ def cardView(page: ft.Page):
 
     # 削除の確認ダイアログのアクション
     def confirm_delete(e):
-        db.deleteByIds(selected_ids)
+        db.delete_card_by_ids(selected_ids)
         page.close(dialog)
         load_table()
         dialog.title = ft.Text("削除完了")
@@ -158,7 +158,7 @@ def cardView(page: ft.Page):
     def confirm_edit(e):
         card_id = e.control.data
         new_card_name = dialog.content.controls[0].value
-        db.updateCardName(card_id, new_card_name)
+        db.update_card_name(card_id, new_card_name)
         page.close(dialog)
         # 編集後のテーブルを再読み込み
         load_table()
@@ -176,7 +176,7 @@ def cardView(page: ft.Page):
     def search(e):
         card_name = search_zone.controls[0].value
         print(card_name)
-        cards = db.findByCardName(card_name)
+        cards = db.find_by_card_name(card_name)
         table.rows.clear()
         for card_id, card_name, card_number, register_date in cards:
             cb = ft.Checkbox()

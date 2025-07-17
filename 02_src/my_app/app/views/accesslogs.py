@@ -78,7 +78,7 @@ def accesslogs(page: ft.Page):
                 return
         
         
-        logs = db.findLog(search_cardname, search_method, search_eventtype,start_dt,end_dt)
+        logs = db.find_log(search_cardname, search_method, search_eventtype,start_dt,end_dt)
 
         table.rows.clear()
         for log in logs:
@@ -112,7 +112,7 @@ def accesslogs(page: ft.Page):
     def show_all_logs(e):
         load_table()
         
-    def reset_dropdown(e):
+    def reset(e):
         searchcardname.value = ""
         searchmethod.value = None
         searcheventtype.value = None
@@ -148,7 +148,7 @@ def accesslogs(page: ft.Page):
     show_all_btn = ft.ElevatedButton("全件表示", on_click=show_all_logs)
     startdate_btn = ft.ElevatedButton(text = "開始日時を選択", on_click=lambda e: open_datepicker(start_date))
     enddate_btn = ft.ElevatedButton(text = "終了日時を選択", on_click=lambda e: open_datepicker(end_date))
-    reset_btn = ft.ElevatedButton("検索欄をクリア", on_click=reset_dropdown)
+    reset_btn = ft.ElevatedButton("検索欄をクリア", on_click=reset)
     back_btn = ft.TextButton("🔙", on_click=lambda e: page.go("/index"),
                     style=ft.ButtonStyle(
                         padding=ft.padding.symmetric(horizontal=20, vertical=10),
@@ -172,7 +172,7 @@ def accesslogs(page: ft.Page):
     def load_table():
 
         table.rows.clear()
-        logs = db.findAllLog()
+        logs = db.find_all_log()
         for id, card_name, method, timestamp, eventtype in logs:
         
             if eventtype == 0:

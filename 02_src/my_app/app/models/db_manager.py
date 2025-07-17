@@ -76,7 +76,7 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime):
     return logs
 
 
-def find_byC_card_name(card_name):
+def find_by_card_name(card_name):
     # カード名でカード情報を取得
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()

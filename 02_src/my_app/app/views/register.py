@@ -167,7 +167,7 @@ def register_input(page: ft.Page):
 
     def execute_register(e):
 
-        db.insertCard(
+        db.insert_card(
             (card_name.value + '_' + card_name_type.value), card_number)
 
         page.close(add_confirm_dialog)
