@@ -57,7 +57,10 @@ def receive_card(card_id: str):
     if current_state == CardReaderState.AUTHENTICATING:
         if db_manager.check_card(card_id):
             unlock()
-
+    
+    elif current_state == CardReaderState.REGISTERING:
+        get_card()
+        
 def unlock():
     """
     解錠操作を実行します。
