@@ -101,7 +101,8 @@ def cardView(page: ft.Page):
 
         for card_id, card_name, card_number, register_date in cards:
             cb = ft.Checkbox()
-            column.controls.append(ft.Radio(value=str(card_id)))
+            column.controls.append(
+                ft.Radio(value=str(card_id)))
 
             checkbox_refs[card_id] = cb
             table.rows.append(
@@ -114,6 +115,8 @@ def cardView(page: ft.Page):
                     ]
                 )
             )
+
+        radio_group.value = cards[0][0] if cards else None
         page.update()
 
     # 選択した行を削除するための確認ダイアログを開く関数
@@ -221,6 +224,8 @@ def cardView(page: ft.Page):
                     ]
                 )
             )
+
+        radio_group.value = cards[0][0] if cards else None
         page.update()
 
     def reflesh(e):
