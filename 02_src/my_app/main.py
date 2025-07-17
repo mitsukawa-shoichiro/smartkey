@@ -7,32 +7,13 @@ import logging
 import json
 from flet.core.page import Page
 
-# オリジナルのメソッドを退避
-_orig = Page._Page__on_page_change_event
-
-
-def _patched_on_page_change_event(self, data):
-    try:
-        # ここで元の実装を呼び出す
-        return _orig(self, data)
-    except TypeError as e:
-        # "'int' object is not iterable" による例外のみ無視
-        if "'int' object is not iterable" in str(e):
-            return
-        # それ以外なら再度例外を投げる
-        raise
-
-
-# マングリングされた名前で上書き
-setattr(Page, "_Page__on_page_change_event", _patched_on_page_change_event)
-
-
 # region logs
 # logs ディレクトリのパスを sys.path に追加
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'logs'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
 # endregion
+
 
 def main(page: ft.Page):
     print(Page._Page__on_page_change_event)
