@@ -45,13 +45,13 @@ def check_card(cardIDM):
         conn.close()
 
 
-def insert_card_id(card_id):
-    # カードIDをaccess_logsテーブルに挿入します。
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO access_logs(card_id) VALUES(?)", (card_id))
-    conn.commit()
-    conn.close()
+# def insert_card_id(card_id):
+#     # カードIDをaccess_logsテーブルに挿入します。
+#     conn = sqlite3.connect(DB_PATH)
+#     cursor = conn.cursor()
+#     cursor.execute("INSERT INTO access_logs(card_id) VALUES(?)", (card_id))
+#     conn.commit()
+#     conn.close()
 
 
 # def gainCardIDwithCardname(card_name):

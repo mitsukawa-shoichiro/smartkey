@@ -1,11 +1,12 @@
+import os
+import sys
 import logs.log_config_app
 import flet as ft
 from app.views.router import route
-import sys
-import os
 import logging
 import json
 from flet.core.page import Page
+
 # オリジナルのメソッドを退避
 _orig = Page._Page__on_page_change_event
 

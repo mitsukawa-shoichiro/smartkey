@@ -2,6 +2,9 @@ import sys
 import os
 import time
 from enum import Enum
+
+path=os.path.dirname(__file__)
+sys.path.append(path)
 import db_manager
 from nfcutils.card_scan import scan_card
 from utils.sesame import open_sesame

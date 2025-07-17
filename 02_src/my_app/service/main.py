@@ -26,8 +26,7 @@ def main():
     print("システムを起動中...")
     # カードリーダーを起動
     card_process = start_card_reader()
-    
-    logging.info("APIサーバーが起動されました")
+
     print("カードリーダー: 動作中")
     print("終了するには Ctrl+C を押してください")
     
