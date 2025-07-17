@@ -81,7 +81,6 @@ def accesslogs(page: ft.Page):
         
         logs = db.find_log(search_cardname, search_method, search_eventtype,start_dt,end_dt)
 
-        print(start_dt,end_dt)
         table.rows.clear()
         for log in logs:
             id, cardname, method,timestamp, eventtype = log
@@ -132,7 +131,6 @@ def accesslogs(page: ft.Page):
             start_text.value = dt.strftime("%Y-%m-%d %H:%M")
         else:
             start_text.value = ""
-        print(start_text.value)
         page.update()
 
     def update_end_textbox():
@@ -141,7 +139,6 @@ def accesslogs(page: ft.Page):
             end_text.value = dt.strftime("%Y-%m-%d %H:%M")
         else:
             end_text.value = ""
-        print(end_text.value)
         page.update()
     
     start_date.on_change = change_start_date
