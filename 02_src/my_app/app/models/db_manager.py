@@ -12,23 +12,26 @@ dir_path = os.path.dirname(
 
 DB_PATH = os.path.join(dir_path, "db", "database.db")
 
-def findAllCard():
+
+def find_all_card():
     # 全てのカード情報を取得
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM card")
-    cards =  cursor.fetchall()
+    cards = cursor.fetchall()
     conn.close()
     return cards
 
-def deleteByIds(ids):
+
+def delete_card_by_ids(ids):
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.executemany("DELETE FROM card WHERE card_id = ?", [(i,) for i in ids])
     conn.commit()
     conn.close()
 
-def findAllLog():
+
+def find_all_log():
     # 全てのアクセスログを取得
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -41,12 +44,13 @@ def findAllLog():
     conn.close()
     return logs
 
-def findLog(card_name,method,eventtype,start_datetime, end_datetime):
+
+def find_log(card_name, method, eventtype, start_datetime, end_datetime):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
+
     now = datetime.now()
-    
+
     card_name = f"%{card_name}%" if card_name else "%"
     method = f"%{method}%" if method else "%"
 
@@ -65,30 +69,35 @@ def findLog(card_name,method,eventtype,start_datetime, end_datetime):
                           WHERE card.card_name LIKE ? AND method LIKE ? 
                           AND (? IS NULL OR access_logs.eventtype = ?) 
                           AND access_logs.timestamp BETWEEN ? AND ?
-                          """, (card_name,method, eventtype, eventtype, start_datetime_str, end_datetime_str)
+                          """, (card_name, method, eventtype, eventtype, start_datetime_str, end_datetime_str)
                           ).fetchall()
-    
+
     conn.close()
     return logs
 
-def findByCardName(card_name):
+
+def find_byC_card_name(card_name):
     # カード名でカード情報を取得
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM card WHERE card_name LIKE ?", (f"%{card_name}%",))
+    cursor.execute("SELECT * FROM card WHERE card_name LIKE ?",
+                   (f"%{card_name}%",))
     cards = cursor.fetchall()
     conn.close()
     return cards
 
-def updateCardName(card_id, new_name):
+
+def update_card_name(card_id, new_name):
     # カード名を更新
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("UPDATE card SET card_name = ? WHERE card_id = ?", (new_name, card_id))
+    cursor.execute(
+        "UPDATE card SET card_name = ? WHERE card_id = ?", (new_name, card_id))
     conn.commit()
     conn.close()
 
-def findCardNameById(card_id):
+
+def find_card_name_by_id(card_id):
     # カードIDからカード名を取得
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -97,51 +106,12 @@ def findCardNameById(card_id):
     conn.close()
     return card_name
 
-def insertCard(card_name, card_number):
+
+def insert_card(card_name, card_number):
     # カードを新規登録
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO card (card_name, card_number) VALUES (?, ?)", (card_name, card_number))
+    cursor.execute(
+        "INSERT INTO card (card_name, card_number) VALUES (?, ?)", (card_name, card_number))
     conn.commit()
     conn.close()
-
-
-def gainCardIDwithCardname(card_name):
-
-    #カードネームをもとに、カードIDを取得します。
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT card_id FROM card WHERE card_name= ?", (card_name,))                                                  
-    card_id=cursor.fetchall()
-    conn.close()
-    print(card_id)
-    return card_id
-    
-
-
-def insert_card_id(card_id):
-   #カードIDをaccess_logsテーブルに挿入します。
-   conn = sqlite3.connect(DB_PATH)
-   cursor = conn.cursor()
-   cursor.execute("INSERT INTO access_logs (method, card_id, eventtype) VALUES(?,?,?)", ('Web', card_id, '0'))
-   conn.commit()
-   conn.close()
-
-
-def delete_lines():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM access_logs WHERE (id>1)")
-    conn.commit()
-    conn.close
-
-
-# endregion
-if __name__ == '__main__':
-
-    # print("カード:", get_cards())
-    # print("アクセスログ:", get_access_logs())
-    # print("カード情報付きアクセスログ:", get_access_logs_with_card_info())
-    insert_card_id(1)
-    gainCardIDwithCardname("sample")
-    delete_lines()
