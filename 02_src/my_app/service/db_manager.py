@@ -30,6 +30,7 @@ def check_card(cardIDM):
             
         
         #     print(card_id[0])#[1:len(card_id)-2])
+       
         #     print('成功です')
         #     return card_id[0]
         # else:
@@ -37,10 +38,10 @@ def check_card(cardIDM):
         #     print(card_id[0])
         #     print('失敗です')
         #     return None
-        print(card_id[0])
+        return card_id[0]
     except Exception as e:
         print(f"カード検索エラー: {e}")
-        print(None)
+        return None
     finally:
         conn.close()
 
