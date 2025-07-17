@@ -2,6 +2,7 @@ import flet as ft
 import asyncio
 import app.models.db_manager as db
 import requests
+from service.card_sys import set_state,get_state,get_card
 from app.utils.thread_state import thread_handle, stop_event
 
 
@@ -12,16 +13,12 @@ def registering(page: ft.Page):
 
         stop_event.set()
         print("停止フラグを送信しました")
-        url = "http://127.0.0.1:5000/api/card/set_state"
-        data = {"state": "authenticating"}
-        res = requests.post(url, json=data)
-        print("set_stateの返り値：", res.json())
+        set_state("authenticating")
+        print("set_stateの返り値：", get_state())
         page.go("/index")
 
-    url = "http://127.0.0.1:5000/api/card/set_state"
-    data = {"state": "registering"}
-    response = requests.post(url, json=data)
-    print("set_stateの返り値：", response.json())
+    set_state("registering")
+    print("set_stateの返り値：", get_state())
 
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -73,18 +70,14 @@ async def delayed_transition(page: ft.Page):
 
     global stop_event
 
-    requests.get("http://127.0.0.1:5000/api/card/get_card",
-                 params={"card_id": "0"})
+    get_card(0)
     while not stop_event.is_set():
-        res = requests.get("http://127.0.0.1:5000/api/card/get_card")
-        card_id = res.json().get("card_id", "0")
-        print("カードID：", card_id)
-        if card_id != None:
+        card_number = get_card()
+        print("カード番号：", card_number)
+        if card_number != None:
 
-            url = "http://127.0.0.1:5000/api/card/set_state"
-            data = {"state": "authenticating"}
-            res = requests.post(url, json=data)
-            print("set_stateの返り値：", res.json())
+            set_state("authenticating")
+            print("set_stateの返り値：", get_state())
             page.go("/register/input")
             break
         await asyncio.sleep(1)
@@ -128,9 +121,8 @@ def register_input(page: ft.Page):
     add_confirm_dialog = ft.AlertDialog(
         modal=True,
     )
-    res = requests.get(
-        "http://127.0.0.1:5000/api/card/get_card")
-    card_number = res.json().get("card_id", "0")
+    
+    card_number = get_card()
 
     def open_add_confirm_dialog(e):
         add_confirm_dialog.title = ft.Text("カード登録の確認")
