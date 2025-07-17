@@ -215,10 +215,10 @@ def accesslogs(page: ft.Page):
                 ft.DataRow(
                     cells=[
                         # ft.DataCell(ft.Text(id)),
-                        ft.DataCell(ft.Text(card_name)),
-                        ft.DataCell(ft.Text(method)),
-                        ft.DataCell(ft.Text(timestamp)),
-                        ft.DataCell(ft.Text(event_str)),
+                        ft.DataCell(ft.Text(card_name,width=130)),
+                        ft.DataCell(ft.Text(method,width=80)),
+                        ft.DataCell(ft.Text(timestamp,width=150)),
+                        ft.DataCell(ft.Text(event_str,width=80)),
                     ]
                 )
             )
