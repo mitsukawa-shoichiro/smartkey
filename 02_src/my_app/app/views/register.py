@@ -70,11 +70,10 @@ async def delayed_transition(page: ft.Page):
 
     global stop_event
 
-    get_card(0)
     while not stop_event.is_set():
         card_number = get_card()
         print("カード番号：", card_number)
-        if card_number != None:
+        if card_number != "":
 
             set_state("authenticating")
             print("set_stateの返り値：", get_state())
