@@ -3,13 +3,15 @@ import os
 import time
 from enum import Enum
 
-from .db_manager import check_card
+from .db_manager import check_card, insert_card_id
 from .nfcutils.card_scan import scan_card
 from .utils.sesame import open_sesame
 
+
 class CardReaderState(Enum):
     REGISTERING = "registering"      # カード登録状態
-    AUTHENTICATING = "authenticating" # カード認証状態
+    AUTHENTICATING = "authenticating"  # カード認証状態
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/db"
 DB_PATH = os.path.join(BASE_DIR, 'dataBase.db')
@@ -17,6 +19,7 @@ sys.path.append('DataBase')
 
 # グローバル状態管理
 current_state = CardReaderState.AUTHENTICATING  # デフォルト状態
+
 
 def set_state(state: str):
     """
@@ -30,8 +33,10 @@ def set_state(state: str):
     elif state == "authenticating":
         current_state = CardReaderState.AUTHENTICATING
     else:
-        raise ValueError("Invalid state: must be 'registering' or 'authenticating'")
+        raise ValueError(
+            "Invalid state: must be 'registering' or 'authenticating'")
     return current_state.value
+
 
 def get_state() -> str:
     """
@@ -39,6 +44,7 @@ def get_state() -> str:
     :return: 現在の状態文字列
     """
     return current_state.value
+
 
 def get_card() -> str:
     """
@@ -50,24 +56,22 @@ def get_card() -> str:
         return ""
     return card_id
 
-def receive_card(card_id: str,card_leader_id: int):
+
+def receive_card(card_number: str, card_leader_id: int):
     """
     現在の状態に基づいてカードIDを処理します。
     card_id: カードID card_leader_id:カードリーダー番号
     """
-    card_id=check_card(card_number)
+    card_id = check_card(card_number)
     if current_state == CardReaderState.AUTHENTICATING:
-        if check_card(card_id):
+        if card_id:
             unlock()
+            insert_card_id(card_id, card_leader_id)
 
-        
-def unlock(card_number:str):
+
+def unlock():
     """
     解錠操作を実行します。
     """
     open_sesame()
-    insert_card_id(card_number)
     time.sleep(6)
-
-
-
