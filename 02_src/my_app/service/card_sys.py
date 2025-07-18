@@ -52,23 +52,26 @@ def get_card() -> str:
         return ""
     return card_id
 
-def receive_card(card_id: str):
+def receive_card(card_number: str):
     """
     現在の状態に基づいてカードIDを処理します。
     :param card_id: カードID
     """
+    card_id=db_manager.check_card(card_number)
     if current_state == CardReaderState.AUTHENTICATING:
-        if db_manager.check_card(card_id):
-            unlock()
+        if card_id:
+            unlock(card_id)
     
     elif current_state == CardReaderState.REGISTERING:
         get_card()
         
-def unlock():
+def unlock(card_number:str):
     """
     解錠操作を実行します。
     """
     open_sesame()
+    db_manager.insert_card_id(card_number)
     time.sleep(6)
+
 
 
