@@ -58,16 +58,19 @@ def receive_card(card_id: str,card_leader_id: int):
     現在の状態に基づいてカードIDを処理します。
     card_id: カードID card_leader_id:カードリーダー番号
     """
+    card_id=db_manager.check_card(card_number)
     if current_state == CardReaderState.AUTHENTICATING:
         if db_manager.check_card(card_id):
             unlock()
 
         
-def unlock():
+def unlock(card_number:str):
     """
     解錠操作を実行します。
     """
     open_sesame()
+    db_manager.insert_card_id(card_number)
     time.sleep(6)
+
 
 
