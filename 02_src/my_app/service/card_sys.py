@@ -4,6 +4,7 @@ import time
 from enum import Enum
 
 path=os.path.dirname(__file__)
+
 sys.path.append(path)
 import db_manager
 from nfcutils.card_scan import scan_card
@@ -52,7 +53,7 @@ def get_card() -> str:
         return ""
     return card_id
 
-def receive_card(card_id: str):
+def receive_card(card_id: str,card_leader_id: int):
     """
     現在の状態に基づいてカードIDを処理します。
     :param card_id: カードID

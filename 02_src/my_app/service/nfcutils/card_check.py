@@ -28,10 +28,10 @@ event_q = queue.Queue()
 def sender():
     """非同期送信スレッド、ポーリングをブロックしない"""
     while True:
-        idm = event_q.get()
+        idm, i = event_q.get()
         try:
-            card_sys.receive_card(idm)
-            print("送信成功")
+            card_sys.receive_card(idm, i)
+            print(f"送信成功（リーダー{i+1}）")
             
         except Exception as e:
             print("送信失敗:", e)
@@ -56,7 +56,7 @@ def reader_loop():
                 # 読み取り成功の場合
                 if [sw1, sw2] == [0x90, 0x00]:
                     idm = ''.join(format(byte, '02X') for byte in response)
-                    event_q.put(idm)
+                    event_q.put((idm, i))
                     print(f"カードリーダー {i+1} でカードを検出、IDm:", idm)
                     conn.disconnect()
                     break  # カードを検出したら他のリーダーをチェックしない
