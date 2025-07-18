@@ -3,9 +3,22 @@ from datetime import time
 import flet as ft
 import app.models.db_manager as db
 
+ITEMS_PER_PAGE = 100
+
 # ログ閲覧画面
 def accesslogs(page: ft.Page):
 
+    current_page = 0           # 現在のページ（0‑origin）
+    total_pages = 1            # 総ページ数（動的に計算）
+    search_mode = False        # False: 全件モード / True: 検索モード
+    search_params = {          # 検索条件を保持
+        "card_name": None,
+        "method": None,
+        "eventtype": None,
+        "start_dt": None,
+        "end_dt": None,
+    }
+    
     start_text = ft.TextField(label="開始日時", width=200, height=48)
     end_text = ft.TextField(label="終了日時", width=200, height=48)
     
@@ -58,6 +71,8 @@ def accesslogs(page: ft.Page):
         
     # 検索結果を表示するためのテーブル
     def search_logs(e):
+        nonlocal current_page, search_mode, search_params
+        
         search_method = searchmethod.value.strip() if searchmethod.value else None
         search_cardname = searchcardname.value.strip() if searchcardname.value else None
         search_eventtype = int(searcheventtype.value.strip()) if searcheventtype.value else None
@@ -79,26 +94,31 @@ def accesslogs(page: ft.Page):
                 page.open(dialog)
                 return
         
-        logs = db.find_log(search_cardname, search_method, search_eventtype,start_dt,end_dt)
+        search_params = {
+            "card_name": search_cardname,
+            "method": search_method,
+            "eventtype": search_eventtype,
+            "start_dt": start_dt,
+            "end_dt": end_dt,
+        }
+        search_mode = True
+        current_page = 0
 
-        table.rows.clear()
-        for log in logs:
-            id, cardname, method,timestamp, eventtype = log
-            event_str = "入室" if eventtype == 0 else "退室"
-            
-            table.rows.append(
-                ft.DataRow(
-                    cells=[
-                        # ft.DataCell(ft.Text(str(id))),
-                        ft.DataCell(ft.Text(cardname,width=130)),
-                        ft.DataCell(ft.Text(method,width=80)),
-                        ft.DataCell(ft.Text(timestamp,width=150)),
-                        ft.DataCell(ft.Text(event_str,width=80)),
-                    ]
-                )
-            )
+        # ③ 件数取得→総ページ
+        cnt = db.count_filtered_logs(search_cardname, search_method,search_eventtype, start_dt, end_dt)
+        calc_total_pages(cnt)
 
-        page.update()
+        # ④ テーブルロード
+        load_table(current_page)
+        
+    def show_all_logs(e):
+        nonlocal current_page, search_mode
+        search_mode = False
+        current_page = 0
+        cnt = db.count_all_logs()
+        calc_total_pages(cnt)
+        db.find_all_log
+        load_table(current_page)
         
     def open_datepicker(picker: ft.DatePicker):
         page.dialog = picker
@@ -110,9 +130,6 @@ def accesslogs(page: ft.Page):
         picker.open = True
         page.update()
     
-    def show_all_logs(e):
-        load_table()
-        
     def reset(e):
         searchcardname.value = ""
         searchmethod.value = None
@@ -144,6 +161,11 @@ def accesslogs(page: ft.Page):
     start_date.on_change = change_start_date
     end_date.on_change = change_end_date
 
+    page_label = ft.Text("")  # 後で更新
+    prev_btn = ft.ElevatedButton("⬅ 前へ",   on_click=lambda e: prev_page(e))
+    next_btn = ft.ElevatedButton("次へ ➡",   on_click=lambda e: next_page(e))
+    pagination_controls = ft.Row([prev_btn, page_label, next_btn], alignment=ft.MainAxisAlignment.CENTER)
+    
     # ボタン定義
     search_btn = ft.ElevatedButton(
         text="検索",
@@ -203,34 +225,59 @@ def accesslogs(page: ft.Page):
     )
      
     # テーブルの行をロードする関数
-    def load_table():
+    def load_table(page_num: int):
 
         table.rows.clear()
-        logs = db.find_all_log()
-        for id, card_name, method, timestamp, eventtype in logs:
-        
-            if eventtype == 0:
-                event_str = "入室"
-            elif eventtype == 1:
-                event_str = "退室"
-            table.rows.append(
-                ft.DataRow(
-                    cells=[
-                        # ft.DataCell(ft.Text(id)),
-                        ft.DataCell(ft.Text(card_name,width=130)),
-                        ft.DataCell(ft.Text(method,width=80)),
-                        ft.DataCell(ft.Text(timestamp,width=150)),
-                        ft.DataCell(ft.Text(event_str,width=80)),
-                    ]
-                )
+        offset = page_num * ITEMS_PER_PAGE
+        if search_mode:
+            # 検索モード
+            logs = db.find_log_by_condition_with_paging(
+                search_params["card_name"], search_params["method"], search_params["eventtype"],
+                search_params["start_dt"], search_params["end_dt"],
+                ITEMS_PER_PAGE, offset
             )
+        else:
+            logs = db.find_log_by_page(ITEMS_PER_PAGE, offset)
+
+        for _id, card_name, method, timestamp, eventtype in logs:
+            event_str = "入室" if eventtype == 0 else "退室"
+            table.rows.append(
+                ft.DataRow(cells=[
+                    ft.DataCell(ft.Text(card_name, width=360)),
+                    ft.DataCell(ft.Text(method, width=80)),
+                    ft.DataCell(ft.Text(timestamp, width=140)),
+                    ft.DataCell(ft.Text(event_str, width=80)),
+                ])
+            )
+        page_label.value = f"{current_page+1} / {total_pages} ページ"
+        prev_btn.disabled = current_page == 0
+        next_btn.disabled = (current_page+1) >= total_pages
         page.update()
         
-    load_table()
+    load_table(current_page)
     scroll_table = ft.Column(
     controls=[table],
     scroll=ft.ScrollMode.ALWAYS,
     expand=True
+    )
+    def calc_total_pages(count: int):
+        nonlocal total_pages
+        total_pages = max(1, (count + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE)
+
+    def next_page(e):
+        nonlocal current_page
+        if (current_page + 1) < total_pages:
+            current_page += 1
+            load_table(current_page)
+
+    def prev_page(e):
+        nonlocal current_page
+        if current_page > 0:
+            current_page -= 1
+            load_table(current_page)
+    
+    dialog = ft.AlertDialog(
+        modal=True,
     )
     # 日付と時刻の入力フィールド
     page.overlay.append(start_date)
@@ -251,15 +298,14 @@ def accesslogs(page: ft.Page):
                 ft.Row([enddate_btn,
                         ft.Container(end_text, margin=ft.margin.only(right=98)),search_btn
                 ])
-                # ft.Row([search_btn,show_all_btn, reset_btn], alignment=ft.MainAxisAlignment.END, spacing=20),
             ],
-            spacing=15,
+            spacing=5,
             horizontal_alignment=ft.CrossAxisAlignment.START
         ),
-        padding=20,
+        padding=30,
         bgcolor=ft.Colors.GREY_200,
         border_radius=12,
-        width=545,
+        width=600,
         visible=False
     )
 
@@ -279,7 +325,8 @@ def accesslogs(page: ft.Page):
             search_area,
             ft.Container(height=30),
             scroll_table,
+            pagination_controls,
             back_btn,
         ],
-          padding=ft.Padding(left=120, top=20, right=0, bottom=20)
+          padding=ft.Padding(left=70, top=20, right=0, bottom=20)
     )
