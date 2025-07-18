@@ -25,6 +25,10 @@ def accesslogs(page: ft.Page):
     dialog = ft.AlertDialog(
         modal=True,
     )
+    def calc_total_pages(count: int):
+        nonlocal total_pages
+        total_pages = max(1, (count + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE)
+
     # 日付の入力値を変換するフォーマット
     def change_start_date(e):
         if start_date.value:
@@ -115,9 +119,7 @@ def accesslogs(page: ft.Page):
         nonlocal current_page, search_mode
         search_mode = False
         current_page = 0
-        cnt = db.count_all_logs()
-        calc_total_pages(cnt)
-        db.find_all_log
+        calc_total_pages(db.count_all_logs())
         load_table(current_page)
         
     def open_datepicker(picker: ft.DatePicker):
@@ -231,7 +233,7 @@ def accesslogs(page: ft.Page):
         offset = page_num * ITEMS_PER_PAGE
         if search_mode:
             # 検索モード
-            logs = db.find_log_by_condition_with_paging(
+            logs = db.find_log(
                 search_params["card_name"], search_params["method"], search_params["eventtype"],
                 search_params["start_dt"], search_params["end_dt"],
                 ITEMS_PER_PAGE, offset
@@ -253,6 +255,9 @@ def accesslogs(page: ft.Page):
         prev_btn.disabled = current_page == 0
         next_btn.disabled = (current_page+1) >= total_pages
         page.update()
+        
+    if not search_mode:
+        calc_total_pages(db.count_all_logs())
         
     load_table(current_page)
     scroll_table = ft.Column(

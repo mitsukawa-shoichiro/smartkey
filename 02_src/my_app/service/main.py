@@ -14,22 +14,25 @@ if LOGS_PATH not in sys.path:
 import logs.log_config_service
 # endregion
 
+server_dir = os.path.dirname(os.path.abspath(__file__))
 
 def start_card_reader():
     """カードリーダーを起動"""
-    server_dir = os.path.dirname(os.path.abspath(__file__))
     card_reader_path = os.path.join(server_dir, "nfcutils", "card_check.py")
     print("カードリーダーを起動中...")
-    return subprocess.Popen([sys.executable, card_reader_path])
+    subprocess.Popen([sys.executable, card_reader_path])
+
+def start_BackSystem():
+    backsys_path=os.path.join(server_dir, "sendmail", "BackSystem.py")
+    subprocess.Popen([sys.executable, backsys_path])
 
 def main():
     print("システムを起動中...")
-    # カードリーダーを起動
-    card_process = start_card_reader()
-    logging.info("サーバーが起動されました")
+    start_card_reader()
+    start_BackSystem()
+    logging.info("システムが起動されました")
     
-    print("カードリーダー: 動作中")
-    print("終了するには Ctrl+C を押してください")
+
     
  
 if __name__ == "__main__":

@@ -45,7 +45,7 @@ def find_all_log():
     return logs
 
 
-def find_log(card_name, method, eventtype, start_datetime, end_datetime):
+def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, offset):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -68,8 +68,8 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime):
                           FROM access_logs JOIN card ON access_logs.card_id = card.card_id 
                           WHERE card.card_name LIKE ? AND method LIKE ? 
                           AND (? IS NULL OR access_logs.eventtype = ?) 
-                          AND access_logs.timestamp BETWEEN ? AND ?
-                          """, (card_name, method, eventtype, eventtype, start_datetime_str, end_datetime_str)
+                          AND access_logs.timestamp BETWEEN ? AND ? ORDER BY timestamp DESC LIMIT ? OFFSET ?
+                          """, (card_name, method, eventtype, eventtype, start_datetime_str, end_datetime_str,limit, offset)
                           ).fetchall()
 
     conn.close()
@@ -103,38 +103,6 @@ def count_all_logs():
 
     conn.close()
     return count
-
-def find_log_by_condition_with_paging(card_name, method, eventtype, start_datetime, end_datetime, limit, offset):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    now = datetime.now()
-    card_name = f"%{card_name}%" if card_name else "%"
-    method = f"%{method}%" if method else "%"
-    start_datetime = start_datetime or (now - timedelta(days=365))
-    end_datetime = end_datetime or now
-
-    start_datetime_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
-
-    query = """
-        SELECT id, card.card_name, method, timestamp, eventtype 
-        FROM access_logs 
-        JOIN card ON access_logs.card_id = card.card_id 
-        WHERE card.card_name LIKE ? 
-          AND method LIKE ? 
-          AND (? IS NULL OR access_logs.eventtype = ?) 
-          AND access_logs.timestamp BETWEEN ? AND ?
-        ORDER BY timestamp DESC
-        LIMIT ? OFFSET ?
-    """
-    logs = cursor.execute(query, (
-        card_name, method, eventtype, eventtype,
-        start_datetime_str, end_datetime_str, limit, offset
-    )).fetchall()
-
-    conn.close()
-    return logs
 
 def count_filtered_logs(card_name, method, eventtype, start_datetime, end_datetime):
     conn = sqlite3.connect(DB_PATH)
