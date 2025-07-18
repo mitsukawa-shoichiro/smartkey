@@ -7,6 +7,13 @@ import time
 import sys
 import os
 import logging
+import socket
+
+HEARTBEAT_HOST = '127.0.0.1'
+HEARTBEAT_PORT = 12345
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+
 # region logs
 # logs ディレクトリのパスを sys.path に追加
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -70,7 +77,10 @@ def reader_loop():
                 print(f"カードリーダー {i+1} でエラー:", e)
                 continue
         
-        time.sleep(0.5)  # CPU負荷軽減
+        msg = "ALIVE"
+        sock.sendto(msg.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
+        time.sleep(1)  # CPU負荷軽減
+
 
 if __name__ == "__main__":
     threading.Thread(target=sender, daemon=True).start()

@@ -3,12 +3,9 @@ import os
 import time
 from enum import Enum
 
-path=os.path.dirname(__file__)
-
-sys.path.append(path)
-import db_manager
-from nfcutils.card_scan import scan_card
-from utils.sesame import open_sesame
+from .db_manager import check_card
+from .nfcutils.card_scan import scan_card
+from .utils.sesame import open_sesame
 
 class CardReaderState(Enum):
     REGISTERING = "registering"      # カード登録状態
@@ -58,9 +55,9 @@ def receive_card(card_id: str,card_leader_id: int):
     現在の状態に基づいてカードIDを処理します。
     card_id: カードID card_leader_id:カードリーダー番号
     """
-    card_id=db_manager.check_card(card_number)
+    card_id=check_card(card_number)
     if current_state == CardReaderState.AUTHENTICATING:
-        if db_manager.check_card(card_id):
+        if check_card(card_id):
             unlock()
 
         
@@ -69,7 +66,7 @@ def unlock(card_number:str):
     解錠操作を実行します。
     """
     open_sesame()
-    db_manager.insert_card_id(card_number)
+    insert_card_id(card_number)
     time.sleep(6)
 
 
