@@ -80,6 +80,7 @@ def reader_loop():
         msg = "ALIVE"
         sock.sendto(msg.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
         time.sleep(1)  # CPU負荷軽減
+        # break
 
 
 if __name__ == "__main__":
