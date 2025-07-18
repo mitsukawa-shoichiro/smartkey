@@ -65,8 +65,10 @@ def accesslogs(page: ft.Page):
         end_dt = None
         
         if start_text.value != "" and end_text.value != "":
-            start_dt = datetime.combine(start_date.value, start_time.value).replace(second=0)
-            end_dt = datetime.combine(end_date.value, end_time.value).replace(second=59)
+            start_dt = datetime.strptime(start_text.value, "%Y-%m-%d %H:%M")
+            start_dt = start_dt.replace(second=0)
+            end_dt = datetime.strptime(end_text.value, "%Y-%m-%d %H:%M")
+            end_dt = end_dt.replace(second=59)
 
             if start_dt and end_dt and end_dt < start_dt:
                 dialog.title = ft.Text("エラー")
@@ -76,7 +78,6 @@ def accesslogs(page: ft.Page):
                 ]
                 page.open(dialog)
                 return
-        
         
         logs = db.find_log(search_cardname, search_method, search_eventtype,start_dt,end_dt)
 
@@ -89,10 +90,10 @@ def accesslogs(page: ft.Page):
                 ft.DataRow(
                     cells=[
                         # ft.DataCell(ft.Text(str(id))),
-                        ft.DataCell(ft.Text(cardname)),
-                        ft.DataCell(ft.Text(method)),
-                        ft.DataCell(ft.Text(timestamp)),
-                        ft.DataCell(ft.Text(event_str)),
+                        ft.DataCell(ft.Text(cardname,width=130)),
+                        ft.DataCell(ft.Text(method,width=80)),
+                        ft.DataCell(ft.Text(timestamp,width=150)),
+                        ft.DataCell(ft.Text(event_str,width=80)),
                     ]
                 )
             )
@@ -144,15 +145,48 @@ def accesslogs(page: ft.Page):
     end_date.on_change = change_end_date
 
     # ボタン定義
-    search_btn = ft.ElevatedButton("検索", on_click=search_logs)
-    show_all_btn = ft.ElevatedButton("全件表示", on_click=show_all_logs)
+    search_btn = ft.ElevatedButton(
+        text="検索",
+        on_click=search_logs,
+        width=80,
+        height=40,
+        bgcolor=ft.Colors.GREY_50,
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(
+                radius=0),
+            padding=ft.padding.all(0)
+        ),
+    )
+    show_all_btn = ft.ElevatedButton(
+        text="全件表示",
+        on_click=show_all_logs,
+        width=80,
+        height=40,
+        bgcolor=ft.Colors.GREY_50,
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(
+                radius=0),
+            padding=ft.padding.all(0)
+        ),
+    )
     startdate_btn = ft.ElevatedButton(text = "開始日時を選択", on_click=lambda e: open_datepicker(start_date))
     enddate_btn = ft.ElevatedButton(text = "終了日時を選択", on_click=lambda e: open_datepicker(end_date))
-    reset_btn = ft.ElevatedButton("検索欄をクリア", on_click=reset)
+    reset_btn = ft.ElevatedButton(
+        text="クリア",
+        on_click=reset,
+        width=80,
+        height=40,
+        bgcolor=ft.Colors.GREY_50,
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(
+                radius=0),
+            padding=ft.padding.all(0)
+        ),
+    )
     back_btn = ft.TextButton("🔙", on_click=lambda e: page.go("/index"),
                     style=ft.ButtonStyle(
                         padding=ft.padding.symmetric(horizontal=20, vertical=10),
-                        text_style=ft.TextStyle(size=20),
+                        text_style=ft.TextStyle(size=30),
                         shape=ft.RoundedRectangleBorder(radius=10),overlay_color=ft.Colors.BLUE_100,
                     ),
                 )
@@ -183,10 +217,10 @@ def accesslogs(page: ft.Page):
                 ft.DataRow(
                     cells=[
                         # ft.DataCell(ft.Text(id)),
-                        ft.DataCell(ft.Text(card_name)),
-                        ft.DataCell(ft.Text(method)),
-                        ft.DataCell(ft.Text(timestamp)),
-                        ft.DataCell(ft.Text(event_str)),
+                        ft.DataCell(ft.Text(card_name,width=130)),
+                        ft.DataCell(ft.Text(method,width=80)),
+                        ft.DataCell(ft.Text(timestamp,width=150)),
+                        ft.DataCell(ft.Text(event_str,width=80)),
                     ]
                 )
             )
@@ -208,10 +242,16 @@ def accesslogs(page: ft.Page):
     search_area = ft.Container(
         content=ft.Column(
             [
-                ft.Row([searchcardname, searchmethod, searcheventtype], spacing=20),
-                ft.Row([ft.Text("開始日時:", width=80), startdate_btn, start_text], spacing=10),
-                ft.Row([ft.Text("終了日時:", width=80), enddate_btn, end_text], spacing=10),
-                ft.Row([search_btn,show_all_btn, reset_btn], alignment=ft.MainAxisAlignment.END, spacing=20),
+                ft.Row([searchcardname, searchmethod,
+                        ft.Container(searcheventtype, margin=ft.margin.only(right=30)),show_all_btn
+                ]),
+                ft.Row([startdate_btn,
+                        ft.Container(start_text, margin=ft.margin.only(right=98)),reset_btn
+                ]),
+                ft.Row([enddate_btn,
+                        ft.Container(end_text, margin=ft.margin.only(right=98)),search_btn
+                ])
+                # ft.Row([search_btn,show_all_btn, reset_btn], alignment=ft.MainAxisAlignment.END, spacing=20),
             ],
             spacing=15,
             horizontal_alignment=ft.CrossAxisAlignment.START
@@ -219,7 +259,7 @@ def accesslogs(page: ft.Page):
         padding=20,
         bgcolor=ft.Colors.GREY_200,
         border_radius=12,
-        width=800,
+        width=545,
         visible=False
     )
 
@@ -241,5 +281,5 @@ def accesslogs(page: ft.Page):
             scroll_table,
             back_btn,
         ],
-          padding=ft.Padding(left=100, top=20, right=0, bottom=20)
+          padding=ft.Padding(left=120, top=20, right=0, bottom=20)
     )
