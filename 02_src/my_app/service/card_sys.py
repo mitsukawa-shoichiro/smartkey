@@ -56,14 +56,12 @@ def get_card() -> str:
 def receive_card(card_id: str,card_leader_id: int):
     """
     現在の状態に基づいてカードIDを処理します。
-    :param card_id: カードID
+    card_id: カードID card_leader_id:カードリーダー番号
     """
     if current_state == CardReaderState.AUTHENTICATING:
         if db_manager.check_card(card_id):
             unlock()
-    
-    elif current_state == CardReaderState.REGISTERING:
-        get_card()
+
         
 def unlock():
     """
