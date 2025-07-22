@@ -30,7 +30,8 @@ def cardView(page: ft.Page):
     )
 
     card_name = ft.TextField(label="カード名検索", autofocus=True,
-                             on_submit=lambda e: search(e))
+                             on_submit=lambda e: search(e),
+                             max_length=50)
     search_btn = ft.ElevatedButton(
         content=ft.Icon(ft.Icons.SEARCH, size=30, color=ft.Colors.WHITE),
         on_click=lambda e: search(e),
@@ -154,7 +155,8 @@ def cardView(page: ft.Page):
         dialog.content = ft.Column(
             [
                 ft.TextField(
-                    label="カード名", value=card_name[0], data=card_id, on_submit=lambda e: confirm_edit(e),),
+                    label="カード名", value=card_name[0], data=card_id, on_submit=lambda e: confirm_edit(e),
+                    max_length=50),
 
             ],
             height=80,

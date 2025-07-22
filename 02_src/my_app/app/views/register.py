@@ -185,12 +185,13 @@ def register_input(page: ft.Page):
             (card_name.value + '_' + card_name_type.value), card_number)
 
         page.close(add_confirm_dialog)
+        logging.info(f"{card_name.value + '_' + card_name_type.value}を追加しました")
         complete_add_confirm_dialog(e)
 
     card_name = ft.TextField(
-        label="ユーザー名", autofocus=True, width=320, border_radius=8, on_submit=lambda e: card_name_type.focus())
+        label="ユーザー名", autofocus=True, width=320, border_radius=8, on_submit=lambda e: card_name_type.focus(), max_length=50)
     card_name_type = ft.TextField(
-        label="カードの種類", width=320, border_radius=8, on_submit=lambda e: open_add_confirm_dialog(e))
+        label="カードの種類", width=320, border_radius=8, on_submit=lambda e: open_add_confirm_dialog(e), max_length=50)
 
     return ft.View(
         "/register/input",

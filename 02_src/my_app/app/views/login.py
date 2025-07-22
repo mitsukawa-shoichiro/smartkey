@@ -22,10 +22,12 @@ def login(page: ft.Page):
     page.title = "ログイン画面"
 
     username = ft.TextField(label="ユーザー名", autofocus=True,
-                            on_submit=lambda e: password.focus())
+                            on_submit=lambda e: password.focus(),
+                            max_length=50)
 
     password = ft.TextField(label="パスワード", password=True,
-                            on_submit=lambda e: do_login(e))
+                            on_submit=lambda e: do_login(e),
+                            max_length=50)
 
     msg = ft.Text("", color=ft.Colors.RED)
     msg_container = ft.Container(
@@ -39,6 +41,7 @@ def login(page: ft.Page):
 
     def do_login(e):
         for account in load_accounts():
+            print(len(username.value))
             if account["username"] == username.value and account["password"] == password.value:
                 logging.info("ログイン成功")
                 page.go("/index")
@@ -46,7 +49,7 @@ def login(page: ft.Page):
                 return
 
             else:
-                msg.value = "ログインIDまたはパスワードが間違っています。"
+                msg.value = "ユーザー名またはパスワードが間違っています。"
                 msg_container.visible = True
                 logging.warning("ログイン失敗")
                 page.update()
