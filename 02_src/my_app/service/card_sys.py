@@ -74,4 +74,3 @@ def unlock():
     解錠操作を実行します。
     """
     open_sesame()
-    time.sleep(6)
