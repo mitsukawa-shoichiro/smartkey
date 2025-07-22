@@ -1,5 +1,6 @@
 import app.models.db_manager as db
 import flet as ft
+import logging
 
 # card管理画面
 
@@ -168,6 +169,9 @@ def cardView(page: ft.Page):
 
     # 削除の確認ダイアログのアクション
     def confirm_delete(e):
+        card_names = [db.find_card_name_by_id(
+            card_id) for card_id in selected_ids]
+        page.open(dialog)
         db.delete_card_by_ids(selected_ids)
         page.close(dialog)
         load_table()
@@ -176,12 +180,16 @@ def cardView(page: ft.Page):
         dialog.actions = [
             ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
         ]
+        for card_name in card_names:
+            logging.info(f"{card_name[0]}が削除されました")
+
         page.open(dialog)
 
     # カード名を編集するためのダイアログのアクション
     def confirm_edit(e):
         card_id = e.control.data
         new_card_name = dialog.content.controls[0].value
+        old_card_name = db.find_card_name_by_id(card_id)
         db.update_card_name(card_id, new_card_name)
         page.close(dialog)
         # 編集後のテーブルを再読み込み
@@ -190,10 +198,11 @@ def cardView(page: ft.Page):
         # ダイアログを更新して完了メッセージを表示
         dialog.title = ft.Text("編集完了")
         dialog.content = ft.Text(
-            f"カード名を '{card_id}'から'{new_card_name}' に変更しました  。")
+            f"カード名を '{old_card_name}'から'{new_card_name}' に変更しました")
         dialog.actions = [
             ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
         ]
+        logging.info(f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
         page.open(dialog)
 
     # 検索ボタンのクリックイベント

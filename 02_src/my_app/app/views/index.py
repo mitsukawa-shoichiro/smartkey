@@ -1,4 +1,5 @@
 import flet as ft
+import logging
 
 
 def index_view(page: ft.Page):
@@ -11,6 +12,10 @@ def index_view(page: ft.Page):
             btn.bgcolor = ft.Colors.LIGHT_BLUE_100
             btn.scale = 1.0
         page.update()
+
+    def logaout(e):
+        logging.info("ログアウトしました")
+        page.go("/")
 
     card_btn = ft.ElevatedButton(
         content=ft.Column([
@@ -81,7 +86,7 @@ def index_view(page: ft.Page):
         content=ft.TextButton(
             text="ログアウト",
             icon=ft.Icons.LOGOUT,
-            on_click=lambda e: page.go("/"),
+            on_click=lambda e: logaout(e),
 
             style=ft.ButtonStyle(
                 padding=ft.padding.symmetric(horizontal=20, vertical=10),

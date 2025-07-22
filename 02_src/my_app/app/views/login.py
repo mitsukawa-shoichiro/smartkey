@@ -1,7 +1,7 @@
-
 import flet as ft
 import json
 import os
+import logging
 
 
 def load_accounts():
@@ -21,11 +21,9 @@ def load_accounts():
 def login(page: ft.Page):
     page.title = "ログイン画面"
 
-    # username = ft.TextField(label="ユーザー名" , autofocus=True, on_submit=lambda e: page.go("/index"))
     username = ft.TextField(label="ユーザー名", autofocus=True,
                             on_submit=lambda e: password.focus())
 
-    # password = ft.TextField(label="パスワード", password=True, on_submit=lambda e: page.go("/index"))
     password = ft.TextField(label="パスワード", password=True,
                             on_submit=lambda e: do_login(e))
 
@@ -42,6 +40,7 @@ def login(page: ft.Page):
     def do_login(e):
         for account in load_accounts():
             if account["username"] == username.value and account["password"] == password.value:
+                logging.info("ログイン成功")
                 page.go("/index")
                 page.update()
                 return
@@ -49,10 +48,10 @@ def login(page: ft.Page):
             else:
                 msg.value = "ログインIDまたはパスワードが間違っています。"
                 msg_container.visible = True
+                logging.warning("ログイン失敗")
                 page.update()
                 username.focus()
 
-    # login_btn = ft.ElevatedButton("ログイン", on_click=lambda e: page.go("/index"))
     login_btn = ft.ElevatedButton("ログイン",
                                   on_click=do_login,
                                   icon=ft.Icons.LOGIN,
