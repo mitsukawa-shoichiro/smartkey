@@ -2,7 +2,7 @@ import flet as ft
 import asyncio
 import app.models.db_manager as db
 import requests
-from service.card_sys import set_state,get_state,get_card
+from service.card_sys import set_state, get_state, get_card
 from app.utils.thread_state import thread_handle, stop_event
 
 
@@ -38,9 +38,9 @@ def registering(page: ft.Page):
             icon=ft.Icons.STOP,
             on_click=stop_loop,
             style=ft.ButtonStyle(
-                padding=ft.padding.symmetric(horizontal=20, vertical=10),
                 shape=ft.RoundedRectangleBorder(radius=10),
-
+                color=ft.Colors.RED,
+                overlay_color=ft.Colors.RED_100,
             )
         )
     )
@@ -54,6 +54,7 @@ def registering(page: ft.Page):
                     controls=[
                         ft.Container(content=loading_text, padding=10),
                         ft.Container(content=loading_spinner),
+                        ft.Container(height=40),
                         stop_btn
 
                     ],
@@ -120,7 +121,7 @@ def register_input(page: ft.Page):
     add_confirm_dialog = ft.AlertDialog(
         modal=True,
     )
-    
+
     card_number = get_card()
 
     def open_add_confirm_dialog(e):

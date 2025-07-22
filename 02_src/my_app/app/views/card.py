@@ -108,9 +108,9 @@ def cardView(page: ft.Page):
             table.rows.append(
                 ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(f"{card_id:07d}")),
-                        ft.DataCell(ft.Text(card_name)),
-                        ft.DataCell(ft.Text(register_date)),
+                        ft.DataCell(ft.Text(f"{card_id:05d}", width=40)),
+                        ft.DataCell(ft.Text(card_name, width=280)),
+                        ft.DataCell(ft.Text(register_date, width=80)),
                         ft.DataCell(cb),
                     ]
                 )
@@ -120,6 +120,7 @@ def cardView(page: ft.Page):
         page.update()
 
     # 選択した行を削除するための確認ダイアログを開く関数
+
     def open_confirm_dialog(e):
 
         nonlocal selected_ids
@@ -196,9 +197,9 @@ def cardView(page: ft.Page):
         page.open(dialog)
 
     # 検索ボタンのクリックイベント
+
     def search(e):
         card_name = search_zone.controls[0].value
-        print(card_name)
         cards = db.find_by_card_name(card_name)
         table.rows.clear()
         column.controls.clear()
@@ -216,9 +217,9 @@ def cardView(page: ft.Page):
             table.rows.append(
                 ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(f"{card_id:07d}")),
-                        ft.DataCell(ft.Text(card_name)),
-                        ft.DataCell(ft.Text(register_date)),
+                        ft.DataCell(ft.Text(f"{card_id:05d}", width=40)),
+                        ft.DataCell(ft.Text(card_name, width=40)),
+                        ft.DataCell(ft.Text(register_date, width=40)),
                         ft.DataCell(cb),
 
                     ]
@@ -227,10 +228,12 @@ def cardView(page: ft.Page):
 
         radio_group.value = cards[0][0] if cards else None
         page.update()
+        scroll_table.scroll_to(offset=0, duration=0)
 
     def reflesh(e):
         search_zone.controls[0].value = ""
         load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
     table_radio_box = ft.Row([
         table,
@@ -241,7 +244,8 @@ def cardView(page: ft.Page):
     scroll_table = ft.Column(
         controls=[table_radio_box],
         scroll=ft.ScrollMode.ALWAYS,
-        expand=True
+        expand=True,
+
     )
 
     load_table()
@@ -254,7 +258,14 @@ def cardView(page: ft.Page):
             ft.Container(height=10),
             scroll_table,
             ft.Container(height=10),
-            ft.ElevatedButton("戻る", on_click=lambda e: page.go("/index")),
+            ft.ElevatedButton(
+                "戻る",
+                icon=ft.Icons.ARROW_BACK,
+                style=ft.ButtonStyle(
+                    shape=ft.RoundedRectangleBorder(radius=6),
+                ),
+                on_click=lambda e: page.go("/index"),
+            )
 
         ],
         padding=ft.Padding(left=120, top=20, right=0, bottom=50)
