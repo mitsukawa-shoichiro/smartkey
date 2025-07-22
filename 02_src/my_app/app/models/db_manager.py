@@ -30,25 +30,11 @@ def delete_card_by_ids(ids):
     conn.commit()
     conn.close()
 
-
-def find_all_log():
-    # 全てのアクセスログを取得
+def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, offset,asc: bool = True):
+    order = "ASC" if asc else "DESC"
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-
-    cursor.execute("""
-                   SELECT id,card.card_name,method,timestamp,eventtype 
-                   FROM access_logs JOIN card ON access_logs.card_id = card.card_id 
-                   """)
-    logs = cursor.fetchall()
-    conn.close()
-    return logs
-
-
-def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, offset):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
+    print(order)
     now = datetime.now()
 
     card_name = f"%{card_name}%" if card_name else "%"
@@ -63,48 +49,19 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, 
     # カード名、認証方式、イベントタイプでアクセスログを検索
     # card_nameとmethodは部分一致検索、eventtypeは完全一致検索
     # COALESCEを使用して、eventtypeがNoneの場合は全てのeventtypeを対象とする
-    logs = cursor.execute("""
+    logs = cursor.execute(f"""
                           SELECT id, card.card_name, method, timestamp, eventtype 
                           FROM access_logs JOIN card ON access_logs.card_id = card.card_id 
                           WHERE card.card_name LIKE ? AND method LIKE ? 
                           AND (? IS NULL OR access_logs.eventtype = ?) 
-                          AND access_logs.timestamp BETWEEN ? AND ? ORDER BY timestamp DESC LIMIT ? OFFSET ?
+                          AND access_logs.timestamp BETWEEN ? AND ? ORDER BY timestamp {order} LIMIT ? OFFSET ?
                           """, (card_name, method, eventtype, eventtype, start_datetime_str, end_datetime_str,limit, offset)
                           ).fetchall()
 
     conn.close()
     return logs
-def find_log_by_page(limit, offset):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
 
-    cursor.execute("""
-        SELECT id, card.card_name, method, timestamp, eventtype 
-        FROM access_logs 
-        JOIN card ON access_logs.card_id = card.card_id 
-        ORDER BY timestamp DESC 
-        LIMIT ? OFFSET ?
-    """, (limit, offset))
-
-    logs = cursor.fetchall()
-    conn.close()
-    return logs
-
-def count_all_logs():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT COUNT(*) 
-        FROM access_logs 
-        JOIN card ON access_logs.card_id = card.card_id
-    """)
-    count = cursor.fetchone()[0]
-
-    conn.close()
-    return count
-
-def count_filtered_logs(card_name, method, eventtype, start_datetime, end_datetime):
+def count_filtered_logs(card_name=None, method=None, eventtype=None, start_datetime=None, end_datetime=None):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 

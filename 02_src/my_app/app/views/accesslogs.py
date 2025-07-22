@@ -25,6 +25,9 @@ def accesslogs(page: ft.Page):
     dialog = ft.AlertDialog(
         modal=True,
     )
+    
+    sort_asc = False
+    
     def calc_total_pages(count: int):
         nonlocal total_pages
         total_pages = max(1, (count + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE)
@@ -114,12 +117,20 @@ def accesslogs(page: ft.Page):
 
         # ④ テーブルロード
         load_table(current_page)
+        scroll_table.scroll_to(offset=0, duration=0)
+    
+    def togle_sort(e):
+        nonlocal sort_asc, current_page
+        sort_asc = not sort_asc
+        sort_btn.icon = ft.Icons.ARROW_CIRCLE_UP if sort_asc else ft.Icons.ARROW_CIRCLE_DOWN
+        current_page = 0
+        load_table(current_page)
         
     def show_all_logs(e):
         nonlocal current_page, search_mode
         search_mode = False
         current_page = 0
-        calc_total_pages(db.count_all_logs())
+        calc_total_pages(db.count_filtered_logs())
         load_table(current_page)
         
     def open_datepicker(picker: ft.DatePicker):
@@ -164,20 +175,20 @@ def accesslogs(page: ft.Page):
     end_date.on_change = change_end_date
 
     page_label = ft.Text("")  # 後で更新
-    prev_btn = ft.ElevatedButton("⬅ 前へ",   on_click=lambda e: prev_page(e))
-    next_btn = ft.ElevatedButton("次へ ➡",   on_click=lambda e: next_page(e))
+    prev_btn = ft.ElevatedButton("⬅ 前へ",   on_click=lambda e: prev_page(e),style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
+    next_btn = ft.ElevatedButton("次へ ➡",   on_click=lambda e: next_page(e),style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
     pagination_controls = ft.Row([prev_btn, page_label, next_btn], alignment=ft.MainAxisAlignment.CENTER)
     
     # ボタン定義
     search_btn = ft.ElevatedButton(
         text="検索",
+        icon=ft.Icons.SEARCH,
         on_click=search_logs,
         width=80,
         height=40,
         bgcolor=ft.Colors.GREY_50,
         style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(
-                radius=0),
+            shape=ft.RoundedRectangleBorder(radius=6),
             padding=ft.padding.all(0)
         ),
     )
@@ -188,13 +199,24 @@ def accesslogs(page: ft.Page):
         height=40,
         bgcolor=ft.Colors.GREY_50,
         style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(
-                radius=0),
+            shape=ft.RoundedRectangleBorder(radius=6),
             padding=ft.padding.all(0)
         ),
     )
-    startdate_btn = ft.ElevatedButton(text = "開始日時を選択", on_click=lambda e: open_datepicker(start_date))
-    enddate_btn = ft.ElevatedButton(text = "終了日時を選択", on_click=lambda e: open_datepicker(end_date))
+    startdate_btn = ft.ElevatedButton(text = "開始日時を選択", 
+                                    icon=ft.Icons.DATE_RANGE,
+                                    on_click=lambda e: open_datepicker(start_date),
+                                    style=ft.ButtonStyle(
+                                        shape=ft.RoundedRectangleBorder(radius=6),
+                                    )
+                )
+    enddate_btn = ft.ElevatedButton(text = "終了日時を選択", 
+                                    icon=ft.Icons.DATE_RANGE,
+                                    on_click=lambda e: open_datepicker(end_date),
+                                    style=ft.ButtonStyle(
+                                        shape=ft.RoundedRectangleBorder(radius=6),
+                                    )
+                )
     reset_btn = ft.ElevatedButton(
         text="クリア",
         on_click=reset,
@@ -202,50 +224,52 @@ def accesslogs(page: ft.Page):
         height=40,
         bgcolor=ft.Colors.GREY_50,
         style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(
-                radius=0),
+            shape=ft.RoundedRectangleBorder(radius=6),
+            color=ft.Colors.RED,
+            overlay_color=ft.Colors.RED_100,
             padding=ft.padding.all(0)
         ),
     )
-    back_btn = ft.TextButton("🔙", on_click=lambda e: page.go("/index"),
+    back_btn = ft.ElevatedButton(
+                    "戻る",
+                    icon=ft.Icons.ARROW_BACK,
                     style=ft.ButtonStyle(
-                        padding=ft.padding.symmetric(horizontal=20, vertical=10),
-                        text_style=ft.TextStyle(size=30),
-                        shape=ft.RoundedRectangleBorder(radius=10),overlay_color=ft.Colors.BLUE_100,
+                        shape=ft.RoundedRectangleBorder(radius=6),
                     ),
+                    on_click=lambda e: page.go("/index"),
                 )
+    sort_btn = ft.IconButton(icon=ft.Icons.ARROW_CIRCLE_DOWN,on_click=togle_sort,)
+    eventtype_row = ft.Row([ft.Text("入退室の日時", weight="bold", size=14),sort_btn])
     # テーブル定義  
     table = ft.DataTable(
         columns=[
                     # ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("カード名", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("認証方式", weight="bold", size=14)),
-                    ft.DataColumn(ft.Text("入退室の日時", weight="bold", size=14)),
+                    ft.DataColumn(eventtype_row),
                     ft.DataColumn(ft.Text("区分", weight="bold", size=14)),
         ],
         rows=[]
     )
-     
+    
     # テーブルの行をロードする関数
     def load_table(page_num: int):
 
         table.rows.clear()
         offset = page_num * ITEMS_PER_PAGE
-        if search_mode:
-            # 検索モード
-            logs = db.find_log(
+        nonlocal sort_asc
+        
+        logs = db.find_log(
                 search_params["card_name"], search_params["method"], search_params["eventtype"],
                 search_params["start_dt"], search_params["end_dt"],
-                ITEMS_PER_PAGE, offset
-            )
-        else:
-            logs = db.find_log_by_page(ITEMS_PER_PAGE, offset)
+                ITEMS_PER_PAGE, offset,sort_asc
+        )
 
         for _id, card_name, method, timestamp, eventtype in logs:
             event_str = "入室" if eventtype == 0 else "退室"
             table.rows.append(
                 ft.DataRow(cells=[
-                    ft.DataCell(ft.Text(card_name, width=360)),
+                    ft.DataCell(ft.Text(card_name, width=280)),
                     ft.DataCell(ft.Text(method, width=80)),
                     ft.DataCell(ft.Text(timestamp, width=140)),
                     ft.DataCell(ft.Text(event_str, width=80)),
@@ -257,13 +281,13 @@ def accesslogs(page: ft.Page):
         page.update()
         
     if not search_mode:
-        calc_total_pages(db.count_all_logs())
+        calc_total_pages(db.count_filtered_logs())
         
     load_table(current_page)
     scroll_table = ft.Column(
-    controls=[table],
-    scroll=ft.ScrollMode.ALWAYS,
-    expand=True
+        controls=[table],
+        scroll=ft.ScrollMode.ALWAYS,
+        expand=True
     )
     def calc_total_pages(count: int):
         nonlocal total_pages
@@ -274,16 +298,15 @@ def accesslogs(page: ft.Page):
         if (current_page + 1) < total_pages:
             current_page += 1
             load_table(current_page)
+            scroll_table.scroll_to(offset=0, duration=0)
 
     def prev_page(e):
         nonlocal current_page
         if current_page > 0:
             current_page -= 1
             load_table(current_page)
+            scroll_table.scroll_to(offset=0, duration=0)
     
-    dialog = ft.AlertDialog(
-        modal=True,
-    )
     # 日付と時刻の入力フィールド
     page.overlay.append(start_date)
     page.overlay.append(end_date)
@@ -295,7 +318,7 @@ def accesslogs(page: ft.Page):
         content=ft.Column(
             [
                 ft.Row([searchcardname, searchmethod,
-                        ft.Container(searcheventtype, margin=ft.margin.only(right=30)),show_all_btn
+                        ft.Container(searcheventtype, margin=ft.margin.only(right=56)),show_all_btn
                 ]),
                 ft.Row([startdate_btn,
                         ft.Container(start_text, margin=ft.margin.only(right=98)),reset_btn
@@ -317,10 +340,16 @@ def accesslogs(page: ft.Page):
     # トグルボタンで表示/非表示切り替え
     def toggle_search_area(e):
         search_area.visible = not search_area.visible
-        toggle_btn.text = "検索オプションを閉じる" if search_area.visible else "🔍 検索オプションを開く"
+        toggle_btn.text = "検索オプションを閉じる" if search_area.visible else "検索オプションを開く"
         page.update()
 
-    toggle_btn = ft.ElevatedButton("🔍 検索オプションを表示", on_click=toggle_search_area)
+    toggle_btn = ft.ElevatedButton("検索オプションを表示", 
+                                   on_click=toggle_search_area,
+                                   style=ft.ButtonStyle(
+                                        shape=ft.RoundedRectangleBorder(radius=6),
+                                        padding=ft.padding.all(0)
+                                    )
+                )
    
     return ft.View(
         "/accesslogs",
