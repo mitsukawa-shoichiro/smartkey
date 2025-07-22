@@ -19,7 +19,7 @@ def main(page: ft.Page):
     print(Page._Page__on_page_change_event)
     page.window.width = 1024
     page.window.height = 768
-    page.window.resizable = False
+    page.window.resizable = True
     page.title = "ドア開閉システム"
     route(page)
     page.go("/")
