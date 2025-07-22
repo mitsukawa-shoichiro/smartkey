@@ -26,6 +26,8 @@ def start_BackSystem():
     backsys_path=os.path.join(server_dir, "sendmail", "BackSystem.py")
     subprocess.Popen([sys.executable, backsys_path])
 
+
+
 def main():
     print("システムを起動中...")
     start_card_reader()
