@@ -4,7 +4,9 @@ log_config.py
 """
 import logging
 import logging.handlers
-import os, sys, queue
+import os
+import sys
+import queue
 
 # ---- ログパスとファイル ----
 LOG_DIR = os.path.join(os.path.dirname(__file__))
@@ -20,16 +22,16 @@ file_hdl = logging.handlers.TimedRotatingFileHandler(
     LOG_PATH, when="midnight", backupCount=10, encoding="utf-8"
 )
 file_hdl.setFormatter(formatter)
-file_hdl.setLevel(logging.INFO)        
+file_hdl.setLevel(logging.INFO)
 
 # ---- コンソールハンドラー ----
 console_hdl = logging.StreamHandler(sys.stdout)
 console_hdl.setFormatter(formatter)
-console_hdl.setLevel(logging.DEBUG)      
+console_hdl.setLevel(logging.INFO)
 
 # # ---- ルートロガーの設定 ----
 root = logging.getLogger()
-root.setLevel(logging.INFO)
+root.setLevel(logging.DEBUG)
 root.addHandler(file_hdl)
 root.addHandler(console_hdl)
 
@@ -39,5 +41,6 @@ def _excepthook(exc_type, exc, tb):
     if issubclass(exc_type, KeyboardInterrupt):
         return sys.__excepthook__(exc_type, exc, tb)
     root.critical("UNCAUGHT EXCEPTION", exc_info=(exc_type, exc, tb))
+
 
 sys.excepthook = _excepthook
