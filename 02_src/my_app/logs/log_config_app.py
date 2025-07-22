@@ -5,6 +5,8 @@ log_config.py
 import os
 import json
 import logging.config
+import sys
+
 
 # 設定ファイルのパス
 BASE_DIR = os.path.dirname(__file__) + "\\..\\config"
@@ -15,7 +17,14 @@ with open(config_path, "r", encoding="utf-8") as f:
 
 logging.config.dictConfig(config)
 
-# テストログ
-logger = logging.getLogger(__name__)
-logger.debug("デバッグメッセージ")
-logger.info("情報メッセージ")
+# ---- グローバル例外フック ----
+root = logging.getLogger()
+
+
+def _excepthook(exc_type, exc, tb):
+    if issubclass(exc_type, KeyboardInterrupt):
+        return sys.__excepthook__(exc_type, exc, tb)
+    root.critical("UNCAUGHT EXCEPTION", exc_info=(exc_type, exc, tb))
+
+
+sys.excepthook = _excepthook
