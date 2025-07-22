@@ -7,7 +7,7 @@ sesame_id = "11200413-0002-0611-3F00-9200FFFFFFFF"
 x_api_key = "O3R8DiaBCR2CD8mi10ibR9yT5OMqZHByaDmSCmnT"
 
 sleep_time = 3600
-
+import logging
 def check_sesame_battery():
     '''
     # sesameのバッテリー残量を確認し、20%以下ならメールを送信する
@@ -24,6 +24,7 @@ def check_sesame_battery():
             except Exception as e:
                 battery = f"JSON解析失敗: {e}"
             print("バッテリー残量:", battery)
+            logging.info(f"バッテリー残量: {battery}")
             try:
                 if float(battery) <= 20:
                     mail_body = f"sesami状態は:\n{response.text}\n\n電池残量:\n{battery}"
