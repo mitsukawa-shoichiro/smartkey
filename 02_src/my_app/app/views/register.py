@@ -90,6 +90,8 @@ async def delayed_transition(page: ft.Page):
                 break
             else:
                 page.open(dialog)
+                set_state("authenticating")
+                logging.info("set_stateの返り値：%s", get_state())
                 break
 
         await asyncio.sleep(1)
