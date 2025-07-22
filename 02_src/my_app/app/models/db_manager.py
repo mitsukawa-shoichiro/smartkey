@@ -34,7 +34,6 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, 
     order = "ASC" if asc else "DESC"
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    print(order)
     now = datetime.now()
 
     card_name = f"%{card_name}%" if card_name else "%"

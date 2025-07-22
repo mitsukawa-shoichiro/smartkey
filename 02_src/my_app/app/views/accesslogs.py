@@ -318,13 +318,13 @@ def accesslogs(page: ft.Page):
         content=ft.Column(
             [
                 ft.Row([searchcardname, searchmethod,
-                        ft.Container(searcheventtype, margin=ft.margin.only(right=56)),show_all_btn
+                        ft.Container(searcheventtype, margin=ft.margin.only(right=56)),reset_btn
                 ]),
                 ft.Row([startdate_btn,
-                        ft.Container(start_text, margin=ft.margin.only(right=98)),reset_btn
+                        ft.Container(start_text, margin=ft.margin.only(right=98)),search_btn
                 ]),
                 ft.Row([enddate_btn,
-                        ft.Container(end_text, margin=ft.margin.only(right=98)),search_btn
+                        ft.Container(end_text, margin=ft.margin.only(right=98)),show_all_btn
                 ])
             ],
             spacing=5,
