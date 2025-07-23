@@ -151,7 +151,7 @@ def register_input(page: ft.Page):
         add_confirm_dialog.content = ft.Text(
             f"ユーザー名: {card_name.value}、カードの種類: {card_name_type.value} を登録しますか？")
         add_confirm_dialog.actions = [
-            ft.TextButton("はい", on_click=lambda e: execute_register(e)),
+            ft.TextButton("はい", on_click=lambda e: execute_register(e),),
             ft.TextButton("いいえ", autofocus=True,
                           on_click=lambda e: page.close(add_confirm_dialog)),
         ]
@@ -191,10 +191,10 @@ def register_input(page: ft.Page):
         nonlocal card_number
         print(f"[{card_number}]")
         if not card_number:
-            print("a")
+            logging.critical("カード番号を取得できませんでした")
             page.close(add_confirm_dialog)
             add_confirm_dialog.title = ft.Text("エラー")
-            add_confirm_dialog.content = ft.Text("カードの番号が上手く読み込みませんでした。")
+            add_confirm_dialog.content = ft.Text("カード番号を取得できませんでした")
             add_confirm_dialog.actions = [
                 ft.TextButton("OK", autofocus=True,
                               on_click=lambda e: page.go("/index")),
