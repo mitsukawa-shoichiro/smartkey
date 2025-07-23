@@ -13,16 +13,6 @@ dir_path = os.path.dirname(
 DB_PATH = os.path.join(dir_path, "db", "database.db")
 
 
-def find_all_card():
-    # 全てのカード情報を取得
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM card")
-    cards = cursor.fetchall()
-    conn.close()
-    return cards
-
-
 def delete_card_by_ids(ids):
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
@@ -30,7 +20,8 @@ def delete_card_by_ids(ids):
     conn.commit()
     conn.close()
 
-def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, offset,asc: bool = True):
+
+def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, offset, asc: bool = True):
     order = "ASC" if asc else "DESC"
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -54,11 +45,12 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, 
                           WHERE card.card_name LIKE ? AND method LIKE ? 
                           AND (? IS NULL OR access_logs.eventtype = ?) 
                           AND access_logs.timestamp BETWEEN ? AND ? ORDER BY timestamp {order} LIMIT ? OFFSET ?
-                          """, (card_name, method, eventtype, eventtype, start_datetime_str, end_datetime_str,limit, offset)
+                          """, (card_name, method, eventtype, eventtype, start_datetime_str, end_datetime_str, limit, offset)
                           ).fetchall()
 
     conn.close()
     return logs
+
 
 def count_filtered_logs(card_name=None, method=None, eventtype=None, start_datetime=None, end_datetime=None):
     conn = sqlite3.connect(DB_PATH)
@@ -90,7 +82,6 @@ def count_filtered_logs(card_name=None, method=None, eventtype=None, start_datet
 
     conn.close()
     return count
-
 
 
 def find_by_card_name(card_name):
