@@ -35,42 +35,10 @@ def run_card():
     logging.info("CardCheck thread started")
     card_check.main()
 
-class SmartKeyService(win32serviceutil.ServiceFramework):
-    _svc_name_        = "SmartKeyService"
-    _svc_display_name_ = "Smart Key Python Service"
-    _svc_description_  = "NFCリーダー監視とバックシステムを常駐実行するサービス"
-
-    def __init__(self, args):
-        super().__init__(args)
-        # 停止シグナル用イベント
-        self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
-        self.threads   = []
-
-    # サービス開始
-    def SvcDoRun(self):
-        servicemanager.LogInfoMsg("SmartKeyService started")
-        # スレッド起動
-        t1 = threading.Thread(target=run_back, daemon=True)
-        t2 = threading.Thread(target=run_card, daemon=True)
-        t1.start(); t2.start()
-        self.threads = [t1, t2]
-
-        # 停止要求を待機
-        win32event.WaitForSingleObject(self.hWaitStop, win32event.INFINITE)
-
-        # ここに来たら停止シグナル受信
-        servicemanager.LogInfoMsg("Stopping worker threads…")
-        # （BackSystem / card_check 側で while ループを回している場合は、
-        #   threading.Event などを使って終了フラグを渡す実装にする）
-        for t in self.threads:
-            t.join(timeout=5)
-
-        servicemanager.LogInfoMsg("SmartKeyService stopped")
-
-    # サービス停止
-    def SvcStop(self):
-        self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
-        win32event.SetEvent(self.hWaitStop)
+def main():
+    logging.info("Service is starting...")
+    run_back()
+    run_card()
 
 if __name__ == "__main__":
-    win32serviceutil.HandleCommandLine(SmartKeyService)
+    main()
