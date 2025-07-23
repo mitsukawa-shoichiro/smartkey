@@ -18,7 +18,7 @@ def registering(page: ft.Page):
         page.go("/index")
 
     set_state("registering")
-    print("set_stateの返り値：", get_state())
+    logging.info(f"set_stateの返り値：{get_state()}")
 
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -81,7 +81,6 @@ async def delayed_transition(page: ft.Page):
 
     while not stop_event.is_set():
         card_number = get_card()
-        print("カード番号：", card_number)
         if card_number != "":
             if not service_db.check_card(card_number):
                 set_state("authenticating")
@@ -139,6 +138,15 @@ def register_input(page: ft.Page):
     card_number = get_card()
 
     def open_add_confirm_dialog(e):
+        if not card_name.value or not card_name_type.value:
+            add_confirm_dialog.title = ft.Text("エラー")
+            add_confirm_dialog.content = ft.Text("入力漏れがあります")
+            add_confirm_dialog.actions = [
+                ft.TextButton("OK", autofocus=True,
+                              on_click=lambda e: page.close(add_confirm_dialog)),
+            ]
+            page.open(add_confirm_dialog)
+            return
         add_confirm_dialog.title = ft.Text("カード登録の確認")
         add_confirm_dialog.content = ft.Text(
             f"ユーザー名: {card_name.value}、カードの種類: {card_name_type.value} を登録しますか？")
@@ -180,7 +188,19 @@ def register_input(page: ft.Page):
         page.open(add_confirm_dialog)
 
     def execute_register(e):
-
+        nonlocal card_number
+        print(f"[{card_number}]")
+        if not card_number:
+            print("a")
+            page.close(add_confirm_dialog)
+            add_confirm_dialog.title = ft.Text("エラー")
+            add_confirm_dialog.content = ft.Text("カードの番号が上手く読み込みませんでした。")
+            add_confirm_dialog.actions = [
+                ft.TextButton("OK", autofocus=True,
+                              on_click=lambda e: page.go("/index")),
+            ]
+            page.open(add_confirm_dialog)
+            return
         db.insert_card(
             (card_name.value + '_' + card_name_type.value), card_number)
 

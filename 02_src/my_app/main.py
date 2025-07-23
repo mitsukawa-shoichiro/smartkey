@@ -20,6 +20,8 @@ logger = logging.getLogger(__name__)
 
 
 def main(page: ft.Page):
+    page.window.width = 1024
+    page.window.height = 768
     page.window.min_width = 1024
     page.window.min_height = 768
     page.window.resizable = True
