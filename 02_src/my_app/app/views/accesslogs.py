@@ -26,8 +26,6 @@ def accesslogs(page: ft.Page):
         modal=True,
     )
     
-    sort_asc = False
-    
     def calc_total_pages(count: int):
         nonlocal total_pages
         total_pages = max(1, (count + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE)
@@ -87,19 +85,20 @@ def accesslogs(page: ft.Page):
         end_dt = None
         
         try:
-            start_dt = datetime.strptime(start_text.value, "%Y-%m-%d %H:%M")
-            start_dt = start_dt.replace(second=0)
-            end_dt = datetime.strptime(end_text.value, "%Y-%m-%d %H:%M")
-            end_dt = end_dt.replace(second=59)
+            if start_text.value != "" or end_text.value != "":
+                start_dt = datetime.strptime(start_text.value, "%Y-%m-%d %H:%M")
+                start_dt = start_dt.replace(second=0)
+                end_dt = datetime.strptime(end_text.value, "%Y-%m-%d %H:%M")
+                end_dt = end_dt.replace(second=59)
 
-            if start_dt and end_dt and end_dt < start_dt:
-                dialog.title = ft.Text("エラー")
-                dialog.content = ft.Text("終了日時が開始日時以降にされていません。")
-                dialog.actions = [
-                    ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
-                ]
-                page.open(dialog)
-                return
+                if start_dt and end_dt and end_dt < start_dt:
+                    dialog.title = ft.Text("エラー")
+                    dialog.content = ft.Text("終了日時が開始日時以降にされていません。")
+                    dialog.actions = [
+                        ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+                    ]
+                    page.open(dialog)
+                    return
         except ValueError:
             dialog.title = ft.Text("エラー")
             dialog.content = ft.Text("日時のフォーマットが正しくありません。")
@@ -127,9 +126,8 @@ def accesslogs(page: ft.Page):
         scroll_table.scroll_to(offset=0, duration=0)
     
     def togle_sort(e):
-        nonlocal sort_asc, current_page
-        sort_asc = not sort_asc
-        sort_btn.icon = ft.Icons.ARROW_CIRCLE_UP if sort_asc else ft.Icons.ARROW_CIRCLE_DOWN
+        nonlocal current_page
+        table.sort_ascending = not table.sort_ascending
         current_page = 0
         load_table(current_page)
         
@@ -252,31 +250,31 @@ def accesslogs(page: ft.Page):
                     ),
                     on_click=lambda e: page.go("/index"),
                 )
-    sort_btn = ft.IconButton(icon=ft.Icons.ARROW_CIRCLE_DOWN,on_click=togle_sort,)
-    eventtype_row = ft.Row([ft.Text("入退室の日時", weight="bold", size=14),sort_btn])
+    eventtype_row = ft.Row([ft.Text("入退室の日時", weight="bold", size=14)])
     # テーブル定義  
     table = ft.DataTable(
         columns=[
                     # ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("カード名", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("認証方式", weight="bold", size=14)),
-                    ft.DataColumn(eventtype_row),
+                    ft.DataColumn(eventtype_row, on_sort=lambda e: togle_sort(e)),
                     ft.DataColumn(ft.Text("区分", weight="bold", size=14)),
         ],
-        rows=[]
+        rows=[],
+        sort_column_index=2,
+        sort_ascending=False,
     )
-    
+
     # テーブルの行をロードする関数
     def load_table(page_num: int):
 
         table.rows.clear()
         offset = page_num * ITEMS_PER_PAGE
-        nonlocal sort_asc
         
         logs = db.find_log(
                 search_params["card_name"], search_params["method"], search_params["eventtype"],
                 search_params["start_dt"], search_params["end_dt"],
-                ITEMS_PER_PAGE, offset,sort_asc
+                ITEMS_PER_PAGE, offset,table.sort_ascending
         )
 
         for _id, card_name, method, timestamp, eventtype in logs:
