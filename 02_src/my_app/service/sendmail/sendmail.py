@@ -9,17 +9,16 @@ if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
 import logs.log_config_service
 
-# 读取mail.json
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'mail.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     mail_config = json.load(f)[0]
+
 mymail = mail_config['mailadress']
 mypass = mail_config['password']
-to_mail = mymail
+to_mail = "lpj99199@163.com"
 
-smtp_server = "smtp.office365.com"   # 根据 MX 结果替换
-port = 465                          # STARTTLS
-
+smtp_server = "try-ltd.sakura.ne.jp1"  
+port = 465                         
 
 def send_mail(TITLE, TEXT):
     '''
@@ -36,7 +35,6 @@ def send_mail(TITLE, TEXT):
     try:
         # 163メールのSMTPサーバーに接続してメールを送信
         with smtplib.SMTP_SSL(smtp_server, port) as server:
-
             server.login(mymail, mypass)
             server.send_message(msg)
             print("メール送信成功")

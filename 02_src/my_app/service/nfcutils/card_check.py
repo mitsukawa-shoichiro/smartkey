@@ -76,9 +76,12 @@ def reader_loop():
             except Exception as e:
                 print(f"カードリーダー {i+1} でエラー:", e)
                 continue
-        
-        msg = "ALIVE"
-        sock.sendto(msg.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
+        if(len(reader_list) <= 1):
+            msg = "DEAD"
+            sock.sendto(msg.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
+        else:
+            msg = "ALIVE"
+            sock.sendto(msg.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
         time.sleep(1)  # CPU負荷軽減
         # break
 

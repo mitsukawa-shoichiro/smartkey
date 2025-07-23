@@ -13,6 +13,7 @@ sesame_id = "11200413-0002-0611-3F00-9200FFFFFFFF"
 x_api_key = "O3R8DiaBCR2CD8mi10ibR9yT5OMqZHByaDmSCmnT"
 
 sleep_time = 3600
+battery_Limit = 50  # バッテリー残量の閾値
 import logging
 def check_sesame_battery():
     '''
@@ -34,9 +35,9 @@ def check_sesame_battery():
             print("wm2State:", data.get('wm2State', '取得失敗'))
 
             try:
-                if float(battery) <= 50 or not data.get('wm2State', '取得失敗'):
-                    mail_body = f"sesami状態は:\n{response.text}\n\n電池残量:\n{battery}"
-                    send_mail('セサミ状態通知', mail_body)
+                if float(battery) <= battery_Limit or not data.get('wm2State', '取得失敗'):
+                    mail_body = f"sesame状態は:\n{response.text}\n\n電池残量:\n{battery}"
+                    send_mail('セサミエラー通知', mail_body)
                     print('メール送信完了')
             except Exception as e:
                 logging.error("バッテリー値の変換またはメール送信中にエラー")
@@ -63,6 +64,14 @@ def check_alive():
         try:
             data, addr = sock.recvfrom(100)
             last_AliveTime = time.time()
+            # 优先处理 DEAD 信号
+            if data.decode('utf-8') == "DEAD":
+                logging.error("カードリーダーが接続されていません")
+                mail_body = "カードリーダーが接続されていません"
+                send_mail('カードリーダー異常', mail_body)
+                print('カードリーダー異常')
+                last_AliveTime = time.time()
+                break
         except socket.timeout:
             pass  # 没收到包，继续检查超时
 
@@ -74,6 +83,7 @@ def check_alive():
             print('システム異常')
             last_AliveTime = time.time()  # 避免重复报警
             break
+        
     print('システム中止')
     sock.close()
 

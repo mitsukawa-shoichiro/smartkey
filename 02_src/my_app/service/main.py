@@ -33,9 +33,6 @@ def main():
     start_card_reader()
     start_BackSystem()
     logging.info("システムが起動されました")
-    
 
-    
- 
 if __name__ == "__main__":
     main() 

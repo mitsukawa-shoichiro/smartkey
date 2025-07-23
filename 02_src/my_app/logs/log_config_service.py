@@ -14,6 +14,11 @@ config_path = os.path.join(BASE_DIR, "service_log_config.json")
 with open(config_path, "r", encoding="utf-8") as f:
     config = json.load(f)
 
+log_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+log_file_path = os.path.join(log_dir, "service.log")
+print(f"Log file path: {log_file_path}")
+config["handlers"]["fileHandler"]["filename"] = log_file_path
+
 logging.config.dictConfig(config)
 
 # ---- グローバル例外フック ----
@@ -27,3 +32,5 @@ def _excepthook(exc_type, exc, tb):
 
 
 sys.excepthook = _excepthook
+
+logging.info("Log configuration loaded successfully")
