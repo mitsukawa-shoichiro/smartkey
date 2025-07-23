@@ -6,6 +6,9 @@ import logging
 
 
 def cardView(page: ft.Page):
+
+    serch_word = ""
+
     page.title = "card管理画面"
 
     # チェックボックスの参照を保持する辞書
@@ -30,7 +33,8 @@ def cardView(page: ft.Page):
     )
 
     card_name = ft.TextField(label="カード名検索", autofocus=True,
-                             on_submit=lambda e: search(e))
+                             on_submit=lambda e: search(e),
+                             max_length=50)
     search_btn = ft.ElevatedButton(
         content=ft.Icon(ft.Icons.SEARCH, size=30, color=ft.Colors.WHITE),
         on_click=lambda e: search(e),
@@ -76,7 +80,7 @@ def cardView(page: ft.Page):
     table = ft.DataTable(
         columns=[
 
-            ft.DataColumn(ft.Text("ID")),
+            ft.DataColumn(ft.Text("ID"), on_sort=lambda e: sort_table(e)),
             ft.DataColumn(ft.Text("名前")),
             # ft.DataColumn(ft.Text("カード番号")),
             ft.DataColumn(ft.Text("登録日")),
@@ -86,11 +90,22 @@ def cardView(page: ft.Page):
                         radius=0),)))
         ],
         rows=[],
+
+        sort_column_index=0,
+        sort_ascending=False,
     )
+
+    def sort_table(e):
+        table.sort_ascending = not table.sort_ascending
+        load_table()
 
     # テーブルの行をロードする関数
     def load_table():
-        cards = db.find_all_card()
+        nonlocal serch_word
+        cards = db.find_by_card_name(serch_word)
+        if table.sort_ascending:
+            cards = cards[::-1]
+
         checkbox_refs.clear()
         table.rows.clear()
         column.controls.clear()
@@ -154,7 +169,8 @@ def cardView(page: ft.Page):
         dialog.content = ft.Column(
             [
                 ft.TextField(
-                    label="カード名", value=card_name[0], data=card_id, on_submit=lambda e: confirm_edit(e),),
+                    label="カード名", value=card_name[0], data=card_id, on_submit=lambda e: confirm_edit(e),
+                    max_length=50),
 
             ],
             height=80,
@@ -208,38 +224,14 @@ def cardView(page: ft.Page):
     # 検索ボタンのクリックイベント
 
     def search(e):
-        card_name = search_zone.controls[0].value
-        cards = db.find_by_card_name(card_name)
-        table.rows.clear()
-        column.controls.clear()
-        column.controls.append(ft.Container(height=-2))
-        column.controls.append(ft.ElevatedButton(text="カード名編集",
-                                                 data=radio_group.value, on_click=open_edit_dialog, style=ft.ButtonStyle(
-                                                     shape=ft.RoundedRectangleBorder(
-                                                         radius=0),)))
-        for card_id, card_name, card_number, register_date in cards:
-            cb = ft.Checkbox()
-            checkbox_refs[card_id] = cb
-
-            column.controls.append(ft.Radio(value=str(card_id)))
-
-            table.rows.append(
-                ft.DataRow(
-                    cells=[
-                        ft.DataCell(ft.Text(f"{card_id:05d}", width=40)),
-                        ft.DataCell(ft.Text(card_name, width=40)),
-                        ft.DataCell(ft.Text(register_date, width=40)),
-                        ft.DataCell(cb),
-
-                    ]
-                )
-            )
-
-        radio_group.value = cards[0][0] if cards else None
-        page.update()
-        scroll_table.scroll_to(offset=0, duration=0)
+        nonlocal serch_word
+        serch_word = search_zone.controls[0].value
+        load_table()
 
     def reflesh(e):
+        nonlocal serch_word
+        serch_word = ""
+        table.sort_ascending = False
         search_zone.controls[0].value = ""
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)

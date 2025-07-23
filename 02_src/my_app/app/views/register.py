@@ -1,9 +1,10 @@
 import flet as ft
 import asyncio
 import app.models.db_manager as db
-import requests
+import logging
 from service.card_sys import set_state, get_state, get_card
 from app.utils.thread_state import thread_handle, stop_event
+import service.db_manager as service_db
 
 
 def registering(page: ft.Page):
@@ -12,9 +13,8 @@ def registering(page: ft.Page):
     def stop_loop(e):
 
         stop_event.set()
-        print("停止フラグを送信しました")
         set_state("authenticating")
-        print("set_stateの返り値：", get_state())
+        logging.info("set_stateの返り値：%s", get_state())
         page.go("/index")
 
     set_state("registering")
@@ -45,7 +45,7 @@ def registering(page: ft.Page):
         )
     )
     return ft.View(
-        "/home",
+        "/register",
         controls=[
             ft.Container(
                 expand=True,
@@ -70,16 +70,30 @@ def registering(page: ft.Page):
 async def delayed_transition(page: ft.Page):
 
     global stop_event
+    dialog = ft.AlertDialog(
+        modal=True,
+        content=ft.Text("このカードは既に登録されています"),
+        actions=[
+            ft.TextButton("戻る", autofocus=True,
+                          on_click=lambda e: page.go("/index"))
+        ]
+    )
 
     while not stop_event.is_set():
         card_number = get_card()
         print("カード番号：", card_number)
         if card_number != "":
+            if not service_db.check_card(card_number):
+                set_state("authenticating")
+                logging.info("set_stateの返り値：%s", get_state())
+                page.go("/register/input")
+                break
+            else:
+                page.open(dialog)
+                set_state("authenticating")
+                logging.info("set_stateの返り値：%s", get_state())
+                break
 
-            set_state("authenticating")
-            print("set_stateの返り値：", get_state())
-            page.go("/register/input")
-            break
         await asyncio.sleep(1)
 
 
@@ -171,12 +185,13 @@ def register_input(page: ft.Page):
             (card_name.value + '_' + card_name_type.value), card_number)
 
         page.close(add_confirm_dialog)
+        logging.info(f"{card_name.value + '_' + card_name_type.value}を追加しました")
         complete_add_confirm_dialog(e)
 
     card_name = ft.TextField(
-        label="ユーザー名", autofocus=True, width=320, border_radius=8, on_submit=lambda e: card_name_type.focus())
+        label="ユーザー名", autofocus=True, width=320, border_radius=8, on_submit=lambda e: card_name_type.focus(), max_length=50)
     card_name_type = ft.TextField(
-        label="カードの種類", width=320, border_radius=8, on_submit=lambda e: open_add_confirm_dialog(e))
+        label="カードの種類", width=320, border_radius=8, on_submit=lambda e: open_add_confirm_dialog(e), max_length=50)
 
     return ft.View(
         "/register/input",

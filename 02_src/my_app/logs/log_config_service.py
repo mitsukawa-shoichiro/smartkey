@@ -2,43 +2,28 @@
 log_config.py
 グローバルロギング初期化モジュール：プロジェクトのどこでも `import log_config` で利用可能。
 """
-import logging
-import logging.handlers
-from math import fabs
-import os, sys, queue
+import os
+import json
+import logging.config
+import sys
 
-# ---- ログパスとファイル ----
-LOG_DIR = os.path.join(os.path.dirname(__file__))
-os.makedirs(LOG_DIR, exist_ok=True)
-LOG_PATH = os.path.join(LOG_DIR, "service.log")
+# 設定ファイルのパス
+BASE_DIR = os.path.dirname(__file__) + "\\..\\config"
+config_path = os.path.join(BASE_DIR, "service_log_config.json")
 
-# ---- フォーマッター ----
-FMT = "%(asctime)s [%(levelname)s] %(name)s:%(lineno)d - %(message)s"
-formatter = logging.Formatter(FMT, datefmt="%Y-%m-%d %H:%M:%S")
+with open(config_path, "r", encoding="utf-8") as f:
+    config = json.load(f)
 
-# ---- ファイルハンドラー（日次ローテーション）----
-file_hdl = logging.handlers.TimedRotatingFileHandler(
-    LOG_PATH, when="midnight", backupCount=10, encoding="utf-8"
-)
-file_hdl.setFormatter(formatter)
-file_hdl.setLevel(logging.DEBUG)         
-
-# ---- コンソールハンドラー ----
-console_hdl = logging.StreamHandler(sys.stdout)
-console_hdl.setFormatter(formatter)
-console_hdl.setLevel(logging.DEBUG)  
-
-# # ---- ルートロガーの設定 ----
-root = logging.getLogger()
-root.setLevel(logging.DEBUG)
-root.addHandler(file_hdl)
-root.addHandler(console_hdl)
-
+logging.config.dictConfig(config)
 
 # ---- グローバル例外フック ----
+root = logging.getLogger()
+
+
 def _excepthook(exc_type, exc, tb):
     if issubclass(exc_type, KeyboardInterrupt):
         return sys.__excepthook__(exc_type, exc, tb)
     root.critical("UNCAUGHT EXCEPTION", exc_info=(exc_type, exc, tb))
+
 
 sys.excepthook = _excepthook
