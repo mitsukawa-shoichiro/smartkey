@@ -1,17 +1,27 @@
 import smtplib
 from email.mime.text import MIMEText
-import os,sys
+import os, sys
 import logging
+import json
+
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
 import logs.log_config_service
 
-#  修正するとき、smtplib.SMTP_SSLの部分を修正してください
-mymail = "mymail"
-mypass = "mypass"
-to_mail = "to_mail"
-def send_mail(TITLE,TEXT):
+# 读取mail.json
+CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'mail.json'))
+with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+    mail_config = json.load(f)[0]
+mymail = mail_config['mailadress']
+mypass = mail_config['password']
+to_mail = mymail
+
+smtp_server = "smtp.office365.com"   # 根据 MX 结果替换
+port = 465                          # STARTTLS
+
+
+def send_mail(TITLE, TEXT):
     '''
     メールを送信するメソッド \n
     引数：\n
@@ -24,8 +34,9 @@ def send_mail(TITLE,TEXT):
     msg['From'] = mymail  # 送信元
     msg['To'] = to_mail  # 宛先
     try:
-    # 163メールのSMTPサーバーに接続してメールを送信
-        with smtplib.SMTP_SSL('？', port) as server:
+        # 163メールのSMTPサーバーに接続してメールを送信
+        with smtplib.SMTP_SSL(smtp_server, port) as server:
+
             server.login(mymail, mypass)
             server.send_message(msg)
             print("メール送信成功")
@@ -33,3 +44,8 @@ def send_mail(TITLE,TEXT):
         print("メール送信失敗:", e)
         logging.error(f"メール送信失敗: {e}")
     print('メール送信完了')
+
+if __name__ == "__main__":
+    # テスト用のメール送信
+    send_mail("テストメール", "これはテストメールです。")
+    print("テストメール送信完了")
