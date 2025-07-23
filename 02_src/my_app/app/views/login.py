@@ -19,6 +19,7 @@ def load_accounts():
 
 
 def login(page: ft.Page):
+
     page.title = "ログイン画面"
 
     username = ft.TextField(label="ユーザー名", autofocus=True,
@@ -58,6 +59,7 @@ def login(page: ft.Page):
     login_btn = ft.ElevatedButton("ログイン",
                                   on_click=do_login,
                                   icon=ft.Icons.LOGIN,
+                                  disabled=False,
                                   style=ft.ButtonStyle(
                                       shape=ft.RoundedRectangleBorder(
                                           radius=4),
@@ -80,9 +82,9 @@ def login(page: ft.Page):
                     alignment=ft.MainAxisAlignment.CENTER,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     spacing=20,
+
                 ),
                 width=400,
-                height=300,
                 padding=30,
                 alignment=ft.alignment.center,
                 margin=ft.Margin(0, -100, 0, 0),
