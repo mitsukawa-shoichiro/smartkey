@@ -12,13 +12,13 @@
   "handlers": {
     "consoleHandler": {
       "class": "logging.StreamHandler",
-      "level": "DEBUG",
+      "level": "INFO",
       "formatter": "stdFormatter",
       "stream": "ext://sys.stdout"
     },
     "fileHandler": {
       "class": "logging.handlers.TimedRotatingFileHandler",
-      "level": "DEBUG",
+      "level": "INFO",
       "formatter": "stdFormatter",
       "filename": "service.log",
       "when": "midnight",
@@ -28,7 +28,7 @@
   },
 
   "root": {
-    "level": "DEBUG",
+    "level": "INFO",
     "handlers": ["consoleHandler", "fileHandler"]
   }
 }
