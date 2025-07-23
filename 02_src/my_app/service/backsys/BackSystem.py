@@ -1,19 +1,31 @@
 import requests
 import time
-from sendmail import send_mail
+from backsys import sendmail
 import socket
 import threading
 import os,sys
+import json
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
 import logs.log_config_service
 
-sesame_id = "11200413-0002-0611-3F00-9200FFFFFFFF"
-x_api_key = "O3R8DiaBCR2CD8mi10ibR9yT5OMqZHByaDmSCmnT"
 
-sleep_time = 3600
-battery_Limit = 50  # バッテリー残量の閾値
+CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'backendsys.json'))
+with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+    config_list = json.load(f)
+    sesami_config = config_list[0]
+    battery_config = config_list[1]
+    battery_mail_config = config_list[2]
+    sesame_mail_config = config_list[3]
+    card_reader_mail_config = config_list[4]
+    system_mail_config = config_list[5]
+
+sesame_id = sesami_config["sesame_id"]
+x_api_key = sesami_config["x_api_key"]
+
+sleep_time = int(battery_config["sleep_time"])  
+battery_Limit = int(battery_config["battery_limit"])  # バッテリー残量の閾値
 import logging
 def check_sesame_battery():
     '''
@@ -33,18 +45,18 @@ def check_sesame_battery():
             print("バッテリー残量:", battery)
             logging.info(f"バッテリー残量: {battery}")
             print("wm2State:", data.get('wm2State', '取得失敗'))
-
             try:
-                if float(battery) <= battery_Limit or not data.get('wm2State', '取得失敗'):
-                    mail_body = f"sesame状態は:\n{response.text}\n\n電池残量:\n{battery}"
-                    send_mail('セサミエラー通知', mail_body)
-                    print('メール送信完了')
+                if float(battery) <= battery_Limit :
+                    mailText=battery_mail_config["TEXT"]+ response.text
+                    send_mail(battery_mail_config["TITLE"], mailText)
+                elif not data.get('wm2State', '取得失敗'):
+                    send_mail(sesame_mail_config["TITLE"], sesame_mail_config["TEXT"])
             except Exception as e:
-                logging.error("バッテリー値の変換またはメール送信中にエラー")
-                print("バッテリー値の変換またはメール送信中にエラー:", e)
+                logging.error("メール送信エラー")
+                print("メール送信エラー:", e)
         except Exception as e:
-            logging.error("バッテリー値の変換またはメール送信中にエラー")
-            print("バッテリー確認中またはメール送信中にエラー:", e)
+            logging.error("不明エラー")
+            print("不明エラー", e)
         time.sleep(sleep_time)  
 
 
@@ -54,44 +66,43 @@ def check_alive():
     PORT = 12345
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind((HOST, PORT))
-    sock.settimeout(1)  # 每1秒检查一次
+    sock.settimeout(1)  
 
     print("死活監視システム起動...")
 
-    waittimeMax = 5  # 超时时间（秒）
+    waittimeMax = 5  
     last_AliveTime = time.time()
     while True:
         try:
             data, addr = sock.recvfrom(100)
             last_AliveTime = time.time()
-            # 优先处理 DEAD 信号
             if data.decode('utf-8') == "DEAD":
                 logging.error("カードリーダーが接続されていません")
-                mail_body = "カードリーダーが接続されていません"
-                send_mail('カードリーダー異常', mail_body)
+                send_mail(card_reader_mail_config["TITLE"], card_reader_mail_config["TEXT"])
                 print('カードリーダー異常')
                 last_AliveTime = time.time()
                 break
         except socket.timeout:
-            pass  # 没收到包，继续检查超时
+            pass  
 
         passTime = time.time() - last_AliveTime
         if passTime > waittimeMax:
             logging.error("開錠システム異常")
-            mail_body = "開錠システムが動作していない"
-            send_mail('システム異常', mail_body)
+            send_mail(system_mail_config["TITLE"], system_mail_config["TEXT"])
             print('システム異常')
-            last_AliveTime = time.time()  # 避免重复报警
+            last_AliveTime = time.time()  
             break
         
     print('システム中止')
     sock.close()
 
 
-
-if __name__ == "__main__":
+def main():
     print("⏱️ sesameのバッテリーとサーバー状態を確認中...")
     threading.Thread(target=check_sesame_battery).start()
     threading.Thread(target=check_alive).start()
+
+if __name__ == "__main__":
+    main()
 
 

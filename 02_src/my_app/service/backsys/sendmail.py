@@ -15,10 +15,9 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
 
 mymail = mail_config['mailadress']
 mypass = mail_config['password']
-to_mail = "lpj99199@163.com"
-
-smtp_server = "try-ltd.sakura.ne.jp1"  
-port = 465                         
+to_mail = mail_config['to_mail']
+smtp_server = mail_config['smtp_server']
+port = mail_config['port']                         
 
 def send_mail(TITLE, TEXT):
     '''

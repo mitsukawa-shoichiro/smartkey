@@ -85,7 +85,10 @@ def reader_loop():
         time.sleep(1)  # CPU負荷軽減
         # break
 
-
-if __name__ == "__main__":
+def main():
     threading.Thread(target=sender, daemon=True).start()
     reader_loop()
+    
+if __name__ == "__main__":
+    main()
+    

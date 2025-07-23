@@ -4,4 +4,4 @@
 *.log
 *.log.*
 .cursor
-mail.json
+temp.txt
