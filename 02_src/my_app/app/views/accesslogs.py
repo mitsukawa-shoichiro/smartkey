@@ -85,20 +85,24 @@ def accesslogs(page: ft.Page):
         end_dt = None
         
         try:
-            if start_text.value != "" or end_text.value != "":
+            if  start_text.value:
                 start_dt = datetime.strptime(start_text.value, "%Y-%m-%d %H:%M")
                 start_dt = start_dt.replace(second=0)
+            
+            if  end_text.value:
+                print(end_text.value)
                 end_dt = datetime.strptime(end_text.value, "%Y-%m-%d %H:%M")
                 end_dt = end_dt.replace(second=59)
 
-                if start_dt and end_dt and end_dt < start_dt:
-                    dialog.title = ft.Text("エラー")
-                    dialog.content = ft.Text("終了日時が開始日時以降にされていません。")
-                    dialog.actions = [
-                        ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
-                    ]
-                    page.open(dialog)
-                    return
+            if start_dt and end_dt and end_dt < start_dt:
+                dialog.title = ft.Text("エラー")
+                dialog.content = ft.Text("終了日時が開始日時以降にされていません。")
+                dialog.actions = [
+                    ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+                ]
+                page.open(dialog)
+                return
+            
         except ValueError:
             dialog.title = ft.Text("エラー")
             dialog.content = ft.Text("日時のフォーマットが正しくありません。")
