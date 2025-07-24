@@ -2,3 +2,4 @@ requests
 pyscard
 pycryptodome
 pywin32
+flet
