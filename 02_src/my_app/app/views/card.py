@@ -159,7 +159,7 @@ def cardView(page: ft.Page):
         radio_group.value = cards[0][0] if cards else None
         page_label.value = f"{offset+1} / {all_page} ページ"
         prev_btn.disabled = offset == 0
-        next_btn.disabled = (offset) == all_page
+        next_btn.disabled = (offset + 1) == all_page
         page.update()
 
     # 選択した行を削除するための確認ダイアログを開く関数
