@@ -5,3 +5,5 @@
 *.log.*
 .cursor
 temp.txt
+memo.txt
+*.tar
