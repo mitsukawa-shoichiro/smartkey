@@ -14,6 +14,7 @@ DB_PATH = os.path.join(dir_path, "db", "database.db")
 
 
 def delete_card_by_ids(ids):
+
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.executemany("DELETE FROM card WHERE card_id = ?", [(i,) for i in ids])
@@ -123,3 +124,19 @@ def insert_card(card_name, card_number):
         "INSERT INTO card (card_name, card_number) VALUES (?, ?)", (card_name, card_number))
     conn.commit()
     conn.close()
+
+
+if __name__ == "__main__":
+    import random
+
+    hiragana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん'
+
+    def generate_random_hiragana(length):
+        return ''.join(random.choices(hiragana, k=length))
+
+    for i in range(1000):
+
+        moji = generate_random_hiragana(5)
+        suuji = random.randint(10000, 1000000)
+
+        insert_card(moji, suuji)

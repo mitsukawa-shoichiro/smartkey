@@ -214,7 +214,7 @@ def cardView(page: ft.Page):
         # ダイアログを更新して完了メッセージを表示
         dialog.title = ft.Text("編集完了")
         dialog.content = ft.Text(
-            f"カード名を '{old_card_name}'から'{new_card_name}' に変更しました")
+            f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
         dialog.actions = [
             ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
         ]
