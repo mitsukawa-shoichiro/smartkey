@@ -85,15 +85,27 @@ def count_filtered_logs(card_name=None, method=None, eventtype=None, start_datet
     return count
 
 
-def find_by_card_name(card_name):
+def find_by_card_name(card_name, asc: bool, offset):
     # カード名でカード情報を取得
+    order = "ASC" if asc else "DESC"
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM card WHERE card_name LIKE ?",
-                   (f"%{card_name}%",))
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+                   (f"%{card_name}%", offset))
     cards = cursor.fetchall()
     conn.close()
     return cards
+
+
+def count_all_card(card_name):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT COUNT(*) FROM card WHERE card_name LIKE ?",
+                   (f"%{card_name}%", ))
+    count = cursor.fetchall()
+    conn.close()
+    return count[0]
 
 
 def update_card_name(card_id, new_name):
@@ -127,16 +139,23 @@ def insert_card(card_name, card_number):
 
 
 if __name__ == "__main__":
-    import random
+    # import random
 
-    hiragana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん'
+    # hiragana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん'
 
-    def generate_random_hiragana(length):
-        return ''.join(random.choices(hiragana, k=length))
+    # def generate_random_hiragana(length):
+    #     return ''.join(random.choices(hiragana, k=length))
 
-    for i in range(1000):
+    # for i in range(1000):
 
-        moji = generate_random_hiragana(5)
-        suuji = random.randint(10000, 1000000)
+    #     moji = generate_random_hiragana(5)
+    #     suuji = random.randint(10000, 1000000)
 
-        insert_card(moji, suuji)
+    #     insert_card(moji, suuji)
+
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.executemany("DELETE FROM card WHERE card_id = ?",
+                    [(i,) for i in range(500, 1050)])
+    conn.commit()
+    conn.close()

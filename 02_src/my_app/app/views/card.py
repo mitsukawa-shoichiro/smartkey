@@ -1,11 +1,15 @@
-import app.models.db_manager as db
-import flet as ft
 import logging
+import flet as ft
+import app.models.db_manager as db
+
 
 # card管理画面
 
 
 def cardView(page: ft.Page):
+
+    offset = 0
+    all_page = 1
 
     serch_word = ""
 
@@ -75,6 +79,13 @@ def cardView(page: ft.Page):
         spacing=50
 
     )
+    prev_btn = ft.ElevatedButton("⬅ 前へ",   on_click=lambda e: prev_page(
+        e), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
+    page_label = ft.Text("")  # 後で更新
+    next_btn = ft.ElevatedButton("次へ ➡",   on_click=lambda e: next_page(
+        e), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
+    btn_zone = ft.Row([prev_btn, page_label, next_btn],
+                      alignment=ft.MainAxisAlignment.CENTER)
 
     # カードの一覧を表示するためのテーブル
     table = ft.DataTable(
@@ -92,20 +103,33 @@ def cardView(page: ft.Page):
         rows=[],
 
         sort_column_index=0,
-        sort_ascending=False,
+        sort_ascending=True,
     )
 
+    def prev_page(e):
+        nonlocal offset
+        offset -= 1
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
+
+    def next_page(e):
+        nonlocal offset
+        offset += 1
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
+
     def sort_table(e):
+        nonlocal offset
         table.sort_ascending = not table.sort_ascending
+        offset = 0
         load_table()
 
     # テーブルの行をロードする関数
     def load_table():
-        nonlocal serch_word
-        cards = db.find_by_card_name(serch_word)
-        if table.sort_ascending:
-            cards = cards[::-1]
-
+        nonlocal serch_word, offset, all_page
+        cards = db.find_by_card_name(
+            serch_word, table.sort_ascending, offset * 100)
+        all_page = int(db.count_all_card(serch_word)[0] / 100 + 1)
         checkbox_refs.clear()
         table.rows.clear()
         column.controls.clear()
@@ -133,6 +157,9 @@ def cardView(page: ft.Page):
             )
 
         radio_group.value = cards[0][0] if cards else None
+        page_label.value = f"{offset+1} / {all_page} ページ"
+        prev_btn.disabled = offset == 0
+        next_btn.disabled = (offset) == all_page
         page.update()
 
     # 選択した行を削除するための確認ダイアログを開く関数
@@ -166,11 +193,14 @@ def cardView(page: ft.Page):
         dialog.title = ft.Text("カード名編集")
         card_name = db.find_card_name_by_id(
             card_id)
+        name_and_type = card_name[0].split("_")
+        print(name_and_type)
         dialog.content = ft.Column(
             [
                 ft.TextField(
-                    label="カード名", value=card_name[0], data=card_id, on_submit=lambda e: confirm_edit(e),
-                    max_length=50),
+                    label="ユーザー名", value=name_and_type[0], max_length=50),
+                ft.TextField(
+                    label="カードの種類", value=name_and_type[1], max_length=50),
 
             ],
             height=80,
@@ -194,7 +224,7 @@ def cardView(page: ft.Page):
         dialog.title = ft.Text("削除完了")
         dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しました。")
         dialog.actions = [
-            ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+            ft.TextButton("閉じる", on_click=lambda e:  page.close(dialog)),
         ]
         for card_name in card_names:
             logging.info(f"{card_name[0]}が削除されました")
@@ -204,7 +234,18 @@ def cardView(page: ft.Page):
     # カード名を編集するためのダイアログのアクション
     def confirm_edit(e):
         card_id = e.control.data
-        new_card_name = dialog.content.controls[0].value
+        if not dialog.content.controls[0].value or not dialog.content.controls[0].value:
+            page.close(dialog)
+            dialog.content = ft.Text("入力漏れがあります")
+            dialog.actions = [
+                ft.TextButton(
+                    "閉じる", on_click=lambda e: return_edit(e)),
+            ]
+            page.open(dialog)
+            return
+
+        new_card_name = dialog.content.controls[0].value + \
+            "_" + dialog.content.controls[1].value
         old_card_name = db.find_card_name_by_id(card_id)
         db.update_card_name(card_id, new_card_name)
         page.close(dialog)
@@ -218,21 +259,28 @@ def cardView(page: ft.Page):
         dialog.actions = [
             ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
         ]
-        logging.info(f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
+        logging.info(
+            f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
         page.open(dialog)
 
-    # 検索ボタンのクリックイベント
+    def return_edit(e):
+        page.close(dialog)
+        open_edit_dialog(e)
+     # 検索ボタンのクリックイベント
 
     def search(e):
-        nonlocal serch_word
+        nonlocal serch_word, offset
         serch_word = search_zone.controls[0].value
+        offset = 0
         load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
     def reflesh(e):
-        nonlocal serch_word
+        nonlocal serch_word, offset
         serch_word = ""
-        table.sort_ascending = False
+        table.sort_ascending = True
         search_zone.controls[0].value = ""
+        offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
@@ -258,6 +306,7 @@ def cardView(page: ft.Page):
             ft.Text("カード一覧", size=30, weight=ft.FontWeight.BOLD),
             ft.Container(height=10),
             scroll_table,
+            btn_zone,
             ft.Container(height=10),
             ft.ElevatedButton(
                 "戻る",
