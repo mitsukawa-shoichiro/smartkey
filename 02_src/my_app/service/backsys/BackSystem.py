@@ -1,6 +1,6 @@
 import requests
 import time
-from backsys import sendmail
+from .sendmail import send_mail
 import socket
 import threading
 import os,sys

@@ -1,0 +1,4 @@
+requests
+pyscard
+pycryptodome
+pywin32

@@ -9,6 +9,7 @@ import win32serviceutil
 import win32service
 import win32event
 import servicemanager
+import threading
 # region logs
 # logs ディレクトリのパスを sys.path に追加
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -62,8 +63,7 @@ class SmartKeyService(win32serviceutil.ServiceFramework):
         servicemanager.LogInfoMsg("Stopping worker threads…")
         # （BackSystem / card_check 側で while ループを回している場合は、
         #   threading.Event などを使って終了フラグを渡す実装にする）
-        for t in self.threads:
-            t.join(timeout=5)
+
 
         servicemanager.LogInfoMsg("SmartKeyService stopped")
 

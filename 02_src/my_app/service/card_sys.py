@@ -57,21 +57,21 @@ def get_card() -> str:
     return card_id
 
 last_card_id= None
-last_card_timestamp = None
+last_card_timestamp = 0
 def receive_card(card_number: str, card_leader_id: int):
     """
     現在の状態に基づいてカードIDを処理します。
     card_id: カードID card_leader_id:カードリーダー番号
     """
+    global last_card_id, last_card_timestamp
     card_id = check_card(card_number)
     if current_state == CardReaderState.AUTHENTICATING:
-        if card_id:
-            if card_id != last_card_id and (time.time() - last_card_timestamp > 20):
-                last_card_id = card_id
-                last_card_timestamp= time.time()
-                unlock()
-                insert_card_id(card_id, card_leader_id)
-
+        if card_id: 
+            if card_id != last_card_id or (time.time() - last_card_timestamp > 20):
+                last_card_id = card_id       
+                last_card_timestamp = time.time()
+                unlock()                      
+                insert_card_id(card_id, card_leader_id) 
 
 
 def unlock():
