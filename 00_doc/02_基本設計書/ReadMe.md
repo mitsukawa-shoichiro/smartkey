@@ -42,6 +42,10 @@
 - NFC 読み取りプログラム（Python）
 - カードデータの管理用データベース（SQLite）
 - IC カード管理システム（Python GUI アプリ flet）
+- 開錠システム死活監視システム(socket)
+- sesami状況監視システム(python)
+- メール送信システム(python email)
+- Windows サービス化スクリプト（Python win32）
 
 ## 3. 機能一覧
 
@@ -89,6 +93,17 @@
 1.  NFC リーダーで IC カードを読み取り、登録情報と照合
 2.  認証成功時に Sesame5 の開錠コマンドを実行
 
+### 3.6 **メール送信機能**
+1.  SESAMI5 の異常やバッテリー残量低下時にメール通知
+2.  カードリーダーと開錠システム異常の時にメール通知
+3.  メール送信先は設定ファイルで指定
+
+### 3.7 **Windows サービス化**
+1.  Windows サービスとして常駐実行
+2.  サービス起動・停止・再起動機能
+
+
+
 ## 4. データ構成
 
 ### 4.1 ファイル管理
@@ -115,6 +130,26 @@
 | card_number   | VARCHAR  | カード番号                                                        |
 | register_date | DATETIME | 登録日時                                                          |
 
+### 4.4 ログシステム
+#### 4.4.1 フロントログシステム
+
+#### 4.4.2 バックエンドログシステム
+- ログは `../logs/service.log` に出力されます。
+
+
+### 4.5 コンフィグシステム
+#### 4.5.1 mail.json
+- 
+- メール送信設定を JSON 形式で管理
+#### 4.5.2 backend.json
+- 位置は
+1. sesami webapiに関する基本情報
+2. sesamiバッテリーシステムに関する設定
+3. バッテリー低下の時のメール内容
+4. sesami異常の時のメール内容
+5. カードリーダー異常の時のメール内容
+6. システム異常の時のメール内容
+
 ## 5. システム運用
 
 <!-- - ユーザーマニュアル
@@ -138,3 +173,4 @@
 - [PaSoRi RC-S300 を Python で扱う](https://qiita.com/tomo_9180/items/5305a888e373416af5d2)
 - [PythonGUI flet](https://zenn.dev/gogotealove/articles/3cb92bcdfac15f)
 - [API を使って Sesame4 を施錠解錠する](https://qiita.com/run1000dori/items/61dc715ddaad54505a29)
+- [Pythonサービス化して処理を常駐 #Python - Qiita ](https://share.google/baszBReBVmBUCFa1U)

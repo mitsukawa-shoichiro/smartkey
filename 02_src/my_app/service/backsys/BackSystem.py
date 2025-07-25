@@ -50,6 +50,7 @@ def check_sesame_battery():
                     mailText=battery_mail_config["TEXT"]+ response.text
                     send_mail(battery_mail_config["TITLE"], mailText)
                 elif not data.get('wm2State', '取得失敗'):
+                    mailText=battery_mail_config["TEXT"]+ response.text
                     send_mail(sesame_mail_config["TITLE"], sesame_mail_config["TEXT"])
             except Exception as e:
                 logging.error("メール送信エラー")
