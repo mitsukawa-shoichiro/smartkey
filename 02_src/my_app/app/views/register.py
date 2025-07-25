@@ -209,7 +209,7 @@ def register_input(page: ft.Page):
         complete_add_confirm_dialog(e)
 
     card_name = ft.TextField(
-        label="ユーザー名", autofocus=True, width=320, border_radius=8, on_submit=lambda e: card_name_type.focus(), max_length=50)
+        label="カード名", autofocus=True, width=320, border_radius=8, on_submit=lambda e: card_name_type.focus(), max_length=50)
     card_name_type = ft.TextField(
         label="カードの種類", width=320, border_radius=8, on_submit=lambda e: open_add_confirm_dialog(e), max_length=50)
 
@@ -221,7 +221,7 @@ def register_input(page: ft.Page):
                     ft.Container(
                         content=ft.Column(
                             controls=[
-                                ft.Text("ユーザー登録", size=28,
+                                ft.Text("カード登録", size=28,
                                         weight=ft.FontWeight.BOLD),
                                 card_name,
                                 card_name_type,

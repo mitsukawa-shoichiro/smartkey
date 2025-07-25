@@ -50,6 +50,7 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, 
                           ).fetchall()
 
     conn.close()
+    print(len(logs))
     return logs
 
 
@@ -85,15 +86,27 @@ def count_filtered_logs(card_name=None, method=None, eventtype=None, start_datet
     return count
 
 
-def find_by_card_name(card_name):
+def find_by_card_name(card_name, asc: bool, offset):
     # カード名でカード情報を取得
+    order = "ASC" if asc else "DESC"
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM card WHERE card_name LIKE ?",
-                   (f"%{card_name}%",))
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+                   (f"%{card_name}%", offset))
     cards = cursor.fetchall()
     conn.close()
     return cards
+
+
+def count_all_card(card_name):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT COUNT(*) FROM card WHERE card_name LIKE ?",
+                   (f"%{card_name}%", ))
+    count = cursor.fetchall()
+    conn.close()
+    return count[0]
 
 
 def update_card_name(card_id, new_name):
@@ -124,19 +137,63 @@ def insert_card(card_name, card_number):
         "INSERT INTO card (card_name, card_number) VALUES (?, ?)", (card_name, card_number))
     conn.commit()
     conn.close()
+    
+def insert_samplelogs(card_id,eventtype,timestamp):
+    # サンプルログを挿入
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO access_logs (card_id, method, eventtype,timestamp) VALUES (?, ?, ?,?)", (card_id,"カード" ,eventtype,timestamp))
+    conn.commit()
+    conn.close()
 
 
 if __name__ == "__main__":
     import random
+    from datetime import datetime, timedelta
+    
 
     hiragana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん'
+    alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     def generate_random_hiragana(length):
         return ''.join(random.choices(hiragana, k=length))
+    
+    def generate_random_alphabet(length):
+        return ''.join(random.choices(alphabet, k=length))
 
-    for i in range(1000):
+    for i in range(299):
 
         moji = generate_random_hiragana(5)
+        card = generate_random_alphabet(5)
         suuji = random.randint(10000, 1000000)
+        name = moji + "_" + card
+        insert_card(name, suuji)
+        
+    def generate_random_timestamp():
+    
+        start_date = datetime(2024, 7, 30)
+        end_date = datetime(2025, 7, 30)
+        
+        delta_seconds = int((end_date - start_date).total_seconds())
+        
+        random_seconds = random.randint(0, delta_seconds)
+        random_datetime = start_date + timedelta(seconds=random_seconds)
+        
+        timestamp = random_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
-        insert_card(moji, suuji)
+        return timestamp
+    
+    for i in range(299):
+        card_id = random.randint(1,150)
+        eventtype = random.randint(0,1)
+        timestamp = generate_random_timestamp()
+        insert_samplelogs(card_id,eventtype,timestamp)
+
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.executemany("DELETE FROM card WHERE card_id = ?",
+                    [(i,) for i in range(500, 1050)])
+    conn.commit()
+    conn.close()
+    
