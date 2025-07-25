@@ -1,46 +1,54 @@
-# card_sys.py 利用方法
+# SmartKey Service モジュール
 
-## 概要
-`card_sys.py` はカードリーダーの状態管理、カードIDの取得、認証・登録処理、解錠操作などを行うモジュールです。
+このディレクトリは、スマートキーシステムの主要なサービスロジックを管理します。  
+Windowsサービスとして動作し、カードリーダーやバックシステムの監視・制御を行います。もし異常を察知したら、mail.jsonの指定先のメールに送信します
 
-## 主な関数
-- `set_state(state: str)`
-  - カードリーダーの状態を設定します。
-  - 引数: `"registering"` または `"authenticating"`
-  - 返り値: 現在の状態文字列
+## 主なファイル
 
-- `get_state() -> str`
-  - 現在のカードリーダー状態を取得します。
-  - 返り値: 状態文字列
+- `main.py`  
+  サービスのエントリーポイント。ログ初期化後、BackSystemとCardCheckを起動します。
 
-- `get_card() -> str`
-  - カードIDを読み取ります。
-  - 返り値: カードID（失敗時は空文字列）
+- `backsys/BackSystem.py`  
+  バックエンドシステムの監視・制御ロジック。
 
-- `receive_card(card_id: str)`
-  - 現在の状態に応じてカードIDを処理します。
-  - 認証状態なら認証、登録状態なら登録処理を行います。
+- `nfcutils/card_check.py`  
+  NFCカードリーダーの認証・管理ロジック。
 
-- `unlock()`
-  - 解錠操作を実行します。
+- `windowsservice.py`  
+  Windowsサービスとして登録・管理するためのスクリプト。
 
-# 使い方例
-## import方法
-if SERVICE_PATH not in sys.path:
+## 依存ライブラリ
 
-   sys.path.insert(0, SERVICE_PATH)
-    
-from service import card_sys
+- Python 標準ライブラリ（logging, os, sys, time, subprocess, threading など）
+-  [Pythonサービス化して処理を常駐 #Python - Qiita](https://share.google/baszBReBVmBUCFa1U)
 
-## 状態を「登録」に設定
-card_sys.set_state("registering")
+## 実行方法
 
-## 状態を取得
-state = card_sys.get_state()
+1. 必要なライブラリをインストール  
+   ```
+   pip install -r requirements.txt
+   ```
 
-## カードIDを取得
-card_id = card_sys.get_card()
+2. サービス登録（管理者権限で実行）  
+   ```
+   python windowsservice.py install
+   ```
 
-## 状態を「認証」に設定
-card_sys.set_state("authenticating")
+3. サービス開始  
+   ```
+   python windowsservice.py start
+   ```
 
+4. サービス停止・削除  
+   ```
+   python windowsservice.py stop
+   python windowsservice.py remove
+   ```
+
+## ログ
+
+- ログは `../logs/service.log` に出力されます。
+
+## 注意事項
+
+- サービス登録・起動には管理者権限が必要です。
