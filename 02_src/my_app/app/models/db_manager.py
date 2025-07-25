@@ -171,9 +171,9 @@ if __name__ == "__main__":
         insert_card(name, suuji)
         
     def generate_random_timestamp():
-    
-        start_date = datetime(2024, 7, 30)
-        end_date = datetime(2025, 7, 30)
+        
+        end_date = datetime.now()
+        start_date = (end_date - timedelta(days=365))
         
         delta_seconds = int((end_date - start_date).total_seconds())
         
