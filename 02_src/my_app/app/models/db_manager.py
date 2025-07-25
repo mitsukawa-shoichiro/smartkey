@@ -50,6 +50,7 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, 
                           ).fetchall()
 
     conn.close()
+    print(len(logs))
     return logs
 
 
@@ -136,22 +137,58 @@ def insert_card(card_name, card_number):
         "INSERT INTO card (card_name, card_number) VALUES (?, ?)", (card_name, card_number))
     conn.commit()
     conn.close()
+    
+def insert_samplelogs(card_id,eventtype,timestamp):
+    # サンプルログを挿入
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO access_logs (card_id, method, eventtype,timestamp) VALUES (?, ?, ?,?)", (card_id,"カード" ,eventtype,timestamp))
+    conn.commit()
+    conn.close()
 
 
 if __name__ == "__main__":
-    # import random
+    import random
+    from datetime import datetime, timedelta
+    
 
-    # hiragana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん'
+    hiragana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん'
+    alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-    # def generate_random_hiragana(length):
-    #     return ''.join(random.choices(hiragana, k=length))
+    def generate_random_hiragana(length):
+        return ''.join(random.choices(hiragana, k=length))
+    
+    def generate_random_alphabet(length):
+        return ''.join(random.choices(alphabet, k=length))
 
-    # for i in range(1000):
+    for i in range(299):
 
-    #     moji = generate_random_hiragana(5)
-    #     suuji = random.randint(10000, 1000000)
+        moji = generate_random_hiragana(5)
+        card = generate_random_alphabet(5)
+        suuji = random.randint(10000, 1000000)
+        name = moji + "_" + card
+        insert_card(name, suuji)
+        
+    def generate_random_timestamp():
+    
+        start_date = datetime(2024, 7, 30)
+        end_date = datetime(2025, 7, 30)
+        
+        delta_seconds = int((end_date - start_date).total_seconds())
+        
+        random_seconds = random.randint(0, delta_seconds)
+        random_datetime = start_date + timedelta(seconds=random_seconds)
+        
+        timestamp = random_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
-    #     insert_card(moji, suuji)
+        return timestamp
+    
+    for i in range(299):
+        card_id = random.randint(1,150)
+        eventtype = random.randint(0,1)
+        timestamp = generate_random_timestamp()
+        insert_samplelogs(card_id,eventtype,timestamp)
 
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
@@ -159,3 +196,4 @@ if __name__ == "__main__":
                     [(i,) for i in range(500, 1050)])
     conn.commit()
     conn.close()
+    
