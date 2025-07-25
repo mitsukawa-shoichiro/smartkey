@@ -62,11 +62,11 @@ def accesslogs(page: ft.Page):
         ft.DropdownOption("Web", "Web"),
     ]
     
-    start_date = ft.DatePicker(on_change=change_start_date)
-    end_date = ft.DatePicker(on_change=change_end_date)
+    start_date = ft.DatePicker(on_change=change_start_date,date_picker_entry_mode=ft.DatePickerEntryMode.INPUT)
+    end_date = ft.DatePicker(on_change=change_end_date,date_picker_entry_mode=ft.DatePickerEntryMode.INPUT)
 
-    start_time = ft.TimePicker(value=time(0, 0), on_change=lambda e: update_start_textbox())
-    end_time = ft.TimePicker(value=time(23, 59), on_change=lambda e: update_end_textbox())
+    start_time = ft.TimePicker(value=time(0, 0), on_change=lambda e: update_start_textbox(),time_picker_entry_mode=ft.TimePickerEntryMode.INPUT)
+    end_time = ft.TimePicker(value=time(23, 59), on_change=lambda e: update_end_textbox(),time_picker_entry_mode=ft.TimePickerEntryMode.INPUT)
 
     searcheventtype = ft.DropdownM2(label="入室/  退室",value=None,width=85,height=45)
     searcheventtype.options = [
