@@ -107,14 +107,16 @@ def cardView(page: ft.Page):
     )
 
     def prev_page(e):
-        nonlocal offset
-        offset -= 1
+        nonlocal offset, all_page
+        if offset != 0:
+            offset -= 1
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
     def next_page(e):
-        nonlocal offset
-        offset += 1
+        nonlocal offset, all_page
+        if (offset + 1) != all_page:
+            offset += 1
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
@@ -129,7 +131,7 @@ def cardView(page: ft.Page):
         nonlocal serch_word, offset, all_page
         cards = db.find_by_card_name(
             serch_word, table.sort_ascending, offset * 100)
-        all_page = int(db.count_all_card(serch_word)[0] / 100 + 1)
+        all_page = int(((db.count_all_card(serch_word)[0] - 1) / 100) + 1)
         checkbox_refs.clear()
         table.rows.clear()
         column.controls.clear()
