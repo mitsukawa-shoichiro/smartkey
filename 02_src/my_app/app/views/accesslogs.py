@@ -1,12 +1,14 @@
-from datetime import datetime
-from datetime import time
+from datetime import datetime,date,time,timedelta
 import flet as ft
 import app.models.db_manager as db
 
+# テーブルの1ページが表示する件数
 ITEMS_PER_PAGE = 100
 
 # ログ閲覧画面
 def accesslogs(page: ft.Page):
+    
+    page.title = "ログ閲覧画面"
 
     current_page = 0           # 現在のページ（0‑origin）
     total_pages = 1            # 総ページ数（動的に計算）
@@ -19,13 +21,12 @@ def accesslogs(page: ft.Page):
         "end_dt": None,
     }
     
-    start_text = ft.TextField(label="開始日時", width=200, height=48)
-    end_text = ft.TextField(label="終了日時", width=200, height=48)
-    
+    # エラーの際に表示するダイアログの初期設定
     dialog = ft.AlertDialog(
         modal=True,
     )
     
+    # 総ページ数の計算
     def calc_total_pages(count: int):
         nonlocal total_pages
         total_pages = max(1, (count + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE)
@@ -51,8 +52,6 @@ def accesslogs(page: ft.Page):
         ], 
         current_locale=ft.Locale("ja", "JP")
     )
-    
-    page.title = "ログ閲覧画面"
 
     # 検索フィールドの定義
     searchcardname = ft.TextField(label="カード名",width=200,height=48)
@@ -61,13 +60,18 @@ def accesslogs(page: ft.Page):
         ft.DropdownOption("カード", "カード"),
         ft.DropdownOption("Web", "Web"),
     ]
-    
-    start_date = ft.DatePicker(on_change=change_start_date,date_picker_entry_mode=ft.DatePickerEntryMode.INPUT)
-    end_date = ft.DatePicker(on_change=change_end_date,date_picker_entry_mode=ft.DatePickerEntryMode.INPUT)
+    today = date.today()
+    start_date = ft.DatePicker(on_change=change_start_date,date_picker_entry_mode=ft.DatePickerEntryMode.INPUT
+                               ,first_date=today - timedelta(days=365),last_date=today)
+    end_date = ft.DatePicker(on_change=change_end_date,date_picker_entry_mode=ft.DatePickerEntryMode.INPUT
+                             ,first_date=today - timedelta(days=365),last_date=today)
 
     start_time = ft.TimePicker(value=time(0, 0), on_change=lambda e: update_start_textbox(),time_picker_entry_mode=ft.TimePickerEntryMode.INPUT)
     end_time = ft.TimePicker(value=time(23, 59), on_change=lambda e: update_end_textbox(),time_picker_entry_mode=ft.TimePickerEntryMode.INPUT)
 
+    start_text = ft.TextField(label="開始日時", width=200, height=48)
+    end_text = ft.TextField(label="終了日時", width=200, height=48)
+    
     searcheventtype = ft.DropdownM2(label="入室/  退室",value=None,width=85,height=45)
     searcheventtype.options = [
         ft.DropdownOption("0", "入室"),
@@ -78,22 +82,27 @@ def accesslogs(page: ft.Page):
     def search_logs(e):
         nonlocal current_page, search_mode, search_params
         
+        # 値が入力されなかった場合はNoneを返す
         search_method = searchmethod.value.strip() if searchmethod.value else None
         search_cardname = searchcardname.value.strip() if searchcardname.value else None
         search_eventtype = int(searcheventtype.value.strip()) if searcheventtype.value else None
+        
         start_dt = None
         end_dt = None
+        first_date=today - timedelta(days=365)
+        last_date=today
         
-        try:
+        try: #開始日時が入力された場合はフォーマットに直す（秒数は00秒）
             if  start_text.value:
                 start_dt = datetime.strptime(start_text.value, "%Y-%m-%d %H:%M")
                 start_dt = start_dt.replace(second=0)
             
+             #終了日時が入力された場合はフォーマットに直す（秒数は00秒）
             if  end_text.value:
-                print(end_text.value)
                 end_dt = datetime.strptime(end_text.value, "%Y-%m-%d %H:%M")
                 end_dt = end_dt.replace(second=59)
 
+             #終了日時が開始日時より前に設定された場合にエラー表示
             if start_dt and end_dt and end_dt < start_dt:
                 dialog.title = ft.Text("エラー")
                 dialog.content = ft.Text("終了日時が開始日時以降にされていません。")
@@ -103,6 +112,27 @@ def accesslogs(page: ft.Page):
                 page.open(dialog)
                 return
             
+            #開始日時が一年以上前または本日以降の場合にエラー表示
+            if start_dt and (start_dt.date() < first_date or start_dt.date() > last_date):
+                dialog.title = ft.Text("エラー")
+                dialog.content = ft.Text(f"開始日時が範囲外です。\n検索範囲は {first_date.strftime('%Y-%m-%d 00:00')} から{last_date.strftime('%Y-%m-%d 23:59')}までです。")
+                dialog.actions = [
+                    ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+                ]
+                page.open(dialog)
+                return
+            
+            #終了日時が一年以上前または本日以降の場合にエラー表示
+            if end_dt and (end_dt.date() > last_date or end_dt.date() < first_date):
+                dialog.title = ft.Text("エラー")
+                dialog.content = ft.Text(f"終了日時が範囲外です。 \n検索範囲は{first_date.strftime('%Y-%m-%d 00:00')} から{last_date.strftime('%Y-%m-%d 23:59')}までです。")
+                dialog.actions = [
+                    ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+                ]
+                page.open(dialog)
+                return
+            
+         #フォーマットに沿っていない入力がされた場合、エラー表示
         except ValueError:
             dialog.title = ft.Text("エラー")
             dialog.content = ft.Text("日時のフォーマットが正しくありません。")
@@ -111,6 +141,8 @@ def accesslogs(page: ft.Page):
             ]
             page.open(dialog)
             return
+        
+        #検索条件に値を保持
         search_params = {
             "card_name": search_cardname,
             "method": search_method,
@@ -118,23 +150,26 @@ def accesslogs(page: ft.Page):
             "start_dt": start_dt,
             "end_dt": end_dt,
         }
+        #検索モードに切り替え
         search_mode = True
         current_page = 0
 
-        # ③ 件数取得→総ページ
+        # 件数取得→総ページ
         cnt = db.count_filtered_logs(search_cardname, search_method,search_eventtype, start_dt, end_dt)
         calc_total_pages(cnt)
 
-        # ④ テーブルロード
+        # テーブルロード
         load_table(current_page)
         scroll_table.scroll_to(offset=0, duration=0)
     
+    #ソートを切り替え、ページをリセットし、新しい順で再描画
     def togle_sort(e):
         nonlocal current_page
         table.sort_ascending = not table.sort_ascending
         current_page = 0
         load_table(current_page)
         
+    #全件検索してテーブルに表示
     def show_all_logs(e):
         nonlocal current_page,search_params
         current_page = 0
@@ -149,6 +184,7 @@ def accesslogs(page: ft.Page):
         calc_total_pages(db.count_filtered_logs())
         load_table(current_page)
         
+    #日時入力のピッカーを開く処理
     def open_datepicker(picker: ft.DatePicker):
         page.dialog = picker
         picker.open = True
@@ -159,6 +195,7 @@ def accesslogs(page: ft.Page):
         picker.open = True
         page.update()
     
+    #検索欄のリセット
     def reset(e):
         searchcardname.value = ""
         searchmethod.value = None
@@ -171,6 +208,7 @@ def accesslogs(page: ft.Page):
         end_time.value = time(23,59)
         page.update()
         
+    #日時で入力された値をテキストボックスに表示する（日時どちらも入力された場合のみ）
     def update_start_textbox():
         if start_date.value and start_time.value:
             dt = datetime.combine(start_date.value, start_time.value)
@@ -187,15 +225,18 @@ def accesslogs(page: ft.Page):
             end_text.value = ""
         page.update()
     
+    #フォーマットの変換
     start_date.on_change = change_start_date
     end_date.on_change = change_end_date
 
+    # ボタン定義
+        #ページ遷移用のボタン
     page_label = ft.Text("")  # 後で更新
     prev_btn = ft.ElevatedButton("⬅ 前へ",   on_click=lambda e: prev_page(e),style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
     next_btn = ft.ElevatedButton("次へ ➡",   on_click=lambda e: next_page(e),style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
     pagination_controls = ft.Row([prev_btn, page_label, next_btn], alignment=ft.MainAxisAlignment.CENTER)
     
-    # ボタン定義
+        #検索ボタン
     search_btn = ft.ElevatedButton(
         text="検索",
         icon=ft.Icons.SEARCH,
@@ -208,6 +249,7 @@ def accesslogs(page: ft.Page):
             padding=ft.padding.all(0)
         ),
     )
+        #全件検索ボタン
     show_all_btn = ft.ElevatedButton(
         text="全件表示",
         on_click=show_all_logs,
@@ -219,6 +261,7 @@ def accesslogs(page: ft.Page):
             padding=ft.padding.all(0)
         ),
     )
+        #開始日時入力ボタン
     startdate_btn = ft.ElevatedButton(text = "開始日時を選択", 
                                     icon=ft.Icons.DATE_RANGE,
                                     on_click=lambda e: open_datepicker(start_date),
@@ -226,6 +269,7 @@ def accesslogs(page: ft.Page):
                                         shape=ft.RoundedRectangleBorder(radius=6),
                                     )
                 )
+        #終了日時入力ボタン
     enddate_btn = ft.ElevatedButton(text = "終了日時を選択", 
                                     icon=ft.Icons.DATE_RANGE,
                                     on_click=lambda e: open_datepicker(end_date),
@@ -233,6 +277,7 @@ def accesslogs(page: ft.Page):
                                         shape=ft.RoundedRectangleBorder(radius=6),
                                     )
                 )
+        #クリアボタン
     reset_btn = ft.ElevatedButton(
         text="クリア",
         on_click=reset,
@@ -246,6 +291,7 @@ def accesslogs(page: ft.Page):
             padding=ft.padding.all(0)
         ),
     )
+        #戻るボタン
     back_btn = ft.ElevatedButton(
                     "戻る",
                     icon=ft.Icons.ARROW_BACK,
@@ -254,14 +300,17 @@ def accesslogs(page: ft.Page):
                     ),
                     on_click=lambda e: page.go("/index"),
                 )
-    eventtype_row = ft.Row([ft.Text("入退室の日時", weight="bold", size=14)])
+    
+    #ソートに使用する項目
+    timestamp_row = ft.Row([ft.Text("入退室の日時", weight="bold", size=14)])
+    
     # テーブル定義  
     table = ft.DataTable(
         columns=[
                     # ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("カード名", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("認証方式", weight="bold", size=14)),
-                    ft.DataColumn(eventtype_row, on_sort=lambda e: togle_sort(e)),
+                    ft.DataColumn(timestamp_row, on_sort=lambda e: togle_sort(e)),  #入退室の日時でソート
                     ft.DataColumn(ft.Text("区分", weight="bold", size=14)),
         ],
         rows=[],
@@ -272,15 +321,16 @@ def accesslogs(page: ft.Page):
     # テーブルの行をロードする関数
     def load_table(page_num: int):
 
-        table.rows.clear()
-        offset = page_num * ITEMS_PER_PAGE
+        table.rows.clear()  #テーブルをクリア
+        offset = page_num * ITEMS_PER_PAGE  #取得する項目の先頭を計算
         
+        #取得する件数と場所、順番を考慮し検索
         logs = db.find_log(
                 search_params["card_name"], search_params["method"], search_params["eventtype"],
                 search_params["start_dt"], search_params["end_dt"],
                 ITEMS_PER_PAGE, offset,table.sort_ascending
         )
-
+        #テーブル表示
         for _id, card_name, method, timestamp, eventtype in logs:
             event_str = "入室" if eventtype == 0 else "退室"
             table.rows.append(
@@ -291,6 +341,7 @@ def accesslogs(page: ft.Page):
                     ft.DataCell(ft.Text(event_str, width=80)),
                 ])
             )
+        #全体ページ数と現在のページを表示し、前へボタンと次へボタンを押下可能にするか判断
         page_label.value = f"{current_page+1} / {total_pages} ページ"
         prev_btn.disabled = current_page == 0
         next_btn.disabled = (current_page+1) >= total_pages
@@ -299,16 +350,15 @@ def accesslogs(page: ft.Page):
     if not search_mode:
         calc_total_pages(db.count_filtered_logs())
         
+    #該当ページのログを取得
     load_table(current_page)
-    scroll_table = ft.Column(
-        controls=[table],
-        scroll=ft.ScrollMode.ALWAYS,
-        expand=True
-    )
+    
+    #合計ページ数を計算
     def calc_total_pages(count: int):
         nonlocal total_pages
         total_pages = max(1, (count + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE)
 
+    #次のページの先頭へ移動
     def next_page(e):
         nonlocal current_page
         if (current_page + 1) < total_pages:
@@ -316,6 +366,7 @@ def accesslogs(page: ft.Page):
             load_table(current_page)
             scroll_table.scroll_to(offset=0, duration=0)
 
+    #前のページの先頭へ移動
     def prev_page(e):
         nonlocal current_page
         if current_page > 0:
@@ -352,6 +403,11 @@ def accesslogs(page: ft.Page):
         width=600,
         visible=False
     )
+    scroll_table = ft.Column(
+        controls=[table],
+        scroll=ft.ScrollMode.ALWAYS,
+        expand=True
+    )
 
     # トグルボタンで表示/非表示切り替え
     def toggle_search_area(e):
@@ -367,6 +423,7 @@ def accesslogs(page: ft.Page):
                                     )
                 )
    
+    #ビューの設定
     return ft.View(
         "/accesslogs",
          controls=[

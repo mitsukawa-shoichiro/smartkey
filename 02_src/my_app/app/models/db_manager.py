@@ -50,7 +50,6 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, 
                           ).fetchall()
 
     conn.close()
-    print(len(logs))
     return logs
 
 
