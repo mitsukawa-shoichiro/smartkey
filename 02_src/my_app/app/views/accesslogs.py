@@ -1,6 +1,7 @@
 from datetime import datetime,date,time,timedelta
 import flet as ft
 import app.models.db_manager as db
+import asyncio
 
 # テーブルの1ページが表示する件数
 ITEMS_PER_PAGE = 100
@@ -163,11 +164,20 @@ def accesslogs(page: ft.Page):
         scroll_table.scroll_to(offset=0, duration=0)
     
     #ソートを切り替え、ページをリセットし、新しい順で再描画
-    def togle_sort(e):
+    async def togle_sort(e):
         nonlocal current_page
         table.sort_ascending = not table.sort_ascending
         current_page = 0
+        scroll_table.visible=False
+        scroll_table.update()
+        await asyncio.sleep(0.01)
+        scroll_table.visible=True
+        scroll_table.update()
         load_table(current_page)
+    
+    #togle_sortの呼び出し
+    async def on_sort(e):
+        await togle_sort(e)
         
     #全件検索してテーブルに表示
     def show_all_logs(e):
@@ -310,7 +320,7 @@ def accesslogs(page: ft.Page):
                     # ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("カード名", weight="bold", size=14)),
                     ft.DataColumn(ft.Text("認証方式", weight="bold", size=14)),
-                    ft.DataColumn(timestamp_row, on_sort=lambda e: togle_sort(e)),  #入退室の日時でソート
+                    ft.DataColumn(timestamp_row, on_sort=on_sort),  #入退室の日時でソート
                     ft.DataColumn(ft.Text("区分", weight="bold", size=14)),
         ],
         rows=[],
