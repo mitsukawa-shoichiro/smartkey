@@ -1,6 +1,7 @@
 import logging
 import flet as ft
 import app.models.db_manager as db
+import asyncio
 
 
 # card管理画面
@@ -51,8 +52,30 @@ def cardView(page: ft.Page):
             padding=ft.padding.all(0)
         ),
     )
+
+    async def reflesh(e):
+        nonlocal serch_word, offset, reset_btn
+        reset_btn.disabled = True
+        page.update()
+
+        serch_word = ""
+        table.sort_ascending = True
+        card_name.value = ""
+        card_name.focus()
+        offset = 0
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
+
+        await asyncio.sleep(0.2)
+
+        reset_btn.disabled = False
+        page.update()
+
+    async def on_refresh(e):
+        await reflesh(e)
+
     reset_btn = ft.ElevatedButton(content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
-                                  on_click=lambda e: reflesh(e),
+                                  on_click=on_refresh,
                                   bgcolor=ft.Colors.RED_50,
                                   width=60,
                                   height=30,
@@ -163,6 +186,7 @@ def cardView(page: ft.Page):
         prev_btn.disabled = offset == 0
         next_btn.disabled = (offset + 1) == all_page
         page.update()
+        return
 
     # 選択した行を削除するための確認ダイアログを開く関数
 
@@ -196,13 +220,15 @@ def cardView(page: ft.Page):
         card_name = db.find_card_name_by_id(
             card_id)
         name_and_type = card_name[0].split("_")
-        print(name_and_type)
+        user_name = ft.TextField(
+            label="ユーザー名", value=name_and_type[0], autofocus=True, max_length=50,  on_submit=lambda e: card_type.focus())
+        card_type = ft.TextField(
+            label="カードの種類", value=name_and_type[1], data=card_id, max_length=50, on_submit=lambda e: confirm_edit(e))
+
         dialog.content = ft.Column(
             [
-                ft.TextField(
-                    label="ユーザー名", value=name_and_type[0], max_length=50),
-                ft.TextField(
-                    label="カードの種類", value=name_and_type[1], max_length=50),
+                user_name,
+                card_type
 
             ],
             height=80,
@@ -226,7 +252,8 @@ def cardView(page: ft.Page):
         dialog.title = ft.Text("削除完了")
         dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しました。")
         dialog.actions = [
-            ft.TextButton("閉じる", on_click=lambda e:  page.close(dialog)),
+            ft.TextButton("閉じる", autofocus=True,
+                          on_click=lambda e:  page.close(dialog)),
         ]
         for card_name in card_names:
             logging.info(f"{card_name[0]}が削除されました")
@@ -236,12 +263,12 @@ def cardView(page: ft.Page):
     # カード名を編集するためのダイアログのアクション
     def confirm_edit(e):
         card_id = e.control.data
-        if not dialog.content.controls[0].value or not dialog.content.controls[0].value:
+        if not dialog.content.controls[0].value or not dialog.content.controls[1].value:
             page.close(dialog)
             dialog.content = ft.Text("入力漏れがあります")
             dialog.actions = [
                 ft.TextButton(
-                    "閉じる", on_click=lambda e: return_edit(e)),
+                    "閉じる", autofocus=True, on_click=lambda e: return_edit(e)),
             ]
             page.open(dialog)
             return
@@ -259,7 +286,8 @@ def cardView(page: ft.Page):
         dialog.content = ft.Text(
             f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
         dialog.actions = [
-            ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+            ft.TextButton("閉じる", autofocus=True,
+                          on_click=lambda e: page.close(dialog)),
         ]
         logging.info(
             f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
@@ -273,15 +301,6 @@ def cardView(page: ft.Page):
     def search(e):
         nonlocal serch_word, offset
         serch_word = search_zone.controls[0].value
-        offset = 0
-        load_table()
-        scroll_table.scroll_to(offset=0, duration=0)
-
-    def reflesh(e):
-        nonlocal serch_word, offset
-        serch_word = ""
-        table.sort_ascending = True
-        search_zone.controls[0].value = ""
         offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
