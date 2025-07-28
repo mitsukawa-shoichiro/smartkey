@@ -61,8 +61,6 @@ def accesslogs(page: ft.Page):
         ft.DropdownOption("Web", "Web"),
     ]
     today = date.today()
-    first_date=today - timedelta(days=365)
-    last_date=today
     start_date = ft.DatePicker(on_change=change_start_date,date_picker_entry_mode=ft.DatePickerEntryMode.INPUT
                                ,first_date=today - timedelta(days=365),last_date=today)
     end_date = ft.DatePicker(on_change=change_end_date,date_picker_entry_mode=ft.DatePickerEntryMode.INPUT
