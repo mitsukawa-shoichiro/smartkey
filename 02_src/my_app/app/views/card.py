@@ -200,7 +200,8 @@ def cardView(page: ft.Page):
             dialog.title = ft.Text("削除の確認")
             dialog.content = ft.Text("削除する行が選択されていません。")
             dialog.actions = [
-                ft.TextButton("閉じる", on_click=lambda e: page.close(dialog)),
+                ft.TextButton("閉じる", autofocus=True,
+                              on_click=lambda e: page.close(dialog)),
             ]
             page.open(dialog)
 
@@ -208,7 +209,8 @@ def cardView(page: ft.Page):
             dialog.title = ft.Text("削除の確認")
             dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しますか？")
             dialog.actions = [
-                ft.TextButton("キャンセル", on_click=lambda e: page.close(dialog)),
+                ft.TextButton("キャンセル", autofocus=True,
+                              on_click=lambda e: page.close(dialog)),
                 ft.TextButton("はい", on_click=confirm_delete),
             ]
             page.open(dialog)
