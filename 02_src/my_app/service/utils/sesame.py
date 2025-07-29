@@ -1,19 +1,27 @@
 import datetime, base64, requests, json
 from Crypto.Hash import CMAC
 from Crypto.Cipher import AES
+import os
+
+CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'backendsys.json'))
+with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+    config_list = json.load(f)
+    sesami_config = config_list[0]
+
+sesame_id = sesami_config["sesame_id"]
+x_api_key = sesami_config["x_api_key"]
+secret_key = sesami_config["secret_key"]
+
+import random
 
 def open_sesame():
     try:
-        uuid = "11200413-0002-0611-3F00-9200FFFFFFFF"
-        secret_key = 'daf80ccf3864885736250cd73849354c'
-        api_key = "O3R8DiaBCR2CD8mi10ibR9yT5OMqZHByaDmSCmnT"
-
-        cmd = 88  # 88/82/83 = toggle/lock/unlock
-        history = 'test2'
+        cmd = 83  # 88/82/83 = toggle/lock/unlock
+        history = str(random.random())
         base64_history = base64.b64encode(bytes(history, 'utf-8')).decode()
 
         print(base64_history)
-        headers = {'x-api-key': api_key}
+        headers = {'x-api-key': x_api_key}
         cmac = CMAC.new(bytes.fromhex(secret_key), ciphermod=AES)
 
         ts = int(datetime.datetime.now().timestamp())
@@ -25,7 +33,7 @@ def open_sesame():
         cmac.update(bytes.fromhex(message))
         sign = cmac.hexdigest()
         # 鍵の操作
-        url = f'https://app.candyhouse.co/api/sesame2/{uuid}/cmd'
+        url = f'https://app.candyhouse.co/api/sesame2/{sesame_id}/cmd'
         body = {
             'cmd': cmd,
             'history': base64_history,
@@ -35,4 +43,4 @@ def open_sesame():
         print(res.status_code, res.text)
     except Exception as e:
         print("エラー:" + e)
-        
+

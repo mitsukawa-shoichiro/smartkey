@@ -1,6 +1,6 @@
 [
-    { "sesame_id": "11200413-0002-0611-3F00-9200FFFFFFFF", "x_api_key": "O3R8DiaBCR2CD8mi10ibR9yT5OMqZHByaDmSCmnT" },
-    { "battery_limit": "101" , "sleep_time": "3600" },
+    { "sesame_id": "11200413-0002-0611-3F00-9200FFFFFFFF", "x_api_key": "O3R8DiaBCR2CD8mi10ibR9yT5OMqZHByaDmSCmnT" ,"secret_key":"daf80ccf3864885736250cd73849354c" },
+    { "battery_limit": "50" , "sleep_time": "3600" },
     { "TITLE": "バッテリー低下", "TEXT": "sesami電池残量が低下しています。" },
     { "TITLE": "sesami異常", "TEXT": "sesamiが接触不良になります。" },
     { "TITLE": "カードリーダー異常", "TEXT": "カードリーダーが接続されていません。" },
