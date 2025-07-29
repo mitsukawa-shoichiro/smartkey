@@ -6,7 +6,6 @@ import asyncio
 
 # card管理画面
 
-
 def cardView(page: ft.Page):
 
     offset = 0
@@ -74,6 +73,20 @@ def cardView(page: ft.Page):
     async def on_refresh(e):
         await reflesh(e)
 
+    async def sort_table(e):
+        nonlocal offset
+        table.sort_ascending = not table.sort_ascending
+        offset = 0
+        scroll_table.visible = False
+        scroll_table.update()
+        await asyncio.sleep(0.01)
+        scroll_table.visible = True
+        scroll_table.update()
+        load_table()
+
+    async def on_sort(e):
+        await sort_table(e)
+
     reset_btn = ft.ElevatedButton(content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
                                   on_click=on_refresh,
                                   bgcolor=ft.Colors.RED_50,
@@ -114,7 +127,7 @@ def cardView(page: ft.Page):
     table = ft.DataTable(
         columns=[
 
-            ft.DataColumn(ft.Text("ID"), on_sort=lambda e: sort_table(e)),
+            ft.DataColumn(ft.Text("ID"), on_sort=on_sort),
             ft.DataColumn(ft.Text("名前")),
             # ft.DataColumn(ft.Text("カード番号")),
             ft.DataColumn(ft.Text("登録日")),
@@ -143,13 +156,8 @@ def cardView(page: ft.Page):
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
-    def sort_table(e):
-        nonlocal offset
-        table.sort_ascending = not table.sort_ascending
-        offset = 0
-        load_table()
-
     # テーブルの行をロードする関数
+
     def load_table():
         nonlocal serch_word, offset, all_page
         cards = db.find_by_card_name(
@@ -186,6 +194,7 @@ def cardView(page: ft.Page):
         prev_btn.disabled = offset == 0
         next_btn.disabled = (offset + 1) == all_page
         page.update()
+        print(f"tables!{table.sort_ascending}")
         return
 
     # 選択した行を削除するための確認ダイアログを開く関数
