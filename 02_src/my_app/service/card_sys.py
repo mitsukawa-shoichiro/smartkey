@@ -56,8 +56,11 @@ def get_card() -> str:
         return ""
     return card_id
 
-last_card_id= None
+
+last_card_id = None
 last_card_timestamp = 0
+
+
 def receive_card(card_number: str, card_leader_id: int):
     """
     現在の状態に基づいてカードIDを処理します。
@@ -66,12 +69,12 @@ def receive_card(card_number: str, card_leader_id: int):
     global last_card_id, last_card_timestamp
     card_id = check_card(card_number)
     if current_state == CardReaderState.AUTHENTICATING:
-        if card_id: 
-            if card_id != last_card_id or (time.time() - last_card_timestamp > 20):
-                last_card_id = card_id       
+        if card_id:
+            if card_id != last_card_id or (time.time() - last_card_timestamp > 6):
+                last_card_id = card_id
                 last_card_timestamp = time.time()
-                unlock()                      
-                insert_card_id(card_id, card_leader_id) 
+                unlock()
+                insert_card_id(card_id, card_leader_id)
 
 
 def unlock():
@@ -79,4 +82,3 @@ def unlock():
     解錠操作を実行します。
     """
     open_sesame()
-
