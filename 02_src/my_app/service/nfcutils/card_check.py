@@ -44,11 +44,9 @@ def sender():
             print("送信失敗:", e)
 
 def reader_loop():
-    # 全てのカードリーダーを取得
-    reader_list = readers()
-    print("利用可能なカードリーダー:", reader_list)
-    
     while True:
+        # 全てのカードリーダーを取得
+        reader_list = readers()
         # 全てのカードリーダーをチェック
         for i, reader in enumerate(reader_list):
             try:
@@ -77,6 +75,7 @@ def reader_loop():
                 print(f"カードリーダー {i+1} でエラー:", e)
                 continue
         if(len(reader_list) <= 1):
+            
             msg = "DEAD"
             sock.sendto(msg.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
         else:
