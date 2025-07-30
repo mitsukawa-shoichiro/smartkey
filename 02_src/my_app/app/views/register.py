@@ -73,15 +73,10 @@ async def delayed_transition(page: ft.Page):
 
     global stop_event, CARD_NUMBER
     dialog = ft.AlertDialog(
-        modal=True,
-        content=ft.Text("このカードは既に登録されています"),
-        actions=[
-            ft.TextButton("戻る", autofocus=True,
-                          on_click=lambda e: page.go("/index"))
-        ]
+        modal=True
     )
-
-    while not stop_event.is_set():
+    i = 0
+    while not stop_event.is_set() and i < 30:
         CARD_NUMBER = get_card()
         if CARD_NUMBER != "":
             if not service_db.check_card(CARD_NUMBER):
@@ -90,12 +85,28 @@ async def delayed_transition(page: ft.Page):
                 page.go("/register/input")
                 break
             else:
-                page.open(dialog)
+                dialog.title = ft.Text("エラー")
+                dialog.content = ft.Text("このカードは既に登録されています")
+                dialog.actions = [
+                    ft.TextButton("戻る", autofocus=True,
+                                  on_click=lambda e: page.go("/index"))
+                ]
                 set_state("authenticating")
                 logging.info("set_stateの返り値：%s", get_state())
+                page.open(dialog)
                 break
-
+        i += 1
         await asyncio.sleep(1)
+    if i == 10:
+        dialog.title = ft.Text("エラー")
+        dialog.content = ft.Text("タイムアウト")
+        dialog.actions = [
+            ft.TextButton("戻る", autofocus=True,
+                          on_click=lambda e: page.go("/index"))
+        ]
+        set_state("authenticating")
+        logging.info("set_stateの返り値：%s", get_state())
+        page.open(dialog)
 
 
 def run_async_delayed_transition(page):
