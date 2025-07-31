@@ -1,5 +1,5 @@
-requests
-pyscard
-pycryptodome
-pywin32
-flet
+requests==2.32.4
+pyscard==2.3.0
+pycryptodome==3.23.0
+pywin32==311
+flet==0.28.3
