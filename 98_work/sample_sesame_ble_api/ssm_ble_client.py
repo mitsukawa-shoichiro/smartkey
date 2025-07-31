@@ -129,7 +129,7 @@ class SsmBleClient:
                     print(f"Login NG!")
                     self.isLogin = False
             elif self._item_code == ITEM_CODE.UNLOCK.value:
-                # 開錠結果受信
+                #解錠結果受信
                 if data[2] == 0x00:
                     print(f"unlocked!")
                 else:
