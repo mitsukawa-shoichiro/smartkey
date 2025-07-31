@@ -94,7 +94,7 @@ def check_alive():
  
         passTime = time.time() - last_AliveTime
         if passTime > waittimeMax:
-            logging.error("開錠システム異常")
+            logging.error("解錠システム異常")
             send_mail(system_mail_config["TITLE"], system_mail_config["TEXT"])
             print('システム異常')
             last_AliveTime = time.time()

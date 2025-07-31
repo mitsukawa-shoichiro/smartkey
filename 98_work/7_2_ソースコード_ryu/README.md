@@ -16,7 +16,7 @@
 ## sesami通信
 
 - **sesami.js**  
-  - sesamiに開錠指令送る
+  - sesami解錠指令送る
   - `sesami.js`
     - 但し、npm install axios node-aes-cmacでライブラリ導入必要
 

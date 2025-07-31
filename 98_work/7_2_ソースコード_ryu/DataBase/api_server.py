@@ -278,7 +278,7 @@ def check_card_api():
         user = DB.get_user_by_card_id(card_id)
         if user:
             logger.info(f"ユーザー確認成功: {user}")
-            #開錠指令送る
+            #解錠指令送る
             result = subprocess.run(
                 ["node", "sesami.js"],  
                 capture_output=True,
