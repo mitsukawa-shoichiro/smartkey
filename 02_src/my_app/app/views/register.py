@@ -81,7 +81,7 @@ async def delayed_transition(page: ft.Page):
         first_card = get_card()
         CARD_NUMBER = get_card()
 
-        if CARD_NUMBER == first_card and CARD_NUMBER != "":
+        if CARD_NUMBER == first_card and first_card != "" and CARD_NUMBER != "":
             if not service_db.check_card(CARD_NUMBER):
                 set_state("authenticating")
                 logging.info("set_stateの返り値：%s", get_state())
@@ -100,7 +100,7 @@ async def delayed_transition(page: ft.Page):
                 logging.info("set_stateの返り値：%s", get_state())
                 break
 
-        elif first_card != "":
+        elif first_card != "" and CARD_NUMBER != "":
             dialog.title = ft.Text("エラー")
             dialog.content = ft.Text("このカードは対応されてません")
             dialog.actions = [
