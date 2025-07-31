@@ -6,7 +6,7 @@ from service.card_sys import set_state, get_state, get_card
 from app.utils.thread_state import thread_handle, stop_event
 import service.db_manager as service_db
 
-CARD_NUMBER = ""
+CARD_NUMBER = None
 
 
 def registering(page: ft.Page):
@@ -72,13 +72,16 @@ def registering(page: ft.Page):
 async def delayed_transition(page: ft.Page):
 
     global stop_event, CARD_NUMBER
+    first_card = None
     dialog = ft.AlertDialog(
         modal=True
     )
     i = 0
     while not stop_event.is_set() and i < 30:
+        first_card = get_card()
         CARD_NUMBER = get_card()
-        if CARD_NUMBER != "":
+
+        if CARD_NUMBER == first_card and CARD_NUMBER != "":
             if not service_db.check_card(CARD_NUMBER):
                 set_state("authenticating")
                 logging.info("set_stateの返り値：%s", get_state())
@@ -91,13 +94,29 @@ async def delayed_transition(page: ft.Page):
                     ft.TextButton("戻る", autofocus=True,
                                   on_click=lambda e: page.go("/index"))
                 ]
+                page.open(dialog)
+                await asyncio.sleep(1)
                 set_state("authenticating")
                 logging.info("set_stateの返り値：%s", get_state())
-                page.open(dialog)
                 break
+
+        elif first_card != "":
+            dialog.title = ft.Text("エラー")
+            dialog.content = ft.Text("このカードは対応されてません")
+            dialog.actions = [
+                ft.TextButton("戻る", autofocus=True,
+                              on_click=lambda e: page.go("/index"))
+            ]
+            page.open(dialog)
+            set_state("authenticating")
+            logging.info("set_stateの返り値：%s", get_state())
+
+            break
+
         i += 1
+
         await asyncio.sleep(1)
-    if i == 10:
+    if i == 30:
         dialog.title = ft.Text("エラー")
         dialog.content = ft.Text("タイムアウト")
         dialog.actions = [
