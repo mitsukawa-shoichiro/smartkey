@@ -67,36 +67,41 @@ def check_alive():
     PORT = 12345
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind((HOST, PORT))
-    sock.settimeout(1)  
-
+    sock.settimeout(1)
+ 
     print("死活監視システム起動...")
-
-    waittimeMax = 5  
+ 
+    state = True
+    waittimeMax = 5
     last_AliveTime = time.time()
     while True:
         try:
             data, addr = sock.recvfrom(100)
             last_AliveTime = time.time()
-            if data.decode('utf-8') == "DEAD":
+            if data.decode('utf-8') == "DEAD" and state:
                 logging.error("カードリーダーが接続されていません")
-                send_mail(card_reader_mail_config["TITLE"], card_reader_mail_config["TEXT"])
+                send_mail(
+                    card_reader_mail_config["TITLE"], card_reader_mail_config["TEXT"])
                 print('カードリーダー異常')
                 last_AliveTime = time.time()
-                break
+                state = False
+ 
+            if data.decode('utf-8') == "ALIVE" and not state:
+                state = True
+ 
         except socket.timeout:
-            pass  
-
+            pass
+ 
         passTime = time.time() - last_AliveTime
         if passTime > waittimeMax:
             logging.error("開錠システム異常")
             send_mail(system_mail_config["TITLE"], system_mail_config["TEXT"])
             print('システム異常')
-            last_AliveTime = time.time()  
+            last_AliveTime = time.time()
             break
-        
+ 
     print('システム中止')
     sock.close()
-
 
 def main():
     print("⏱️ sesameのバッテリーとサーバー状態を確認中...")
