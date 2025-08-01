@@ -119,16 +119,8 @@ def main():
 if __name__ == "__main__":
     main()
 
-<< << << < HEAD
 # REGISTERING = "registering"      # カード登録状態
 # AUTHENTICATING = "authenticating"  # カード認証状態
-
-
-== == == =
-
-# REGISTERING = "registering"      # カード登録状態
-# AUTHENTICATING = "authenticating"  # カード認証状態
->>>>>> > 4236f28f5712d6bedc069a832ec24e7e9d1a0552
 
 
 def changeState(newState):
