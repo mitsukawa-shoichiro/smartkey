@@ -1,6 +1,22 @@
-# cardSys.py
 import socket
 import logging
+
+# Windowsサービス起動時
+
+HOST = '127.0.0.1'
+PORT = 33333
+
+try:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.connect((HOST, PORT))
+        msg = "AUTHENTICATING"
+        sock.sendall(msg.encode('utf-8'))
+        logging.info(f"Sent message: {msg}")
+except Exception as e:
+    logging.error(f"通信エラー: {e}")
+
+
+# cardSys.py
 
 HOST = '127.0.0.1'
 PORT = 33333
