@@ -53,7 +53,7 @@ def reciever():
     while(1):
         data, addr = sock_check.recvfrom(100)
         message=data.decode('utf-8')
-        print(f"收到:{message } 来自 {addr}")
+        print(f":{message }  {addr}")
         changeState(message)
 
 def reader_loop():
@@ -109,9 +109,9 @@ if __name__ == "__main__":
     main()
     
 
-    
-    # REGISTERING = "registering"      # カード登録状態
-    # AUTHENTICATING = "authenticating"  # カード認証状態
+
+# REGISTERING = "registering"      # カード登録状態
+# AUTHENTICATING = "authenticating"  # カード認証状態
 def changeState(newState):
     global state
     state=newState
