@@ -5,17 +5,14 @@ import logging
 from service.card_sys import set_state, get_state, get_card
 from app.utils.thread_state import thread_handle, stop_event
 import service.db_manager as service_db
+import socket
 
 CARD_NUMBER = None
 
-import socket
-import time
+HOST = '127.0.0.1'
+PORT = 10000
 
-HOST = '127.0.0.1'  # 本地回环地址
-
-PORT = 10000        
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
 
 
 def registering(page: ft.Page):
@@ -24,18 +21,24 @@ def registering(page: ft.Page):
     def stop_loop(e):
 
         stop_event.set()
-        
-        msg="authenticating"
-        sock.sendto(msg.encode('utf-8'), (HOST, PORT))
-        
-        logging.info("set_stateの返り値：%s", get_state())
+        try:
+
+            sock.connect((HOST, PORT))
+            msg = "authenticating"
+            sock.sendall(msg.encode('utf-8'))
+            logging.info(f"Sent message: {msg}")
+        except Exception as e:
+            logging.error(f"通信エラー: {e}")
         page.go("/index")
-    
-    msg="registering"
-    sock.sendto(msg.encode('utf-8'), (HOST, PORT))
-    
-    set_state("registering")
-    logging.info(f"set_stateの返り値：{get_state()}")
+
+    try:
+
+        sock.connect((HOST, PORT))
+        msg = "registering"
+        sock.sendall(msg.encode('utf-8'))
+        logging.info(f"Sent message: {msg}")
+    except Exception as e:
+        logging.error(f"通信エラー: {e}")
 
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -98,8 +101,15 @@ async def delayed_transition(page: ft.Page):
 
         if CARD_NUMBER == first_card and first_card != "" and CARD_NUMBER != "":
             if not service_db.check_card(CARD_NUMBER):
-                set_state("authenticating")
-                logging.info("set_stateの返り値：%s", get_state())
+                try:
+
+                    sock.connect((HOST, PORT))
+                    msg = "authenticating"
+                    sock.sendall(msg.encode('utf-8'))
+                    logging.info(f"Sent message: {msg}")
+                except Exception as e:
+                    logging.error(f"通信エラー: {e}")
+
                 page.go("/register/input")
                 break
             else:
@@ -111,8 +121,14 @@ async def delayed_transition(page: ft.Page):
                 ]
                 page.open(dialog)
                 await asyncio.sleep(1)
-                set_state("authenticating")
-                logging.info("set_stateの返り値：%s", get_state())
+                try:
+
+                    sock.connect((HOST, PORT))
+                    msg = "authenticating"
+                    sock.sendall(msg.encode('utf-8'))
+                    logging.info(f"Sent message: {msg}")
+                except Exception as e:
+                    logging.error(f"通信エラー: {e}")
                 break
 
         elif first_card != "" and CARD_NUMBER != "":
@@ -123,8 +139,14 @@ async def delayed_transition(page: ft.Page):
                               on_click=lambda e: page.go("/index"))
             ]
             page.open(dialog)
-            set_state("authenticating")
-            logging.info("set_stateの返り値：%s", get_state())
+            try:
+
+                sock.connect((HOST, PORT))
+                msg = "authenticating"
+                sock.sendall(msg.encode('utf-8'))
+                logging.info(f"Sent message: {msg}")
+            except Exception as e:
+                logging.error(f"通信エラー: {e}")
 
             break
 
@@ -138,8 +160,14 @@ async def delayed_transition(page: ft.Page):
             ft.TextButton("戻る", autofocus=True,
                           on_click=lambda e: page.go("/index"))
         ]
-        set_state("authenticating")
-        logging.info("set_stateの返り値：%s", get_state())
+        try:
+
+            sock.connect((HOST, PORT))
+            msg = "authenticating"
+            sock.sendall(msg.encode('utf-8'))
+            logging.info(f"Sent message: {msg}")
+        except Exception as e:
+            logging.error(f"通信エラー: {e}")
         page.open(dialog)
 
 
