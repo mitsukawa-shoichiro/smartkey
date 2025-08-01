@@ -10,8 +10,10 @@ import logging
 import socket
 
 HEARTBEAT_HOST = '127.0.0.1'
-HEARTBEAT_PORT = 12345
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+HEARTBEAT_PORT = 54321
+heartbeatsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+state="authenticating"
 
 
 # region logs
@@ -43,9 +45,21 @@ def sender():
         except Exception as e:
             print("送信失敗:", e)
 
+def reciever():
+    HEARTBEAT_HOST = '127.0.0.1'
+    CardCheck_PORT = 10000
+    sock_check = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock_check.bind((HEARTBEAT_HOST, CardCheck_PORT))
+    while(1):
+        data, addr = sock_check.recvfrom(100)
+        message=data.decode('utf-8')
+        print(f"收到:{message } 来自 {addr}")
+        changeState(message)
+
 def reader_loop():
     while True:
         # 全てのカードリーダーを取得
+        print(state)
         reader_list = readers()
         # 全てのカードリーダーをチェック
         for i, reader in enumerate(reader_list):
@@ -61,7 +75,8 @@ def reader_loop():
                 # 読み取り成功の場合
                 if [sw1, sw2] == [0x90, 0x00]:
                     idm = ''.join(format(byte, '02X') for byte in response)
-                    event_q.put((idm, i))
+                    if(state!="registering"):   
+                        event_q.put((idm, i))
                     print(f"カードリーダー {i+1} でカードを検出、IDm:", idm)
                     conn.disconnect()
                     break  # カードを検出したら他のリーダーをチェックしない
@@ -77,17 +92,27 @@ def reader_loop():
         if(len(reader_list) <= 1):
             
             msg = "DEAD"
-            sock.sendto(msg.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
+            heartbeatsocket.sendto(msg.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
         else:
             msg = "ALIVE"
-            sock.sendto(msg.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
+            heartbeatsocket.sendto(msg.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
         time.sleep(1)  # CPU負荷軽減
         # break
 
 def main():
     threading.Thread(target=sender, daemon=True).start()
-    reader_loop()
+    threading.Thread(target=reciever, daemon=True).start()
+    threading.Thread(target=reader_loop, daemon=True).start()
+    
     
 if __name__ == "__main__":
     main()
     
+
+    
+    # REGISTERING = "registering"      # カード登録状態
+    # AUTHENTICATING = "authenticating"  # カード認証状態
+def changeState(newState):
+    global state
+    state=newState
+    print("現在のstate"+state)

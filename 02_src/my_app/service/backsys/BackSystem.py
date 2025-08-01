@@ -64,10 +64,10 @@ def check_sesame_battery():
 
 def check_alive():
     HOST = '127.0.0.1'
-    PORT = 12345
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind((HOST, PORT))
-    sock.settimeout(1)
+    PORT = 54321
+    heartbeatsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    heartbeatsocket.bind((HOST, PORT))
+    heartbeatsocket.settimeout(1)
  
     print("死活監視システム起動...")
  
@@ -76,7 +76,7 @@ def check_alive():
     last_AliveTime = time.time()
     while True:
         try:
-            data, addr = sock.recvfrom(100)
+            data, addr = heartbeatsocket.recvfrom(100)
             last_AliveTime = time.time()
             if data.decode('utf-8') == "DEAD" and state:
                 logging.error("カードリーダーが接続されていません")
@@ -101,7 +101,7 @@ def check_alive():
             break
  
     print('システム中止')
-    sock.close()
+    heartbeatsocket.close()
 
 def main():
     print("⏱️ sesameのバッテリーとサーバー状態を確認中...")

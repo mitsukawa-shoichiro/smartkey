@@ -35,6 +35,7 @@ def run_card():
     logging.info("CardCheck thread started")
     card_check.main()
 
+import threading
 def main():
     logging.info("Service is starting...")
     run_back()

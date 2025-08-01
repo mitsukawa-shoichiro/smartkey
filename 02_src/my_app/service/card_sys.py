@@ -84,16 +84,5 @@ def unlock():
     open_sesame()
 
 
-import socket
-HOST, PORT = '127.0.0.1', 12345
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind((HOST, PORT))
-def reciever():
-    while True:
-        data, addr = sock.recvfrom(1024)
-        if data.decode('utf-8') == "registering":
-            set_state("registering")
-        elif data.decode('utf-8') == "authenticating":
-            set_state("authenticating")
 
 

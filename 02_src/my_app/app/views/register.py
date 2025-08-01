@@ -8,6 +8,15 @@ import service.db_manager as service_db
 
 CARD_NUMBER = None
 
+import socket
+import time
+
+HOST = '127.0.0.1'  # 本地回环地址
+
+PORT = 10000        
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+
 
 def registering(page: ft.Page):
     global stop_event, thread_handle
@@ -15,10 +24,16 @@ def registering(page: ft.Page):
     def stop_loop(e):
 
         stop_event.set()
-        set_state("authenticating")
+        
+        msg="authenticating"
+        sock.sendto(msg.encode('utf-8'), (HOST, PORT))
+        
         logging.info("set_stateの返り値：%s", get_state())
         page.go("/index")
-
+    
+    msg="registering"
+    sock.sendto(msg.encode('utf-8'), (HOST, PORT))
+    
     set_state("registering")
     logging.info(f"set_stateの返り値：{get_state()}")
 
