@@ -1,8 +1,24 @@
 [
-    { "sesame_id": "11200413-0002-0611-3F00-9200FFFFFFFF", "x_api_key": "O3R8DiaBCR2CD8mi10ibR9yT5OMqZHByaDmSCmnT" ,"secret_key":"daf80ccf3864885736250cd73849354c" },
-    { "battery_limit": "50" , "sleep_time": "3600" },
-    { "TITLE": "バッテリー低下", "TEXT": "sesami電池残量が低下しています。" },
-    { "TITLE": "sesami異常", "TEXT": "sesamiが接触不良になります。" },
-    { "TITLE": "カードリーダー異常", "TEXT": "カードリーダーが接続されていません。" },
-    { "TITLE": "システム異常", "TEXT": "開錠システムが異常です。" }
+  {
+    "sesame_id": "11200413-0002-0611-3F00-9200FFFFFFFF",
+    "x_api_key": "qBT5z7uXeG5vBIshsLktb6UOATb7aS6S1Q0GLMhH",
+    "secret_key": "6ec38d24f0c9b88467116ae69b3c6104"
+  },
+  { "battery_limit": "50", "sleep_time": "3600" },
+  {
+    "TITLE": "SESAME電池交換のお知らせ",
+    "TEXT": "SESAMEのバッテリー残量が設定値を下回りました。早めの電池交換をお願いします。"
+  },
+  {
+    "TITLE": "SESAME接続エラー",
+    "TEXT": "システムからSESAMEの接続が確認できなくなりました。SESMEやwifiモジュールを確認してください。"
+  },
+  {
+    "TITLE": "カードリーダー接続エラー",
+    "TEXT": "システムからカードリーダーの接続が確認できなくなりました。カードリーダ、USBハブを確認してください"
+  },
+  {
+    "TITLE": "システム停止",
+    "TEXT": "開錠システムが停止しました。Windowsサービスの再起動をお願いします。"
+  }
 ]
