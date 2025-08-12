@@ -26,6 +26,7 @@ import logs.log_config_service
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'config', 'backend', 'shutdown.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     shutdown_time = json.load(f)[0]["shutdown_time"]
+    shutdown_bool = json.load(f)[0]["auto_shutdown"]
 
 # def reboot_computer():
 #     now = datetime.datetime.now()
@@ -82,8 +83,10 @@ class SmartKeyService(win32serviceutil.ServiceFramework):
         # スレッド起動
         t1 = threading.Thread(target=run_back, daemon=True)
         t2 = threading.Thread(target=run_card, daemon=True)
-        t3 = threading.Thread(target=reboot_computer, daemon=True)
-        t1.start(); t2.start() ;t3.start()
+        if shutdown_bool:
+            t3 = threading.Thread(target=reboot_computer_at_time, daemon=True)
+            t3.start()
+        t1.start(); t2.start()
         self.threads = [t1, t2, t3]
 
         # 停止要求を待機
