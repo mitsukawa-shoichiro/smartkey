@@ -16,6 +16,8 @@ import os
 import logging
 import socket
 
+now= time.time()
+HEARTBEAT_ERROR_GAP_S=10
 HEARTBEAT_HOST = '127.0.0.1'
 HEARTBEAT_PORT = 54321
 heartbeatsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -65,6 +67,15 @@ def reciever():
         changeState(message)
 
 
+def send_message(message):
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.sendto(message.encode('utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
+        sock.close()
+    except Exception as e:
+        logging.error(f"card_checkがメッセージ送信失敗: {e}")
+        print(f"メッセージ送信失敗: {e}")
+
 def reader_loop():
     while True:
         # 全てのカードリーダーを取得
@@ -92,20 +103,25 @@ def reader_loop():
                     conn.disconnect()
 
             except NoCardException:
-
                 conn.disconnect()
             except Exception as e:
-                print(f"カードリーダー {i+1} でエラー:", e)
+                logging.error(f"カードリーダー {i+1} でエラー:", e)
                 continue
-        if (len(reader_list) <= 1):
+            
+        global now
+        gap = time.time() - now
+        now = time.time()
 
+        if gap > HEARTBEAT_ERROR_GAP_S:
+            logging.error("card_check.pyのポーリングが遅延しています")
+
+        if (len(reader_list) <= 1):
             msg = "DEAD"
-            heartbeatsocket.sendto(msg.encode(
-                'utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
+            send_message(msg)
         else:
             msg = "ALIVE"
-            heartbeatsocket.sendto(msg.encode(
-                'utf-8'), (HEARTBEAT_HOST, HEARTBEAT_PORT))
+            send_message(msg)
+
         time.sleep(1)  # CPU負荷軽減
         # break
 
@@ -117,7 +133,10 @@ def main():
 
 
 if __name__ == "__main__":
+    now = time.time()
     main()
+
+
 
 # REGISTERING = "registering"      # カード登録状態
 # AUTHENTICATING = "authenticating"  # カード認証状態

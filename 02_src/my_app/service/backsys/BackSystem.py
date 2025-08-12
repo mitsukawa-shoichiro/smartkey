@@ -72,7 +72,7 @@ def check_alive():
     print("死活監視システム起動...")
  
     state = True
-    waittimeMax = 5
+    waittimeMax = 10
     last_AliveTime = time.time()
     while True:
         try:
@@ -98,7 +98,7 @@ def check_alive():
             send_mail(system_mail_config["TITLE"], system_mail_config["TEXT"])
             print('システム異常')
             last_AliveTime = time.time()
-            break
+
  
     print('システム中止')
     heartbeatsocket.close()
