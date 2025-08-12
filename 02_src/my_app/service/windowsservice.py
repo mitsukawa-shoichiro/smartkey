@@ -25,8 +25,9 @@ import logs.log_config_service
 # backsys_path = os.path.join(server_dir, "sendmail", "BackSystem.py")
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'config', 'backend', 'shutdown.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
-    shutdown_time = json.load(f)[0]["shutdown_time"]
-    shutdown_bool = json.load(f)[0]["auto_shutdown"]
+    data = json.load(f)
+    shutdown_time = data[0]["shutdown_time"]
+    shutdown_bool = bool(data[0]["auto_shutdown"])
 
 # def reboot_computer():
 #     now = datetime.datetime.now()
