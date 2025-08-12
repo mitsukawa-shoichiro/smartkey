@@ -27,6 +27,8 @@ sys.path.append(os.path.dirname(__file__))
 
 from backsys import BackSystem 
 from nfcutils import card_check
+
+
 def run_back():
     logging.info("BackSystem thread started")
     BackSystem.main()

@@ -1,4 +1,5 @@
 # Windowsサービスのエントリーポイント
+import json
 import logging
 import subprocess
 import os
@@ -21,10 +22,17 @@ import logs.log_config_service
 # server_dir = os.path.dirname(os.path.abspath(__file__))
 # card_reader_path = os.path.join(server_dir, "nfcutils", "card_check.py")
 # backsys_path = os.path.join(server_dir, "sendmail", "BackSystem.py")
+shutdown_time=10
+CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'config', 'backend', 'shutdown.json'))
+with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+    shutdown_time = json.load(f)[0]["shutdown_time"]
+
+def reboot_computer():
+    time.sleep(shutdown_time)
+    logging.info("ReStartComputer,Waitting"+ str(shutdown_time) + "seconds")
+    os.system("shutdown /r /t 0")  # Windows
 
 
-
-sys.path.append(os.path.dirname(__file__))
 
 from backsys import BackSystem 
 from nfcutils import card_check
@@ -53,8 +61,9 @@ class SmartKeyService(win32serviceutil.ServiceFramework):
         # スレッド起動
         t1 = threading.Thread(target=run_back, daemon=True)
         t2 = threading.Thread(target=run_card, daemon=True)
-        t1.start(); t2.start()
-        self.threads = [t1, t2]
+        t3 = threading.Thread(target=reboot_computer, daemon=True)
+        t1.start(); t2.start() ;t3.start()
+        self.threads = [t1, t2, t3]
 
         # 停止要求を待機
         win32event.WaitForSingleObject(self.hWaitStop, win32event.INFINITE)
