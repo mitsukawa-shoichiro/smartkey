@@ -11,6 +11,7 @@ import win32service
 import win32event
 import servicemanager
 import threading
+import datetime
 # region logs
 # logs ディレクトリのパスを sys.path に追加
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -22,16 +23,36 @@ import logs.log_config_service
 # server_dir = os.path.dirname(os.path.abspath(__file__))
 # card_reader_path = os.path.join(server_dir, "nfcutils", "card_check.py")
 # backsys_path = os.path.join(server_dir, "sendmail", "BackSystem.py")
-shutdown_time=10
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'config', 'backend', 'shutdown.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     shutdown_time = json.load(f)[0]["shutdown_time"]
 
-def reboot_computer():
-    time.sleep(shutdown_time)
-    logging.info("ReStartComputer,Waitting"+ str(shutdown_time) + "seconds")
-    os.system("shutdown /r /t 0")  # Windows
+# def reboot_computer():
+#     now = datetime.datetime.now()
+#     time.sleep(shutdown_time)
+#     logging.info("ReStartComputer,Waitting"+ str(shutdown_time) + "seconds")
+#     os.system("shutdown /r /t 0")  # Windows
+def reboot_computer_at_time():
+    try:
+        reboot_hour, reboot_minute = map(int, shutdown_time.split(':'))
+    except ValueError:
+        logging.error(f"時間情報が無効です: {shutdown_time}. HH:MM形式で指定してください。")
+        return
 
+    while True:
+        now = datetime.datetime.now()
+        reboot_time_today = now.replace(hour=reboot_hour, minute=reboot_minute, second=0, microsecond=0)
+
+        if now < reboot_time_today:
+            wait_seconds = (reboot_time_today - now).total_seconds()
+        else:
+            reboot_time_tomorrow = reboot_time_today + datetime.timedelta(days=1)
+            wait_seconds = (reboot_time_tomorrow - now).total_seconds()
+        
+        time.sleep(wait_seconds)
+
+        logging.info("パソコン再起動します")
+        os.system("shutdown /r /t 0")
 
 
 from backsys import BackSystem 
