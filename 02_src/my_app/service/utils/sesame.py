@@ -43,3 +43,4 @@ def open_sesame():
         print(res.status_code, res.text)
     except Exception as e:
         print("エラー:" + e)
+

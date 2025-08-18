@@ -1,0 +1,7 @@
+[
+
+  {
+    "sesami_connect":"bluetooth",
+    "__comment": "bluetooth or wifi"
+  }
+]

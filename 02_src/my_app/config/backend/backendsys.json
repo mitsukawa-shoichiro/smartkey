@@ -20,5 +20,11 @@
   {
     "TITLE": "システム停止",
     "TEXT": "開錠システムが停止しました。Windowsサービスの再起動をお願いします。"
+  } ,
+
+  {
+    "sesami_connect":"bluetooth",
+    "__comment": "bluetooth or wifi"
   }
 ]
+

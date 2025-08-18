@@ -20,6 +20,10 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     sesame_mail_config = config_list[3]
     card_reader_mail_config = config_list[4]
     system_mail_config = config_list[5]
+    
+    connectSetting = config_list[6]
+
+
 
 sesame_id = sesami_config["sesame_id"]
 x_api_key = sesami_config["x_api_key"]

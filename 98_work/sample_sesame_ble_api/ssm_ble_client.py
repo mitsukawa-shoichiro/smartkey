@@ -209,7 +209,7 @@ class SsmBleClient:
 async def test():
     config = {
         'mac_addr': 'DF:FD:0D:D3:43:8D', # SESAME5のMACアドレス
-        'private_key': 'daf80ccf3864885736250cd73849354c', # アプリから取得した鍵
+        'private_key': '6ec38d24f0c9b88467116ae69b3c6104', # アプリから取得した鍵
         'max_retry_count': 5, # notify通知待機最大回数
         'notify_interval': 1.0 # notify通知待機時間
     }
