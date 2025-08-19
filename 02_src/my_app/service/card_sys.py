@@ -7,7 +7,7 @@ import json
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'config', 'backend', 'connection.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
-    connect_config = config_list[0]
+    connect_config = config_list[1]
 
 
 

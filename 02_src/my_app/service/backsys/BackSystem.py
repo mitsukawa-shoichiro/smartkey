@@ -14,15 +14,17 @@ import logs.log_config_service
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'backendsys.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
-    sesami_config = config_list[0]
-    battery_config = config_list[1]
-    battery_mail_config = config_list[2]
-    sesame_mail_config = config_list[3]
-    card_reader_mail_config = config_list[4]
-    system_mail_config = config_list[5]
-    
-    connectSetting = config_list[6]
+    battery_config = config_list[0]
+    battery_mail_config = config_list[1]
+    sesame_mail_config = config_list[2]
+    card_reader_mail_config = config_list[3]
+    system_mail_config = config_list[4]
+    connectSetting = config_list[5]
 
+CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
+with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+    config_list = json.load(f)
+    sesami_config = config_list[0]
 
 
 sesame_id = sesami_config["sesame_id"]

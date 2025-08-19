@@ -4,6 +4,15 @@ from Crypto.Hash import CMAC
 from Crypto.Cipher import AES
 from enum import Enum
 
+import json
+import os
+CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
+with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+    config_list = json.load(f)
+    sesami_config = config_list[0]
+
+
+
 # BluetoothでSESAMI5を制御するサンプルプログラム
 
 class OP_CODE(Enum):
@@ -207,13 +216,7 @@ class SsmBleClient:
 # ---- 以下テストコード ----
 
 async def open_sesame_bt():
-    config = {
-        'mac_addr': 'DF:FD:0D:D3:43:8D', # SESAME5のMACアドレス
-        'private_key': '6ec38d24f0c9b88467116ae69b3c6104', # アプリから取得した鍵
-        'max_retry_count': 5, # notify通知待機最大回数
-        'notify_interval': 1.0 # notify通知待機時間
-    }
-    sbc = SsmBleClient(config)
+    sbc = SsmBleClient(sesami_config)
     await sbc.connect()
     await sbc.start_notify()
     await sbc.login()
