@@ -6,11 +6,11 @@ from enum import Enum
 
 import json
 import os
-CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
+CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
+    __file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
     sesami_config = config_list[0]
-
 
 
 # BluetoothでSESAMI5を制御するサンプルプログラム
@@ -18,6 +18,7 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
 class OP_CODE(Enum):
     RESPONSE = 0x07
     PUBLISH = 0x08
+
 
 class ITEM_CODE(Enum):
     NONE = 0
@@ -35,6 +36,7 @@ class ITEM_CODE(Enum):
     LOCK = 82
     UNLOCK = 83
 
+
 class SsmBleClient:
     def __init__(self, config):
         self.__isWait = False
@@ -49,16 +51,17 @@ class SsmBleClient:
         self._decrypt_counter = 0
         self._encrypt_counter = 0
         self.isLogin = False
-        
-        self._client = BleakClient(self._config['mac_addr'], address_type="random")
-    
+
+        self._client = BleakClient(
+            self._config['mac_addr'], address_type="random")
+
     async def connect(self):
         await self._client.connect()
         if self._client.is_connected:
             print(f"connection OK! MAC Address: {self._config['mac_addr']}")
         else:
             print("connection error!")
-         
+
         for service in self._client.services:
             for char in service.characteristics:
                 if self._notify_uuid is None and 'read' in char.properties and 'notify' in char.properties:
@@ -77,25 +80,25 @@ class SsmBleClient:
         self.__isWait = True
         await self._client.start_notify(self._notify_uuid, self.__handleNotification)
         await self._wait()
-    
+
     async def stop_notify(self):
         print("notify stop!")
         await self._client.stop_notify(self._notify_uuid)
-    
+
     async def login(self):
         self.__isWait = True
         command = bytes([0x02]) + self._token
         print(f"cmd send login data: [{command}] encrypt: {False}")
         await self._send(command, False)
         await self._wait()
-    
+
     async def history(self):
         self.__isWait = True
         command = bytes([ITEM_CODE.HISTORY.value]) + bytes([0x01])
         print(f"cmd send history data: [{command}] encrypt: {True}")
         await self._send(command, True)
         await self._wait()
-    
+
     async def unlock(self):
         self.__isWait = True
         tag = 'SampleUnlock'.encode()
@@ -103,7 +106,7 @@ class SsmBleClient:
         print(f"cmd send unlock data: [{command}] encrypt: {True}")
         await self._send(command, True)
         await self._wait()
-    
+
     def __handleNotification(self, handle, data):
         print(f"handle: {handle}, data: {data}")
 
@@ -124,7 +127,7 @@ class SsmBleClient:
         else:
             print(f"packet error!")
             return
-        
+
         print(f"Notify data: {data}")
         self._op_code = data[0]
         self._item_code = data[1]
@@ -138,7 +141,7 @@ class SsmBleClient:
                     print(f"Login NG!")
                     self.isLogin = False
             elif self._item_code == ITEM_CODE.UNLOCK.value:
-                #解錠結果受信
+                # 解錠結果受信
                 if data[2] == 0x00:
                     print(f"unlocked!")
                 else:
@@ -149,7 +152,8 @@ class SsmBleClient:
             if self._item_code == ITEM_CODE.INITIAL.value:
                 # ランダムコード受信
                 self._random_code = bytes([data[2], data[3], data[4], data[5]])
-                cobj = CMAC.new(bytes.fromhex(self._config['secret_key']), ciphermod=AES)
+                cobj = CMAC.new(bytes.fromhex(
+                    self._config['secret_key']), ciphermod=AES)
                 cobj.update(self._random_code)
                 self._token = cobj.digest()
                 print(f"Random Code: {self._random_code}")
@@ -158,16 +162,16 @@ class SsmBleClient:
                 self._encrypt_counter = 0
         else:
             print('response error!')
-        
+
         self.__isWait = False
-    
+
     async def _wait(self):
         retry_count = 0
-        while self.__isWait or retry_count > self._config['max_retry_count']:
+        while self.__isWait or retry_count < self._config['max_retry_count']:
             print(f"wait... {retry_count}")
             retry_count += 1
-            await asyncio.sleep(self._config['notify_interval']) 
-    
+            await asyncio.sleep(self._config['notify_interval'])
+
     async def _send(self, send_data, is_encrypt):
         if is_encrypt:
             send_data = self._encrypt(send_data)
@@ -193,11 +197,13 @@ class SsmBleClient:
 
             buffer = bytes([header]) + buffer
             await self._client.write_gatt_char(self._write_uuid, buffer)
-    
+
     def _encrypt(self, data):
         nouse = bytes([0x00])
-        ccm_iv = self._encrypt_counter.to_bytes(8, "little") + nouse + self._random_code
-        cobj = AES.new(self._token, AES.MODE_CCM, ccm_iv, mac_len=4,msg_len=len(data), assoc_len=1)
+        ccm_iv = self._encrypt_counter.to_bytes(
+            8, "little") + nouse + self._random_code
+        cobj = AES.new(self._token, AES.MODE_CCM, ccm_iv,
+                       mac_len=4, msg_len=len(data), assoc_len=1)
         cobj.update(bytes([0x00]))
         enc_data, tag = cobj.encrypt_and_digest(data)
         tag4 = tag[0:4]
@@ -206,7 +212,8 @@ class SsmBleClient:
 
     def _decrypt(self, data):
         nouse = bytes([0x00])
-        ccm_iv = self._decrypt_counter.to_bytes(8, "little") + nouse + self._random_code
+        ccm_iv = self._decrypt_counter.to_bytes(
+            8, "little") + nouse + self._random_code
         cobj = AES.new(self._token, AES.MODE_CCM, nonce=ccm_iv, mac_len=4)
         cobj.update(bytes([0x00]))
         decode_data = cobj.decrypt(data[:-4])
@@ -214,6 +221,7 @@ class SsmBleClient:
         return decode_data
 
 # ---- 以下テストコード ----
+
 
 async def open_sesame_bt():
     sbc = SsmBleClient(sesami_config)
