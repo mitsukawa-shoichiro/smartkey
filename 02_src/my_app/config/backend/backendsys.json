@@ -1,9 +1,5 @@
 [
-  {
-    "sesame_id": "11200413-0002-0611-3F00-9200FFFFFFFF",
-    "x_api_key": "qBT5z7uXeG5vBIshsLktb6UOATb7aS6S1Q0GLMhH",
-    "secret_key": "6ec38d24f0c9b88467116ae69b3c6104"
-  },
+
   { "battery_limit": "50", "sleep_time": "3600" },
   {
     "TITLE": "SESAME電池交換のお知らせ",
@@ -20,11 +16,6 @@
   {
     "TITLE": "システム停止",
     "TEXT": "開錠システムが停止しました。Windowsサービスの再起動をお願いします。"
-  } ,
-
-  {
-    "sesami_connect":"bluetooth",
-    "__comment": "bluetooth or wifi"
   }
 ]
 

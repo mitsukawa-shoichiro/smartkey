@@ -149,7 +149,7 @@ class SsmBleClient:
             if self._item_code == ITEM_CODE.INITIAL.value:
                 # ランダムコード受信
                 self._random_code = bytes([data[2], data[3], data[4], data[5]])
-                cobj = CMAC.new(bytes.fromhex(self._config['private_key']), ciphermod=AES)
+                cobj = CMAC.new(bytes.fromhex(self._config['secret_key']), ciphermod=AES)
                 cobj.update(self._random_code)
                 self._token = cobj.digest()
                 print(f"Random Code: {self._random_code}")
@@ -227,6 +227,7 @@ async def open_sesame_bt():
 
 if __name__ == "__main__":
     asyncio.run(open_sesame_bt())
+
 
 # Service: 00001800-0000-1000-8000-00805f9b34fb
 #  Characteristic: 00002a00-0000-1000-8000-00805f9b34fb
