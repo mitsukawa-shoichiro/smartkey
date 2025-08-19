@@ -8,7 +8,7 @@ from Crypto.Cipher import AES
 import os
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
-    __file__), '..', '..', 'config', 'backend', 'backendsys.json'))
+    __file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
     sesami_config = config_list[0]
