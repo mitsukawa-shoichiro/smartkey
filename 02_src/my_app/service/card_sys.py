@@ -83,7 +83,7 @@ def receive_card(card_number: str, card_leader_id: int):
                 last_card_id = card_id
                 last_card_timestamp = time.time()
                 
-                if(con):
+                if(connect_config):
                     unlock()
                 else:
                     unlock_bt()
