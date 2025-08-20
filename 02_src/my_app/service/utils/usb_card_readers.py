@@ -29,7 +29,10 @@ def get_all_serials():
 
 
 def get_readers():
-    config = load_config()
+    BASE_DIR = os.path.dirname(__file__) + "\\..\\config"
+    config_path = os.path.join(BASE_DIR, "usb_settings.json")
+
+    config = load_config(config_path)
     desired_order = list(config.values())  # 例: ["0373604","0371756"]
 
     r = readers()  # pyscard で取得
