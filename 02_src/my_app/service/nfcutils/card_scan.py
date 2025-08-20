@@ -1,10 +1,10 @@
 # 1. ライブラリのインポート
 from os import name
 from smartcard.Exceptions import NoCardException
-from get_reader import get_reader
 import json
 import os
 import pythoncom
+from service.utils.usb_card_readers import get_readers
 
 # USB設定ファイルのパスを指定
 def load_config():
@@ -21,18 +21,35 @@ def load_config():
     with open(CONFIG_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
-register_reader = get_reader()
+def register_reader():
+    config = load_config()
+    reader_list = get_readers()
+    
+    if not reader_list:
+        print("カードリーダーが見つかりませんでした")
+        return None
+    
+    if len(reader_list) == 1:
+        return reader_list[0]
+    
+    if len(reader_list) > 1:
+        exit_id = config.get("出口")
+        for r,s in reader_list:
+            if exit_id in str(s):
+                return r
+
+register_readers = register_reader()
 
 def scan_card():
     pythoncom.CoInitialize()  # COM初期化
     # 2. カードリーダーを取得
-    if not register_reader:
+    if not register_readers:
         return None
     # 3. カードリーダーをチェック
-    print(f"カードリーダー1をチェック中: {register_reader}")
+    print(f"カードリーダー1をチェック中: {register_readers}")
     try:
         # カードリーダーに接続
-        connection = register_reader.createConnection()
+        connection = register_readers.createConnection()
         connection.connect()
             
         # カードを読み取り
