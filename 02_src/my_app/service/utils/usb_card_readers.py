@@ -4,14 +4,18 @@ import os
 from smartcard.System import readers
 import json
 
+import pythoncom
+import pywintypes
+
+
 
 # 設定ファイル読み込み
 def load_config():
-    DIR_NAME = os.path.dirname(
-        os.path.abspath(__file__)
-    )
-    CONFIG_PATH = os.path.join(DIR_NAME, "usb_setting.json")
-    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+     BASE_DIR = os.path.dirname(__file__) + "\\..\\config"
+     config_path = os.path.join(BASE_DIR, "usb_settings.json")
+
+
+     with open(config_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -29,10 +33,8 @@ def get_all_serials():
 
 
 def get_readers():
-    BASE_DIR = os.path.dirname(__file__) + "\\..\\config"
-    config_path = os.path.join(BASE_DIR, "usb_settings.json")
-
-    config = load_config(config_path)
+   
+    config = load_config()
     desired_order = list(config.values())  # 例: ["0373604","0371756"]
 
     r = readers()  # pyscard で取得
