@@ -11,7 +11,7 @@ import pywintypes
 
 # 設定ファイル読み込み
 def load_config():
-     BASE_DIR = os.path.dirname(__file__) + "\\..\\config"
+     BASE_DIR = os.path.dirname(__file__) + "\\..\\..\\config"
      config_path = os.path.join(BASE_DIR, "usb_settings.json")
 
 
