@@ -1,6 +1,4 @@
 [
-
-
   {
     "sesame_id": "11200413-0002-0611-3F00-9200FFFFFFFF",
     "x_api_key": "qBT5z7uXeG5vBIshsLktb6UOATb7aS6S1Q0GLMhH",
@@ -10,7 +8,7 @@
     "notify_interval": 1.0
   },
   {
-    "sesami_connect":"bluetooth",
+    "sesami_connect": "wifi",
     "__comment": "bluetooth or wifi"
   }
 ]

@@ -1,21 +1,20 @@
+from .utils.sesami_bluetooth import open_sesame_bt
+from .utils.sesame import open_sesame
+from .nfcutils.card_scan import scan_card
+from .db_manager import check_card, insert_card_id
 import sys
 import os
 import time
 from enum import Enum
+import logging
 
 import json
-CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'config', 'backend', 'connection.json'))
+CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
+    __file__), '..', 'config', 'backend', 'sesami_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
-    connect_config = config_list[1]
+    connect_config = config_list[1]["sesami_connect"]
 
-
-
-
-from .db_manager import check_card, insert_card_id
-from .nfcutils.card_scan import scan_card
-from .utils.sesame import open_sesame
-from .utils.sesami_bluetooth import open_sesame_bt
 
 class CardReaderState(Enum):
     REGISTERING = "registering"      # カード登録状態
@@ -82,14 +81,12 @@ def receive_card(card_number: str, card_leader_id: int):
             if card_id != last_card_id or (time.time() - last_card_timestamp > 6):
                 last_card_id = card_id
                 last_card_timestamp = time.time()
-                
-                if(connect_config):
+
+                if connect_config == "wifi":
                     unlock()
-                else:
+                elif connect_config == "bluetooth":
                     unlock_bt()
 
-                
-                
                 insert_card_id(card_id, card_leader_id)
 
 
@@ -98,14 +95,14 @@ def unlock():
     解錠操作を実行します。
     """
     open_sesame()
-    
+
+
 def unlock_bt():
     """
     Bluetoothを使用して解錠操作を実行します。
     """
     open_sesame_bt()
- 
 
 
-
-
+if __name__ == "main":
+    receive_card(860703, 1)
