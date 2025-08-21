@@ -19,36 +19,45 @@ def load_config():
 
 def get_all_serials():
 
-    start = time.time()
     c = wmi.WMI()
-
-    # WQLでDeviceIDにターゲット文字列を含むものだけ取得
-    wql = (
-        "SELECT DeviceID "
-        "FROM Win32_PnPEntity "
-        "WHERE DeviceID LIKE '%VID_054C&PID_0DC9%'"
-    )
-    pattern = re.compile(r"USB\\VID_054C&PID_0DC9(?:&MI_\d)?\\([^\\]+)$")
-
     serials = []
-    for dev in c.query(wql):
-        m = pattern.search(dev.DeviceID or "")
-        if m:
-            serials.append(m.group(1))
+    config = load_config()
 
-    print(f"{time.time() - start} 秒、シリアル")
+    c = wmi.WMI()
+    serials = []
+
+    dev = config["devices"]
+    for direction in ["入口", "出口"]:
+
+        info = dev[direction]
+        vid = info["vid"]
+        pid = info["pid"]
+
+        wql = f"SELECT DeviceID FROM Win32_PnPEntity WHERE DeviceID LIKE '%VID_{vid}&PID_{pid}%'"
+        pattern = re.compile(
+            rf"USB\\VID_{vid}&PID_{pid}(?:&MI_\d)?\\([^\\]+)$")
+
+        for d in c.query(wql):
+            m = pattern.search(d.DeviceID or "")
+            if m:
+                serials.append(m.group(1))
+
     return serials
 
 
 def get_readers():
     start = time.time()
     config = load_config()
-    desired_order = list(config.values())
+    desired_order = []
+    devices = config["devices"]
+    print(type(devices))
+    for direction in ["入口", "出口"]:
+        info = devices[direction]
+        desired_order.append(info["serial"])
 
-    r = readers()  # pyscard で取得
-    serials = get_all_serials()  # WMI で取得
+    r = readers()
+    serials = get_all_serials()
 
-    # pyscard reader に serial を順番に割り当て
     reader_serial_map = {}
     for i, reader in enumerate(r):
         if i < len(serials):
@@ -71,3 +80,4 @@ def get_readers():
 if __name__ == "__main__":
     for reader, serial in get_readers():
         print(f"{reader} -> {serial}")
+    print(get_all_serials())
