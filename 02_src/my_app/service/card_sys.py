@@ -6,6 +6,7 @@ import sys
 import os
 import time
 from enum import Enum
+import asyncio
 import logging
 
 import json
@@ -101,8 +102,4 @@ def unlock_bt():
     """
     Bluetoothを使用して解錠操作を実行します。
     """
-    open_sesame_bt()
-
-
-if __name__ == "main":
-    receive_card(860703, 1)
+    asyncio.run(open_sesame_bt())

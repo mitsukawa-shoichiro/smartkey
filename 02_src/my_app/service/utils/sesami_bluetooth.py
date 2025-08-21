@@ -3,7 +3,7 @@ from bleak import BleakClient
 from Crypto.Hash import CMAC
 from Crypto.Cipher import AES
 from enum import Enum
-
+import logging
 import json
 import os
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
@@ -167,7 +167,7 @@ class SsmBleClient:
 
     async def _wait(self):
         retry_count = 0
-        while self.__isWait or retry_count < self._config['max_retry_count']:
+        while self.__isWait and retry_count < self._config['max_retry_count']:
             print(f"wait... {retry_count}")
             retry_count += 1
             await asyncio.sleep(self._config['notify_interval'])
@@ -224,14 +224,18 @@ class SsmBleClient:
 
 
 async def open_sesame_bt():
-    sbc = SsmBleClient(sesami_config)
-    await sbc.connect()
-    await sbc.start_notify()
-    await sbc.login()
-    if sbc.isLogin:
-        await sbc.unlock()
-    await sbc.stop_notify()
-    await sbc.disconnect()
+    try:
+        sbc = SsmBleClient(sesami_config)
+        await sbc.connect()
+        await sbc.start_notify()
+        await sbc.login()
+        if sbc.isLogin:
+            await sbc.unlock()
+        await sbc.stop_notify()
+        await sbc.disconnect()
+        logging.info(f"bluetooth解錠")
+    except Exception as e:
+        logging.error(f"bluetooth解錠失敗：{e}")
 
 if __name__ == "__main__":
     asyncio.run(open_sesame_bt())
