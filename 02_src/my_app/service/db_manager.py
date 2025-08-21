@@ -1,5 +1,7 @@
 import os
 import sqlite3
+import json
+import logging
 from datetime import datetime, timedelta
 
 
@@ -7,6 +9,17 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))+"/.."+"/db"
 DB_PATH = os.path.join(BASE_DIR, 'dataBase.db')
 print(BASE_DIR)
 
+def load_config():
+    base_dir = os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))
+    )
+
+    CONFIG_PATH = os.path.normpath(
+        os.path.join(base_dir,"config", "usb_settings.json")
+    )
+    logging.info(f"USB設定ファイルのパス: {CONFIG_PATH}")
+    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 def check_card(cardIDM):
     """
@@ -50,7 +63,17 @@ def get_last_date_time(card_id, card_leader_id):
 
 def insert_card_id(card_id, card_leader_id):
     # カードIDをaccess_logsテーブルに挿入します。
-    dt = get_last_date_time(card_id, card_leader_id)
+    logging.info(f"カードIDを挿入: {card_id}, リーダーID: {card_leader_id}")
+    config = load_config()
+
+    if config.get("出口") == card_leader_id:
+        eventtype = 1
+    elif config.get("入口") == card_leader_id:
+        eventtype = 0
+    else:
+        logging.error("不明なリーダーIDです")
+        return
+    dt = get_last_date_time(card_id, eventtype)
     if dt:
         now = datetime.now()
 
@@ -60,6 +83,6 @@ def insert_card_id(card_id, card_leader_id):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO access_logs (method, card_id, eventtype) VALUES(?,?,?)", ('カード', card_id, card_leader_id))
+        "INSERT INTO access_logs (method, card_id, eventtype) VALUES(?,?,?)", ('カード', card_id, eventtype))
     conn.commit()
     conn.close()

@@ -10,6 +10,7 @@ import hashlib
 from smartcard.System import readers
 from smartcard.Exceptions import NoCardException
 from smartcard.util import toHexString
+from service.utils.usb_card_readers import get_readers
 import time
 import sys
 import os
@@ -53,6 +54,17 @@ def sender():
         except Exception as e:
             print("送信失敗:", e)
 
+def get_reader():
+    reader_list = get_readers()
+
+    if not reader_list:
+        print("カードリーダーが見つかりませんでした")
+        return None
+
+    readers_list = [reader_list[i][0] for i in range(len(reader_list))]
+    return readers_list
+
+card_reader = get_readers()
 
 def reciever():
     HEARTBEAT_HOST = '127.0.0.1'
@@ -79,9 +91,9 @@ def send_message(message):
 def reader_loop():
     while True:
         # 全てのカードリーダーを取得
-        reader_list = readers()
+        reader_list = card_reader
         # 全てのカードリーダーをチェック
-        for i, reader in enumerate(reader_list):
+        for reader,number in reader_list:
             try:
                 # カードリーダーに接続
                 conn = reader.createConnection()
@@ -95,8 +107,8 @@ def reader_loop():
                 if [sw1, sw2] == [0x90, 0x00]:
                     idm = ''.join(format(byte, '02X') for byte in response)
                     if (state != "registering"):
-                        event_q.put((idm, i))
-                    print(f"カードリーダー {i+1} でカードを検出、IDm:", idm)
+                        event_q.put((idm, number))
+                    print(f"カードリーダー {number} でカードを検出、IDm:", idm)
                     conn.disconnect()
                     break  # カードを検出したら他のリーダーをチェックしない
                 else:
@@ -105,7 +117,7 @@ def reader_loop():
             except NoCardException:
                 conn.disconnect()
             except Exception as e:
-                logging.error(f"カードリーダー {i+1} でエラー:", e)
+                logging.error(f"カードリーダー {number} でエラー:", e)
                 continue
             
         global now

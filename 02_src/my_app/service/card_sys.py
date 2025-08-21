@@ -85,10 +85,12 @@ def receive_card(card_number: str, card_leader_id: int):
 
                 if connect_config == "wifi":
                     unlock()
+                    logging.info("a")
                 elif connect_config == "bluetooth":
                     unlock_bt()
 
                 insert_card_id(card_id, card_leader_id)
+                logging.info(f"カード認証成功: {card_id} (リーダーID: {card_leader_id})")
 
 
 def unlock():
