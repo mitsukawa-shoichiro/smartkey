@@ -17,13 +17,21 @@ import os
 import logging
 import socket
 
-now= time.time()
-HEARTBEAT_ERROR_GAP_S=10
+now = time.time()
+HEARTBEAT_ERROR_GAP_S = 10
 HEARTBEAT_HOST = '127.0.0.1'
 HEARTBEAT_PORT = 54321
 heartbeatsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 state = "authenticating"
+
+BASE_DIR = os.path.dirname(__file__) + "\\..\\..\\config"
+config_path = os.path.join(BASE_DIR, "usb_settings.json")
+
+with open(config_path, "r", encoding="utf-8") as f:
+    config = json.load(f)
+
+COUNT_READER = config["設置台数"]
 
 
 # region logs
@@ -54,6 +62,7 @@ def sender():
         except Exception as e:
             print("送信失敗:", e)
 
+
 def get_reader():
     reader_list = get_readers()
 
@@ -64,7 +73,9 @@ def get_reader():
     readers_list = [reader_list[i][0] for i in range(len(reader_list))]
     return readers_list
 
+
 card_reader = get_readers()
+
 
 def reciever():
     HEARTBEAT_HOST = '127.0.0.1'
@@ -88,12 +99,14 @@ def send_message(message):
         logging.error(f"card_checkがメッセージ送信失敗: {e}")
         print(f"メッセージ送信失敗: {e}")
 
+
 def reader_loop():
+    print(COUNT_READER)
     while True:
         # 全てのカードリーダーを取得
         reader_list = card_reader
         # 全てのカードリーダーをチェック
-        for reader,number in reader_list:
+        for reader, number in reader_list:
             try:
                 # カードリーダーに接続
                 conn = reader.createConnection()
@@ -119,15 +132,15 @@ def reader_loop():
             except Exception as e:
                 logging.error(f"カードリーダー {number} でエラー:", e)
                 continue
-            
+
         global now
         gap = time.time() - now
         now = time.time()
 
         if gap > HEARTBEAT_ERROR_GAP_S:
-            logging.error("card_check.pyのポーリングが遅延しています" + str(gap)+ "秒")
+            logging.error("card_check.pyのポーリングが遅延しています" + str(gap) + "秒")
 
-        if (len(reader_list) <= 1):
+        if (len(reader_list) <= int(COUNT_READER)):
             msg = "DEAD"
             send_message(msg)
         else:
@@ -136,6 +149,15 @@ def reader_loop():
 
         time.sleep(1)  # CPU負荷軽減
         # break
+
+# REGISTERING = "registering"      # カード登録状態
+# AUTHENTICATING = "authenticating"  # カード認証状態
+
+
+def changeState(newState):
+    global state
+    state = newState
+    print("現在のstate"+state)
 
 
 def main():
@@ -146,15 +168,3 @@ def main():
 
 if __name__ == "__main__":
     now = time.time()
-    main()
-
-
-
-# REGISTERING = "registering"      # カード登録状態
-# AUTHENTICATING = "authenticating"  # カード認証状態
-
-
-def changeState(newState):
-    global state
-    state = newState
-    print("現在のstate"+state)
