@@ -16,6 +16,7 @@ import sys
 import os
 import logging
 import socket
+import pythoncom
 
 now = time.time()
 HEARTBEAT_ERROR_GAP_S = 10
@@ -64,18 +65,18 @@ def sender():
 
 
 def get_reader():
-    reader_list = get_readers()
+    reader_list = get_readers()  # [(reader, serial), ...]
+    state = True
+    logging.info(f"カードリーダーの数: {len(reader_list)}")
+    while True:
+        if len(reader_list) >= COUNT_READER:
+            logging.info("カードリーダーの数が設定台数と一致しました。")
+            return reader_list
 
-    if not reader_list:
-        print("カードリーダーが見つかりませんでした")
-        return None
-
-    readers_list = [reader_list[i][0] for i in range(len(reader_list))]
-    return readers_list
-
-
-card_reader = get_readers()
-
+        if COUNT_READER > len(reader_list) and state:
+            logging.error(f"カードリーダーの数が不足しています: {len(reader_list)} / {COUNT_READER}")
+            state = False
+        time.sleep(1)
 
 def reciever():
     HEARTBEAT_HOST = '127.0.0.1'
@@ -101,10 +102,12 @@ def send_message(message):
 
 
 def reader_loop():
+    pythoncom.CoInitialize()
     print(COUNT_READER)
+    reader_list = get_reader()
     while True:
-        # 全てのカードリーダーを取得
-        reader_list = card_reader
+        
+        
         # 全てのカードリーダーをチェック
         for reader, number in reader_list:
             try:
@@ -140,7 +143,7 @@ def reader_loop():
         if gap > HEARTBEAT_ERROR_GAP_S:
             logging.error("card_check.pyのポーリングが遅延しています" + str(gap) + "秒")
 
-        if (len(reader_list) < int(COUNT_READER)):
+        if (len(reader_list) < (COUNT_READER)):
             msg = "DEAD"
             send_message(msg)
         else:
