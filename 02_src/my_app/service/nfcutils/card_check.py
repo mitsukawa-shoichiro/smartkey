@@ -140,7 +140,7 @@ def reader_loop():
         if gap > HEARTBEAT_ERROR_GAP_S:
             logging.error("card_check.pyのポーリングが遅延しています" + str(gap) + "秒")
 
-        if (len(reader_list) <= int(COUNT_READER)):
+        if (len(reader_list) < int(COUNT_READER)):
             msg = "DEAD"
             send_message(msg)
         else:
