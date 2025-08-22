@@ -5,6 +5,7 @@ import json
 import os
 import pythoncom
 from service.utils.usb_card_readers import get_readers
+import logging
 
 # USB設定ファイルのパスを指定
 
@@ -49,12 +50,13 @@ def scan_card():
     # 2. カードリーダーを取得
     register_readers = register_reader()
     if not register_readers:
+        logging.error("カードリーダーが接続されてません")
         return None
     # 3. カードリーダーをチェック
-    print(f"カードリーダー1をチェック中: {register_readers}")
+    logging.info(f"カードリーダー1をチェック中: {register_readers}")
     try:
         # カードリーダーに接続
-        connection = register_readers.createConnection()
+        connection = register_readers[0].createConnection()
         connection.connect()
 
         # カードを読み取り
@@ -64,16 +66,16 @@ def scan_card():
         # 読み取り成功の場合
         if sw1 == 0x90 and sw2 == 0x00:
             idm = ''.join(format(byte, '02X') for byte in response)
-            print(f"登録用リーダーでカードを検出、IDm:", idm)
+            logging.info(f"登録用リーダーでカードを検出、IDm:", idm)
             connection.disconnect()
             return idm  # カードIDを返す
         else:
-            print(f"登録用リーダーでカードを検出できませんでした")
+
             connection.disconnect()
             return None
 
     except Exception as e:
-        print(f"登録用リーダーでエラーが発生しました:", e)
+        logging.info(f"登録用リーダーでエラーが発生しました:", e)
         return None
 
 
