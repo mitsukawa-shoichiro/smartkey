@@ -10,7 +10,7 @@ CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
-    sesami_config = config_list[0]
+    sesami_config = config_list["device"]
 
 
 # BluetoothでSESAMI5を制御するサンプルプログラム
@@ -58,7 +58,7 @@ class SsmBleClient:
     async def connect(self):
         await self._client.connect()
         if self._client.is_connected:
-            print(f"connection OK! MAC Address: {self._config['mac_addr']}")
+            logging.debug(f"connection OK! MAC Address: {self._config['mac_addr']}")
         else:
             print("connection error!")
 

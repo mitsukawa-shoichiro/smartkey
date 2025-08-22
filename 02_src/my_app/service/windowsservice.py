@@ -26,8 +26,8 @@ import logs.log_config_service
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'config', 'backend', 'shutdown.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     data = json.load(f)
-    shutdown_time = data[0]["shutdown_time"]
-    shutdown_bool = bool(data[0]["auto_shutdown"])
+    shutdown_time = data["shutdown_time"]
+    shutdown_bool = bool(data["auto_shutdown"])
 
 # def reboot_computer():
 #     now = datetime.datetime.now()

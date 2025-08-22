@@ -18,17 +18,17 @@ CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', '..', 'config', 'backend', 'backendsys.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
-    battery_config = config_list[0]
-    battery_mail_config = config_list[1]
-    sesame_mail_config = config_list[2]
-    card_reader_mail_config = config_list[3]
-    system_mail_config = config_list[4]
+    battery_config = config_list["battery_observation"]
+    battery_mail_config = config_list["battery_mail"]
+    sesame_mail_config = config_list["sesame_mail"]
+    card_reader_mail_config = config_list["cardreader_mail"]
+    system_mail_config = config_list["system_mail"]
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
-    sesami_config = config_list[0]
+    sesami_config = config_list["device"]
 
 
 sesame_id = sesami_config["sesame_id"]

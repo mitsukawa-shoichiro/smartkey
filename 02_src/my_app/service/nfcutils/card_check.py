@@ -70,12 +70,12 @@ def get_reader():
     logging.info(f"カードリーダーの数: {len(reader_list)}")
     while True:
         if len(reader_list) >= COUNT_READER:
-            logging.info("カードリーダーの数が設定台数と一致しました。")
+            logging.info("カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。")
             return reader_list
 
         if COUNT_READER > len(reader_list) and state:
             logging.error(
-                f"カードリーダーの数が不足しています: {len(reader_list)} / {COUNT_READER}")
+                f"カードリーダーの数が不足しているためカードの読み込みがスタートしていません: {len(reader_list)} / {COUNT_READER}")
             state = False
         msg = "DEAD"
         send_message(msg)

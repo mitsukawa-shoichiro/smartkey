@@ -11,7 +11,7 @@ import logs.log_config_service
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'mail.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
-    mail_config = json.load(f)[0]
+    mail_config = json.load(f)
 
 mymail = mail_config['mailadress']
 mypass = mail_config['password']

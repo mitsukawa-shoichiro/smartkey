@@ -1,9 +1,7 @@
-[
-  {
-    "mailadress": "h-ryu@try-ltd.co.jp",
-    "password": "!Hr13001",
-    "to_mail": "",
-    "smtp_server": "try-ltd.sakura.ne.jp",
-    "port": 465
-  }
-]
+{
+  "mailadress": "h-ryu@try-ltd.co.jp",
+  "password": "!Hr13001",
+  "to_mail": "200110032626takahi@gmail.com",
+  "smtp_server": "try-ltd.sakura.ne.jp",
+  "port": 465
+}

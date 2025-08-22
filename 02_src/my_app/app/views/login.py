@@ -41,20 +41,20 @@ def login(page: ft.Page):
     )
 
     def do_login(e):
-        for account in load_accounts():
-            print(len(username.value))
-            if account["username"] == username.value and account["password"] == password.value:
-                logging.info("ログイン成功")
-                page.go("/index")
-                page.update()
-                return
+        account = load_accounts()
+        print(len(username.value))
+        if account["username"] == username.value and account["password"] == password.value:
+            logging.info("ログイン成功")
+            page.go("/index")
+            page.update()
+            return
 
-            else:
-                msg.value = "ユーザー名またはパスワードが間違っています。"
-                msg_container.visible = True
-                logging.warning("ログイン失敗")
-                page.update()
-                username.focus()
+        else:
+            msg.value = "ユーザー名またはパスワードが間違っています。"
+            msg_container.visible = True
+            logging.warning("ログイン失敗")
+            page.update()
+            username.focus()
 
     login_btn = ft.ElevatedButton("ログイン",
                                   on_click=do_login,
