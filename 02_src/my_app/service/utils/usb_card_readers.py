@@ -32,12 +32,19 @@ def get_all_serials():
         info = dev[direction]
         vid = info["vid"]
         pid = info["pid"]
-
+        s = info["serial"]
+        if s.isdigit():
+            serial_regex = rf"\d{{{len(s)}}}"
+        else:
+            # 使用されている文字だけを許容する
+            serial_regex = "[" + "".join(sorted(set(s))) + "]+"
+        print(serial_regex)
         wql = f"SELECT DeviceID FROM Win32_PnPEntity WHERE DeviceID LIKE '%VID_{vid}&PID_{pid}%'"
         pattern = re.compile(
-            rf"USB\\VID_{vid}&PID_{pid}(?:&MI_\d)?\\([^\\]+)$")
+            rf"USB\\VID_{vid}&PID_{pid}\\({serial_regex})$", re.IGNORECASE)
 
         for d in c.query(wql):
+
             m = pattern.search(d.DeviceID or "")
             if m:
                 serials.append(m.group(1))
@@ -80,4 +87,4 @@ def get_readers():
 if __name__ == "__main__":
     for reader, serial in get_readers():
         print(f"{reader} -> {serial}")
-    print(get_all_serials())
+    # print(get_all_serials())
