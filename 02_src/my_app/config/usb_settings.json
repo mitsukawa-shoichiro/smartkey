@@ -5,13 +5,13 @@
       "name": "PaSoRi RC-S300",
       "vid": "054C",
       "pid": "0DC9",
-      "serial": "0373604"
+      "serial": "0371756"
     },
     "出口": {
       "name": "PaSoRi RC-S300",
       "vid": "054c",
       "pid": "0DC9",
-      "serial": "0371756"
+      "serial": "0373604"
     }
   }
 }
