@@ -56,7 +56,7 @@ def scan_card():
     logging.info(f"カードリーダー1をチェック中: {register_readers}")
     try:
         # カードリーダーに接続
-        connection = register_readers[0].createConnection()
+        connection = register_readers.createConnection()
         connection.connect()
 
         # カードを読み取り
