@@ -33,9 +33,12 @@ def get_all_serials():
         vid = info["vid"]
         pid = info["pid"]
         s = info["serial"]
-
-        serial_regex = re.escape(s)
-
+        if s.isdigit():
+            serial_regex = rf"\d{{{len(s)}}}"
+        else:
+            # 使用されている文字だけを許容する
+            serial_regex = "[" + "".join(sorted(set(s))) + "]+"
+        print(serial_regex)
         wql = f"SELECT DeviceID FROM Win32_PnPEntity WHERE DeviceID LIKE '%VID_{vid}&PID_{pid}%'"
         pattern = re.compile(
             rf"USB\\VID_{vid}&PID_{pid}\\({serial_regex})$", re.IGNORECASE)
