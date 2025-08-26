@@ -37,7 +37,7 @@ def main(page: ft.Page):
     logging.info("GUIが起動されました")
 
 
-ft.app(target=main)
+ft.app(target=main, assets_dir="app")
 
 
 @atexit.register

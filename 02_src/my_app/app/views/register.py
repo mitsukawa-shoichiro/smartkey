@@ -6,7 +6,7 @@ from service.card_sys import set_state, get_state, get_card
 from app.utils.thread_state import thread_handle, stop_event
 import service.db_manager as service_db
 import socket
-
+import threading
 CARD_NUMBER = None
 
 HOST = '127.0.0.1'
@@ -44,7 +44,7 @@ def registering(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.title = "ICカード情報読み込み中"
 
-    loading_text = ft.Text("ICカード情報読み込み中", size=60,
+    loading_text = ft.Text("30秒以内に登録したいカードを\n出口のカードリーダーにかざしてください", size=35,
                            text_align=ft.TextAlign.CENTER)
     loading_spinner = ft.CupertinoActivityIndicator(
         radius=50,
@@ -64,6 +64,14 @@ def registering(page: ft.Page):
             )
         )
     )
+    img = ft.Image(
+        src=f"img/card_reader.JPG",
+        height=100,
+        width=200,
+        fit=ft.ImageFit.CONTAIN,
+
+
+    )
     return ft.View(
         "/register",
         controls=[
@@ -73,6 +81,7 @@ def registering(page: ft.Page):
                 content=ft.Column(
                     controls=[
                         ft.Container(content=loading_text, padding=10),
+                        ft.Container(content=img),
                         ft.Container(content=loading_spinner),
                         ft.Container(height=40),
                         stop_btn
@@ -95,6 +104,7 @@ async def delayed_transition(page: ft.Page):
         modal=True
     )
     i = 0
+
     while not stop_event.is_set() and i < 30:
         first_card = get_card()
         CARD_NUMBER = get_card()
@@ -154,10 +164,19 @@ async def delayed_transition(page: ft.Page):
 
         await asyncio.sleep(1)
     if i == 30:
-        dialog.title = ft.Text("エラー")
-        dialog.content = ft.Text("タイムアウト")
+        dialog.title = ft.Text("タイムアウト")
+        dialog.content = ft.Column(
+            controls=[
+                ft.Container(height=10),
+                ft.Text("30秒経ったため処理を中断しました。"),
+                ft.Text("リトライしますか。")
+            ],
+            height=70
+        )
         dialog.actions = [
-            ft.TextButton("戻る", autofocus=True,
+            ft.TextButton("はい", autofocus=True,
+                          on_click=lambda e: retry(e)),
+            ft.TextButton("いいえ",
                           on_click=lambda e: page.go("/index"))
         ]
         try:
@@ -169,6 +188,16 @@ async def delayed_transition(page: ft.Page):
         except Exception as e:
             logging.error(f"通信エラー: {e}")
         page.open(dialog)
+
+        def retry(e):
+            global stop_event, thread_handle
+            stop_event.clear()
+            page.views.append(registering(page))
+            thread_handle = threading.Thread(
+                target=lambda: run_async_delayed_transition(page))
+            thread_handle.daemon = True
+            thread_handle.start()
+            page.close(dialog)
 
 
 def run_async_delayed_transition(page):
