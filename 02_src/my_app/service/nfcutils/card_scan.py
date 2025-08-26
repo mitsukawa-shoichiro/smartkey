@@ -34,7 +34,8 @@ def register_reader():
         return None
 
     if len(reader_list) == 1:
-        return reader_list[0]
+        r,s = reader_list[0]
+        return r
 
     if len(reader_list) > 1:
         device = config["devices"]
