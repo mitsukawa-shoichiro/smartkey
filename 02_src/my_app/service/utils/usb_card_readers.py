@@ -27,27 +27,42 @@ def get_all_serials():
     serials = []
 
     dev = config["devices"]
-    for direction in ["入口", "出口"]:
 
-        info = dev[direction]
-        vid = info["vid"]
-        pid = info["pid"]
-        s = info["serial"]
-        if s.isdigit():
-            serial_regex = rf"\d{{{len(s)}}}"
-        else:
-            # 使用されている文字だけを許容する
-            serial_regex = "[" + "".join(sorted(set(s))) + "]+"
-        print(serial_regex)
-        wql = f"SELECT DeviceID FROM Win32_PnPEntity WHERE DeviceID LIKE '%VID_{vid}&PID_{pid}%'"
-        pattern = re.compile(
-            rf"USB\\VID_{vid}&PID_{pid}\\({serial_regex})$", re.IGNORECASE)
+    info1 = dev["a"]
+    vid1 = info1["vid"]
+    pid1 = info1["pid"]
+    s1 = info1["serial"]
+    if s1.isdigit():
+        serial_regex1 = rf"\d{{{len(s1)}}}"
+    else:
+        # 使用されている文字だけを許容する
+        serial_regex1 = "[" + "".join(sorted(set(s1))) + "]+"
+    info2 = dev["b"]
+    vid2 = info2["vid"]
+    pid2 = info2["pid"]
+    s2 = info2["serial"]
+    if s2.isdigit():
+        serial_regex2 = rf"\d{{{len(s2)}}}"
+    else:
+        # 使用されている文字だけを許容する
+        serial_regex2 = "[" + "".join(sorted(set(s2))) + "]+"
 
-        for d in c.query(wql):
+    wql = (
+        f"SELECT DeviceID FROM Win32_PnPEntity WHERE DeviceID LIKE '%VID_{vid1}&PID_{pid1}%' OR DeviceID LIKE '%VID_{vid2}&PID_{pid2}%'"
+    )
+    pattern1 = re.compile(
+        rf"USB\\VID_{vid1}&PID_{pid1}\\({serial_regex1})$", re.IGNORECASE)
+    pattern2 = re.compile(
+        rf"USB\\VID_{vid2}&PID_{pid2}\\({serial_regex2})$", re.IGNORECASE)
 
-            m = pattern.search(d.DeviceID or "")
-            if m:
-                serials.append(m.group(1))
+    for d in c.query(wql):
+        devid = d.DeviceID or ""
+        m1 = pattern1.search(devid)
+        m2 = pattern2.search(devid)
+        if m1:
+            serials.append(m1.group(1))
+        elif m2:
+            serials.append(m2.group(1))
 
     return serials
 
