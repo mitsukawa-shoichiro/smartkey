@@ -1,4 +1,17 @@
 {
-  "入口": "0373604",
-  "出口": "0371756"
+  "設置台数": 2,
+  "devices": {
+    "入口": {
+      "name": "SONY FeliCa Port/PaSoRi 4.0",
+      "vid": "054C",
+      "pid": "0DC9",
+      "serial": "0371756"
+    },
+    "出口": {
+      "name": "SONY FeliCa Port/PaSoRi 4.0",
+      "vid": "054C",
+      "pid": "0DC9",
+      "serial": "0373604"
+    }
+  }
 }
