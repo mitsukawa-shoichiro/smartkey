@@ -9,7 +9,7 @@
     },
     "出口": {
       "name": "SONY FeliCa Port/PaSoRi 4.0",
-      "vid": "054c",
+      "vid": "054C",
       "pid": "0DC9",
       "serial": "0371756"
     }
