@@ -41,7 +41,10 @@ battery_Limit = int(battery_config["battery_limit"])  # バッテリー残量の
 def check_sesame_battery():
     '''
     # sesameのバッテリー残量を確認し、50%以下ならメールを送信する
+
     '''
+    battery_state = True
+    sesame_state = True
     while (1):
         try:
             sesame_url = f"https://app.candyhouse.co/api/sesame2/{sesame_id}"
@@ -58,12 +61,27 @@ def check_sesame_battery():
             print("wm2State:", data.get('wm2State', '取得失敗'))
             try:
                 if float(battery) <= battery_Limit:
-                    mailText = battery_mail_config["TEXT"] + response.text
-                    send_mail(battery_mail_config["TITLE"], mailText)
-                elif not data.get('wm2State', '取得失敗'):
-                    mailText = battery_mail_config["TEXT"] + response.text
-                    send_mail(
-                        sesame_mail_config["TITLE"], sesame_mail_config["TEXT"])
+                    logging.error(f"バッテリーが{battery_Limit}%以下になりました。")
+                    if battery_state:
+                        mailText = battery_mail_config["TEXT"] + response.text
+                        send_mail(battery_mail_config["TITLE"], mailText)
+                        battery_state = False
+
+                elif not battery_state:
+                    logging.info(f"バッテリーが{battery_Limit}%以上に戻りました。")
+                    battery_state = True
+
+                if not data.get('wm2State', '取得失敗'):
+                    logging.error("セサミと接続できません")
+                    if sesame_state:
+                        mailText = battery_mail_config["TEXT"] + response.text
+                        send_mail(
+                            sesame_mail_config["TITLE"], sesame_mail_config["TEXT"])
+                        sesame_state = False
+                elif not sesame_state:
+                    logging.info("セサミとの接続が回復しました")
+                    sesame_state = True
+
             except Exception as e:
                 logging.error("メール送信エラー")
                 print("メール送信エラー:", e)
@@ -82,24 +100,26 @@ def check_alive():
 
     print("死活監視システム起動...")
 
-    state = True
+    card_reader_state = True
+    system_state = True
     waittimeMax = 10
     last_AliveTime = time.time()
     while True:
         try:
             data, addr = heartbeatsocket.recvfrom(100)
             last_AliveTime = time.time()
-            if data.decode('utf-8') == "DEAD" and state:
+            if data.decode('utf-8') == "DEAD" and card_reader_state:
 
-                logging.error("カードリーダーが接続されていません")
+                logging.error("カードリーダーが指定台数分接続されていません")
                 send_mail(
                     card_reader_mail_config["TITLE"], card_reader_mail_config["TEXT"])
                 print('カードリーダー異常')
                 last_AliveTime = time.time()
-                state = False
+                card_reader_state = False
 
-            if data.decode('utf-8') == "ALIVE" and not state:
-                state = True
+            if data.decode('utf-8') == "ALIVE" and not card_reader_state:
+                logging.info("カードリーダが指定台数接続されました")
+                card_reader_state = True
 
         except socket.timeout:
             pass
@@ -107,12 +127,17 @@ def check_alive():
         passTime = time.time() - last_AliveTime
         if passTime > waittimeMax:
             logging.error("解錠システム異常")
-            send_mail(system_mail_config["TITLE"], system_mail_config["TEXT"])
-            print('システム異常')
-            last_AliveTime = time.time()
+            if system_state:
 
-    print('システム中止')
-    heartbeatsocket.close()
+                send_mail(system_mail_config["TITLE"],
+                          system_mail_config["TEXT"])
+                print('システム異常')
+                last_AliveTime = time.time()
+                system_state = False
+
+        elif not system_state:
+            system_state = True
+            logging.info("システム正常に戻りました")
 
 
 def main():
