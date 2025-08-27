@@ -67,7 +67,7 @@ def get_readers():
 
     r = readers()
     reader_serial_map = {}
-    if (len(desired_order) == 1) or (len(desired_order) > 1 and pid_list[0] == pid_list[2] and vid_list[0] == vid_list[2]):
+    if (len(desired_order) == 1) or (len(desired_order) > 1 and pid_list[0] == pid_list[1] and vid_list[0] == vid_list[1]):
         serials = same_get_serials()
 
         for i, reader in enumerate(r):
