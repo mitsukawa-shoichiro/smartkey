@@ -13,7 +13,7 @@ async def main():
             print("RSSI:", adv.rssi)
             print("Service UUIDs:", adv.service_uuids)
             print("Manufacturer Data:", adv.manufacturer_data)
-            return d.address
+            # return d.address
 
 
 def mac_address_type(mac):
