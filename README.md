@@ -17,6 +17,8 @@
 
 ## ブランチ
 - main  
-　⇒releaseブランチ  
+　⇒releaseブランチ
 - develop  
 　⇒開発ブランチ
+- develop_YYYY  
+　⇒YYYY年度の開発ブランチ
