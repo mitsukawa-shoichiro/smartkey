@@ -16,84 +16,91 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 
 def registering(page: ft.Page):
-    global stop_event, thread_handle
+    try:
+        global stop_event, thread_handle
 
-    def stop_loop(e):
+        def stop_loop(e):
 
-        stop_event.set()
+            stop_event.set()
+            try:
+
+                sock.connect((HOST, PORT))
+                msg = "authenticating"
+                sock.sendall(msg.encode('utf-8'))
+                logging.info(f"Sent message: {msg}")
+            except Exception as e:
+                logging.error(f"通信エラー: {e}")
+            page.go("/index")
+
         try:
 
             sock.connect((HOST, PORT))
-            msg = "authenticating"
+            msg = "registering"
             sock.sendall(msg.encode('utf-8'))
             logging.info(f"Sent message: {msg}")
         except Exception as e:
             logging.error(f"通信エラー: {e}")
-        page.go("/index")
 
-    try:
+        page.vertical_alignment = ft.MainAxisAlignment.CENTER
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        page.title = "ICカード情報読み込み中"
 
-        sock.connect((HOST, PORT))
-        msg = "registering"
-        sock.sendall(msg.encode('utf-8'))
-        logging.info(f"Sent message: {msg}")
-    except Exception as e:
-        logging.error(f"通信エラー: {e}")
+        loading_text = ft.Text("30秒以内に登録したいカードを\n出口のカードリーダーにかざしてください", size=35,
+                            text_align=ft.TextAlign.CENTER)
+        loading_spinner = ft.CupertinoActivityIndicator(
+            radius=50,
+            color=ft.Colors.LIGHT_BLUE_ACCENT,
+            animating=True,
+        )
 
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.title = "ICカード情報読み込み中"
-
-    loading_text = ft.Text("30秒以内に登録したいカードを\n出口のカードリーダーにかざしてください", size=35,
-                           text_align=ft.TextAlign.CENTER)
-    loading_spinner = ft.CupertinoActivityIndicator(
-        radius=50,
-        color=ft.Colors.LIGHT_BLUE_ACCENT,
-        animating=True,
-    )
-
-    stop_btn = ft.Container(
-        content=ft.TextButton(
-            text="キャンセル",
-            icon=ft.Icons.STOP,
-            on_click=stop_loop,
-            style=ft.ButtonStyle(
-                shape=ft.RoundedRectangleBorder(radius=10),
-                color=ft.Colors.RED,
-                overlay_color=ft.Colors.RED_100,
+        stop_btn = ft.Container(
+            content=ft.TextButton(
+                text="キャンセル",
+                icon=ft.Icons.STOP,
+                on_click=stop_loop,
+                style=ft.ButtonStyle(
+                    shape=ft.RoundedRectangleBorder(radius=10),
+                    color=ft.Colors.RED,
+                    overlay_color=ft.Colors.RED_100,
+                )
             )
         )
-    )
-    img = ft.Image(
-        src=f"img/card_reader.JPG",
-        height=100,
-        width=200,
-        fit=ft.ImageFit.CONTAIN,
+        img = ft.Image(
+            src=f"img/card_reader.JPG",
+            height=100,
+            width=200,
+            fit=ft.ImageFit.CONTAIN,
 
 
-    )
-    return ft.View(
-        "/register",
-        controls=[
-            ft.Container(
-                expand=True,
-                alignment=ft.alignment.center,
-                content=ft.Column(
-                    controls=[
-                        ft.Container(content=loading_text, padding=10),
-                        ft.Container(content=img),
-                        ft.Container(content=loading_spinner),
-                        ft.Container(height=40),
-                        stop_btn
+        )
+        return ft.View(
+            "/register",
+            controls=[
+                ft.Container(
+                    expand=True,
+                    alignment=ft.alignment.center,
+                    content=ft.Column(
+                        controls=[
+                            ft.Container(content=loading_text, padding=10),
+                            ft.Container(content=img),
+                            ft.Container(content=loading_spinner),
+                            ft.Container(height=40),
+                            stop_btn
 
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    tight=True,
-                ),
-            )
-        ],
-    )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        tight=True,
+                    ),
+                )
+            ],
+        )
+    except Exception as e:
+        logging.exception("カード登録画面の表示中にエラーが発生しました: %s", e)
+        page.go("/index?error=カード登録画面の表示中にエラーが発生しました")
+
+    finally:
+        page.update()
 
 
 async def delayed_transition(page: ft.Page):
@@ -343,3 +350,5 @@ def register_input(page: ft.Page):
             )
         ]
     )
+
+

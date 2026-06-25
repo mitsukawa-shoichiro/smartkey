@@ -7,23 +7,25 @@ import app.views.register as register
 import threading
 from app.utils.thread_state import thread_handle, stop_event
 import logging
-
+import urllib.parse
 
 def route(page: ft.Page):
     def page_route_change(e):
+        params = dict(urllib.parse.parse_qsl(urllib.parse.urlparse(e.route).query))
+        error_message = params.get("error", "")
         page.title = "ドア開閉システム"
         page.views.clear()
-        logging.info("%sに遷移しました", page.route)
-        if page.route == "/":
+        logging.info("%sに遷移しました", e.route)
+        if e.route == "/":
             page.views.append(login.login(page))
-        elif page.route == "/index":
-
-            page.views.append(index.index_view(page))
-        elif page.route == "/card":
+        elif e.route.startswith("/index"):
+            logging.info("index_viewに遷移しました。error_message=%s", error_message)
+            page.views.append(index.index_view(page, error_message))
+        elif e.route == "/card":
             page.views.append(card.cardView(page))
-        elif page.route == "/accesslogs":
+        elif e.route == "/accesslogs":
             page.views.append(accesslogs.accesslogs(page))
-        elif page.route == "/register":
+        elif e.route == "/register":
             global stop_event, thread_handle
             stop_event.clear()
             page.views.append(register.registering(page))
@@ -31,7 +33,7 @@ def route(page: ft.Page):
                 target=lambda: register.run_async_delayed_transition(page))
             thread_handle.daemon = True
             thread_handle.start()
-        elif page.route == "/register/input":
+        elif e.route == "/register/input":
             page.views.append(register.register_input(page))
         page.update()
     page.on_route_change = page_route_change

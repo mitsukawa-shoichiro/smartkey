@@ -1,8 +1,9 @@
 import flet as ft
 import logging
+import urllib.parse
 
+def index_view(page: ft.Page, error_message: str = ""):
 
-def index_view(page: ft.Page):
     def on_hover(e: ft.HoverEvent):
         btn = e.control  # イベントが起きたボタンの参照
         if e.data == "true":  # ホバー中
@@ -100,6 +101,14 @@ def index_view(page: ft.Page):
         alignment=ft.alignment.center,
         padding=ft.padding.only(top=40)
     )
+    print(page.route)
+
+    error_text = ft.Text(
+        error_message,
+        color="red",
+        visible=bool(error_message)
+    )
+
     return ft.View(
         "/index",
         controls=[
@@ -108,6 +117,7 @@ def index_view(page: ft.Page):
                 alignment=ft.alignment.center,
                 content=ft.Column(
                     controls=[
+                        error_text,
                         ft.Container(content=ft.Text(
                             "ホーム画面", size=36, weight=ft.FontWeight.BOLD), padding=10),
                         ft.Container(content=ft.Text(
