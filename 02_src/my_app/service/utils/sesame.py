@@ -6,6 +6,7 @@ import json
 from Crypto.Hash import CMAC
 from Crypto.Cipher import AES
 import os
+import logging
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
@@ -16,6 +17,8 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
 sesame_id = sesami_config["sesame_id"]
 x_api_key = sesami_config["x_api_key"]
 secret_key = sesami_config["secret_key"]
+
+logger = logging.getLogger(__name__)
 
 
 def open_sesame():
@@ -45,8 +48,16 @@ def open_sesame():
         }
         res = requests.post(url, json.dumps(body), headers=headers)
         print(res.status_code, res.text)
+    except requests.exceptions.ConnectionError:
+        logger.exception("接続失敗")        # サーバーに繋がらない
+    except requests.exceptions.Timeout:
+        logger.exception("タイムアウト")    # 時間内に返ってこない
+    except requests.exceptions.HTTPError:
+        logger.exception("HTTPエラー")      # 4xx/5xx
+    except requests.exceptions.RequestException:
+        logger.exception("その他APIエラー") # 上記以外全部
     except Exception as e:
-        print("エラー:" + e)
+        logger.exception("不明なエラー: %s", e)
 
 
 if __name__ == "__main__":
