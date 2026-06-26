@@ -17,6 +17,9 @@ import logging
 # 顔認証とICカード認証で同じ開錠・自動施錠の処理つかっちゃう
 from service.cardsystem import request_unlock
 
+# 複数登録画像との距離・平均値で顔認証するよう
+from camera.face_util.face_stable import recognize_image_average
+
 #region ReadConfig
 import json
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
@@ -84,14 +87,12 @@ class CameraWorker:
     """バックグラウンドスレッド：カメラ起動 -> プレビュー表示 -> CAPTURE/STOP"""
     isRegisting: bool = False
 
-    # 同じ顔で連続開錠しないための待ち時間
-    FACE_UNLOCK_COOLDOWN_SEC = 6
-
-    # 最後に開錠した顔のなまえ
-    last_face_name = None
-
-    # 最後に開錠したじかん
-    last_face_timestamp = 0
+    FACE_UNLOCK_COOLDOWN_SEC = 6    # 同じ顔で連続開錠しないための待ち時間
+    REQUIRED_MATCH_COUNT = 3        # 何フレーム連続で成功したらとおすか
+    last_face_name = None           # 最後に開錠した顔のなまえ
+    last_face_timestamp = 0         # 最後に開錠したじかん
+    current_match_name = None       # 今やってる人物名
+    current_match_count = 0         # 今の成功回数
 
     __BACK_END_CAMERA:threading.Thread = None
     __SOCKET_THREAD:threading.Thread = None
@@ -152,9 +153,12 @@ class CameraWorker:
                     if ok:
                         CaptureBuffer.save_frame(frame, f"camera_{i}.jpg")
                     print("写真を保存"+str(i))
+
+                # 認証
                 self.__Authentication()
                 # 成功でも失敗でもまつ
                 time.sleep(0.5)
+                
                 logging.info("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
 
         except KeyboardInterrupt:
@@ -175,38 +179,72 @@ class CameraWorker:
             self.cap_dict[i] = cap
             print(f"[INFO] カメラ {i} を開きました。")
 
+
+
     def __Authentication(self):
         for file_path in CaptureBuffer.files:
+            # 1枚一致ではなく、登録画像との距離・平均値で認証する
+            name_roma, info = recognize_image_average(file_path, DB_DIR)
 
-            # 顔が1枚だけ検出できたとき
-            if face_util.check_face(file_path):
-                name_roma=face_util.match_against_db(file_path,DB_DIR)
+            # 今回のフレームで認証できなかったら次の画像にいく
+            if name_roma is None:
+                continue
 
-                # DB内の顔と一致したとき
-                if name_roma != None:
-                    now = time.time()
+            # 同じ人物が連続で認証されたか確認するよ
+            if self.current_match_name == name_roma:
+                self.current_match_count += 1
+            else:
+                self.current_match_name = name_roma
+                self.current_match_count = 1
 
-                    # 同じ顔で、前回の開錠から指定秒数以内なら開けない
-                    if (
-                        self.last_face_name == name_roma
-                        and now - self.last_face_timestamp < self.FACE_UNLOCK_COOLDOWN_SEC
-                    ):
-                        print(f"連続認証のため開錠スキップ: {name_roma}")
-                        return True
+            # 判定状況をログとして見えるようにするよ
+            print(
+                f"認証候補: {name_roma} "
+                f"{self.current_match_count}/{self.REQUIRED_MATCH_COUNT} "
+                f"best={info['best_distance']:.4f} "
+                f"avg={info['avg_nearest_distance']:.4f} "
+                f"hits={info['registered_match_count']}/{info['required_registered_matches']}"
+            )
 
-                    # 開けた顔と時間をきろく
-                    self.last_face_name = name_roma
-                    self.last_face_timestamp = now
+            # 必要回数連続で成功するまではあけない
+            if self.current_match_count < self.REQUIRED_MATCH_COUNT:
+                return False
 
-                    match = re.search(r"camera_(\d+)\.jpg", file_path)
-                    if match:
-                        index = int(match.group(1))
-                        print("撮影されたカメラのindexは"+str(index))
-                    self.__open_sesami()
-                    return True
-                
+            # 次の判定用に連続カウントリセット
+            self.current_match_name = None
+            self.current_match_count = 0
+
+            now = time.time()
+
+            # 同じ顔で、前回の開錠から指定秒数以内なら開錠しない
+            if (
+                self.last_face_name == name_roma
+                and now - self.last_face_timestamp < self.FACE_UNLOCK_COOLDOWN_SEC
+            ):
+                print(f"開錠スキップ: {name_roma}")
+                return True
+
+            # 開錠した顔とじかん記録
+            self.last_face_name = name_roma
+            self.last_face_timestamp = now
+
+            # どのカメラで認証されたかを表示
+            match = re.search(r"camera_(\d+)\.jpg", file_path)
+            if match:
+                index = int(match.group(1))
+                print("撮影されたカメラのindexは" + str(index))
+
+            # あける
+            self.__open_sesami()
+            return True
+
+        # どのカメラ画像でも一致しなかった場合は連続成功をリセット
+        self.current_match_name = None
+        self.current_match_count = 0
         return False
-                
+        
+
+        
     def __open_sesami(self):
         # 開錠 -> 一定時間後の自動施錠も予約！！！！！！
         request_unlock()
