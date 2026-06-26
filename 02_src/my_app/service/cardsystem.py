@@ -16,10 +16,10 @@ from service.utils.sesame import open_sesame, lock_sesame
 
 import json
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
-    __file__), '..', 'config', 'backend', 'sesami_config.json'))
+    __file__), '..', 'config', 'backend', 'sesame_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
-    connect_config = config_list["method"]["sesami_connect"]
+    connect_config = config_list["method"]["sesame_connect"]
 
 
 class CardReaderState(Enum):

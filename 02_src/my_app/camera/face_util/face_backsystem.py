@@ -12,10 +12,10 @@ from pathlib import Path
 
 from .face_utils import check_face, match_against_db
 
-BASE_DIR = Path(__file__).resolve().parent   # service/facerecognition
+BASE_DIR = Path(__file__).resolve().parent   # service/faceRecognition
 ROOT_DIR = BASE_DIR.parent.parent            # root/
-DB_DIR = ROOT_DIR / "db" / "Facelib"         # root/db/Facelib
-print("datapath is " + str(DB_DIR))
+DB_DIR = ROOT_DIR / "db" / "FaceLib"         # root/db/FaceLib
+print("dataPath is " + str(DB_DIR))
 
 
 HOST = "0.0.0.0"
@@ -58,7 +58,7 @@ def __recv_json(conn: socket.socket) -> dict:
 
 # ========= 核心处理 =========
 def handle_request(req: dict) -> dict:
-    # 读取并解码 base64 图像
+    # 读取并解码 base64 图像 (画像を読み取ってデコードする)
     try:
         b64 = req["img_data"]
     except Exception as e:
@@ -66,18 +66,18 @@ def handle_request(req: dict) -> dict:
 
     try:
         img_binary = base64.b64decode(b64)
-        jpg = np.frombuffer(img_binary, dtype=np.uint8)
-        img = cv2.imdecode(jpg, cv2.IMREAD_COLOR)
+        jpg = np.fromBuffer(img_binary, dtype=np.uint8)
+        img = cv2.imdeCode(jpg, cv2.IMREAD_COLOR)
         if img is None:
-            raise ValueError("imdecode failed")
+            raise ValueError("imdeCode failed")
     except Exception as e:
         return {"result": "NG", "reason": f"decode error: {e}", "status": 400}
 
-    # 为方便排错，写个临时文件（按需可改到 tmp 目录）
+    # 为方便排错，写个临时文件（按需可改到 tmp 目录） デバッグしやすいよう臨時ファイルを書いておく（必要に応じてtmpディレクトリに変更可能）
     tmp_path = "test_decode.jpg"
-    cv2.imwrite(tmp_path, img)
+    cv2.imWrite(tmp_path, img)
 
-    # 1) 人脸数量检查
+    # 1) 人脸数量检查　顔写真の数をチェック
     try:
         is_single = check_face(tmp_path, model="hog")
     except Exception as e:
@@ -86,7 +86,7 @@ def handle_request(req: dict) -> dict:
     if not is_single:
         return {"result": "NG", "reason": "faces_detected not 1", "status": 200}
 
-    # 2) 数据库比对
+    # 2) 数据库比对　DB比較
     try:
         result_face_romaji = match_against_db(tmp_path, DB_DIR, tolerance, model="hog")
     except Exception as e:
@@ -97,10 +97,10 @@ def handle_request(req: dict) -> dict:
     else:
         return {"result": "NG", "status": 200}
 
-# ========= 服务器主循环 =========
+# ========= 服务器主循环 =========　サーバーのメインループ
 def RunFaceBackSystem():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        # 复用端口，方便重启
+        # 复用端口，方便重启　ポートを再利用して再起動を簡単にする
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((HOST, PORT))
         s.listen(5)

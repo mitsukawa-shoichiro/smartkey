@@ -37,7 +37,7 @@ def __detect(image_path: str, model="hog", out_path="detected.jpg") -> int:
     for (top, right, bottom, left) in face_locations:
         cv2.rectangle(img_cv, (left, top), (right, bottom), (0, 255, 0), 2)
 
-    cv2.imwrite(out_path, img_cv)
+    cv2.imWrite(out_path, img_cv)
     print(f"[OK] {len(face_locations)} 枚の顔を検出、保存先: {out_path}")
     return len(face_locations)
 #endregion
@@ -57,7 +57,7 @@ def match_against_db(
     顔が一致した場合はファイル名（例: me_001.jpg）を返す。
     一致しない場合は None を返す。
     """
-    for db_img_path in __read_imagedatabase(db_dir):
+    for db_img_path in __read_imageDatabase(db_dir):
         name_roma = os.path.basename(db_img_path).split("_")[0]
 
         # print(f"[INFO] 照合中: {name_roma}")
@@ -80,7 +80,7 @@ def match_against_db(
     # print("[INFO] 一致する顔は見つかりませんでした。")
     return None
 
-def __read_imagedatabase(path: str) -> List[str]:
+def __read_imageDatabase(path: str) -> List[str]:
     """指定ディレクトリ直下の画像パス一覧を返す"""
     paths: List[str] = []
     if not os.path.isdir(path):
@@ -137,4 +137,4 @@ def __verify_face_similarity(
 #endregion
 
 # if __name__ == "__main__":
-#     print(read_imagedatabase(db_path))
+#     print(read_imageDatabase(db_path))
