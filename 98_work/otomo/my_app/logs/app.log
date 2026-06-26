@@ -1,0 +1,143 @@
+2026-06-25 11:25:00 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 11:25:02 [INFO] flet:371 - Assets path configured: C:\smartkey\98_work\otomo\my_app\app
+2026-06-25 11:25:02 [INFO] flet:61 - Starting up TCP server on localhost:62447
+2026-06-25 11:25:02 [INFO] flet:171 - Flet app has started...
+2026-06-25 11:25:04 [INFO] flet:131 - App URL: tcp://localhost:62447
+2026-06-25 11:25:04 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 11:25:04 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 11:25:04 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 11:25:04 [INFO] flet:240 - App session started
+2026-06-25 11:25:04 [INFO] root:39 - GUIが起動されました
+2026-06-25 11:25:04 [INFO] root:22 - /に遷移しました
+2026-06-25 11:25:34 [INFO] root:48 - ログイン成功
+2026-06-25 11:25:34 [INFO] root:22 - /indexに遷移しました
+2026-06-25 11:25:40 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 11:43:28 [INFO] root:54 - Sent message: authenticating
+2026-06-25 11:43:28 [INFO] __main__:59 - GUIを終了しました
+2026-06-25 11:50:36 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 11:50:38 [INFO] flet:371 - Assets path configured: C:\smartkey\98_work\otomo\my_app\app
+2026-06-25 11:50:38 [INFO] flet:61 - Starting up TCP server on localhost:51046
+2026-06-25 11:50:38 [INFO] flet:171 - Flet app has started...
+2026-06-25 11:50:38 [INFO] flet:131 - App URL: tcp://localhost:51046
+2026-06-25 11:50:38 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 11:50:38 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 11:50:38 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 11:50:38 [INFO] flet:240 - App session started
+2026-06-25 11:50:38 [INFO] root:39 - GUIが起動されました
+2026-06-25 11:50:38 [INFO] root:22 - /に遷移しました
+2026-06-25 11:50:50 [INFO] root:48 - ログイン成功
+2026-06-25 11:50:50 [INFO] root:22 - /indexに遷移しました
+2026-06-25 11:50:52 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 11:50:55 [INFO] root:22 - /indexに遷移しました
+2026-06-25 11:50:57 [INFO] root:22 - /facerecognitionに遷移しました
+2026-06-25 11:51:00 [INFO] root:22 - /indexに遷移しました
+2026-06-25 11:51:02 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 11:52:07 [INFO] root:22 - /indexに遷移しました
+2026-06-25 11:52:13 [INFO] root:54 - Sent message: authenticating
+2026-06-25 11:52:13 [INFO] __main__:59 - GUIを終了しました
+2026-06-25 13:19:02 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 13:19:05 [INFO] flet:371 - Assets path configured: C:\smartkey\98_work\otomo\my_app\app
+2026-06-25 13:19:05 [INFO] flet:61 - Starting up TCP server on localhost:52785
+2026-06-25 13:19:05 [INFO] flet:171 - Flet app has started...
+2026-06-25 13:19:05 [INFO] flet:131 - App URL: tcp://localhost:52785
+2026-06-25 13:19:05 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 13:19:05 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:19:05 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:19:05 [INFO] flet:240 - App session started
+2026-06-25 13:19:05 [INFO] root:39 - GUIが起動されました
+2026-06-25 13:19:05 [INFO] root:22 - /に遷移しました
+2026-06-25 13:19:11 [INFO] root:48 - ログイン成功
+2026-06-25 13:19:11 [INFO] root:22 - /indexに遷移しました
+2026-06-25 13:19:18 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 13:19:39 [INFO] root:22 - /faceregister/inputに遷移しました
+2026-06-25 13:19:45 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 13:19:49 [INFO] root:22 - /faceregister/inputに遷移しました
+2026-06-25 13:19:53 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 13:19:59 [INFO] root:22 - /faceregister/inputに遷移しました
+2026-06-25 13:20:11 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 13:20:13 [INFO] root:22 - /indexに遷移しました
+2026-06-25 13:20:14 [INFO] root:22 - /facerecognitionに遷移しました
+2026-06-25 13:20:17 [INFO] root:22 - /indexに遷移しました
+2026-06-25 13:20:20 [INFO] root:22 - /camera_registerに遷移しました
+2026-06-25 13:20:21 [INFO] root:22 - /indexに遷移しました
+2026-06-25 13:20:34 [INFO] root:22 - /facerecognitionに遷移しました
+2026-06-25 13:20:36 [INFO] root:22 - /indexに遷移しました
+2026-06-25 13:20:42 [INFO] root:22 - /facerecognitionに遷移しました
+2026-06-25 13:20:55 [INFO] root:22 - /indexに遷移しました
+2026-06-25 13:20:58 [INFO] root:22 - /cardに遷移しました
+2026-06-25 13:21:07 [INFO] root:22 - /indexに遷移しました
+2026-06-25 13:21:13 [INFO] root:54 - Sent message: authenticating
+2026-06-25 13:21:13 [INFO] __main__:59 - GUIを終了しました
+2026-06-25 14:42:28 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 14:42:30 [INFO] flet:371 - Assets path configured: C:\smartkey\98_work\otomo\my_app\app
+2026-06-25 14:42:30 [INFO] flet:61 - Starting up TCP server on localhost:49689
+2026-06-25 14:42:30 [INFO] flet:171 - Flet app has started...
+2026-06-25 14:42:30 [INFO] flet:131 - App URL: tcp://localhost:49689
+2026-06-25 14:42:30 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 14:42:30 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:42:30 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:42:31 [INFO] flet:240 - App session started
+2026-06-25 14:42:31 [INFO] root:39 - GUIが起動されました
+2026-06-25 14:42:31 [INFO] root:22 - /に遷移しました
+2026-06-25 14:42:35 [INFO] root:48 - ログイン成功
+2026-06-25 14:42:35 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:42:37 [INFO] root:22 - /facerecognitionに遷移しました
+2026-06-25 14:42:39 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:42:51 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 14:42:54 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:42:56 [INFO] root:22 - /accesslogsに遷移しました
+2026-06-25 14:42:57 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:42:58 [INFO] root:22 - /facerecognitionに遷移しました
+2026-06-25 14:43:00 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:43:01 [INFO] root:22 - /facerecognitionに遷移しました
+2026-06-25 14:43:02 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:43:02 [INFO] root:22 - /camera_registerに遷移しました
+2026-06-25 14:43:05 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:43:06 [INFO] root:22 - /cardに遷移しました
+2026-06-25 14:43:08 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:43:13 [INFO] root:54 - Sent message: authenticating
+2026-06-25 14:43:13 [INFO] __main__:59 - GUIを終了しました
+2026-06-25 14:43:46 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 14:43:48 [INFO] flet:371 - Assets path configured: C:\smartkey\98_work\otomo\my_app\app
+2026-06-25 14:43:48 [INFO] flet:61 - Starting up TCP server on localhost:63586
+2026-06-25 14:43:48 [INFO] flet:171 - Flet app has started...
+2026-06-25 14:43:48 [INFO] flet:131 - App URL: tcp://localhost:63586
+2026-06-25 14:43:48 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 14:43:48 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:43:48 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:43:48 [INFO] flet:240 - App session started
+2026-06-25 14:43:48 [INFO] root:39 - GUIが起動されました
+2026-06-25 14:43:48 [INFO] root:22 - /に遷移しました
+2026-06-25 14:43:52 [INFO] root:48 - ログイン成功
+2026-06-25 14:43:52 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:43:54 [INFO] root:22 - /cardに遷移しました
+2026-06-25 14:43:55 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:43:56 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 14:44:00 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:44:01 [INFO] root:22 - /registerに遷移しました
+2026-06-25 14:44:01 [INFO] root:39 - Sent message: registering
+2026-06-25 14:44:03 [INFO] root:29 - Sent message: authenticating
+2026-06-25 14:44:03 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:44:06 [INFO] root:22 - /camera_registerに遷移しました
+2026-06-25 14:44:07 [INFO] root:22 - /indexに遷移しました
+2026-06-25 14:44:11 [INFO] root:54 - Sent message: authenticating
+2026-06-25 14:44:11 [INFO] __main__:59 - GUIを終了しました
+2026-06-25 15:52:01 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 15:52:03 [INFO] flet:371 - Assets path configured: C:\smartkey\98_work\otomo\my_app\app
+2026-06-25 15:52:03 [INFO] flet:61 - Starting up TCP server on localhost:56504
+2026-06-25 15:52:03 [INFO] flet:171 - Flet app has started...
+2026-06-25 15:52:03 [INFO] flet:131 - App URL: tcp://localhost:56504
+2026-06-25 15:52:03 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 15:52:03 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:52:03 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:52:03 [INFO] flet:240 - App session started
+2026-06-25 15:52:03 [INFO] root:22 - /に遷移しました
+2026-06-25 15:52:03 [INFO] root:39 - GUIが起動されました
+2026-06-25 15:52:09 [INFO] root:48 - ログイン成功
+2026-06-25 15:52:09 [INFO] root:22 - /indexに遷移しました
+2026-06-25 15:52:10 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 15:52:25 [INFO] root:22 - /faceregister/inputに遷移しました
+2026-06-25 15:52:39 [INFO] root:22 - /faceregisterに遷移しました
+2026-06-25 15:52:42 [INFO] root:22 - /indexに遷移しました
+2026-06-25 15:52:44 [INFO] root:54 - Sent message: authenticating
+2026-06-25 15:52:44 [INFO] __main__:59 - GUIを終了しました

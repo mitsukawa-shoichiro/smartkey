@@ -1,0 +1,3 @@
+
+python .\main.pyw
+
