@@ -17,7 +17,9 @@ mymail = mail_config['mailadress']
 mypass = mail_config['password']
 to_mail = mail_config['to_mail']
 smtp_server = mail_config['smtp_server']
-port = mail_config['port']                         
+port = mail_config['port']
+
+logger = logging.getLogger(__name__)  # logに書き込む用
 
 def send_mail(TITLE, TEXT):
     '''
@@ -36,13 +38,12 @@ def send_mail(TITLE, TEXT):
         with smtplib.SMTP_SSL(smtp_server, port) as server:
             server.login(mymail, mypass)
             server.send_message(msg)
-            print("メール送信成功")
+            logger.info("メール送信成功")
     except Exception as e:
-        print("メール送信失敗:", e)
-        logging.error(f"メール送信失敗: {e}")
-    print('メール送信完了')
+        logger.error(f"メール送信失敗: {e}")
+    logger.info('メール送信完了')
 
 if __name__ == "__main__":
     # テスト用のメール送信
     send_mail("テストメール", "これはテストメールです。")
-    print("テストメール送信完了")
+    logger.info("テストメール送信完了")

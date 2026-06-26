@@ -13,7 +13,7 @@ HOST = '127.0.0.1'
 PORT = 10000
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
+logger = logging.getLogger(__name__)
 
 def registering(page: ft.Page):
     try:
@@ -27,9 +27,9 @@ def registering(page: ft.Page):
                 sock.connect((HOST, PORT))
                 msg = "authenticating"
                 sock.sendall(msg.encode('utf-8'))
-                logging.info(f"Sent message: {msg}")
+                logger.info(f"Sent message: {msg}")
             except Exception as e:
-                logging.error(f"通信エラー: {e}")
+                logger.error(f"通信エラー: {e}")
             page.go("/index")
 
         try:
@@ -37,9 +37,9 @@ def registering(page: ft.Page):
             sock.connect((HOST, PORT))
             msg = "registering"
             sock.sendall(msg.encode('utf-8'))
-            logging.info(f"Sent message: {msg}")
+            logger.info(f"Sent message: {msg}")
         except Exception as e:
-            logging.error(f"通信エラー: {e}")
+            logger.error(f"通信エラー: {e}")
 
         page.vertical_alignment = ft.MainAxisAlignment.CENTER
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -96,7 +96,7 @@ def registering(page: ft.Page):
             ],
         )
     except Exception as e:
-        logging.exception("カード登録画面の表示中にエラーが発生しました: %s", e)
+        logger.exception("カード登録画面の表示中にエラーが発生しました: %s", e)
         page.go("/index?error=カード登録画面の表示中にエラーが発生しました")
 
     finally:
@@ -123,9 +123,9 @@ async def delayed_transition(page: ft.Page):
                     sock.connect((HOST, PORT))
                     msg = "authenticating"
                     sock.sendall(msg.encode('utf-8'))
-                    logging.info(f"Sent message: {msg}")
+                    logger.info(f"Sent message: {msg}")
                 except Exception as e:
-                    logging.error(f"通信エラー: {e}")
+                    logger.error(f"通信エラー: {e}")
 
                 page.go("/register/input")
                 break
@@ -143,9 +143,9 @@ async def delayed_transition(page: ft.Page):
                     sock.connect((HOST, PORT))
                     msg = "authenticating"
                     sock.sendall(msg.encode('utf-8'))
-                    logging.info(f"Sent message: {msg}")
+                    logger.info(f"Sent message: {msg}")
                 except Exception as e:
-                    logging.error(f"通信エラー: {e}")
+                    logger.error(f"通信エラー: {e}")
                 break
 
         elif first_card != "" and CARD_NUMBER != "":
@@ -161,9 +161,9 @@ async def delayed_transition(page: ft.Page):
                 sock.connect((HOST, PORT))
                 msg = "authenticating"
                 sock.sendall(msg.encode('utf-8'))
-                logging.info(f"Sent message: {msg}")
+                logger.info(f"Sent message: {msg}")
             except Exception as e:
-                logging.error(f"通信エラー: {e}")
+                logger.error(f"通信エラー: {e}")
 
             break
 
@@ -191,9 +191,9 @@ async def delayed_transition(page: ft.Page):
             sock.connect((HOST, PORT))
             msg = "authenticating"
             sock.sendall(msg.encode('utf-8'))
-            logging.info(f"Sent message: {msg}")
+            logger.info(f"Sent message: {msg}")
         except Exception as e:
-            logging.error(f"通信エラー: {e}")
+            logger.error(f"通信エラー: {e}")
         page.open(dialog)
 
         def retry(e):
@@ -248,6 +248,7 @@ def register_input(page: ft.Page):
 
     def open_add_confirm_dialog(e):
         if not card_name.value or not card_name_type.value:
+            logger.error("入力漏れがあります")
             add_confirm_dialog.title = ft.Text("エラー")
             add_confirm_dialog.content = ft.Text("入力漏れがあります")
             add_confirm_dialog.actions = [
@@ -300,7 +301,7 @@ def register_input(page: ft.Page):
         global CARD_NUMBER
         print(f"[{CARD_NUMBER}]")
         if not CARD_NUMBER:
-            logging.critical("カード番号を取得できませんでした")
+            logger.critical("カード番号を取得できませんでした")
             page.close(add_confirm_dialog)
             add_confirm_dialog.title = ft.Text("エラー")
             add_confirm_dialog.content = ft.Text("カード番号を取得できませんでした")
@@ -314,7 +315,7 @@ def register_input(page: ft.Page):
             (card_name.value + '_' + card_name_type.value), CARD_NUMBER)
 
         page.close(add_confirm_dialog)
-        logging.info(f"{card_name.value + '_' + card_name_type.value}を追加しました")
+        logger.info(f"{card_name.value + '_' + card_name_type.value}を追加しました")
         complete_add_confirm_dialog(e)
 
     card_name = ft.TextField(

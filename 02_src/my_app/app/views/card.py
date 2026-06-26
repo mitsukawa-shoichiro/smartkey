@@ -5,6 +5,8 @@ import asyncio
 import sqlite3
 # card管理画面
 
+logger = logging.getLogger(__name__)
+
 def cardView(page: ft.Page):
 
     try:
@@ -268,7 +270,7 @@ def cardView(page: ft.Page):
                             on_click=lambda e:  page.close(dialog)),
             ]
             for card_name in card_names:
-                logging.info(f"{card_name[0]}が削除されました")
+                logger.info(f"{card_name[0]}が削除されました")
 
             page.open(dialog)
 
@@ -301,7 +303,7 @@ def cardView(page: ft.Page):
                 ft.TextButton("閉じる", autofocus=True,
                             on_click=lambda e: page.close(dialog)),
             ]
-            logging.info(
+            logger.info(
                 f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
             page.open(dialog)
 
@@ -333,7 +335,7 @@ def cardView(page: ft.Page):
         try:
             load_table()
         except sqlite3.Error as e:
-            logging.error(f"カードテーブルの読み込みに失敗しました: {e}")
+            logger.error(f"カードテーブルの読み込みに失敗しました: {e}")
             page.go("/index?error=カードテーブルの読み込みに失敗しました")
 
         return ft.View(
@@ -360,7 +362,7 @@ def cardView(page: ft.Page):
 
         )
     except Exception as e:
-        logging.exception("カード管理画面の表示中にエラーが発生しました: %s", e)
+        logger.exception("カード管理画面の表示中にエラーが発生しました: %s", e)
         page.go("/index?error=カード管理画面の表示中にエラーが発生しました")
     finally:
         page.update()

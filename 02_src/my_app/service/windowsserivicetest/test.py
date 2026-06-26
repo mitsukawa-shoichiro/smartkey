@@ -4,6 +4,8 @@ import win32service
 import win32event
 import time
 
+logger = logging.getLogger(__name__)  # logに書き込む用
+
 class MyPythonService(win32serviceutil.ServiceFramework):
     _svc_name_ = "SimpleHelloService"
     _svc_display_name_ = "Simple Hello World Python Service"
@@ -15,7 +17,7 @@ class MyPythonService(win32serviceutil.ServiceFramework):
 
     def SvcDoRun(self):
         while self.running:
-            logging.info("Hello World")
+            logger.info("Hello World")
             time.sleep(10)
 
     def SvcStop(self):

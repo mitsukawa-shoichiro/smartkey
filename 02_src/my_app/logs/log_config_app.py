@@ -7,6 +7,7 @@ import json
 import logging.config
 import sys
 
+logger = logging.getLogger(__name__)
 
 # 設定ファイルのパス
 BASE_DIR = os.path.dirname(__file__) + "\\..\\config"
@@ -33,4 +34,4 @@ def _excepthook(exc_type, exc, tb):
 
 
 sys.excepthook = _excepthook
-logging.info("Log configuration loaded successfully")
+logger.info("Log configuration loaded successfully")

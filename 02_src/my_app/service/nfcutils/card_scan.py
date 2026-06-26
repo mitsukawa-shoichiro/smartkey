@@ -7,7 +7,10 @@ import pythoncom
 from service.utils.usb_card_readers import get_readers
 import logging
 
+logger = logging.getLogger(__name__)  # logに書き込む用
+
 # USB設定ファイルのパスを指定
+
 
 
 def load_config():
@@ -30,7 +33,7 @@ def register_reader():
     reader_list = get_readers()
 
     if not reader_list:
-        print("カードリーダーが見つかりませんでした")
+        logger.info("カードリーダーが見つかりませんでした")
         return None
 
     if len(reader_list) == 1:
@@ -51,10 +54,10 @@ def scan_card():
     # 2. カードリーダーを取得
     register_readers = register_reader()
     if not register_readers:
-        logging.error("カードリーダーが接続されてません")
+        logger.error("カードリーダーが接続されてません")
         return None
     # 3. カードリーダーをチェック
-    logging.info(f"カードリーダー1をチェック中: {register_readers}")
+    logger.info(f"カードリーダー1をチェック中: {register_readers}")
     try:
         # カードリーダーに接続
         connection = register_readers.createConnection()
@@ -67,7 +70,7 @@ def scan_card():
         # 読み取り成功の場合
         if sw1 == 0x90 and sw2 == 0x00:
             idm = ''.join(format(byte, '02X') for byte in response)
-            logging.info(f"登録用リーダーでカードを検出、IDm:", idm)
+            logger.info(f"登録用リーダーでカードを検出、IDm: {idm}")
             connection.disconnect()
             return idm  # カードIDを返す
         else:
@@ -76,7 +79,7 @@ def scan_card():
             return None
 
     except Exception as e:
-        logging.info(f"登録用リーダーでエラーが発生しました:", e)
+        logger.info(f"登録用リーダーでエラーが発生しました: {e}")
         return None
 
 

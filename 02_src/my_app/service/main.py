@@ -1,5 +1,4 @@
 # Windowsサービスのエントリーポイント
-import logging
 import subprocess
 import os
 import time
@@ -21,25 +20,25 @@ import logs.log_config_service
 # card_reader_path = os.path.join(server_dir, "nfcutils", "card_check.py")
 # backsys_path = os.path.join(server_dir, "sendmail", "BackSystem.py")
 
-
+logger = logs.log_config_service.logger
 
 sys.path.append(os.path.dirname(__file__))
 
-from backsys import BackSystem 
+from backsys import BackSystem
 from nfcutils import card_check
 
 
 def run_back():
-    logging.info("BackSystem thread started")
+    logger.info("BackSystem thread started")
     BackSystem.main()
 
 def run_card():
-    logging.info("CardCheck thread started")
+    logger.info("CardCheck thread started")
     card_check.main()
 
 import threading
 def main():
-    logging.info("Service is starting...")
+    logger.info("Service is starting...")
     run_back()
     run_card()
 

@@ -37,6 +37,7 @@ x_api_key = sesami_config["x_api_key"]
 sleep_time = int(battery_config["sleep_time"])
 battery_Limit = int(battery_config["battery_limit"])  # バッテリー残量の閾値
 
+logger = logging.getLogger(__name__)  # logに書き込む用
 
 def check_sesame_battery():
     '''
@@ -50,43 +51,43 @@ def check_sesame_battery():
             sesame_url = f"https://app.candyhouse.co/api/sesame2/{sesame_id}"
             headers = {"x-api-key": x_api_key}
             response = requests.get(sesame_url, headers=headers)
-            print(response.text)
+            logger.debug(f"Response: {response.text}")
             try:
                 data = response.json()
                 battery = data.get('batteryPercentage', '取得失敗')
             except Exception as e:
                 battery = f"JSON解析失敗: {e}"
-            print("バッテリー残量:", battery)
-            logging.info(f"バッテリー残量: {battery}")
-            print("wm2State:", data.get('wm2State', '取得失敗'))
+            logger.debug(f"バッテリー残量: {battery}")
+            logger.info(f"バッテリー残量: {battery}")
+            logger.debug(f"wm2State: {data.get('wm2State', '取得失敗')}")
             try:
                 if float(battery) <= battery_Limit:
-                    logging.error(f"バッテリーが{battery_Limit}%以下になりました。")
+                    logger.error(f"バッテリーが{battery_Limit}%以下になりました。")
                     if battery_state:
                         mailText = battery_mail_config["TEXT"] + response.text
                         send_mail(battery_mail_config["TITLE"], mailText)
                         battery_state = False
 
                 elif not battery_state:
-                    logging.info(f"バッテリーが{battery_Limit}%以上に戻りました。")
+                    logger.info(f"バッテリーが{battery_Limit}%以上に戻りました。")
                     battery_state = True
 
                 if not data.get('wm2State', '取得失敗'):
-                    logging.error("セサミと接続できません")
+                    logger.error("セサミと接続できません")
                     if sesame_state:
                         mailText = battery_mail_config["TEXT"] + response.text
                         send_mail(
                             sesame_mail_config["TITLE"], sesame_mail_config["TEXT"])
                         sesame_state = False
                 elif not sesame_state:
-                    logging.info("セサミとの接続が回復しました")
+                    logger.info("セサミとの接続が回復しました")
                     sesame_state = True
 
             except Exception as e:
-                logging.error("メール送信エラー")
-                print("メール送信エラー:", e)
+                logger.error("メール送信エラー")
+                logger.debug(f"メール送信エラー: {e}")
         except Exception as e:
-            logging.error("不明エラー")
+            logger.error("不明エラー")
             print("不明エラー", e)
         time.sleep(sleep_time)
 
@@ -98,7 +99,7 @@ def check_alive():
     heartbeatsocket.bind((HOST, PORT))
     heartbeatsocket.settimeout(1)
 
-    print("死活監視システム起動...")
+    logger.info("死活監視システム起動...")
 
     card_reader_state = True
     system_state = True
@@ -110,15 +111,15 @@ def check_alive():
             last_AliveTime = time.time()
             if data.decode('utf-8') == "DEAD" and card_reader_state:
 
-                logging.error("カードリーダーが指定台数分接続されていません")
+                logger.error("カードリーダーが指定台数分接続されていません")
                 send_mail(
                     card_reader_mail_config["TITLE"], card_reader_mail_config["TEXT"])
-                print('カードリーダー異常')
+                logger.info('カードリーダー異常')
                 last_AliveTime = time.time()
                 card_reader_state = False
 
             if data.decode('utf-8') == "ALIVE" and not card_reader_state:
-                logging.info("カードリーダが指定台数接続されました")
+                logger.info("カードリーダが指定台数接続されました")
                 card_reader_state = True
 
         except socket.timeout:
@@ -126,22 +127,22 @@ def check_alive():
 
         passTime = time.time() - last_AliveTime
         if passTime > waittimeMax:
-            logging.error("解錠システム異常")
+            logger.error("解錠システム異常")
             if system_state:
 
                 send_mail(system_mail_config["TITLE"],
                           system_mail_config["TEXT"])
-                print('システム異常')
+                logger.info('システム異常')
                 last_AliveTime = time.time()
                 system_state = False
 
         elif not system_state:
             system_state = True
-            logging.info("システム正常に戻りました")
+            logger.info("システム正常に戻りました")
 
 
 def main():
-    print("⏱️ sesameのバッテリーとサーバー状態を確認中...")
+    logger.info("⏱️ sesameのバッテリーとサーバー状態を確認中...")
     threading.Thread(target=check_sesame_battery).start()
     threading.Thread(target=check_alive).start()
 

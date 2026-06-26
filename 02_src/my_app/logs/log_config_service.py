@@ -7,6 +7,8 @@ import json
 import logging.config
 import sys
 
+logger = logging.getLogger(__name__)
+
 # 設定ファイルのパス
 BASE_DIR = os.path.dirname(__file__) + "\\..\\config"
 config_path = os.path.join(BASE_DIR, "service_log_config.json")
@@ -16,7 +18,7 @@ with open(config_path, "r", encoding="utf-8") as f:
 
 log_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 log_file_path = os.path.join(log_dir, "service.log")
-print(f"Log file path: {log_file_path}")
+logger.debug(f"Log file path: {log_file_path}")
 config["handlers"]["fileHandler"]["filename"] = log_file_path
 
 logging.config.dictConfig(config)
@@ -33,4 +35,4 @@ def _excepthook(exc_type, exc, tb):
 
 sys.excepthook = _excepthook
 
-logging.info("Log configuration loaded successfully")
+logger.info("Log configuration loaded successfully")

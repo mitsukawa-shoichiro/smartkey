@@ -3,6 +3,7 @@ import json
 import os
 import logging
 
+logger = logging.getLogger(__name__)
 
 def load_accounts():
     dir_path = os.path.dirname(
@@ -44,7 +45,7 @@ def login(page: ft.Page):
         account = load_accounts()
         print(len(username.value))
         if account["username"] == username.value and account["password"] == password.value:
-            logging.info("ログイン成功")
+            logger.info("ログイン成功")
             page.go("/index")
             page.update()
             return
@@ -52,7 +53,7 @@ def login(page: ft.Page):
         else:
             msg.value = "ユーザー名またはパスワードが間違っています。"
             msg_container.visible = True
-            logging.warning("ログイン失敗")
+            logger.warning("ログイン失敗")
             page.update()
             username.focus()
 
