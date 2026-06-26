@@ -6,6 +6,9 @@ import json
 from Crypto.Hash import CMAC
 from Crypto.Cipher import AES
 import os
+import logging
+logger = logging.getLogger(__name__)
+
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
@@ -47,9 +50,9 @@ def send_sesame_command(cmd: int):
 
         res = requests.post(url, json=body, headers=headers, timeout=10)
         print(res.status_code, res.text)
-    
+
     except Exception as e:
-        print("エラー:" + str(e))
+        logger.error("エラー:" + str(e))
 
 def open_sesame():
     # 83 であける
