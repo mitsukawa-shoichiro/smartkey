@@ -1,3 +1,6 @@
+# type: ignore
+#警告がうるさいのでコメントアウトしてます。動かしたいなら上の行を削除してください
+
 import re
 import threading
 import tempfile, cv2, os,random
@@ -7,11 +10,11 @@ import cv2
 import tempfile
 import time
 
-import service.db_manager as db
-import service.utils.sesame as sesami
-import camera.face_util as face_util
+#import service.db_manager as db
+#import service.utils.sesame as sesami
+#import camera.face_util as face_util
+#import logs.log_config_service
 
-import logs.log_config_service
 import logging
 
 
