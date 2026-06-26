@@ -7,6 +7,8 @@ from Crypto.Hash import CMAC
 from Crypto.Cipher import AES
 import os
 import logging
+logger = logging.getLogger(__name__)
+
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
@@ -18,47 +20,44 @@ sesame_id = sesami_config["sesame_id"]
 x_api_key = sesami_config["x_api_key"]
 secret_key = sesami_config["secret_key"]
 
-logger = logging.getLogger(__name__)
 
 
-def open_sesame():
+def send_sesame_command(cmd: int):
     try:
-        cmd = 83  # 88/82/83 = toggle/lock/unlock
+        # SESAMEの履歴用文字列つくる
         history = str(random.random())
         base64_history = base64.b64encode(bytes(history, 'utf-8')).decode()
 
-        print(base64_history)
+        # APIキーをヘッダーにせってい
         headers = {'x-api-key': x_api_key}
-        cmac = CMAC.new(bytes.fromhex(secret_key), ciphermod=AES)
 
+        # SESAME API用の署名つくる
         ts = int(datetime.datetime.now().timestamp())
         message = ts.to_bytes(4, byteorder='little')
         message = message.hex()[2:8]
-        print("message:" + message)
-        cmac = CMAC.new(bytes.fromhex(secret_key), ciphermod=AES)
 
+        cmac = CMAC.new(bytes.fromhex(secret_key), ciphermod=AES)
         cmac.update(bytes.fromhex(message))
         sign = cmac.hexdigest()
-        # 鍵の操作
+
+        # SESAME APIにコマンドおくる
         url = f'https://app.candyhouse.co/api/sesame2/{sesame_id}/cmd'
         body = {
             'cmd': cmd,
             'history': base64_history,
             'sign': sign
         }
-        res = requests.post(url, json.dumps(body), headers=headers)
+
+        res = requests.post(url, json=body, headers=headers, timeout=10)
         print(res.status_code, res.text)
-    except requests.exceptions.ConnectionError:
-        logger.exception("接続失敗")        # サーバーに繋がらない
-    except requests.exceptions.Timeout:
-        logger.exception("タイムアウト")    # 時間内に返ってこない
-    except requests.exceptions.HTTPError:
-        logger.exception("HTTPエラー")      # 4xx/5xx
-    except requests.exceptions.RequestException:
-        logger.exception("その他APIエラー") # 上記以外全部
+
     except Exception as e:
-        logger.exception("不明なエラー: %s", e)
+        logger.error("エラー:" + str(e))
 
+def open_sesame():
+    # 83 であける
+    send_sesame_command(83)
 
-if __name__ == "__main__":
-    open_sesame()
+def lock_sesame():
+    # 82 で閉める
+    send_sesame_command(82)
