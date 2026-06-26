@@ -1,4 +1,4 @@
-from .utils.sesami_bluetooth import open_sesame_bt
+from .utils.sesame_bluetooth import open_sesame_bt
 from .utils.sesame import open_sesame
 from .nfcutils.card_scan import scan_card
 from .db_manager import check_card, insert_card_id

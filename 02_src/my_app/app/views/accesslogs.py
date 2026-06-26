@@ -1,6 +1,6 @@
 from datetime import datetime,date,time,timedelta
 import flet as ft
-import app.models.db_manager as db
+import service.db_manager as db
 import asyncio
 import logging
 

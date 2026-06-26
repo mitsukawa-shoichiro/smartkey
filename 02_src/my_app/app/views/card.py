@@ -1,6 +1,6 @@
 import logging
 import flet as ft
-import app.models.db_manager as db
+import service.db_manager as db
 import asyncio
 import sqlite3
 # card管理画面

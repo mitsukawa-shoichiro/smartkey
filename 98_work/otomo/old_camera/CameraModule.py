@@ -1,3 +1,6 @@
+# type: ignore
+#警告がうるさいのでコメントアウトしてます。動かしたいなら上の行を削除してください
+
 import re
 import threading
 import tempfile, cv2, os,random
@@ -7,11 +10,11 @@ import cv2
 import tempfile
 import time
 
-import service.db_manager as db
-import service.utils.sesame as sesami
-import camera.face_util as face_util
+#import service.db_manager as db
+#import service.utils.sesame as sesami
+#import camera.face_util as face_util
+#import logs.log_config_service
 
-import logs.log_config_service
 import logging
 
 
@@ -156,8 +159,8 @@ class CameraWorker:
         if self.cap_dict:
             for i, cap in self.cap_dict.items():
                 cap.release()
-                print(f"[INFO] カメラ {i} のリソースを解放しました。")  
-    
+                print(f"[INFO] カメラ {i} のリソースを解放しました。")
+
     def open_all_cameras(self):
         for i in self.cap_dict.keys():
             cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
@@ -175,14 +178,14 @@ class CameraWorker:
                         print("撮影されたカメラのindexは"+str(index))
                     self.__open_sesami()
                     return True
-                
+
         return False
-                
+
     def __open_sesami(self):
         sesami.open_sesame()
         print("認証成功")
 
-        
+
     #region socket
     HOST = '127.0.0.1'
     PORT = 44444
