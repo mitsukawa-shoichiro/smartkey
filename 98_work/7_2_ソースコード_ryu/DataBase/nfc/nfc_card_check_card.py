@@ -4,13 +4,14 @@ from smartcard.System import readers
 from smartcard.Exceptions import NoCardException
 from smartcard.util import toHexString
 import time
-
+import sys, os, logging, socket, pythoncom, sqlite3
 
 POLL = [0x00, 0xFF, 0xFF, 0x01, 0x00]    # FeliCaポーリング
 API  = "http://127.0.0.1:5000/api/users/check_card"   # バックエンドAPI
 DEDUP_WINDOW = 5.0                       # 同じカードはN秒間無視
 event_q = queue.Queue()
 
+logger = logging.getLogger(__name__)  # logに書き込む用
 
 def sender():
     """非同期送信スレッド、ポーリングをブロックしない"""
@@ -19,15 +20,15 @@ def sender():
         payload = {"card_id": idm,
                    "time": time.time()}
         try:
-            print("送信成功")
+            logger.info("送信成功")
             requests.post(API, json=payload, timeout=2)
         except Exception as e:
-            print("送信失敗:", e)
+            logger.error(f"送信失敗: {e}")
 
 def reader_loop():
     rdr = readers()[0]
     conn = rdr.createConnection()
-    print("使用カードリーダー:", rdr)
+    logger.info(f"使用カードリーダー: {rdr}")
 
     while True:
         try:
@@ -37,14 +38,15 @@ def reader_loop():
             if [sw1, sw2] == [0x90, 0x00]:
                 idm = ''.join(format(byte, '02X') for byte in response)
                 event_q.put(idm)
-                print("IDmをキャプチャ:", idm)
-                time.sleep(DEDUP_WINDOW)  
+                logger.info(f"IDmをキャプチャ: {idm}")
+                time.sleep(DEDUP_WINDOW)
             conn.disconnect()
             time.sleep(0.05)             # CPU負荷軽減
         except NoCardException:
             time.sleep(0.05)
         except Exception as e:
-            print("例外:", e); time.sleep(1)
+            logger.error(f"例外: {e}")
+            time.sleep(1)
 
 if __name__ == "__main__":
     threading.Thread(target=sender, daemon=True).start()

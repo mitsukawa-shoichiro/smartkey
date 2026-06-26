@@ -5,7 +5,6 @@ import subprocess
 import os
 import time
 import sys
-import logging
 import win32serviceutil
 import win32service
 import win32event
@@ -18,6 +17,7 @@ LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
 import logs.log_config_service
+logger = logging.getLogger(__name__)  # logに書き込む用
 # endregion
 
 # server_dir = os.path.dirname(os.path.abspath(__file__))
@@ -32,13 +32,13 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
 # def reboot_computer():
 #     now = datetime.datetime.now()
 #     time.sleep(shutdown_time)
-#     logging.info("ReStartComputer,Waitting"+ str(shutdown_time) + "seconds")
+#     logger.info("ReStartComputer,Waitting"+ str(shutdown_time) + "seconds")
 #     os.system("shutdown /r /t 0")  # Windows
 def reboot_computer_at_time():
     try:
         reboot_hour, reboot_minute = map(int, shutdown_time.split(':'))
     except ValueError:
-        logging.error(f"時間情報が無効です: {shutdown_time}. HH:MM形式で指定してください。")
+        logger.error(f"時間情報が無効です: {shutdown_time}. HH:MM形式で指定してください。")
         return
 
     while True:
@@ -50,21 +50,21 @@ def reboot_computer_at_time():
         else:
             reboot_time_tomorrow = reboot_time_today + datetime.timedelta(days=1)
             wait_seconds = (reboot_time_tomorrow - now).total_seconds()
-        
+
         time.sleep(wait_seconds)
 
-        logging.info("パソコン再起動します")
+        logger.info("パソコン再起動します")
         os.system("shutdown /r /t 0")
 
 
-from backsys import BackSystem 
+from backsys import BackSystem
 from nfcutils import card_check
 def run_back():
-    logging.info("BackSystem thread started")
+    logger.info("BackSystem thread started")
     BackSystem.main()
 
 def run_card():
-    logging.info("CardCheck thread started")
+    logger.info("CardCheck thread started")
     card_check.main()
 
 class SmartKeyService(win32serviceutil.ServiceFramework):

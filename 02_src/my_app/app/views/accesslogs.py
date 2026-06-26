@@ -6,7 +6,7 @@ import logging
 
 # テーブルの1ページが表示する件数
 ITEMS_PER_PAGE = 100
-
+logger = logging.getLogger(__name__)
 # ログ閲覧画面
 def accesslogs(page: ft.Page):
     try:
@@ -449,7 +449,7 @@ def accesslogs(page: ft.Page):
             padding=ft.Padding(left=70, top=20, right=0, bottom=20)
         )
     except Exception as e:
-        logging.exception("ログ閲覧画面の表示中にエラーが発生しました: %s", e)
+        logger.exception("ログ閲覧画面の表示中にエラーが発生しました: %s", e)
         page.go("/index?error=ログ閲覧画面の表示中にエラーが発生しました")
 
     finally:

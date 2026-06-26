@@ -8,6 +8,8 @@ import time
 from enum import Enum
 import asyncio
 import logging
+logger = logging.getLogger(__name__)#log書き込む陽
+
 
 import threading
 from service.utils.sesame import open_sesame, lock_sesame
@@ -92,7 +94,7 @@ def receive_card(card_number: str, card_leader_id: int):
                 request_unlock()
 
                 insert_card_access_log(card_id, card_leader_id)
-                logging.info(f"カード認証成功: {card_id} (リーダーID: {card_leader_id})")
+                logger.info(f"カード認証成功: {card_id} (リーダーID: {card_leader_id})")
 
 
 
@@ -102,7 +104,7 @@ def schedule_auto_lock():
     # タイマー動いてたらとめる
     if _auto_lock_timer is not None and _auto_lock_timer.is_alive():
         _auto_lock_timer.cancel()
-    
+
     # 指定時間後にしめる
     _auto_lock_timer = threading.Timer(AUTO_LOCK_SECONDS, request_lock)
     _auto_lock_timer.daemon = True
@@ -114,7 +116,7 @@ def request_unlock():
         unlock()
     elif connect_config == "bluetooth":
         unlock_bt()
-    
+
     # 開錠 -> 自動施錠予約
     schedule_auto_lock()
 
@@ -122,11 +124,11 @@ def request_lock():
     # wifiの時SESAME APIであける
     if connect_config == "wifi":
         lock()
-    
+
     # ぶるーとぅーすはまだ
     # 使うときは別途lock_bt追加
     elif connect_config == "bluetooth":
-        logging.warning("まだよ～")
+        logger.warning("まだよ～")
 
 
 def unlock():

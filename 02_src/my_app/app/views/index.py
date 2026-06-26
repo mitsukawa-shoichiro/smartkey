@@ -2,6 +2,8 @@ import flet as ft
 import logging
 import urllib.parse
 
+logger = logging.getLogger(__name__)
+
 def index_view(page: ft.Page, error_message: str = ""):
 
     def on_hover(e: ft.HoverEvent):
@@ -15,7 +17,7 @@ def index_view(page: ft.Page, error_message: str = ""):
         page.update()
 
     def logaout(e):
-        logging.info("ログアウトしました")
+        logger.info("ログアウトしました")
         page.go("/")
 
     card_btn = ft.ElevatedButton(
@@ -101,7 +103,6 @@ def index_view(page: ft.Page, error_message: str = ""):
         alignment=ft.alignment.center,
         padding=ft.padding.only(top=40)
     )
-    print(page.route)
 
     error_text = ft.Text(
         error_message,
