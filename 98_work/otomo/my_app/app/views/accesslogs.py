@@ -1,6 +1,6 @@
 from datetime import datetime, date, time, timedelta
 import flet as ft
-import app.models.db_manager as db
+import service.db_manager as db
 import asyncio
 
 # テーブルの1ページが表示する件数
@@ -8,7 +8,7 @@ ITEMS_PER_PAGE = 100
 
 # ログ閲覧画面
 def accesslogs(page: ft.Page):
-    
+
     page.title = "ログ閲覧画面"
 
     current_page = 0           # 現在のページ（0‑origin）
@@ -22,12 +22,12 @@ def accesslogs(page: ft.Page):
         "start_dt": None,
         "end_dt": None,
     }
-    
+
     # エラーの際に表示するダイアログの初期設定
     dialog = ft.AlertDialog(
         modal=True,
     )
-    
+
     # 総ページ数の計算
     def calc_total_pages(count: int):
         nonlocal total_pages
@@ -39,7 +39,7 @@ def accesslogs(page: ft.Page):
             start_time.open = True
             open_timepicker(start_time)
             page.update()
-        
+
     def change_end_date(e):
         if end_date.value:
             end_time.open = True
@@ -51,7 +51,7 @@ def accesslogs(page: ft.Page):
         supported_locales=[
             ft.Locale("ja", "JP"),
             ft.Locale("en", "US")
-        ], 
+        ],
         current_locale=ft.Locale("ja", "JP")
     )
 
@@ -73,17 +73,17 @@ def accesslogs(page: ft.Page):
 
     start_text = ft.TextField(label="開始日時", width=200, height=48)
     end_text = ft.TextField(label="終了日時", width=200, height=48)
-    
+
     searcheventtype = ft.DropdownM2(label="入室/  退室",value=None,width=85,height=45)
     searcheventtype.options = [
         ft.DropdownOption("0", "入室"),
         ft.DropdownOption("1", "退室"),
     ]
-        
+
     # 検索結果を表示するためのテーブル
     def search_logs(e):
         nonlocal current_page, search_mode, search_params
-        
+
         # 値が入力されなかった場合はNoneを返す
         search_method = searchmethod.value.strip() if searchmethod.value else None
         search_username = searchusername.value.strip() if searchusername.value else None
@@ -93,12 +93,12 @@ def accesslogs(page: ft.Page):
         end_dt = None
         first_date=today - timedelta(days=365)
         last_date=today
-        
+
         try: #開始日時が入力された場合はフォーマットに直す（秒数は00秒）
             if  start_text.value:
                 start_dt = datetime.strptime(start_text.value, "%Y-%m-%d %H:%M")
                 start_dt = start_dt.replace(second=0)
-            
+
              #終了日時が入力された場合はフォーマットに直す（秒数は00秒）
             if  end_text.value:
                 end_dt = datetime.strptime(end_text.value, "%Y-%m-%d %H:%M")
@@ -113,7 +113,7 @@ def accesslogs(page: ft.Page):
                 ]
                 page.open(dialog)
                 return
-            
+
             #開始日時が一年以上前または本日以降の場合にエラー表示
             if start_dt and (start_dt.date() < first_date or start_dt.date() > last_date):
                 dialog.title = ft.Text("エラー")
@@ -123,7 +123,7 @@ def accesslogs(page: ft.Page):
                 ]
                 page.open(dialog)
                 return
-            
+
             #終了日時が一年以上前または本日以降の場合にエラー表示
             if end_dt and (end_dt.date() > last_date or end_dt.date() < first_date):
                 dialog.title = ft.Text("エラー")
@@ -133,7 +133,7 @@ def accesslogs(page: ft.Page):
                 ]
                 page.open(dialog)
                 return
-            
+
          #フォーマットに沿っていない入力がされた場合、エラー表示
         except ValueError:
             dialog.title = ft.Text("エラー")
@@ -143,7 +143,7 @@ def accesslogs(page: ft.Page):
             ]
             page.open(dialog)
             return
-        
+
         #検索条件に値を保持
         search_params = {
             "card_name": search_username,
@@ -165,8 +165,8 @@ def accesslogs(page: ft.Page):
         # テーブルロード
         load_table(current_page)
         scroll_table.scroll_to(offset=0, duration=0)
-    
-    
+
+
     #ソートを切り替え、ページをリセットし、新しい順で再描画
     async def togle_sort(e):
         nonlocal current_page
@@ -178,11 +178,11 @@ def accesslogs(page: ft.Page):
         scroll_table.visible=True
         scroll_table.update()
         load_table(current_page)
-    
+
     #togle_sortの呼び出し
     async def on_sort(e):
         await togle_sort(e)
-        
+
     #全件検索してテーブルに表示
     def show_all_logs(e):
         nonlocal current_page,search_params
@@ -198,7 +198,7 @@ def accesslogs(page: ft.Page):
         reset(e)
         calc_total_pages(db.count_filtered_logs())
         load_table(current_page)
-        
+
     #日時入力のピッカーを開く処理
     def open_datepicker(picker: ft.DatePicker):
         page.dialog = picker
@@ -209,7 +209,7 @@ def accesslogs(page: ft.Page):
         page.dialog = picker
         picker.open = True
         page.update()
-    
+
     #検索欄のリセット
     def reset(e):
         searchusername.value = ""
@@ -222,7 +222,7 @@ def accesslogs(page: ft.Page):
         start_time.value = time(0,0)
         end_time.value = time(23,59)
         page.update()
-        
+
     #日時で入力された値をテキストボックスに表示する（日時どちらも入力された場合のみ）
     def update_start_textbox():
         if start_date.value and start_time.value:
@@ -239,7 +239,7 @@ def accesslogs(page: ft.Page):
         else:
             end_text.value = ""
         page.update()
-    
+
     #フォーマットの変換
     start_date.on_change = change_start_date
     end_date.on_change = change_end_date
@@ -250,7 +250,7 @@ def accesslogs(page: ft.Page):
     prev_btn = ft.ElevatedButton("⬅ 前へ",   on_click=lambda e: prev_page(e),style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
     next_btn = ft.ElevatedButton("次へ ➡",   on_click=lambda e: next_page(e),style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
     pagination_controls = ft.Row([prev_btn, page_label, next_btn], alignment=ft.MainAxisAlignment.CENTER)
-    
+
         #検索ボタン
     search_btn = ft.ElevatedButton(
         text="検索",
@@ -277,7 +277,7 @@ def accesslogs(page: ft.Page):
         ),
     )
         #開始日時入力ボタン
-    startdate_btn = ft.ElevatedButton(text = "開始日時を選択", 
+    startdate_btn = ft.ElevatedButton(text = "開始日時を選択",
                                     icon=ft.Icons.DATE_RANGE,
                                     on_click=lambda e: open_datepicker(start_date),
                                     style=ft.ButtonStyle(
@@ -285,7 +285,7 @@ def accesslogs(page: ft.Page):
                                     )
                 )
         #終了日時入力ボタン
-    enddate_btn = ft.ElevatedButton(text = "終了日時を選択", 
+    enddate_btn = ft.ElevatedButton(text = "終了日時を選択",
                                     icon=ft.Icons.DATE_RANGE,
                                     on_click=lambda e: open_datepicker(end_date),
                                     style=ft.ButtonStyle(
@@ -315,11 +315,11 @@ def accesslogs(page: ft.Page):
                     ),
                     on_click=lambda e: page.go("/index"),
                 )
-    
+
     #ソートに使用する項目
     timestamp_row = ft.Row([ft.Text("入退室の日時", weight="bold", size=14)])
-    
-    # テーブル定義  
+
+    # テーブル定義
     table = ft.DataTable(
         columns=[
                     # ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
@@ -338,7 +338,7 @@ def accesslogs(page: ft.Page):
 
         table.rows.clear()  #テーブルをクリア
         offset = page_num * ITEMS_PER_PAGE  #取得する項目の先頭を計算
-        
+
         #取得する件数と場所、順番を考慮し検索
         logs = db.find_log(
                 search_params["card_name"],search_params["face_name"], search_params["method"], search_params["eventtype"],
@@ -358,7 +358,7 @@ def accesslogs(page: ft.Page):
                 ])
             )
             elif method == "顔認証":
-                table.rows.append( 
+                table.rows.append(
                     ft.DataRow(cells=[
                         ft.DataCell(ft.Text(face_name, width=280)),
                         ft.DataCell(ft.Text(method, width=80)),
@@ -371,13 +371,13 @@ def accesslogs(page: ft.Page):
         prev_btn.disabled = current_page == 0
         next_btn.disabled = (current_page+1) >= total_pages
         page.update()
-        
+
     if not search_mode:
         calc_total_pages(db.count_filtered_logs())
-        
+
     #該当ページのログを取得
     load_table(current_page)
-    
+
     #合計ページ数を計算
     def calc_total_pages(count: int):
         nonlocal total_pages
@@ -398,13 +398,13 @@ def accesslogs(page: ft.Page):
             current_page -= 1
             load_table(current_page)
             scroll_table.scroll_to(offset=0, duration=0)
-    
+
     # 日付と時刻の入力フィールド
     page.overlay.append(start_date)
     page.overlay.append(end_date)
     page.overlay.append(start_time)
     page.overlay.append(end_time)
-    
+
      # 検索エリアの Column（非表示で初期化）
     search_area = ft.Container(
         content=ft.Column(
@@ -440,14 +440,14 @@ def accesslogs(page: ft.Page):
         toggle_btn.text = "検索オプションを閉じる" if search_area.visible else "検索オプションを開く"
         page.update()
 
-    toggle_btn = ft.ElevatedButton("検索オプションを表示", 
+    toggle_btn = ft.ElevatedButton("検索オプションを表示",
                                    on_click=toggle_search_area,
                                    style=ft.ButtonStyle(
                                         shape=ft.RoundedRectangleBorder(radius=6),
                                         padding=ft.padding.all(0)
                                     )
                 )
-   
+
     #ビューの設定
     return ft.View(
         "/accesslogs",
@@ -461,4 +461,4 @@ def accesslogs(page: ft.Page):
             back_btn,
         ],
           padding=ft.Padding(left=70, top=20, right=0, bottom=20)
-    ) 
+    )

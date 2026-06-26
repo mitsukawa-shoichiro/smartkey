@@ -156,8 +156,8 @@ class CameraWorker:
         if self.cap_dict:
             for i, cap in self.cap_dict.items():
                 cap.release()
-                print(f"[INFO] カメラ {i} のリソースを解放しました。")  
-    
+                print(f"[INFO] カメラ {i} のリソースを解放しました。")
+
     def open_all_cameras(self):
         for i in self.cap_dict.keys():
             cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
@@ -175,14 +175,14 @@ class CameraWorker:
                         print("撮影されたカメラのindexは"+str(index))
                     self.__open_sesami()
                     return True
-                
+
         return False
-                
+
     def __open_sesami(self):
         sesami.open_sesame()
         print("認証成功")
 
-        
+
     #region socket
     HOST = '127.0.0.1'
     PORT = 44444

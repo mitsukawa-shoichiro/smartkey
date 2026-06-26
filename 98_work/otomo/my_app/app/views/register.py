@@ -1,10 +1,9 @@
 import flet as ft
 import asyncio
-import app.models.db_manager as db
+import service.db_manager as db
 import logging
 from service.cardsystem import set_state, get_state, get_card
 from app.utils.thread_state import thread_handle, stop_event
-import service.db_manager as service_db
 import socket
 import threading
 CARD_NUMBER = None
@@ -110,7 +109,7 @@ async def delayed_transition(page: ft.Page):
         CARD_NUMBER = get_card()
 
         if CARD_NUMBER == first_card and first_card != "" and CARD_NUMBER != "":
-            if not service_db.check_card(CARD_NUMBER):
+            if not db.check_card(CARD_NUMBER):
                 try:
 
                     sock.connect((HOST, PORT))

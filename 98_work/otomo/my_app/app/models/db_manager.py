@@ -10,6 +10,13 @@ dir_path = os.path.dirname(
         )
     )
 )
+"""
+
+db_managerはservice側に統合、一応残しておきます
+
+"""
+
+
 
 DB_PATH = os.path.join(dir_path, "db", "database.db")
 FACEDB_PATH=    os.path.join(dir_path, "db", "Facelib")
@@ -87,7 +94,7 @@ def delete_old_logs():
     conn.commit()
     conn.close()
     print("1年以上前のログを削除しました")
-   
+
 def insert_samplelogs(card_id,eventtype,timestamp):
     # サンプルログを挿入
     conn = sqlite3.connect(DB_PATH)
@@ -136,9 +143,9 @@ def find_log(card_name,face_name, method, eventtype, start_datetime, end_datetim
         ORDER BY al.timestamp {order}
         LIMIT ? OFFSET ?
     """, (
-        card_name,  
+        card_name,
         face_name,
-        method,               
+        method,
         eventtype, eventtype,
         start_datetime_str, end_datetime_str,
         limit, offset
@@ -403,14 +410,14 @@ def find_face_name_and_roma_by_id(face_id):
 if  __name__ == "__main__":
     import random
     from datetime import datetime, timedelta
-    
+
 
     hiragana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん'
     alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     def generate_random_hiragana(length):
         return ''.join(random.choices(hiragana, k=length))
-    
+
     def generate_random_alphabet(length):
         return ''.join(random.choices(alphabet, k=length))
 
@@ -421,21 +428,21 @@ if  __name__ == "__main__":
         suuji = random.randint(10000, 1000000)
         name = moji + "_" + card
         insert_card(name, suuji)
-        
+
     def generate_random_timestamp():
-        
+
         end_date = datetime.now()
         start_date = (end_date - timedelta(days=365))
-        
+
         delta_seconds = int((end_date - start_date).total_seconds())
-        
+
         random_seconds = random.randint(0, delta_seconds)
         random_datetime = start_date + timedelta(seconds=random_seconds)
-        
+
         timestamp = random_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
         return timestamp
-    
+
     for i in range(299):
         card_id = random.randint(1,150)
         eventtype = random.randint(0,1)

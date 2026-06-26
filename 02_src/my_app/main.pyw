@@ -34,7 +34,7 @@ def main(page: ft.Page):
     route(page)
     page.go("/")
 
-    logging.info("GUIが起動されました")
+    logger.info("GUIが起動されました")
 
 
 ft.app(target=main, assets_dir="app")
@@ -49,11 +49,11 @@ def _on_exit():
             sock.connect((HOST, PORT))
             msg = "authenticating"
             sock.sendall(msg.encode('utf-8'))
-            logging.info(f"Sent message: {msg}")
+            logger.info(f"Sent message: {msg}")
         except Exception as e:
-            logging.error(f"通信エラー: {e}")
+            logger.error(f"通信エラー: {e}")
 
         logger.info("GUIを終了しました")
     except Exception:
-        print("失敗")
+        logger.error("失敗")
         pass

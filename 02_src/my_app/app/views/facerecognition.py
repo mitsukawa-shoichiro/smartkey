@@ -1,6 +1,6 @@
 import logging
 import flet as ft
-import app.models.db_manager as db
+import service.db_manager as db
 import asyncio
 
 
@@ -39,7 +39,7 @@ def faceView(page: ft.Page):
     face_name = ft.TextField(label="登録者検索", autofocus=True,
                              on_submit=lambda e: search(e),
                              max_length=50)
-    # endregion 
+    # endregion
     search_btn = ft.ElevatedButton(
         content=ft.Icon(ft.Icons.SEARCH, size=30, color=ft.Colors.WHITE),
         on_click=lambda e: search(e),
@@ -299,7 +299,7 @@ def faceView(page: ft.Page):
             page.open(dialog)
             return
 
-        new_face_name = dialog.content.controls[0].value 
+        new_face_name = dialog.content.controls[0].value
         new_face_name_roma = dialog.content.controls[1].value
         old_face_data = db.find_face_name_and_roma_by_id(face_id)
         db.update_face_name(face_id, new_face_name,new_face_name_roma)
@@ -310,7 +310,7 @@ def faceView(page: ft.Page):
         # ダイアログを更新して完了メッセージを表示
         dialog.title = ft.Text("編集完了")
         dialog.content = ft.Text(
-            f"登録者名を '{old_face_data[0]}'から'{new_face_name}' に変更しました\n" +  
+            f"登録者名を '{old_face_data[0]}'から'{new_face_name}' に変更しました\n" +
             f"登録者名ローマ字を '{old_face_data[1]}'から'{new_face_name_roma}' に変更しました"
         )
         dialog.actions = [
