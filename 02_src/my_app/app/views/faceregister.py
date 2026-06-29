@@ -14,32 +14,121 @@ from app.utils.front_camera_moduel import CameraWorker_Front, CaptureBuffer
 #region util
 import shutil
 savedir="./db/FaceLib"
-def SaveFaceData(src_path: str, new_name: str,target_dir=savedir) :
+
+from pathlib import Path
+import glob
+import shutil
+import os
+
+savedir = "./db/FaceLib"
+
+
+def next_index(target_dir: str, user_name: str, ext=".jpg"):
+    """
+    指定ユーザーの次の保存番号を取得する
+    例)
+        otomo_001.jpg
+        otomo_002.jpg
+    →
+        3
+    """
+
+    pattern = os.path.join(target_dir, f"{user_name}_*")
+
+    max_index = 0
+
+    for path in glob.glob(pattern):
+        stem = Path(path).stem
+
+        try:
+            idx = int(stem.split("_")[-1])
+            max_index = max(max_index, idx)
+        except Exception:
+            pass
+
+    return max_index + 1
+
+#1枚だけ保存する場合
+def SaveFaceData(src_path: str,
+                new_name: str,
+                target_dir=savedir):
+    """
+    画像1枚を保存する
+
+    Returns
+    -------
+    保存したファイルパス
+    """
+
     if not os.path.exists(src_path):
         print(f"[ERROR] ファイルが存在しません: {src_path}")
         return None
 
-    # 保存先ディレクトリ
-    if target_dir is None:
-        target_dir = os.path.dirname(src_path)
     os.makedirs(target_dir, exist_ok=True)
 
     _, ext = os.path.splitext(src_path)
-    if not ext:
+    if ext == "":
         ext = ".jpg"
 
-    # 連番で空き名を探す
-    counter = 1
-    while True:
-        new_filename = f"{new_name}_{counter:03d}{ext}"
-        dst_path = os.path.join(target_dir, new_filename)
-        if not os.path.exists(dst_path):
-            shutil.copy2(src_path, dst_path)  # ← コピー
-            print(f"[OK] 画像を保存しました: {dst_path}")
-            return dst_path
-        counter += 1
+    index = next_index(target_dir, new_name)
 
+    dst_path = os.path.join(
+        target_dir,
+        f"{new_name}_{index:03d}{ext}"
+    )
+
+    shutil.copy2(src_path, dst_path)
+
+    print(f"[OK] 保存: {dst_path}")
+
+    return dst_path
+# 現在の最大番号＋１枚の形で画像を管理
 #endregion
+#画像を複数枚保存する場合
+def SaveFaceDatas(src_paths,
+                new_name,
+                target_dir=savedir):
+    """
+    複数画像をまとめて保存する
+
+    Parameters
+    ----------
+    src_paths : list[str]
+    """
+
+    if len(src_paths) == 0:
+        return []
+
+    os.makedirs(target_dir, exist_ok=True)
+
+    saved_files = []
+
+    index = next_index(target_dir, new_name)
+
+    for src_path in src_paths:
+
+        if not os.path.exists(src_path):
+            continue
+
+        _, ext = os.path.splitext(src_path)
+
+        if ext == "":
+            ext = ".jpg"
+
+        dst_path = os.path.join(
+            target_dir,
+            f"{new_name}_{index:03d}{ext}"
+        )
+
+        shutil.copy2(src_path, dst_path)
+
+        saved_files.append(dst_path)
+
+        print(f"[OK] 保存: {dst_path}")
+
+        index += 1
+
+    return saved_files
 
 
 
@@ -55,11 +144,20 @@ def faceRegister_view(page: ft.Page) -> ft.View:
     status = ft.Text("カメラ未起動", size=16)
 
     def open_cam(_):
+        CaptureBuffer.files.clear()
+        #前回のバッファをクリアする
         CameraWorker_Front.instance.close_camera = False
         CameraWorker_Front.instance.front_end_system(camera_index_input_area.value)
 
         status.value = "カメラ起動中（別ウィンドウにプレビュー表示）"
         status.update()
+
+    #撮影枚数を提示    
+    capture_count = ft.Text(
+        "撮影枚数：0枚",
+        size=16,
+        color=ft.Colors.BLUE,
+    )
 
     def close_cam(_):
         CameraWorker_Front.instance.close_camera = True
@@ -69,11 +167,32 @@ def faceRegister_view(page: ft.Page) -> ft.View:
     def __cleanup(_=None):
 
         CameraWorker_Front.instance.close_camera = True
+        CaptureBuffer.files.clear()
 
+#撮影後にさらに撮影するかどうかを誘導
     def capture_one(_):
         CameraWorker_Front.instance.front_capture_photo()
-        status.value = f"撮影枚数:{len(CaptureBuffer.files)}枚"
-        status.update()  
+
+        count = len(CaptureBuffer.files)
+
+        capture_count.value = f"撮影枚数：{count}枚"
+
+        if count > 0:
+            status.value = "撮影しました。さらに撮影するか、『登録へ進む』を押してください。"
+        else:
+            status.value = "撮影に失敗しました。"
+
+        page.update()
+#登録画面に遷移するボタンの追加
+    def go_register(_):
+
+        if len(CaptureBuffer.files) == 0:
+
+            status.value = "写真を1枚以上撮影してください。"
+            status.update()
+            return
+
+        page.go("/faceRegister/input")
 
     #region face_register_view
     camera_index_input_area = ft.TextField(
@@ -96,6 +215,7 @@ def faceRegister_view(page: ft.Page) -> ft.View:
                     [
                         ft.Text("顔登録", size=24, weight=ft.FontWeight.BOLD),
                         status,
+                        capture_count,
                         camera_index_input_area,
                         ft.Row(
                             [
@@ -126,7 +246,7 @@ def faceRegister_view(page: ft.Page) -> ft.View:
                         ),
                         ft.ElevatedButton(
                             "登録へ",
-                            on_click=lambda e: page.go("/faceRegister/input")
+                            on_click=go_register
                         )
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
@@ -165,19 +285,47 @@ def faceRegister_register(page: ft.Page) -> ft.View:
 
     add_confirm_dialog = ft.AlertDialog(modal=True)
 
-    # --- 画像プレビュー（最後の1枚） ---
-    last_img_path = CaptureBuffer.files[-1]
-    print(f"[INFO] プレビュー画像: {last_img_path}")
-    if last_img_path and os.path.exists(last_img_path):
-        preview = ft.Image(
-            src=last_img_path,        # デスクトップアプリならローカルパスでOK
-            width=320, height=240,
-            fit=ft.ImageFit.CONTAIN,
+    # --- 画像プレビュー（最後の1枚） ---→全画像に変更
+    image_paths = CaptureBuffer.files.copy()
+    print(f"[INFO] プレビュー画像: {image_paths}")
+    
+    preview_controls = []
+    if len(image_paths) == 0:
+        preview_controls.append(
+            ft.Text(
+                "画像がありません",
+                color=ft.Colors.RED
+            )
         )
-        hint = ft.Text(f"直近の撮影: {last_img_path}", size=12, color=ft.Colors.BLUE_GREY_600)
     else:
-        preview = ft.Text("画像がありません", size=16, color=ft.Colors.RED)
-        hint = ft.Text("", size=12)
+        for path in image_paths:
+            if not os.path.exists(path):
+                continue
+            preview_controls.append(
+                ft.Container(
+                    content=ft.Image(
+                        src=path,
+                        width=140,
+                        height=100,
+                        fit=ft.ImageFit.CONTAIN,
+                    ),
+                    padding=5,
+                )
+            )
+        preview_area = ft.Row(
+            controls=preview_controls,
+            wrap=True,
+            spacing=10,
+            scroll=ft.ScrollMode.AUTO,
+        )
+    hint = ft.Text(f"直近の撮影: {image_paths}", size=12, color=ft.Colors.BLUE_GREY_600)
+    
+    preview = ft.Text("画像がありません", size=16, color=ft.Colors.RED)
+    hint = ft.Text(
+        f"撮影画像：{len(image_paths)}枚",
+        size=12,
+        color=ft.Colors.BLUE_GREY_600,
+    )
 
     # --- 入力 ---
     user_name = ft.TextField(
@@ -203,12 +351,22 @@ def faceRegister_register(page: ft.Page) -> ft.View:
         # TODO: ここで正式保存（DB 登録 / 画像の本保存先へ移動 など）
 
         # イメージセーブ
-        SaveFaceData(CaptureBuffer.files[-1], user_name_romaji.value)
+        saved_files = SaveFaceDatas(
+            image_paths,
+            user_name_romaji.value
+        )
 
         # DB登録
         db.insert_facedata(user_name.value, user_name_romaji.value)
-
-        print(f"[本人登録] ユーザー名={user_name.value}  画像={CaptureBuffer.files[-1]}")
+        for path in image_paths:
+            if os.path.exists(path):
+                os.remove(path)    #一時画像ファイルの削除
+        CaptureBuffer.files.clear() #一時画像の消去
+        print(
+            f"[本人登録] "
+            f"{user_name.value} "
+            f"保存枚数={len(saved_files)}"
+        )
 
         # 完了ダイアログ
         page.close(add_confirm_dialog)
@@ -259,7 +417,7 @@ def faceRegister_register(page: ft.Page) -> ft.View:
 
 
         # 画像がない場合の警告（任意）
-        if not CaptureBuffer.files[-1]:
+        if len(image_paths) == 0:
             add_confirm_dialog.title = ft.Text("エラー")
             add_confirm_dialog.content = ft.Text("画像はありません")
             add_confirm_dialog.actions = [
@@ -281,14 +439,17 @@ def faceRegister_register(page: ft.Page) -> ft.View:
         page.open(add_confirm_dialog)
 
         #endregion
-
+    def cancel_register(e):
+        CaptureBuffer.files.clear()
+        page.close(add_confirm_dialog)
+        page.go("/faceRegister")
 
     # --- キャンセル ---
     def open_cancel_confirm_dialog(e):
         add_confirm_dialog.title = ft.Text("キャンセル確認")
-        add_confirm_dialog.content = ft.Text("登録をキャンセルしますか？（一時画像は残ります）")
+        add_confirm_dialog.content = ft.Text("登録をキャンセルしますか？（一時画像は削除されます）")
         add_confirm_dialog.actions = [
-            ft.TextButton("はい", on_click=lambda e: page.go("/faceRegister")),
+            ft.TextButton("はい", on_click=cancel_register),
             ft.TextButton("いいえ", on_click=lambda e: page.close(add_confirm_dialog)),
         ]
         page.open(add_confirm_dialog)
@@ -298,7 +459,7 @@ def faceRegister_register(page: ft.Page) -> ft.View:
         controls=[
             ft.Text("本人登録", size=28, weight=ft.FontWeight.BOLD),
             # 外部で定義された preview と hint を使用
-            preview,          # ← 画像を表示するft.Imageコントロール
+            preview_area,          # ← 画像を表示するft.Imageコントロール
             hint,             # ← 画像に関するヒントテキスト
             user_name,        # ← ユーザー名入力欄（ft.TextFieldなどを想定）
             user_name_romaji, # ← ユーザー名（ローマ字）入力欄
