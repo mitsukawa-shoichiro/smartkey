@@ -7,16 +7,16 @@ import logging
 import json
 import os
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
-    __file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
+    __file__), '..', '..', 'config', 'backend', 'sesame_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
-    sesami_config = config_list["device"]
+    sesame_config = config_list["device"]
 
 #logに書き込む用
 logger = logging.getLogger(__name__)
 
 
-# BluetoothでSESAMI5を制御するサンプルプログラム
+# BluetoothでSESAME5を制御するサンプルプログラム
 
 class OP_CODE(Enum):
     RESPONSE = 0x07

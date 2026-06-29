@@ -111,29 +111,34 @@ def schedule_auto_lock():
     _auto_lock_timer.start()
 
 def request_unlock():
-    # 接続方式で開錠
+    success = False
+    # 接続方式で開錠   開錠成功＝successとして開錠された時のみunlockを要求
     if connect_config == "wifi":
-        unlock()
+        success = unlock()
     elif connect_config == "bluetooth":
-        unlock_bt()
+        success = unlock_bt()
 
     # 開錠 -> 自動施錠予約
-    schedule_auto_lock()
+    if success:
+        schedule_auto_lock()
 
 def request_lock():
     # wifiの時SESAME APIであける
-    if connect_config == "wifi":
-        lock()
+    try:
+        if connect_config == "wifi":
+            lock()
+        elif connect_config == "bluetooth":
+            logger.warning("Bluetooth lock is not implemented") 
+            #Bluetoothでは未実装
+    except Exception as e:      
+        #例外の詳細を変数eに格納
+        logger.exception(f"Auto lock failed:{e}")
 
-    # ぶるーとぅーすはまだ
-    # 使うときは別途lock_bt追加
-    elif connect_config == "bluetooth":
-        logger.warning("まだよ～")
 
 
 def unlock():
     # Wi-Fiで開錠する
-    open_sesame()
+    return open_sesame()
 
 def lock():
     # Wi-Fiで施錠する
