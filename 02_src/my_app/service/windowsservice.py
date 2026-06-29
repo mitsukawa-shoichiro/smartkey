@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)  # logに書き込む用
 
 # server_dir = os.path.dirname(os.path.abspath(__file__))
 # card_reader_path = os.path.join(server_dir, "nfcutils", "card_check.py")
-# backsys_path = os.path.join(server_dir, "sendmail", "BackSystem.py")
+# backsys_path = os.path.join(server_dir, "sendmail", "back_system.py")
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'config', 'backend', 'shutdown.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     data = json.load(f)
@@ -57,11 +57,11 @@ def reboot_computer_at_time():
         os.system("shutdown /r /t 0")
 
 
-from backsys import BackSystem
+from backsys import back_system
 from nfcutils import card_check
 def run_back():
-    logger.info("BackSystem thread started")
-    BackSystem.main()
+    logger.info("back_system thread started")
+    back_system.main()
 
 def run_card():
     logger.info("CardCheck thread started")
@@ -95,7 +95,7 @@ class SmartKeyService(win32serviceutil.ServiceFramework):
 
         # ここに来たら停止シグナル受信
         servicemanager.LogInfoMsg("Stopping worker threads…")
-        # （BackSystem / card_check 側で while ループを回している場合は、
+        # （back_system / card_check 側で while ループを回している場合は、
         #   threading.Event などを使って終了フラグを渡す実装にする）
 
 

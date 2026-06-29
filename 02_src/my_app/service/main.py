@@ -18,19 +18,19 @@ import logs.log_config_service
 
 # server_dir = os.path.dirname(os.path.abspath(__file__))
 # card_reader_path = os.path.join(server_dir, "nfcutils", "card_check.py")
-# backsys_path = os.path.join(server_dir, "sendmail", "BackSystem.py")
+# backsys_path = os.path.join(server_dir, "sendmail", "back_system.py")
 
 logger = logs.log_config_service.logger
 
 sys.path.append(os.path.dirname(__file__))
 
-from backsys import BackSystem
+from backsys import back_system
 from nfcutils import card_check
 
 
 def run_back():
-    logger.info("BackSystem thread started")
-    BackSystem.main()
+    logger.info("back_system thread started")
+    back_system.main()
 
 def run_card():
     logger.info("CardCheck thread started")

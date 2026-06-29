@@ -23,7 +23,7 @@ import logging
 
 # server_dir = os.path.dirname(os.path.abspath(__file__))
 # card_reader_path = os.path.join(server_dir, "nfcutils", "card_check.py")
-# backsys_path = os.path.join(server_dir, "sendmail", "BackSystem.py")
+# backsys_path = os.path.join(server_dir, "sendmail", "back_system.py")
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),   'config', 'backend', 'shutdown.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     data = json.load(f)
@@ -46,13 +46,13 @@ def reboot_computer_at_time():
         else:
             reboot_time_tomorrow = reboot_time_today + datetime.timedelta(days=1)
             wait_seconds = (reboot_time_tomorrow - now).total_seconds()
-        
+
         time.sleep(wait_seconds)
 
         logging.info("パソコン再起動します")
         os.system("shutdown /r /t 0")
 
-from service.backsystem import BackSystem
+from service.backsystem import back_system
 from camera.CameraModule import CameraWorker
 
 
@@ -64,7 +64,7 @@ class SmartKeyService(win32serviceutil.ServiceFramework):
     _svc_display_name_ = "Smart Key Python Service"
     _svc_description_  = "NFCリーダー監視とバックシステムを常駐実行するサービス"
 
-    backsys_instance: BackSystem = None
+    backsys_instance: back_system = None
     camera_worker_instance: CameraWorker = None
 
     def __init__(self, args):
@@ -77,7 +77,7 @@ class SmartKeyService(win32serviceutil.ServiceFramework):
         self.camera_worker_instance = None
 
     def _run_backsystem(self):
-        self.backsys_instance =BackSystem()
+        self.backsys_instance =back_system()
 
     def _run_camera_worker(self):
         self.camera_worker_instance = CameraWorker()
@@ -106,16 +106,16 @@ class SmartKeyService(win32serviceutil.ServiceFramework):
     # サービス停止
     def SvcStop(self):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
-        
+
         self.backsys_instance.stop()
 
         self.camera_worker_instance.stop()
-        
+
         win32event.SetEvent(self.hWaitStop)
 
 
 def test():
-    backsys_instance =BackSystem()
+    backsys_instance =back_system()
     camera_worker_instance = CameraWorker()
     camera_worker_instance.back_end_system()
 
