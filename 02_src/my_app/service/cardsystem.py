@@ -8,7 +8,7 @@ import time
 from enum import Enum
 import asyncio
 import logging
-logger = logging.getLogger(__name__)#log書き込む陽
+logger = logging.getLogger(__name__)#log書き込む用
 
 
 import threading

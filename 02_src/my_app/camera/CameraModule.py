@@ -20,6 +20,9 @@ from service.cardsystem import request_unlock
 # 複数登録画像との距離・平均値で顔認証するよう
 from camera.face_util.face_stable import recognize_image_average
 
+#logに書き込む用
+logger = logging.getLogger(__name__)
+
 #region ReadConfig
 import json
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
@@ -158,8 +161,8 @@ class CameraWorker:
                 self.__Authentication()
                 # 成功でも失敗でもまつ
                 time.sleep(0.5)
-                
-                logging.info("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
+
+                logger.info("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
 
         except KeyboardInterrupt:
             print("\n[INFO] ユーザー中断、プログラムを終了します。")
@@ -171,8 +174,8 @@ class CameraWorker:
         if self.cap_dict:
             for i, cap in self.cap_dict.items():
                 cap.release()
-                print(f"[INFO] カメラ {i} のリソースを解放しました。")  
-    
+                print(f"[INFO] カメラ {i} のリソースを解放しました。")
+
     def open_all_cameras(self):
         for i in self.cap_dict.keys():
             cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
@@ -242,15 +245,15 @@ class CameraWorker:
         self.current_match_name = None
         self.current_match_count = 0
         return False
-        
 
-        
+
+
     def __open_sesami(self):
         # 開錠 -> 一定時間後の自動施錠も予約！！！！！！
         request_unlock()
         print("認証成功")
 
-        
+
     #region socket
     HOST = '127.0.0.1'
     PORT = 44444

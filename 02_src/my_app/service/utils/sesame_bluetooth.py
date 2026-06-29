@@ -12,6 +12,9 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
     sesami_config = config_list["device"]
 
+#logに書き込む用
+logger = logging.getLogger(__name__)
+
 
 # BluetoothでSESAMI5を制御するサンプルプログラム
 
@@ -58,7 +61,7 @@ class SsmBleClient:
     async def connect(self):
         await self._client.connect()
         if self._client.is_connected:
-            logging.debug(f"connection OK! MAC Address: {self._config['mac_addr']}")
+            logger.debug(f"connection OK! MAC Address: {self._config['mac_addr']}")
         else:
             print("connection error!")
 
@@ -233,9 +236,9 @@ async def open_sesame_bt():
             await sbc.unlock()
         await sbc.stop_notify()
         await sbc.disconnect()
-        logging.info(f"bluetooth解錠")
+        logger.info(f"bluetooth解錠")
     except Exception as e:
-        logging.error(f"bluetooth解錠失敗：{e}")
+        logger.error(f"bluetooth解錠失敗：{e}")
 
 if __name__ == "__main__":
     asyncio.run(open_sesame_bt())

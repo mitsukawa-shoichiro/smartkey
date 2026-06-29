@@ -3,6 +3,7 @@ import flet as ft
 import service.db_manager as db
 import asyncio
 
+logger = logging.getLogger(__name__)#logに書き込む用
 
 # card管理画面
 
@@ -252,7 +253,7 @@ def faceView(page: ft.Page):
                           on_click=lambda e:  page.close(dialog)),
         ]
         for face_data in face_datas:
-            logging.info(f"{face_data[1]}が削除されました")
+            logger.info(f"{face_data[1]}が削除されました")
 
         page.open(dialog)
 
