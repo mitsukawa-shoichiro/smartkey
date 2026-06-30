@@ -133,7 +133,7 @@ async def delayed_transition(page: ft.Page):
                 dialog.content = ft.Text("このカードは既に登録されています")
                 dialog.actions = [
                     ft.TextButton("戻る", autofocus=True,
-                                  on_click=lambda e: page.go("/index"))
+                        on_click=lambda e: page.go("/index"))
                 ]
                 page.open(dialog)
                 await asyncio.sleep(1)
@@ -152,7 +152,7 @@ async def delayed_transition(page: ft.Page):
             dialog.content = ft.Text("このカードは対応されてません")
             dialog.actions = [
                 ft.TextButton("戻る", autofocus=True,
-                              on_click=lambda e: page.go("/index"))
+                    on_click=lambda e: page.go("/index"))
             ]
             page.open(dialog)
             try:
@@ -181,9 +181,9 @@ async def delayed_transition(page: ft.Page):
         )
         dialog.actions = [
             ft.TextButton("はい", autofocus=True,
-                          on_click=lambda e: retry(e)),
+                on_click=lambda e: retry(e)),
             ft.TextButton("いいえ",
-                          on_click=lambda e: page.go("/index"))
+                on_click=lambda e: page.go("/index"))
         ]
         try:
 
@@ -252,7 +252,7 @@ def register_input(page: ft.Page):
             add_confirm_dialog.content = ft.Text("入力漏れがあります")
             add_confirm_dialog.actions = [
                 ft.TextButton("OK", autofocus=True,
-                              on_click=lambda e: page.close(add_confirm_dialog)),
+                    on_click=lambda e: page.close(add_confirm_dialog)),
             ]
             page.open(add_confirm_dialog)
             return
@@ -262,7 +262,7 @@ def register_input(page: ft.Page):
         add_confirm_dialog.actions = [
             ft.TextButton("はい", on_click=lambda e: execute_register(e),),
             ft.TextButton("いいえ", autofocus=True,
-                          on_click=lambda e: page.close(add_confirm_dialog)),
+                on_click=lambda e: page.close(add_confirm_dialog)),
         ]
         page.open(add_confirm_dialog)
 
@@ -273,7 +273,7 @@ def register_input(page: ft.Page):
             ft.TextButton(
                 "はい", on_click=lambda e: complete_cancel_confirm_dialog(e)),
             ft.TextButton("いいえ", autofocus=True,
-                          on_click=lambda e: page.close(add_confirm_dialog)),
+                on_click=lambda e: page.close(add_confirm_dialog)),
         ]
         page.open(add_confirm_dialog)
 
@@ -282,7 +282,7 @@ def register_input(page: ft.Page):
         add_confirm_dialog.content = ft.Text("カードの登録が完了しました。")
         add_confirm_dialog.actions = [
             ft.TextButton("OK", autofocus=True,
-                          on_click=lambda e: page.go("/index")),
+                on_click=lambda e: page.go("/index")),
         ]
         page.open(add_confirm_dialog)
 
@@ -292,7 +292,7 @@ def register_input(page: ft.Page):
         add_confirm_dialog.content = ft.Text("カードの登録がキャンセルされました。")
         add_confirm_dialog.actions = [
             ft.TextButton("OK", autofocus=True,
-                          on_click=lambda e: page.go("/index")),
+                on_click=lambda e: page.go("/index")),
         ]
         page.open(add_confirm_dialog)
 
@@ -306,7 +306,7 @@ def register_input(page: ft.Page):
             add_confirm_dialog.content = ft.Text("カード番号を取得できませんでした")
             add_confirm_dialog.actions = [
                 ft.TextButton("OK", autofocus=True,
-                              on_click=lambda e: page.go("/index")),
+                    on_click=lambda e: page.go("/index")),
             ]
             page.open(add_confirm_dialog)
             return
