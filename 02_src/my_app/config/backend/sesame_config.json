@@ -8,7 +8,7 @@
     "notify_interval": 1.0
   },
   "method": {
-    "sesami_connect": "wifi",
+    "sesame_connect": "wifi",
     "__comment": "bluetooth or wifi"
   }
 }
