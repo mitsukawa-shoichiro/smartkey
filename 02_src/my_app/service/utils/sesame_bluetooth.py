@@ -228,7 +228,7 @@ class SsmBleClient:
 
 async def open_sesame_bt():
     try:
-        sbc = SsmBleClient(sesami_config)
+        sbc = SsmBleClient(sesame_config)
         await sbc.connect()
         await sbc.start_notify()
         await sbc.login()

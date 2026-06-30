@@ -11,14 +11,14 @@ logger = logging.getLogger(__name__)
 
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
-    __file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
+    __file__), '..', '..', 'config', 'backend', 'sesame_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
-    sesami_config = config_list["device"]
+    sesame_config = config_list["device"]
 
-sesame_id = sesami_config["sesame_id"]
-x_api_key = sesami_config["x_api_key"]
-secret_key = sesami_config["secret_key"]
+sesame_id = sesame_config["sesame_id"]
+x_api_key = sesame_config["x_api_key"]
+secret_key = sesame_config["secret_key"]
 
 
 

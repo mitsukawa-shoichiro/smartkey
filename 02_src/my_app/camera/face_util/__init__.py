@@ -1,2 +1,2 @@
-from .face_backsystem import RunFaceBackSystem
+from .face_back_system import run_face_back_system
 from .face_utils import check_face,match_against_db

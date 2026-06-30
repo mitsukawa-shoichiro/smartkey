@@ -98,7 +98,7 @@ def handle_request(req: dict) -> dict:
         return {"result": "NG", "status": 200}
 
 # ========= 服务器主循环 =========　サーバーのメインループ
-def RunFaceBackSystem():
+def run_face_back_system():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         # 复用端口，方便重启　ポートを再利用して再起動を簡単にする
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -122,4 +122,4 @@ def RunFaceBackSystem():
                 conn.close()
 
 if __name__ == "__main__":
-    RunFaceBackSystem()
+    run_face_back_system()

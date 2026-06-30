@@ -1,20 +1,20 @@
 # SmartKey Service モジュール
 
-このディレクトリは、スマートキーシステムの主要なサービスロジックを管理します。  
+このディレクトリは、スマートキーシステムの主要なサービスロジックを管理します。
 Windowsサービスとして動作し、カードリーダーやバックシステムの監視・制御を行います。もし異常を察知したら、mail.jsonの指定先のメールに送信します
 
 ## 主なファイル
 
-- `main.py`  
-  サービスのエントリーポイント。ログ初期化後、BackSystemとCardCheckを起動します。
+- `main.py`
+  サービスのエントリーポイント。ログ初期化後、back_systemとCardCheckを起動します。
 
-- `backsys/BackSystem.py`  
+- `backsys/back_system.py`
   バックエンドシステムの監視・制御ロジック。
 
-- `nfcutils/card_check.py`  
+- `nfcutils/card_check.py`
   NFCカードリーダーの認証・管理ロジック。
 
-- `windowsservice.py`  
+- `windowsservice.py`
   Windowsサービスとして登録・管理するためのスクリプト。
 
 ## 依存ライブラリ
@@ -24,22 +24,22 @@ Windowsサービスとして動作し、カードリーダーやバックシス�
 
 ## 実行方法
 
-1. 必要なライブラリをインストール  
+1. 必要なライブラリをインストール
    ```
    pip install -r requirements.txt
    ```
 
-2. サービス登録（管理者権限で実行）  
+2. サービス登録（管理者権限で実行）
    ```
    python windowsservice.py install
    ```
 
-3. サービス開始  
+3. サービス開始
    ```
    python windowsservice.py start
    ```
 
-4. サービス停止・削除  
+4. サービス停止・削除
    ```
    python windowsservice.py stop
    python windowsservice.py remove
