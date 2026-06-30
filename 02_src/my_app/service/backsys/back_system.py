@@ -95,19 +95,19 @@ def check_sesame_battery():
 def check_alive():
     HOST = '127.0.0.1'
     PORT = 54321
-    heartbeatsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    heartbeatsocket.bind((HOST, PORT))
-    heartbeatsocket.settimeout(1)
+    heart_beat_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    heart_beat_socket.bind((HOST, PORT))
+    heart_beat_socket.settimeout(1)
 
     logger.info("死活監視システム起動...")
 
     card_reader_state = True
     system_state = True
-    waittimeMax = 10
+    wait_timeMax = 10
     last_AliveTime = time.time()
     while True:
         try:
-            data, addr = heartbeatsocket.recvfrom(100)
+            data, addr = heart_beat_socket.recvfrom(100)
             last_AliveTime = time.time()
             if data.decode('utf-8') == "DEAD" and card_reader_state:
 
@@ -126,7 +126,7 @@ def check_alive():
             pass
 
         passTime = time.time() - last_AliveTime
-        if passTime > waittimeMax:
+        if passTime > wait_timeMax:
 
             if system_state:
                 logger.error("解錠システム異常")

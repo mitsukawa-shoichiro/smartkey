@@ -1,6 +1,6 @@
-from service.backsystem import BackSystem
+from service.backsystem import back_system
 from camera.CameraModule import CameraWorker
 
-BackSystem()
+back_system()
 ins=CameraWorker()
 ins.back_end_system()

@@ -48,7 +48,7 @@ def run_sesame_monitor():
     else:
         logging.info("Bluetooth経由でセサミ監視開始")
         # asyncio.run(check_sesame_battery_bt())
-        
+
 def check_sesame_battery():
     '''
     # sesameのバッテリー残量を確認し、50%以下ならメールを送信する
@@ -129,7 +129,7 @@ def check_sesame_battery():
 #                 except Exception as e:
 #                     logging.error("メール送信エラー")
 #                     print("メール送信エラー:", e)
-                    
+
 #             await sbc.stop_notify()
 #             await sbc.disconnect()
 #         except Exception as e:
@@ -147,7 +147,7 @@ def check_alive():
 
     card_reader_state = True
     system_state = True
-    waittimeMax = 10
+    wait_timeMax = 10
     last_AliveTime = time.time()
     while True:
         try:
@@ -170,7 +170,7 @@ def check_alive():
             pass
 
         passTime = time.time() - last_AliveTime
-        if passTime > waittimeMax:
+        if passTime > wait_timeMax:
             logging.error("解錠システム異常")
             if system_state:
 

@@ -23,7 +23,7 @@ now = time.time()
 HEARTBEAT_ERROR_GAP_S = 10
 HEARTBEAT_HOST = '127.0.0.1'
 HEARTBEAT_PORT = 54321
-heartbeatsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+heart_beat_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 state = "authenticating"
 
