@@ -38,8 +38,8 @@ def faceView(page: ft.Page):
     )
 
     face_name = ft.TextField(label="登録者検索", autofocus=True,
-                             on_submit=lambda e: search(e),
-                             max_length=50)
+                            on_submit=lambda e: search(e),
+                            max_length=50)
     # endregion
     search_btn = ft.ElevatedButton(
         content=ft.Icon(ft.Icons.SEARCH, size=30, color=ft.Colors.WHITE),
@@ -55,7 +55,7 @@ def faceView(page: ft.Page):
     )
 
     #region Refresh
-    async def reflesh(e):
+    async def refresh(e):
         nonlocal search_word, offset, reset_btn
         reset_btn.disabled = True
         page.update()
@@ -74,7 +74,7 @@ def faceView(page: ft.Page):
         page.update()
 
     async def on_refresh(e):
-        await reflesh(e)
+        await refresh(e)
 
     async def sort_table(e):
         nonlocal offset
@@ -100,11 +100,11 @@ def faceView(page: ft.Page):
         scroll_table.scroll_to(offset=0, duration=0)
 
     reset_btn = ft.ElevatedButton(content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
-                                  on_click=on_refresh,
-                                  bgcolor=ft.Colors.RED_50,
-                                  width=60,
-                                  height=30,
-                                  style=ft.ButtonStyle(
+                                on_click=on_refresh,
+                                bgcolor=ft.Colors.RED_50,
+                                width=60,
+                                height=30,
+                                style=ft.ButtonStyle(
         shape=ft.RoundedRectangleBorder(
             radius=0),
         padding=ft.padding.all(0)
@@ -133,7 +133,7 @@ def faceView(page: ft.Page):
     next_btn = ft.ElevatedButton("次へ ➡",   on_click=lambda e: next_page(
         e), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
     btn_zone = ft.Row([prev_btn, page_label, next_btn],
-                      alignment=ft.MainAxisAlignment.CENTER)
+                    alignment=ft.MainAxisAlignment.CENTER)
 
     # カードの一覧を表示するためのテーブル
     table = ft.DataTable(
@@ -180,9 +180,9 @@ def faceView(page: ft.Page):
         column.controls.clear()
         column.controls.append(ft.Container(height=-2))
         column.controls.append(ft.ElevatedButton(text="登録者名編集",
-                                                 data=radio_group.value, on_click=open_edit_dialog, style=ft.ButtonStyle(
-                                                     shape=ft.RoundedRectangleBorder(
-                                                         radius=0),)))
+                                                data=radio_group.value, on_click=open_edit_dialog, style=ft.ButtonStyle(
+                                                    shape=ft.RoundedRectangleBorder(
+                                                        radius=0),)))
 
         for face_id, face_name, face_name_roma, register_date in faces:
             cb = ft.Checkbox()
@@ -225,7 +225,7 @@ def faceView(page: ft.Page):
             dialog.content = ft.Text("削除する行が選択されていません。")
             dialog.actions = [
                 ft.TextButton("閉じる", autofocus=True,
-                              on_click=lambda e: page.close(dialog)),
+                            on_click=lambda e: page.close(dialog)),
             ]
             page.open(dialog)
 
@@ -234,7 +234,7 @@ def faceView(page: ft.Page):
             dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しますか？")
             dialog.actions = [
                 ft.TextButton("キャンセル", autofocus=True,
-                              on_click=lambda e: page.close(dialog)),
+                            on_click=lambda e: page.close(dialog)),
                 ft.TextButton("はい", on_click=confirm_delete),
             ]
             page.open(dialog)
@@ -250,7 +250,7 @@ def faceView(page: ft.Page):
         dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しました。")
         dialog.actions = [
             ft.TextButton("閉じる", autofocus=True,
-                          on_click=lambda e:  page.close(dialog)),
+                        on_click=lambda e:  page.close(dialog)),
         ]
         for face_data in face_datas:
             logger.info(f"{face_data[1]}が削除されました")
@@ -280,7 +280,7 @@ def faceView(page: ft.Page):
         dialog.actions = [
             ft.TextButton("キャンセル", on_click=lambda e: page.close(dialog)),
             ft.TextButton("保存", data=face_id,
-                          on_click=lambda e: confirm_edit(e)),
+                        on_click=lambda e: confirm_edit(e)),
         ]
         page.open(dialog)
 
@@ -316,7 +316,7 @@ def faceView(page: ft.Page):
         )
         dialog.actions = [
             ft.TextButton("閉じる", autofocus=True,
-                          on_click=lambda e: page.close(dialog)),
+                        on_click=lambda e: page.close(dialog)),
         ]
         logging.info(
             f"登録者名を '{old_face_data[0]}'から'{new_face_name}' に変更しました")
@@ -325,7 +325,7 @@ def faceView(page: ft.Page):
     def return_edit(e):
         page.close(dialog)
         open_edit_dialog(e)
-     # 検索ボタンのクリックイベント
+    # 検索ボタンのクリックイベント
     #endregion
 
 
