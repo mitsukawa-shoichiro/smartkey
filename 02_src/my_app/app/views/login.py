@@ -58,15 +58,15 @@ def login(page: ft.Page):
             username.focus()
 
     login_btn = ft.ElevatedButton("ログイン",
-                                  on_click=do_login,
-                                  icon=ft.Icons.LOGIN,
-                                  disabled=False,
-                                  style=ft.ButtonStyle(
-                                      shape=ft.RoundedRectangleBorder(
-                                          radius=4),
-                                      overlay_color=ft.Colors.BLUE_50,
-                                  )
-                                  )
+                                on_click=do_login,
+                                icon=ft.Icons.LOGIN,
+                                disabled=False,
+                                style=ft.ButtonStyle(
+                                    shape=ft.RoundedRectangleBorder(
+                                        radius=4),
+                                    overlay_color=ft.Colors.BLUE_50,
+                                )
+                                )
 
     return ft.View(
         "/",

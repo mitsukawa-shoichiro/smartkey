@@ -16,7 +16,7 @@ def index_view(page: ft.Page, error_message: str = ""):
             btn.scale = 1.0
         page.update()
 
-    def logaout(e):
+    def logout(e):
         logger.info("ログアウトしました")
         page.go("/")
 
@@ -72,7 +72,7 @@ def index_view(page: ft.Page, error_message: str = ""):
         )
     )
 
-    uopper_row = ft.Row(
+    upper_row = ft.Row(
         controls=[card_btn, accesslog_btn],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=60,
@@ -89,7 +89,7 @@ def index_view(page: ft.Page, error_message: str = ""):
         content=ft.TextButton(
             text="ログアウト",
             icon=ft.Icons.LOGOUT,
-            on_click=lambda e: logaout(e),
+            on_click=lambda e: logout(e),
 
             style=ft.ButtonStyle(
                 padding=ft.padding.symmetric(horizontal=20, vertical=10),
@@ -124,7 +124,7 @@ def index_view(page: ft.Page, error_message: str = ""):
                         ft.Container(content=ft.Text(
                             "ようこそ！", size=18, color=ft.Colors.BLUE_GREY_700), padding=ft.padding.only(top=4)),
                         ft.Container(height=40),
-                        uopper_row,
+                        upper_row,
                         center_button,
                         logout_button,
                     ],
