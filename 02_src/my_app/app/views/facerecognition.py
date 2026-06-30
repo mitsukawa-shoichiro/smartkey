@@ -12,7 +12,7 @@ def faceView(page: ft.Page):
     offset = 0
     all_page = 1
 
-    serch_word = ""
+    search_word = ""
 
     page.title = "顔認証管理画面"
 
@@ -56,11 +56,11 @@ def faceView(page: ft.Page):
 
     #region Refresh
     async def reflesh(e):
-        nonlocal serch_word, offset, reset_btn
+        nonlocal search_word, offset, reset_btn
         reset_btn.disabled = True
         page.update()
 
-        serch_word = ""
+        search_word = ""
         table.sort_ascending = True
         face_name.value = ""
         face_name.focus()
@@ -93,8 +93,8 @@ def faceView(page: ft.Page):
 
     #region Search
     def search(e):
-        nonlocal serch_word, offset
-        serch_word = search_zone.controls[0].value
+        nonlocal search_word, offset
+        search_word = search_zone.controls[0].value
         offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
@@ -171,10 +171,10 @@ def faceView(page: ft.Page):
     # テーブルの行をロードする関数
 
     def load_table():
-        nonlocal serch_word, offset, all_page
+        nonlocal search_word, offset, all_page
         faces = db.find_by_face_name(
-            serch_word, table.sort_ascending, offset * 100)
-        all_page = int(((db.count_all_face(serch_word)[0] - 1) / 100) + 1)
+            search_word, table.sort_ascending, offset * 100)
+        all_page = int(((db.count_all_face(search_word)[0] - 1) / 100) + 1)
         checkbox_refs.clear()
         table.rows.clear()
         column.controls.clear()
