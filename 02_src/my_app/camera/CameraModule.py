@@ -10,6 +10,7 @@ import time
 import service.db_manager as db
 import service.utils.sesame as sesami
 import camera.face_util as face_util
+from camera.blink_detector import BlinkDetector
 
 import logs.log_config_service
 import logging
@@ -110,6 +111,7 @@ class CameraWorker:
         if CameraWorker.instance is None:
             print("CameraWorker初期化")
             CameraWorker.instance = self
+            self.blink_detector = BlinkDetector()
 
             if self.__SOCKET_THREAD is None:
                 self.__SOCKET_THREAD = threading.Thread(target=self.socket_receiver, daemon=True)
@@ -153,8 +155,11 @@ class CameraWorker:
                 CaptureBuffer.clean_frame()
                 for i, cap in self.cap_dict.items():
                     ok, frame = cap.read()
-                    if ok:
-                        CaptureBuffer.save_frame(frame, f"camera_{i}.jpg")
+                    if not ok:
+                        continue
+                    if not self.blink_detector.detect(frame):
+                        continue
+                    CaptureBuffer.save_frame(frame, f"camera_{i}.jpg")
                     print("写真を保存"+str(i))
 
                 # 認証
