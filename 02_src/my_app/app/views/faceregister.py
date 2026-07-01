@@ -132,7 +132,7 @@ def SaveFaceDatas(src_paths,
 
 
 
-def faceRegister_view(page: ft.Page) -> ft.View:
+def faceregister_view(page: ft.Page) -> ft.View:
     page.title = "顔登録"
     page.padding = 20
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -277,7 +277,7 @@ def faceRegister_view(page: ft.Page) -> ft.View:
 # views/faceRegister.py 内の faceRegister_register
 import flet as ft
 
-def faceRegister_register(page: ft.Page) -> ft.View:
+def faceregister_register(page: ft.Page) -> ft.View:
     page.title = "本人登録"
     page.padding = 20
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER

@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 
 BASE_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "db"))
 DB_PATH = os.path.join(BASE_DIR, 'database.db')
+#顔データベースへのパス
+FACEDB_PATH=    os.path.join(BASE_DIR, "face_lib")
 logger = logging.getLogger(__name__)
 
 
@@ -282,6 +284,231 @@ def insert_samplelogs(card_id,eventtype,timestamp):
         raise
     finally:
         conn.close()
+
+def find_all_faces():
+    # 全ての顔情報を取得
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM face ORDER BY face_id ASC")
+        faces = cursor.fetchall()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔情報の取得中にエラーが発生しました: {e}")
+        faces = []
+    finally:
+        conn.close()
+    return faces
+
+def insert_facedata(face_name, face_name_roma):
+    # 顔情報を新規登録
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO face (face_name, face_name_roma) VALUES (?, ?)", (face_name, face_name_roma))
+        conn.commit()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔情報の登録中にエラーが発生しました: {e}")
+    finally:
+        conn.close()    
+
+
+
+def delete_face_by_ids(ids):
+    delete_face_lib_by_ids(ids)
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.executemany("DELETE FROM face WHERE face_id = ?", [(i,) for i in ids])
+        conn.commit()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔情報の削除中にエラーが発生しました: {e}")
+    finally:
+        conn.close()
+
+def delete_face_lib_by_ids(ids):
+    """
+    DBのface_name_romaをもとに、該当する画像ファイルを削除する
+    """
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+
+        for i in ids:
+            # 1️⃣ DBから face_name_roma を取得
+            cur.execute("SELECT face_name_roma FROM face WHERE face_id = ?", (i,))
+            row = cur.fetchone()
+
+            if not row:
+                logger.info(f"[WARN] face_id={i} は存在しません。")
+                continue
+
+            face_name_roma = row[0]
+            logger.info(f"[INFO] face_name_roma={face_name_roma}")
+
+            # 2️⃣ ディレクトリ内で該当プレフィックスのファイルを削除
+            for file in os.listdir(FACEDB_PATH):
+                if file.startswith(face_name_roma):
+                    try:
+                        os.remove(os.path.join(FACEDB_PATH, file))
+                        logger.info(f"[OK] 削除: {file}")
+                    except Exception as e:
+                        logger.info(f"[ERROR] {file} の削除失敗: {e}")
+    except Exception as e:
+        logger.info(f"[ERROR] 顔画像ファイルの削除中にエラーが発生しました: {e}")
+    finally:
+        conn.close()
+
+def find_by_face_name(searchword: str, asc: bool, offset: int):
+    """
+    名前またはローマ字で顔データを検索します。
+
+    Args:
+        searchword (str): 検索キーワード（日本語またはローマ字）
+        asc (bool): 昇順または降順
+        offset (int): ページオフセット（100件ごと）
+
+    Returns:
+        list[tuple]: 該当する顔データのリスト
+    """
+    order = "ASC" if asc else "DESC"
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        like_word = f"%{searchword}%" if searchword else "%"
+
+        cursor.execute(f"""
+            SELECT *
+            FROM face
+            WHERE face_name LIKE ?
+                OR face_name_roma LIKE ?
+            ORDER BY face_id {order}
+            LIMIT 100 OFFSET ?
+        """, (like_word, like_word, offset))
+
+        faces = cursor.fetchall()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔データの検索中にエラーが発生しました: {e}")
+        faces = []
+    finally:    
+        conn.close()
+    return faces
+
+def count_all_face(searchword: str):
+    """
+    名前またはローマ字で検索結果の総件数をカウントします。
+
+    Args:
+        searchword (str): 検索キーワード（日本語またはローマ字）
+
+    Returns:
+        int: 該当件数
+    """
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        like_word = f"%{searchword}%" if searchword else "%"
+
+        cursor.execute("""
+            SELECT COUNT(*)
+            FROM face
+            WHERE face_name LIKE ?
+                OR face_name_roma LIKE ?
+        """, (like_word, like_word))
+
+        count = cursor.fetchone()[0]
+    except Exception as e:
+        logger.info(f"[ERROR] 顔データの件数カウント中にエラーが発生しました: {e}")
+        count = 0#いる？
+    finally:
+        conn.close()
+    return count
+
+def update_face_name(face_id, face_name,face_name_roma):
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE face SET face_name = ? WHERE face_id = ?", (face_name, face_id))
+
+        cursor.execute("SELECT face_name_roma FROM face WHERE face_id = ?", (face_id,))
+        row = cursor.fetchone()
+        current_roma = row[0]
+
+        if current_roma == face_name_roma:
+            logger.info(f"[INFO] '{current_roma}' と '{face_name_roma}' は同じです。変更なし。")
+        else:
+            cursor.execute(
+                "UPDATE face SET face_name_roma = ? WHERE face_id = ?", (face_name_roma, face_id))
+            update_face_lib(current_roma,face_name_roma)
+
+        conn.commit()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔データの更新中にエラーが発生しました: {e}")
+    finally:
+        conn.close()
+
+def update_face_lib(face_name_roma,face_name_roma_new):#try-exceptないけど大丈夫かわかんない関数くん
+
+    '''
+    TODO 我要改文件名
+    '''
+    """
+    指定フォルダ内で人脸データファイルをリネームする。
+
+    Args:
+        folder_path (str): 画像ファイルが保存されているフォルダパス
+        face_name_roma (str): 旧ローマ字名（例: "me"）
+        face_name_roma_new (str): 新しいローマ字名（例: "taro"）
+
+    Returns:
+        bool: True = 成功, False = 同名ファイルがすでに存在 or エラー
+    """
+
+    # --- 1️⃣ まず、face_name_roma_new で始まるファイルが存在するかチェック ---
+    for file in os.listdir(FACEDB_PATH):
+        name, ext = os.path.splitext(file)
+        if name.startswith(face_name_roma_new):
+            print(f"[WARN] '{face_name_roma_new}' で始まるファイルがすでに存在: {file}")
+            return False  # すでに存在する → リネーム中止
+
+    # --- 2️⃣ face_name_roma で始まるファイルを検索してリネーム ---
+    renamed = False
+    for file in os.listdir(FACEDB_PATH):
+        name, ext = os.path.splitext(file)
+        if name.startswith(face_name_roma):
+            new_name = file.replace(face_name_roma, face_name_roma_new, 1)
+            old_path = os.path.join(FACEDB_PATH, file)
+            new_path = os.path.join(FACEDB_PATH, new_name)
+
+            os.rename(old_path, new_path)
+            print(f"[OK] '{file}' → '{new_name}' にリネーム完了")
+            renamed = True
+
+    # --- 3️⃣ リネーム成功 or 該当なし ---
+    if not renamed:
+        print(f"[INFO] '{face_name_roma}' に一致するファイルは見つかりませんでした。")
+        return False
+
+    return True
+
+
+def find_face_name_and_roma_by_id(face_id):
+    # カードIDからカード名を取得
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT face_name, face_name_roma FROM face WHERE face_id = ?", (face_id,))
+        face_data = cursor.fetchone()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔データの取得中にエラーが発生しました: {e}")
+        face_data = None
+    finally:   
+        conn.close()
+    return face_data
+
 
 
 if __name__ == "__main__":
