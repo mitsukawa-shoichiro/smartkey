@@ -25,7 +25,7 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     system_mail_config = config_list["system_mail"]
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
-    __file__), '..', '..', 'config', 'backend', 'sesami_config.json'))
+    __file__), '..', '..', 'config', 'backend', 'sesame_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
     sesami_config = config_list["device"]

@@ -1,9 +1,16 @@
 {
   "device": {
+<<<<<<< Updated upstream:98_work/otomo/my_app/config/backend/sesami_config.json
     "sesame_id": "11200413-0002-0611-3F00-9200FFFFFFFF",
     "x_api_key": "O3R8DiaBCR2CD8mi10ibR9yT5OMqZHByaDmSCmnT",
     "secret_key": "6ec38d24f0c9b88467116ae69b3c6104",
     "mac_addr": "DF:FD:0D:D3:43:8D",
+=======
+    "sesame_id": "11200514-0801-0925-DA00-DC00FFFFFFFF",
+    "x_api_key": "8oXMMQzpxbLXBDzhYKyjpISqhnqmYcrQcjctpDcj",
+    "secret_key": "7929869799a24bc11c16b9976f475c4d",
+    "mac_addr": "D0:70:69:B2:04:A5",
+>>>>>>> Stashed changes:02_src/my_app/config/backend/sesami_config.json
     "max_retry_count": 5,
     "notify_interval": 1.0
   },

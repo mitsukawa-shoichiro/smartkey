@@ -6,7 +6,10 @@ import json
 import time
 import pythoncom
 import pywintypes
+import logging
 
+#
+logger = logging.getLogger(__name__)
 
 # 設定ファイル読み込み
 def load_config():
@@ -25,17 +28,22 @@ def same_get_serials():
 
     dev = config["devices"]
     try:
-        info = dev["入口"]
+        info = dev["テスト"]#入口に直して
     except Exception:
-        info = dev["出口"]
+        info = dev["テスト"]#出口に直して
     vid = info["vid"]
     pid = info["pid"]
     s = info["serial"]
+    """ ここ、テスト用に変えてるだけなので戻してくださいネ
     if s.isdigit():
         serial_regex = rf"\d{{{len(s)}}}"
     else:
         # 使用されている文字だけを許容する
         serial_regex = "[" + "".join(sorted(set(s))) + "]+"
+
+    """
+
+    serial_regex = r"[0-9A-Fa-f]+"
 
     wql = f"SELECT DeviceID FROM Win32_PnPEntity WHERE DeviceID LIKE '%VID_{vid}&PID_{pid}%'"
     pattern = re.compile(
@@ -58,7 +66,7 @@ def get_readers():
     name_list = []
     devices = config["devices"]
     print(type(devices))
-    for direction in ["入口", "出口"]:
+    for direction in ["テスト"]:    #for direction in ["入口", "出口"]:使うときはこれに直して
         info = devices[direction]
         desired_order.append(info["serial"])
         pid_list.append(info["pid"])

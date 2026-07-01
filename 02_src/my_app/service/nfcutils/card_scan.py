@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)  # logに書き込む用
 # USB設定ファイルのパスを指定
 
 
-
+#超危険、グローバル変数を塗り替えさせるな!!!!!!
 def load_config():
     base_dir = os.path.dirname(
         os.path.dirname(

@@ -4,11 +4,10 @@ import json
 import logging
 from datetime import datetime, timedelta
 
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))+"/.."+"/db"
-DB_PATH = os.path.join(BASE_DIR, 'dataBase.db')
-print(BASE_DIR)
+BASE_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "db"))
+DB_PATH = os.path.join(BASE_DIR, 'database.db')
 logger = logging.getLogger(__name__)
+
 
 def load_config():
     base_dir = os.path.dirname(
@@ -33,16 +32,15 @@ def check_card(cardIDM):
     Returns:
         dict: カード情報（存在する場合）またはNone（存在しない場合）
     """
-    conn = sqlite3.connect(DB_PATH)
-
-    cursor = conn.cursor()
-
     try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
         cursor.execute(
             'SELECT card_id FROM card WHERE card_number = ?', (cardIDM,))
         card_id = cursor.fetchone()
 
-        return card_id[0]
+        return card_id[0] if card_id else None
     except sqlite3.Error as e:
         logger.exception("カード検索エラー: card_id=%s", cardIDM)
         raise
@@ -52,9 +50,10 @@ def check_card(cardIDM):
 
 def get_last_date_time(card_id, card_reader_id):
     dt = None
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
     try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+    
         cursor.execute(
             "SELECT timestamp FROM access_logs where card_id = ? AND eventtype = ? ORDER BY timestamp DESC LIMIT 1", (card_id, card_reader_id))
         row = cursor.fetchone()
@@ -89,9 +88,10 @@ def insert_card_id(card_id, card_reader_id):
         if now - dt <= timedelta(seconds=10):
             logger.info("10秒以内に登録されています")
             return
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
     try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
         cursor.execute(
             "INSERT INTO access_logs (method, card_id, eventtype) VALUES(?,?,?)", ('カード', card_id, eventtype))
         conn.commit()
@@ -101,22 +101,11 @@ def insert_card_id(card_id, card_reader_id):
     finally:
         conn.close()
 
-dir_path = os.path.dirname(
-    os.path.dirname(
-        os.path.dirname(
-            os.path.abspath(__file__)
-        )
-    )
-)
-
-DB_PATH = os.path.join(dir_path, "db", "database.db")
-
-
 def delete_card_by_ids(ids):
-
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
     try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+
         cur.executemany("DELETE FROM card WHERE card_id = ?", [(i,) for i in ids])
         conn.commit()
     except sqlite3.Error as e:
@@ -128,24 +117,25 @@ def delete_card_by_ids(ids):
 
 def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, offset, asc: bool = True):
     order = "ASC" if asc else "DESC"
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    now = datetime.now()
-
-    card_name = f"%{card_name}%" if card_name else "%"
-    method = f"%{method}%" if method else "%"
-
-    start_datetime = start_datetime or (now - timedelta(days=365))
-    end_datetime = end_datetime or now
-
-    start_datetime_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
-
-    # カード名、認証方式、イベントタイプでアクセスログを検索
-    # card_nameとmethodは部分一致検索、eventtypeは完全一致検索
-    # COALESCEを使用して、eventtypeがNoneの場合は全てのeventtypeを対象とする
-
     try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        now = datetime.now()
+
+        card_name = f"%{card_name}%" if card_name else "%"
+        method = f"%{method}%" if method else "%"
+
+        start_datetime = start_datetime or (now - timedelta(days=365))
+        end_datetime = end_datetime or now
+
+        start_datetime_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
+        end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+        # カード名、認証方式、イベントタイプでアクセスログを検索
+        # card_nameとmethodは部分一致検索、eventtypeは完全一致検索
+        # COALESCEを使用して、eventtypeがNoneの場合は全てのeventtypeを対象とする
+
+
         logs = cursor.execute(f"""
                             SELECT id, card.card_name, method, timestamp, eventtype
                             FROM access_logs JOIN card ON access_logs.card_id = card.card_id
@@ -163,28 +153,29 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, 
 
 
 def count_filtered_logs(card_name=None, method=None, eventtype=None, start_datetime=None, end_datetime=None):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    now = datetime.now()
-    card_name = f"%{card_name}%" if card_name else "%"
-    method = f"%{method}%" if method else "%"
-    start_datetime = start_datetime or (now - timedelta(days=365))
-    end_datetime = end_datetime or now
-
-    start_datetime_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
-
-    query = """
-        SELECT COUNT(*)
-        FROM access_logs
-        JOIN card ON access_logs.card_id = card.card_id
-        WHERE card.card_name LIKE ?
-          AND method LIKE ?
-          AND (? IS NULL OR access_logs.eventtype = ?)
-          AND access_logs.timestamp BETWEEN ? AND ?
-    """
     try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        now = datetime.now()
+        card_name = f"%{card_name}%" if card_name else "%"
+        method = f"%{method}%" if method else "%"
+        start_datetime = start_datetime or (now - timedelta(days=365))
+        end_datetime = end_datetime or now
+
+        start_datetime_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
+        end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+        query = """
+            SELECT COUNT(*)
+            FROM access_logs
+            JOIN card ON access_logs.card_id = card.card_id
+            WHERE card.card_name LIKE ?
+            AND method LIKE ?
+            AND (? IS NULL OR access_logs.eventtype = ?)
+            AND access_logs.timestamp BETWEEN ? AND ?
+        """
+
 
         cursor.execute(query, (
             card_name, method, eventtype, eventtype,
@@ -234,9 +225,10 @@ def count_all_card(card_name):
 
 def update_card_name(card_id, new_name):
     # カード名を更新
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
     try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
         cursor.execute(
             "UPDATE card SET card_name = ? WHERE card_id = ?", (new_name, card_id))
         conn.commit()
@@ -249,9 +241,10 @@ def update_card_name(card_id, new_name):
 
 def find_card_name_by_id(card_id):
     # カードIDからカード名を取得
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
     try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
         cursor.execute("SELECT card_name FROM card WHERE card_id = ?", (card_id,))
         card_name = cursor.fetchone()
     except sqlite3.Error as e:
@@ -264,9 +257,9 @@ def find_card_name_by_id(card_id):
 
 def insert_card(card_name, card_number):
     # カードを新規登録
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
     try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO card (card_name, card_number) VALUES (?, ?)", (card_name, card_number))
         conn.commit()
@@ -278,9 +271,9 @@ def insert_card(card_name, card_number):
 
 def insert_samplelogs(card_id,eventtype,timestamp):
     # サンプルログを挿入
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
     try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO access_logs (card_id, method, eventtype,timestamp) VALUES (?, ?, ?,?)", (card_id,"カード" ,eventtype,timestamp))
         conn.commit()
@@ -333,10 +326,15 @@ if __name__ == "__main__":
         timestamp = generate_random_timestamp()
         insert_samplelogs(card_id,eventtype,timestamp)
 
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.executemany("DELETE FROM card WHERE card_id = ?",
-                    [(i,) for i in range(500, 1050)])
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.executemany("DELETE FROM card WHERE card_id = ?",
+                        [(i,) for i in range(500, 1050)])
+        conn.commit()
+    except sqlite3.Error as e:
+        logger.exception("カード削除エラー")
+        raise
+    finally:
+        conn.close()
 
