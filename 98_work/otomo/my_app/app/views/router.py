@@ -8,11 +8,12 @@ import app.views.register as register
 import app.views.faceregister as faceregister
 import app.views.facerecognition as facerecognition
 
-import app.views.camera_regisit as camera_register
+import app.views.camera_regist as camera_register
 
 import threading
 from app.utils.thread_state import thread_handle, stop_event
 import logging
+
 
 
 def route(page: ft.Page):
@@ -50,7 +51,7 @@ def route(page: ft.Page):
 
 
         elif page.route == "/camera_register":
-            page.views.append(camera_register.camera_regisit_view(page))
+            page.views.append(camera_register.camera_regist_view(page))
         
         page.update()
     page.on_route_change = page_route_change

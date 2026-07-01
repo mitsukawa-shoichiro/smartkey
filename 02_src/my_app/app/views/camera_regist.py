@@ -276,8 +276,8 @@ def camera_regist_view(page: ft.Page) -> ft.View:
 
     card_button=ft.Row(
         [
-         set_card_indoor_button,
-         set_card_outdoor_button],
+        set_card_indoor_button,
+        set_card_outdoor_button],
         alignment=ft.MainAxisAlignment.SPACE_EVENLY,   
         vertical_alignment=ft.CrossAxisAlignment.CENTER
 
@@ -285,8 +285,8 @@ def camera_regist_view(page: ft.Page) -> ft.View:
 
     card_text_area=ft.Row(
         [
-         card_indoor_text,
-         card_outdoor_text],
+        card_indoor_text,
+        card_outdoor_text],
         alignment=ft.MainAxisAlignment.SPACE_EVENLY,   
         vertical_alignment=ft.CrossAxisAlignment.CENTER
 

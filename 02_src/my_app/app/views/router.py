@@ -9,7 +9,7 @@ import app.views.register as register
 import app.views.faceregister as faceregister
 import app.views.facerecognition as facerecognition
 
-import app.views.camera_regisit as camera_register
+import app.views.camera_regist as camera_register
 
 
 import threading
@@ -50,14 +50,14 @@ def route(page: ft.Page):
 
         elif e.route == "/faceregister":
             page.views.append(faceregister.faceregister_view(page))
-        elif page.route == "/faceregister/input":
+        elif e.route == "/faceregister/input":
             page.views.append(faceregister.faceregister_registe(page))
-        elif page.route == "/facerecognition":
+        elif e.route == "/facerecognition":
             page.views.append(facerecognition.faceView(page))
 
 
-        elif page.route == "/camera_register":
-            page.views.append(camera_register.camera_regisit_view(page))
+        elif e.route == "/camera_register":
+            page.views.append(camera_register.camera_regist_view(page))
        
 
 
