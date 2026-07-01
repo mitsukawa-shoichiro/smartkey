@@ -4,6 +4,14 @@ import app.views.index as index
 import app.views.card as card
 import app.views.accesslogs as accesslogs
 import app.views.register as register
+
+
+import app.views.faceregister as faceregister
+import app.views.facerecognition as facerecognition
+
+import app.views.camera_regisit as camera_register
+
+
 import threading
 from app.utils.thread_state import thread_handle, stop_event
 import logging
@@ -38,5 +46,20 @@ def route(page: ft.Page):
             thread_handle.start()
         elif e.route == "/register/input":
             page.views.append(register.register_input(page))
+
+
+        elif e.route == "/faceregister":
+            page.views.append(faceregister.faceregister_view(page))
+        elif page.route == "/faceregister/input":
+            page.views.append(faceregister.faceregister_registe(page))
+        elif page.route == "/facerecognition":
+            page.views.append(facerecognition.faceView(page))
+
+
+        elif page.route == "/camera_register":
+            page.views.append(camera_register.camera_regisit_view(page))
+       
+
+
         page.update()
     page.on_route_change = page_route_change
