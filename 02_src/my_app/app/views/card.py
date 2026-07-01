@@ -55,7 +55,7 @@ def cardView(page: ft.Page):
             ),
         )
 
-        async def reflesh(e):
+        async def refresh(e):
             nonlocal search_word, offset, reset_btn
             reset_btn.disabled = True
             page.update()
@@ -74,7 +74,7 @@ def cardView(page: ft.Page):
             page.update()
 
         async def on_refresh(e):
-            await reflesh(e)
+            await refresh(e)
 
         async def sort_table(e):
             nonlocal offset
