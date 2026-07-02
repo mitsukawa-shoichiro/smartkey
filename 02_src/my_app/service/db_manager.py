@@ -421,7 +421,7 @@ def count_all_face(searchword: str):
         count = cursor.fetchone()[0]
     except Exception as e:
         logger.info(f"[ERROR] 顔データの件数カウント中にエラーが発生しました: {e}")
-        count = 0#いる？
+        count = 0 #どゆこと？
     finally:
         conn.close()
     return count

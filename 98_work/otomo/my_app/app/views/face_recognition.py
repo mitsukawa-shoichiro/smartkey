@@ -344,7 +344,7 @@ def faceView(page: ft.Page):
 
     load_table()
     return ft.View(
-        "/facerecognition",
+        "/face_recognition",
         controls=[
             search_zone_row,
             ft.Text("登録者一覧", size=30, weight=ft.FontWeight.BOLD),

@@ -2,6 +2,7 @@
   "設置台数": 1,
   "devices": {
     "テスト": {
+      "index": 0,
       "name": "SONY FeliCa Port/PaSoRi 4.0",
       "vid": "054C",
       "pid": "0DC9",

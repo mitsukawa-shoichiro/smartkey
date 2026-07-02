@@ -132,7 +132,7 @@ def SaveFaceDatas(src_paths,
 
 
 
-def faceregister_view(page: ft.Page) -> ft.View:
+def face_register_view(page: ft.Page) -> ft.View:
     page.title = "顔登録"
     page.padding = 20
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -192,7 +192,7 @@ def faceregister_view(page: ft.Page) -> ft.View:
             status.update()
             return
 
-        page.go("/faceRegister/input")
+        page.go("/face_register/input")
 
     #region face_register_view
     camera_index_input_area = ft.TextField(
@@ -207,7 +207,7 @@ def faceregister_view(page: ft.Page) -> ft.View:
 
 
     v = ft.View(
-        "/faceRegister",
+        "/face_register",
         controls=[
             ft.Container(
                 expand=True,
@@ -274,10 +274,10 @@ def faceregister_view(page: ft.Page) -> ft.View:
     #endregion
 
 
-# views/faceRegister.py 内の faceRegister_register
+# views/face_register.py 内の face_register_register
 import flet as ft
 
-def faceregister_register(page: ft.Page) -> ft.View:
+def face_register_register(page: ft.Page) -> ft.View:
     page.title = "本人登録"
     page.padding = 20
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -334,6 +334,7 @@ def faceregister_register(page: ft.Page) -> ft.View:
         width=320,
         border_radius=8,
         max_length=50,
+        on_submit=lambda e: user_name_romaji.focus(),
     )
     # --- 入力 ---
     user_name_romaji = ft.TextField(
@@ -342,6 +343,7 @@ def faceregister_register(page: ft.Page) -> ft.View:
         width=320,
         border_radius=8,
         max_length=50,
+        on_submit=lambda e: open_add_confirm_dialog(e),
     )
     # --- 登録処理 ---
     def execute_register(e):
@@ -373,7 +375,7 @@ def faceregister_register(page: ft.Page) -> ft.View:
         add_confirm_dialog.title = ft.Text("登録完了")
         add_confirm_dialog.content = ft.Text("本人登録が完了しました。")
         add_confirm_dialog.actions = [
-            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/faceRegister")),
+            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/face_register")),
         ]
         page.open(add_confirm_dialog)
 
@@ -442,7 +444,7 @@ def faceregister_register(page: ft.Page) -> ft.View:
     def cancel_register(e):
         CaptureBuffer.files.clear()
         page.close(add_confirm_dialog)
-        page.go("/faceRegister")
+        page.go("/face_register")
 
     # --- キャンセル ---
     def open_cancel_confirm_dialog(e):
@@ -517,7 +519,7 @@ def faceregister_register(page: ft.Page) -> ft.View:
     # --- 画面 (ft.View) への統合 ---
     # ft.Viewのcontrolsは、画面全体の中央揃えを実現するためにft.Rowで囲みます
     return ft.View(
-        "/faceRegister/input",
+        "/face_register/input",
         controls=[
             ft.Row(
                 controls=[

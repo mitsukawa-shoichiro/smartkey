@@ -174,7 +174,7 @@ def faceView(page: ft.Page):
         nonlocal search_word, offset, all_page
         faces = db.find_by_face_name(
             search_word, table.sort_ascending, offset * 100)
-        all_page = int(((db.count_all_face(search_word)[0] - 1) / 100) + 1)
+        all_page = int(((db.count_all_face(search_word) - 1) / 100) + 1)
         checkbox_refs.clear()
         table.rows.clear()
         column.controls.clear()
@@ -345,7 +345,7 @@ def faceView(page: ft.Page):
 
     load_table()
     return ft.View(
-        "/facerecognition",
+        "/face_recognition",
         controls=[
             search_zone_row,
             ft.Text("登録者一覧", size=30, weight=ft.FontWeight.BOLD),

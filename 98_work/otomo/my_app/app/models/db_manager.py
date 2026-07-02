@@ -1,6 +1,7 @@
 from ast import List
 import sqlite3
 import os
+import logging
 from datetime import datetime, timedelta
 from typing import Optional, Dict
 dir_path = os.path.dirname(
@@ -10,6 +11,9 @@ dir_path = os.path.dirname(
         )
     )
 )
+
+logger = logging.getLogger(__name__)
+
 """
 
 db_managerはservice側に統合、一応残しておきます
@@ -212,63 +216,80 @@ def count_filtered_logs(
 #endregion
 
 # region Face
+
 def find_all_faces():
     # 全ての顔情報を取得
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM face ORDER BY face_id ASC")
-    faces = cursor.fetchall()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM face ORDER BY face_id ASC")
+        faces = cursor.fetchall()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔情報の取得中にエラーが発生しました: {e}")
+        faces = []
+    finally:
+        conn.close()
     return faces
 
 def insert_facedata(face_name, face_name_roma):
     # 顔情報を新規登録
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO face (face_name, face_name_roma) VALUES (?, ?)", (face_name, face_name_roma))
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO face (face_name, face_name_roma) VALUES (?, ?)", (face_name, face_name_roma))
+        conn.commit()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔情報の登録中にエラーが発生しました: {e}")
+    finally:
+        conn.close()    
+
 
 
 def delete_face_by_ids(ids):
     delete_face_lib_by_ids(ids)
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.executemany("DELETE FROM face WHERE face_id = ?", [(i,) for i in ids])
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.executemany("DELETE FROM face WHERE face_id = ?", [(i,) for i in ids])
+        conn.commit()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔情報の削除中にエラーが発生しました: {e}")
+    finally:
+        conn.close()
 
 def delete_face_lib_by_ids(ids):
     """
     DBのface_name_romaをもとに、該当する画像ファイルを削除する
     """
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
 
-    for i in ids:
-        # 1️⃣ DBから face_name_roma を取得
-        cur.execute("SELECT face_name_roma FROM face WHERE face_id = ?", (i,))
-        row = cur.fetchone()
+        for i in ids:
+            # 1️⃣ DBから face_name_roma を取得
+            cur.execute("SELECT face_name_roma FROM face WHERE face_id = ?", (i,))
+            row = cur.fetchone()
 
-        if not row:
-            print(f"[WARN] face_id={i} は存在しません。")
-            continue
+            if not row:
+                logger.info(f"[WARN] face_id={i} は存在しません。")
+                continue
 
-        face_name_roma = row[0]
-        print(f"[INFO] face_name_roma={face_name_roma}")
+            face_name_roma = row[0]
+            logger.info(f"[INFO] face_name_roma={face_name_roma}")
 
-        # 2️⃣ ディレクトリ内で該当プレフィックスのファイルを削除
-        for file in os.listdir(FACEDB_PATH):
-            if file.startswith(face_name_roma):
-                try:
-                    os.remove(os.path.join(FACEDB_PATH, file))
-                    print(f"[OK] 削除: {file}")
-                except Exception as e:
-                    print(f"[ERROR] {file} の削除失敗: {e}")
-
-    conn.close()
-
+            # 2️⃣ ディレクトリ内で該当プレフィックスのファイルを削除
+            for file in os.listdir(FACEDB_PATH):
+                if file.startswith(face_name_roma):
+                    try:
+                        os.remove(os.path.join(FACEDB_PATH, file))
+                        logger.info(f"[OK] 削除: {file}")
+                    except Exception as e:
+                        logger.info(f"[ERROR] {file} の削除失敗: {e}")
+    except Exception as e:
+        logger.info(f"[ERROR] 顔画像ファイルの削除中にエラーが発生しました: {e}")
+    finally:
+        conn.close()
 
 def find_by_face_name(searchword: str, asc: bool, offset: int):
     """
@@ -283,25 +304,28 @@ def find_by_face_name(searchword: str, asc: bool, offset: int):
         list[tuple]: 該当する顔データのリスト
     """
     order = "ASC" if asc else "DESC"
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
 
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+        like_word = f"%{searchword}%" if searchword else "%"
 
-    like_word = f"%{searchword}%" if searchword else "%"
+        cursor.execute(f"""
+            SELECT *
+            FROM face
+            WHERE face_name LIKE ?
+                OR face_name_roma LIKE ?
+            ORDER BY face_id {order}
+            LIMIT 100 OFFSET ?
+        """, (like_word, like_word, offset))
 
-    cursor.execute(f"""
-        SELECT *
-        FROM face
-        WHERE face_name LIKE ?
-           OR face_name_roma LIKE ?
-        ORDER BY face_id {order}
-        LIMIT 100 OFFSET ?
-    """, (like_word, like_word, offset))
-
-    faces = cursor.fetchall()
-    conn.close()
+        faces = cursor.fetchall()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔データの検索中にエラーが発生しました: {e}")
+        faces = []
+    finally:    
+        conn.close()
     return faces
-
 
 def count_all_face(searchword: str):
     """
@@ -313,45 +337,52 @@ def count_all_face(searchword: str):
     Returns:
         int: 該当件数
     """
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
 
-    like_word = f"%{searchword}%" if searchword else "%"
+        like_word = f"%{searchword}%" if searchword else "%"
 
-    cursor.execute("""
-        SELECT COUNT(*)
-        FROM face
-        WHERE face_name LIKE ?
-           OR face_name_roma LIKE ?
-    """, (like_word, like_word))
+        cursor.execute("""
+            SELECT COUNT(*)
+            FROM face
+            WHERE face_name LIKE ?
+                OR face_name_roma LIKE ?
+        """, (like_word, like_word))
 
-    count = cursor.fetchall()[0]
-    conn.close()
+        count = cursor.fetchone()[0]
+    except Exception as e:
+        logger.info(f"[ERROR] 顔データの件数カウント中にエラーが発生しました: {e}")
+        count = 0#いる？
+    finally:
+        conn.close()
     return count
 
-
-
 def update_face_name(face_id, face_name,face_name_roma):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE face SET face_name = ? WHERE face_id = ?", (face_name, face_id))
-
-    cursor.execute("SELECT face_name_roma FROM face WHERE face_id = ?", (face_id,))
-    row = cursor.fetchone()
-    current_roma = row[0]
-
-    if current_roma == face_name_roma:
-        print(f"[INFO] '{current_roma}' と '{face_name_roma}' は同じです。変更なし。")
-    else:
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
         cursor.execute(
-            "UPDATE face SET face_name_roma = ? WHERE face_id = ?", (face_name_roma, face_id))
-        update_face_lib(current_roma,face_name_roma)
+            "UPDATE face SET face_name = ? WHERE face_id = ?", (face_name, face_id))
 
-    conn.commit()
-    conn.close()
+        cursor.execute("SELECT face_name_roma FROM face WHERE face_id = ?", (face_id,))
+        row = cursor.fetchone()
+        current_roma = row[0]
 
-def update_face_lib(face_name_roma,face_name_roma_new):
+        if current_roma == face_name_roma:
+            logger.info(f"[INFO] '{current_roma}' と '{face_name_roma}' は同じです。変更なし。")
+        else:
+            cursor.execute(
+                "UPDATE face SET face_name_roma = ? WHERE face_id = ?", (face_name_roma, face_id))
+            update_face_lib(current_roma,face_name_roma)
+
+        conn.commit()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔データの更新中にエラーが発生しました: {e}")
+    finally:
+        conn.close()
+
+def update_face_lib(face_name_roma,face_name_roma_new):#try-exceptないけど大丈夫かわかんない関数くん
 
     '''
     TODO 我要改文件名
@@ -398,11 +429,16 @@ def update_face_lib(face_name_roma,face_name_roma_new):
 
 def find_face_name_and_roma_by_id(face_id):
     # カードIDからカード名を取得
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT face_name,face_name_roma FROM face WHERE face_id = ?", (face_id,))
-    face_data = cursor.fetchone()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT face_name, face_name_roma FROM face WHERE face_id = ?", (face_id,))
+        face_data = cursor.fetchone()
+    except Exception as e:
+        logger.info(f"[ERROR] 顔データの取得中にエラーが発生しました: {e}")
+        face_data = None
+    finally:   
+        conn.close()
     return face_data
 
 #endregion
@@ -449,9 +485,13 @@ if  __name__ == "__main__":
         timestamp = generate_random_timestamp()
         insert_samplelogs(card_id,eventtype,timestamp)
 
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.executemany("DELETE FROM card WHERE card_id = ?",
-                    [(i,) for i in range(500, 1050)])
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.executemany("DELETE FROM card WHERE card_id = ?",
+                        [(i,) for i in range(1, 150)])
+        conn.commit()
+    except Exception as e:
+        logger.info(f"[ERROR] カードデータの削除中にエラーが発生しました: {e}")
+    finally:
+        conn.close()    

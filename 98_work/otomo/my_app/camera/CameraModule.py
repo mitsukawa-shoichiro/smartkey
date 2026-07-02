@@ -31,7 +31,7 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     outdoor_index=int(config_list["devices"]["出口"]["index"])
 
 from pathlib import Path
-BASE_DIR = Path(__file__).resolve().parent   # service/facerecognition
+BASE_DIR = Path(__file__).resolve().parent   # service/face_recognition
 ROOT_DIR = BASE_DIR.parent            # root/
 DB_DIR = ROOT_DIR / "db" / "Facelib"         # root/db/Facelib
 print("datapath is " + str(DB_DIR))

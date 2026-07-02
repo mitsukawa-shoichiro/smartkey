@@ -53,7 +53,7 @@ def index_view(page: ft.Page):
         )
     )
 
-    facerecognition_btn = ft.ElevatedButton(   
+    face_recognition_btn = ft.ElevatedButton(   
         content=ft.Column([
             ft.Icon(ft.Icons.PERSON_SEARCH, size=50),
             ft.Text("顔認証管理", size=20, weight=ft.FontWeight.BOLD),
@@ -64,12 +64,12 @@ def index_view(page: ft.Page):
         height=176,
         on_hover=on_hover,
         bgcolor=ft.Colors.LIGHT_BLUE_100,
-        on_click=lambda e: page.go("/facerecognition"),
+        on_click=lambda e: page.go("/face_recognition"),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=20)
         )
     )
-    faceregister_btn = ft.ElevatedButton(
+    face_register_btn = ft.ElevatedButton(
             content=ft.Column([
                 ft.Icon(ft.Icons.FACE, size=50),
                 ft.Text("顔登録", size=20, weight=ft.FontWeight.BOLD),
@@ -80,7 +80,7 @@ def index_view(page: ft.Page):
             height=176,
             on_hover=on_hover,
             bgcolor=ft.Colors.LIGHT_BLUE_100,
-            on_click=lambda e: page.go("/faceregister"),
+            on_click=lambda e: page.go("/face_register"),
             style=ft.ButtonStyle(
                 shape=ft.RoundedRectangleBorder(radius=20)
             )
@@ -154,7 +154,7 @@ def index_view(page: ft.Page):
             ft.Column(
                 controls=[
                     add_card_btn,
-                    faceregister_btn,
+                    face_register_btn,
                 ],
                 alignment=ft.MainAxisAlignment.START,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -172,7 +172,7 @@ def index_view(page: ft.Page):
             ft.Column(
                 controls=[
                     card_btn,
-                    facerecognition_btn,
+                    face_recognition_btn,
                 ],
                 alignment=ft.MainAxisAlignment.START,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,

@@ -6,8 +6,8 @@ import app.views.accesslogs as accesslogs
 import app.views.register as register
 
 
-import app.views.faceregister as faceregister
-import app.views.facerecognition as facerecognition
+import app.views.face_register as face_register
+import app.views.face_recognition as face_recognition
 
 import app.views.camera_regist as camera_register
 
@@ -48,12 +48,12 @@ def route(page: ft.Page):
             page.views.append(register.register_input(page))
 
 
-        elif e.route == "/faceregister":
-            page.views.append(faceregister.faceregister_view(page))
-        elif e.route == "/faceregister/input":
-            page.views.append(faceregister.faceregister_registe(page))
-        elif e.route == "/facerecognition":
-            page.views.append(facerecognition.faceView(page))
+        elif e.route == "/face_register":
+            page.views.append(face_register.face_register_view(page))
+        elif e.route == "/face_register/input":
+            page.views.append(face_register.face_register_register(page))
+        elif e.route == "/face_recognition":
+            page.views.append(face_recognition.faceView(page))
 
 
         elif e.route == "/camera_register":

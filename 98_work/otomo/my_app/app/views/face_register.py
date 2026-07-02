@@ -9,7 +9,7 @@ import tempfile, cv2, os
 import app.models.db_manager as db
 import random
 
-from app.utils.front_camera_moduel import CameraWorker_Front, CaptureBuffer
+from app.utils.front_camera_module import CameraWorker_Front, CaptureBuffer
 
 #region util
 import shutil
@@ -43,7 +43,7 @@ def SaveFaceData(src_path: str, new_name: str,target_dir=savedir) :
 
 
 
-def faceregister_view(page: ft.Page) -> ft.View:
+def face_register_view(page: ft.Page) -> ft.View:
     page.title = "顔登録"
     page.padding = 20
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -75,7 +75,7 @@ def faceregister_view(page: ft.Page) -> ft.View:
         if len(CaptureBuffer.files) > 0:
             path = CaptureBuffer.get_newest_shot()  # 最新の1枚
             print(f"[OK] 撮影成功: {path}")
-            page.go("/faceregister/input")
+            page.go("/face_register/input")
 
 
     #region face_register_view
@@ -91,7 +91,7 @@ def faceregister_view(page: ft.Page) -> ft.View:
 
 
     v = ft.View(
-        "/faceregister",
+        "/face_register",
         controls=[
             ft.Container(
                 expand=True,
@@ -153,10 +153,10 @@ def faceregister_view(page: ft.Page) -> ft.View:
     #endregion
 
     
-# views/faceregister.py 内の faceregister_registe
+# views/face_register.py 内の face_register_register
 import flet as ft
 
-def faceregister_registe(page: ft.Page) -> ft.View:
+def face_register_register(page: ft.Page) -> ft.View:
     page.title = "本人登録"
     page.padding = 20
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -214,7 +214,7 @@ def faceregister_registe(page: ft.Page) -> ft.View:
         add_confirm_dialog.title = ft.Text("登録完了")
         add_confirm_dialog.content = ft.Text("本人登録が完了しました。")
         add_confirm_dialog.actions = [
-            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/faceregister")),
+            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/face_register")),
         ]
         page.open(add_confirm_dialog)
 
@@ -287,7 +287,7 @@ def faceregister_registe(page: ft.Page) -> ft.View:
         add_confirm_dialog.title = ft.Text("キャンセル確認")
         add_confirm_dialog.content = ft.Text("登録をキャンセルしますか？（一時画像は残ります）")
         add_confirm_dialog.actions = [  
-            ft.TextButton("はい", on_click=lambda e: page.go("/faceregister")),
+            ft.TextButton("はい", on_click=lambda e: page.go("/face_register")),
             ft.TextButton("いいえ", on_click=lambda e: page.close(add_confirm_dialog)),
         ]
         page.open(add_confirm_dialog)
@@ -355,7 +355,7 @@ def faceregister_registe(page: ft.Page) -> ft.View:
     # --- 画面 (ft.View) への統合 ---
     # ft.Viewのcontrolsは、画面全体の中央揃えを実現するためにft.Rowで囲みます
     return ft.View(
-        "/faceregister/input",
+        "/face_register/input",
         controls=[
             ft.Row(
                 controls=[

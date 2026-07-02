@@ -1,6 +1,6 @@
 import sqlite3
 import os
-
+from DateBase import create_database
 db_path = os.path.join(os.path.dirname(__file__), "database.db")
 
 import sqlite3
@@ -40,11 +40,6 @@ def CreateFaceTable():
         print("[INFO] face テーブルは既に存在します。何もしません。")
 
     conn.close()
-
-
-import sqlite3
-
-import sqlite3
 
 def DBUpdate():
     conn = sqlite3.connect(db_path)
@@ -117,6 +112,11 @@ def insert_sameplelog_face(card_name, card_number):
     (1, "顔認証", 1)
     )
 
-if __name__ == "__main__":
+def main():#バック開始に呼び出されるinit作業
     CreateFaceTable()
     DBUpdate()
+    create_database() 
+
+
+if __name__ == "__main__":
+    main()

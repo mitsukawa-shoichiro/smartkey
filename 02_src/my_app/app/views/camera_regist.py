@@ -82,8 +82,7 @@ def Detect_face(camera_count=4) -> int:
 from enum import Enum
 
 class IndexEnum(Enum):
-    入口 = "入口"
-    出口 = "出口"
+    テスト = "テスト"#テストのためテストに変更
 
 
 def set_camera_config(camera_enum: IndexEnum, camera_index: int):
@@ -118,14 +117,14 @@ def camera_regist_view(page: ft.Page) -> ft.View:
     page.title = "設備設定"
 
     page.theme_mode = ft.ThemeMode.LIGHT
+    #入口、出口にして
+    card_indoor_text = ft.Text("現在:"+str(card_config["devices"][IndexEnum.テスト.value]["index"]), size=20)
 
-    card_indoor_text = ft.Text("現在:"+str(card_config["devices"][IndexEnum.入口.value]["index"]), size=20)
+    card_outdoor_text = ft.Text("現在:"+str(card_config["devices"][IndexEnum.テスト.value]["index"]), size=20)
 
-    card_outdoor_text = ft.Text("現在:"+str(card_config["devices"][IndexEnum.出口.value]["index"]), size=20)
+    face_indoor_text = ft.Text("現在:"+str(camera_config["devices"][IndexEnum.テスト.value]["index"]), size=20)
 
-    face_indoor_text = ft.Text("現在:"+str(camera_config["devices"][IndexEnum.入口.value]["index"]), size=20)
-
-    face_outdoor_text = ft.Text("現在:"+str(camera_config["devices"][IndexEnum.出口.value]["index"]), size=20)
+    face_outdoor_text = ft.Text("現在:"+str(camera_config["devices"][IndexEnum.テスト.value]["index"]), size=20)
 
 
     #region face_util_method
@@ -158,8 +157,8 @@ def camera_regist_view(page: ft.Page) -> ft.View:
         with open(camera_config_path, "r", encoding="utf-8") as fc:
             camera_config = json.load(fc)
         print(camera_config)
-        face_indoor_text.value = "現在:"+str(camera_config["devices"][IndexEnum.入口.value]["index"])
-        face_outdoor_text.value = "現在:"+str(camera_config["devices"][IndexEnum.出口.value]["index"])
+        face_indoor_text.value = "現在:"+str(camera_config["devices"][IndexEnum.テスト.value]["index"])#ここも入口出口！
+        face_outdoor_text.value = "現在:"+str(camera_config["devices"][IndexEnum.テスト.value]["index"])
 
     #endregion
 
@@ -192,8 +191,8 @@ def camera_regist_view(page: ft.Page) -> ft.View:
         with open(card_config_path, "r", encoding="utf-8") as fc:
             card_config = json.load(fc)
         print(card_config)
-        card_indoor_text.value = "現在:"+str(card_config["devices"][IndexEnum.入口.value]["index"])
-        card_outdoor_text.value = "現在:"+str(card_config["devices"][IndexEnum.出口.value]["index"])
+        card_indoor_text.value = "現在:"+str(card_config["devices"][IndexEnum.テスト.value]["index"])
+        card_outdoor_text.value = "現在:"+str(card_config["devices"][IndexEnum.テスト.value]["index"])
 
 
     #endregion
@@ -205,12 +204,12 @@ def camera_regist_view(page: ft.Page) -> ft.View:
 
     set_face_indoor_button = ft.ElevatedButton(
         text="入口カメラに設定",
-        on_click=lambda e: SetCameraIndex(IndexEnum.入口),
+        on_click=lambda e: SetCameraIndex(IndexEnum.テスト),
         width=200,
     )
     set_face_outdoor_button = ft.ElevatedButton(
         text="出口カメラに設定",
-        on_click=lambda e: SetCameraIndex(IndexEnum.出口),
+        on_click=lambda e: SetCameraIndex(IndexEnum.テスト),
         width=200,
     )
 
@@ -222,12 +221,12 @@ def camera_regist_view(page: ft.Page) -> ft.View:
 
     set_card_indoor_button = ft.ElevatedButton(
         text="入口カードリーダー設定",
-        on_click=lambda e: SetCardIndex( IndexEnum.入口),
+        on_click=lambda e: SetCardIndex( IndexEnum.テスト),
         width=200,
     )
     set_card_outdoor_button = ft.ElevatedButton(
         text="出口カードリーダー設定",
-        on_click=lambda e: SetCardIndex( IndexEnum.出口),
+        on_click=lambda e: SetCardIndex( IndexEnum.テスト),
         width=200,
     )
 

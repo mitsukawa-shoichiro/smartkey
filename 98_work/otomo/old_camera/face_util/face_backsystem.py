@@ -12,7 +12,7 @@ from pathlib import Path
 
 from .face_utils import check_face, match_against_db
 
-BASE_DIR = Path(__file__).resolve().parent   # service/facerecognition
+BASE_DIR = Path(__file__).resolve().parent   # service/face_recognition
 ROOT_DIR = BASE_DIR.parent.parent            # root/
 DB_DIR = ROOT_DIR / "db" / "Facelib"         # root/db/Facelib
 print("datapath is " + str(DB_DIR))
