@@ -1,5 +1,4 @@
 from .utils.sesame_bluetooth import open_sesame_bt
-from .utils.sesame import open_sesame
 from .nfcutils.card_scan import scan_card
 from .db_manager import check_card, insert_card_id
 import sys
@@ -8,7 +7,8 @@ import time
 from enum import Enum
 import asyncio
 import logging
-
+import threading
+from service.utils.sesame import open_sesame, lock_sesame
 import json
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', 'config', 'backend', 'sesame_config.json'))
@@ -27,6 +27,9 @@ class CardReaderState(Enum):
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/db"
 DB_PATH = os.path.join(BASE_DIR, 'dataBase.db')
 sys.path.append('DataBase')
+
+AUTO_LOCK_SECONDS = 10      # 開錠から自動施錠までの時間
+_auto_lock_timer = None     # 自動ロックの時間もっとけ
 
 # グローバル状態管理
 current_state = CardReaderState.AUTHENTICATING  # デフォルト状態
@@ -85,25 +88,57 @@ def receive_card(card_number: str, card_leader_id: int):
                 last_card_id = card_id
                 last_card_timestamp = time.time()
 
-                if connect_config == "wifi":
-                    unlock()
-                    logger.info("wifiでの解錠完了")
-                elif connect_config == "bluetooth":
-                    unlock_bt()
-                    logger.info("bluetoothでの解錠完了")
-                insert_card_id(card_id, card_leader_id)
+                request_unlock()
+
+                insert_card_id(card_id, card_leader_id)#入退室ログに書き込み
                 logger.info(f"カード認証成功: {card_id} (リーダーID: {card_leader_id})")
 
+def schedule_auto_lock():
+    global _auto_lock_timer
+
+    # タイマー動いてたらとめる
+    if _auto_lock_timer is not None and _auto_lock_timer.is_alive():
+        _auto_lock_timer.cancel()
+
+    # 指定時間後にしめる
+    _auto_lock_timer = threading.Timer(AUTO_LOCK_SECONDS, request_lock)
+    _auto_lock_timer.daemon = True
+    _auto_lock_timer.start()
+
+
+def request_unlock():
+    success = False
+    # 接続方式で開錠   開錠成功＝successとして開錠された時のみunlockを要求
+    if connect_config == "wifi":
+        success = unlock()
+        logger.info("wifiでの解錠完了")
+    elif connect_config == "bluetooth":
+        success = unlock_bt()
+        logger.info("bluetoothでの解錠完了")
+
+def request_lock():
+    # wifiの時SESAME APIであける
+    try:
+        if connect_config == "wifi":
+            lock()
+        elif connect_config == "bluetooth":
+            logger.warning("Bluetooth lock is not implemented")
+            #Bluetoothでは未実装
+    except Exception as e:
+        #例外の詳細を変数eに格納
+        logger.exception(f"Auto lock failed:{e}")
 
 def unlock():
-    """
-    解錠操作を実行します。
-    """
-    open_sesame()
+    # Wi-Fiで開錠する
+    return open_sesame()
 
+def lock():
+    # Wi-Fiで施錠する
+    lock_sesame()
 
 def unlock_bt():
     """
     Bluetoothを使用して解錠操作を実行します。
     """
     asyncio.run(open_sesame_bt())
+

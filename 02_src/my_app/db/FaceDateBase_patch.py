@@ -1,6 +1,6 @@
 import sqlite3
 import os
-from DateBase import create_database
+from DataBase import create_database
 db_path = os.path.join(os.path.dirname(__file__), "database.db")
 
 import sqlite3
@@ -84,7 +84,7 @@ def DBUpdate():
         # 古いテーブルのデータを新しいテーブルへ移行（face_id は NULL で補完）
         cur.execute("""
             INSERT INTO access_logs (id, timestamp, method, card_id, eventtype, face_id)
-            SELECT 
+            SELECT
                 id,
                 timestamp,
                 method,
@@ -115,7 +115,7 @@ def insert_sameplelog_face(card_name, card_number):
 def main():#バック開始に呼び出されるinit作業
     CreateFaceTable()
     DBUpdate()
-    create_database() 
+    create_database()
 
 
 if __name__ == "__main__":

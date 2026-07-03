@@ -8,7 +8,7 @@ import tempfile
 import time
 
 import service.db_manager as db
-import service.utils.sesame as sesami
+import service.utils.sesame as sesame
 import camera.face_util as face_util
 from camera.blink_detector import BlinkDetector
 
@@ -16,7 +16,7 @@ import logs.log_config_service
 import logging
 
 # 顔認証とICカード認証で同じ開錠・自動施錠の処理つかっちゃう
-from service.cardsystem import request_unlock
+from service.card_sys import request_unlock
 
 # 複数登録画像との距離・平均値で顔認証するよう
 from camera.face_util.face_stable import recognize_image_average
@@ -89,7 +89,7 @@ class CaptureBuffer:
 
 class CameraWorker:
     """バックグラウンドスレッド：カメラ起動 -> プレビュー表示 -> CAPTURE/STOP"""
-    isRegisting: bool = False
+    isRegistering: bool = False
 
     FACE_UNLOCK_COOLDOWN_SEC = 6    # 同じ顔で連続開錠しないための待ち時間
     REQUIRED_MATCH_COUNT = 3        # 何フレーム連続で成功したらとおすか
@@ -130,26 +130,26 @@ class CameraWorker:
 
     def back_end_system(self):
         print("カメラ起動！")
-        was_registing = None  # 直前の状態を記録（None/True/False）
+        was_registering = None  # 直前の状態を記録（None/True/False）
         try:
             while not self.systemstop:  # 常に動作
                 # 状態遷移を検出
                 timg=time.time()
-                if self.isRegisting:
-                    if was_registing is not True:
+                if self.isRegistering:
+                    if was_registering is not True:
                         # False -> True に遷移した瞬間だけ一度だけ実行
                         self.release_all_cameras()
                         print("[INFO] 登録モードのためカメラを一時解放しました")
-                    was_registing = True
+                    was_registering = True
                     print("⏸️ 登録中のため認証処理を一時停止")
                     time.sleep(0.5)  # ポーリング間隔（短め）
                     continue
                 else:
-                    if was_registing is True:
+                    if was_registering is True:
                         # True -> False に遷移した瞬間だけ再オープン
                         self.open_all_cameras()
                         print("[INFO] 登録完了。カメラを再オープンしました")
-                    was_registing = False
+                    was_registering = False
 
                 # 通常フロー（認証）
                 CaptureBuffer.clean_frame()
@@ -243,7 +243,7 @@ class CameraWorker:
                 print("撮影されたカメラのindexは" + str(index))
 
             # あける
-            self.__open_sesami()
+            self.__open_sesame()
             return True
 
         # どのカメラ画像でも一致しなかった場合は連続成功をリセット
@@ -253,7 +253,7 @@ class CameraWorker:
 
 
 
-    def __open_sesami(self):
+    def __open_sesame(self):
         # 開錠 -> 一定時間後の自動施錠も予約！！！！！！
         request_unlock()
         print("認証成功")
@@ -279,11 +279,11 @@ class CameraWorker:
                 recv_msg = data.decode('utf-8').strip()
                 print(f"📩 {addr} からのメッセージを受信：{recv_msg}")
 
-                if recv_msg == "startRegisting":
-                    self.isRegisting = True
+                if recv_msg == "startRegistering":
+                    self.isRegistering = True
                     print("✅ 現在の状態：登録中")
-                elif recv_msg == "finishRegisting":
-                    self.isRegisting = False
+                elif recv_msg == "finishRegistering":
+                    self.isRegistering = False
                     print("❎ 現在の状態：未登録")
                 else:
                     print(f"⚠️ 不明なメッセージ：{recv_msg}")

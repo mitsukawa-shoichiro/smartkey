@@ -1,3 +1,7 @@
+
+#service.dbmanagerに統合済み、残しておきます↓元の住所
+#C:\smartkey\02_src\my_app\app\models\db_manager.py
+
 import sqlite3
 import os
 from datetime import datetime, timedelta

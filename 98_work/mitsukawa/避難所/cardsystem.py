@@ -1,3 +1,7 @@
+
+#card_sysに移行済み、使わないけど念のため残しておきます。↓元の住所
+#C:\smartkey\02_src\my_app\service\cardsystem.py
+
 from service.utils.sesame_bluetooth import open_sesame_bt
 from service.utils.sesame import open_sesame
 from service.nfcutils.card_scan import scan_card
@@ -115,8 +119,10 @@ def request_unlock():
     # 接続方式で開錠   開錠成功＝successとして開錠された時のみunlockを要求
     if connect_config == "wifi":
         success = unlock()
+        logger.info("wifiでの解錠完了")
     elif connect_config == "bluetooth":
         success = unlock_bt()
+        logger.info("bluetoothでの解錠完了")
 
     # 開錠 -> 自動施錠予約
     if success:
@@ -128,9 +134,9 @@ def request_lock():
         if connect_config == "wifi":
             lock()
         elif connect_config == "bluetooth":
-            logger.warning("Bluetooth lock is not implemented") 
+            logger.warning("Bluetooth lock is not implemented")
             #Bluetoothでは未実装
-    except Exception as e:      
+    except Exception as e:
         #例外の詳細を変数eに格納
         logger.exception(f"Auto lock failed:{e}")
 

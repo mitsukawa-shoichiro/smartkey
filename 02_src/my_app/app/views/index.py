@@ -71,7 +71,7 @@ def index_view(page: ft.Page, error_message: str = ""):
         )
     )
 
-    face_recognition_btn = ft.ElevatedButton(   
+    face_recognition_btn = ft.ElevatedButton(
         content=ft.Column([
             ft.Icon(ft.Icons.PERSON_SEARCH, size=50),
             ft.Text("顔認証管理", size=20, weight=ft.FontWeight.BOLD),
@@ -104,8 +104,8 @@ def index_view(page: ft.Page, error_message: str = ""):
                 shape=ft.RoundedRectangleBorder(radius=20)
             )
         )
-    
-    camera_regist_button = ft.ElevatedButton(
+
+    camera_register_button = ft.ElevatedButton(
         content=ft.Column([
             ft.Icon(ft.Icons.SETTINGS, size=50),
             ft.Text("設備登録", size=20, weight=ft.FontWeight.BOLD),
@@ -172,7 +172,7 @@ def index_view(page: ft.Page, error_message: str = ""):
             ft.Column(
                 controls=[
                     middle_col,
-                    camera_regist_button,
+                    camera_register_button,
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -188,7 +188,7 @@ def index_view(page: ft.Page, error_message: str = ""):
             ),
         ],
         alignment=ft.MainAxisAlignment.CENTER,
-        spacing=40,  
+        spacing=40,
     )
 
     return ft.View(

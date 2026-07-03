@@ -100,7 +100,7 @@ def detect_cardreader() -> int:
     readerindex=int(scan_cardreader())
 
     return readerindex
-    
+
 
 
 def set_card_config(card_enum:IndexEnum,card_index:int):
@@ -112,7 +112,7 @@ def set_card_config(card_enum:IndexEnum,card_index:int):
 #endregion
 
 
-def camera_regist_view(page: ft.Page) -> ft.View:
+def camera_register_view(page: ft.Page) -> ft.View:
 
     page.title = "設備設定"
 
@@ -148,7 +148,7 @@ def camera_regist_view(page: ft.Page) -> ft.View:
 
     def SetCameraIndex(camera_enum: IndexEnum):
         match = re.search(r"\[(\d+)\]", face_text.value)
-        if match:   
+        if match:
             cam_index = int(match.group(1))
             set_camera_config(camera_enum,cam_index)
             update_text_face()
@@ -165,8 +165,8 @@ def camera_regist_view(page: ft.Page) -> ft.View:
 
     #region card_util method
     card_text = ft.Text("まだ検出していません。", size=20)
-    
-    
+
+
     def on_detect_click_card(e):
         card_text.value = "検出中..."
         page.update()
@@ -182,7 +182,7 @@ def camera_regist_view(page: ft.Page) -> ft.View:
 
     def SetCardIndex(card_enum: IndexEnum):
         match = re.search(r"\[(\d+)\]", card_text.value)
-        if match:   
+        if match:
             cardreader_index = int(match.group(1))
             set_card_config(card_enum, cardreader_index)
             update_text_card()
@@ -234,36 +234,36 @@ def camera_regist_view(page: ft.Page) -> ft.View:
     #endregion
 
 
-    #region face_regist_view
+    #region face_register_view
 
 
     face_content = ft.Row(
         [ face_button,face_text],
-        alignment=ft.MainAxisAlignment.CENTER,        
-        vertical_alignment=ft.CrossAxisAlignment.CENTER  
+        alignment=ft.MainAxisAlignment.CENTER,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER
     )
 
     face_button = ft.Row(
         [set_face_indoor_button, set_face_outdoor_button],
-        alignment=ft.MainAxisAlignment.SPACE_EVENLY,   
+        alignment=ft.MainAxisAlignment.SPACE_EVENLY,
         vertical_alignment=ft.CrossAxisAlignment.CENTER
     )
 
     face_text_area = ft.Row(
         [face_indoor_text, face_outdoor_text],
-        alignment=ft.MainAxisAlignment.SPACE_EVENLY,   
+        alignment=ft.MainAxisAlignment.SPACE_EVENLY,
         vertical_alignment=ft.CrossAxisAlignment.CENTER
     )
-    face_regist_view = ft.Column(
+    face_register_view = ft.Column(
         [face_content, face_button,face_text_area],
-        alignment=ft.MainAxisAlignment.CENTER,       
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER  
+        alignment=ft.MainAxisAlignment.CENTER,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER
     )
 
 
     #endregion
 
-    #region card_regist_view
+    #region card_register_view
 
 
     card_button = ft.ElevatedButton(text="カードを検出する", on_click=on_detect_click_card, width=200)
@@ -277,21 +277,21 @@ def camera_regist_view(page: ft.Page) -> ft.View:
         [
         set_card_indoor_button,
         set_card_outdoor_button],
-        alignment=ft.MainAxisAlignment.SPACE_EVENLY,   
+        alignment=ft.MainAxisAlignment.SPACE_EVENLY,
         vertical_alignment=ft.CrossAxisAlignment.CENTER
 
-    )   
+    )
 
     card_text_area=ft.Row(
         [
         card_indoor_text,
         card_outdoor_text],
-        alignment=ft.MainAxisAlignment.SPACE_EVENLY,   
+        alignment=ft.MainAxisAlignment.SPACE_EVENLY,
         vertical_alignment=ft.CrossAxisAlignment.CENTER
 
-    )   
-    
-    card_regist_view = ft.Column(
+    )
+
+    card_register_view = ft.Column(
         [card_content, card_button,card_text_area],
         alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -318,8 +318,8 @@ def camera_regist_view(page: ft.Page) -> ft.View:
                     ft.Container(
                         content=ft.Column(
                             controls=[
-                                face_regist_view,
-                                card_regist_view,
+                                face_register_view,
+                                card_register_view,
                             ],
                             spacing=100,
                             alignment=ft.MainAxisAlignment.CENTER,
@@ -344,7 +344,7 @@ def main(page: ft.Page):
     def route_change(e: ft.RouteChangeEvent):
         page.views.clear()
         if page.route in ("/", "/camera/register"):
-            page.views.append(camera_regist_view(page))
+            page.views.append(camera_register_view(page))
         page.update()
 
     page.on_route_change = route_change

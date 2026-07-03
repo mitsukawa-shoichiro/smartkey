@@ -39,23 +39,23 @@ def check_card(cardIDM):
         cursor = conn.cursor()
 
         cursor.execute(
-            'SELECT card_id FROM card WHERE card_number = ?', (cardIDM,))
+            'SELECT id FROM card WHERE card_number = ?', (cardIDM,))
         card_id = cursor.fetchone()
 
         return card_id[0] if card_id else None
     except sqlite3.Error as e:
-        logger.exception("カード検索エラー: card_id=%s", cardIDM)
+        logger.exception("カード検索エラー: id=%s", cardIDM)
         raise
     finally:
         conn.close()
 
-
+#怪しい香り、後回し
 def get_last_date_time(card_id, card_reader_id):
     dt = None
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
-    
+
         cursor.execute(
             "SELECT timestamp FROM access_logs where card_id = ? AND eventtype = ? ORDER BY timestamp DESC LIMIT 1", (card_id, card_reader_id))
         row = cursor.fetchone()
@@ -70,7 +70,7 @@ def get_last_date_time(card_id, card_reader_id):
         conn.close()
 
 
-
+#怪しい香り、後回し
 def insert_card_id(card_id, card_reader_id):
     # カードIDをaccess_logsテーブルに挿入します。
     logger.info(f"カードIDを挿入: {card_id}, リーダーID: {card_reader_id}")
@@ -108,7 +108,7 @@ def delete_card_by_ids(ids):
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
 
-        cur.executemany("DELETE FROM card WHERE card_id = ?", [(i,) for i in ids])
+        cur.executemany("DELETE FROM card WHERE id = ?", [(i,) for i in ids])
         conn.commit()
     except sqlite3.Error as e:
         logger.exception("カード削除エラー: ids=%s", ids)
@@ -116,7 +116,7 @@ def delete_card_by_ids(ids):
     finally:
         conn.close()
 
-
+#怪しい香り、後回し
 def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, offset, asc: bool = True):
     order = "ASC" if asc else "DESC"
     try:
@@ -153,7 +153,7 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, 
         conn.close()
     return logs
 
-
+#怪しい香り、後回し
 def count_filtered_logs(card_name=None, method=None, eventtype=None, start_datetime=None, end_datetime=None):
     try:
         conn = sqlite3.connect(DB_PATH)
@@ -199,7 +199,7 @@ def find_by_card_name(card_name, asc: bool, offset):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     try:
-        cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+        cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY id {order} LIMIT 100 OFFSET ?",
                     (f"%{card_name}%", offset))
         cards = cursor.fetchall()
     except sqlite3.Error as e:
@@ -232,10 +232,10 @@ def update_card_name(card_id, new_name):
         cursor = conn.cursor()
 
         cursor.execute(
-            "UPDATE card SET card_name = ? WHERE card_id = ?", (new_name, card_id))
+            "UPDATE card SET card_name = ? WHERE id = ?", (new_name, card_id))
         conn.commit()
     except sqlite3.Error as e:
-        logger.exception("カード名更新エラー: card_id=%s, new_name=%s", card_id, new_name)
+        logger.exception("カード名更新エラー: id=%s, new_name=%s", card_id, new_name)
         raise
     finally:
         conn.close()
@@ -247,16 +247,16 @@ def find_card_name_by_id(card_id):
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
-        cursor.execute("SELECT card_name FROM card WHERE card_id = ?", (card_id,))
+        cursor.execute("SELECT card_name FROM card WHERE id = ?", (card_id,))
         card_name = cursor.fetchone()
     except sqlite3.Error as e:
-        logger.exception("カード名取得エラー: card_id=%s", card_id)
+        logger.exception("カード名取得エラー: id=%s", card_id)
         raise
     finally:
         conn.close()
     return card_name
 
-
+#怪しい香り、後回し
 def insert_card(card_name, card_number):
     # カードを新規登録
     try:
@@ -271,6 +271,7 @@ def insert_card(card_name, card_number):
     finally:
         conn.close()
 
+#怪しい香り、後回し
 def insert_samplelogs(card_id,eventtype,timestamp):
     # サンプルログを挿入
     try:
@@ -285,12 +286,13 @@ def insert_samplelogs(card_id,eventtype,timestamp):
     finally:
         conn.close()
 
+
 def find_all_faces():
     # 全ての顔情報を取得
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM face ORDER BY face_id ASC")
+        cursor.execute("SELECT * FROM face ORDER BY id ASC")
         faces = cursor.fetchall()
     except Exception as e:
         logger.info(f"[ERROR] 顔情報の取得中にエラーが発生しました: {e}")
@@ -299,6 +301,7 @@ def find_all_faces():
         conn.close()
     return faces
 
+#怪しい香り、後回し
 def insert_facedata(face_name, face_name_roma):
     # 顔情報を新規登録
     try:
@@ -310,22 +313,23 @@ def insert_facedata(face_name, face_name_roma):
     except Exception as e:
         logger.info(f"[ERROR] 顔情報の登録中にエラーが発生しました: {e}")
     finally:
-        conn.close()    
+        conn.close()
 
 
-
+#user_idでも一括で消せるようにメソッド作って
 def delete_face_by_ids(ids):
     delete_face_lib_by_ids(ids)
     try:
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
-        cur.executemany("DELETE FROM face WHERE face_id = ?", [(i,) for i in ids])
+        cur.executemany("DELETE FROM face WHERE id = ?", [(i,) for i in ids])
         conn.commit()
     except Exception as e:
         logger.info(f"[ERROR] 顔情報の削除中にエラーが発生しました: {e}")
     finally:
         conn.close()
 
+#怪しい香り、後回し
 def delete_face_lib_by_ids(ids):
     """
     DBのface_name_romaをもとに、該当する画像ファイルを削除する
@@ -336,11 +340,11 @@ def delete_face_lib_by_ids(ids):
 
         for i in ids:
             # 1️⃣ DBから face_name_roma を取得
-            cur.execute("SELECT face_name_roma FROM face WHERE face_id = ?", (i,))
+            cur.execute("SELECT face_name_roma FROM face WHERE id = ?", (i,))
             row = cur.fetchone()
 
             if not row:
-                logger.info(f"[WARN] face_id={i} は存在しません。")
+                logger.info(f"[WARN] id={i} は存在しません。")
                 continue
 
             face_name_roma = row[0]
@@ -359,12 +363,13 @@ def delete_face_lib_by_ids(ids):
     finally:
         conn.close()
 
-def find_by_face_name(searchword: str, asc: bool, offset: int):
+#怪しい香り、後回し
+def find_by_face_name(search_word: str, asc: bool, offset: int):
     """
     名前またはローマ字で顔データを検索します。
 
     Args:
-        searchword (str): 検索キーワード（日本語またはローマ字）
+        search_word (str): 検索キーワード（日本語またはローマ字）
         asc (bool): 昇順または降順
         offset (int): ページオフセット（100件ごと）
 
@@ -376,7 +381,7 @@ def find_by_face_name(searchword: str, asc: bool, offset: int):
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
-        like_word = f"%{searchword}%" if searchword else "%"
+        like_word = f"%{search_word}%" if search_word else "%"
 
         cursor.execute(f"""
             SELECT *
@@ -391,16 +396,17 @@ def find_by_face_name(searchword: str, asc: bool, offset: int):
     except Exception as e:
         logger.info(f"[ERROR] 顔データの検索中にエラーが発生しました: {e}")
         faces = []
-    finally:    
+    finally:
         conn.close()
     return faces
 
-def count_all_face(searchword: str):
+#怪しい香り、後回し
+def count_all_face(search_word: str):
     """
     名前またはローマ字で検索結果の総件数をカウントします。
 
     Args:
-        searchword (str): 検索キーワード（日本語またはローマ字）
+        search_word (str): 検索キーワード（日本語またはローマ字）
 
     Returns:
         int: 該当件数
@@ -409,7 +415,7 @@ def count_all_face(searchword: str):
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
-        like_word = f"%{searchword}%" if searchword else "%"
+        like_word = f"%{search_word}%" if search_word else "%"
 
         cursor.execute("""
             SELECT COUNT(*)
@@ -426,6 +432,8 @@ def count_all_face(searchword: str):
         conn.close()
     return count
 
+#怪しい香り、後回し
+#これは後でuser用のメソッドに変えよう
 def update_face_name(face_id, face_name,face_name_roma):
     try:
         conn = sqlite3.connect(DB_PATH)
@@ -450,6 +458,7 @@ def update_face_name(face_id, face_name,face_name_roma):
     finally:
         conn.close()
 
+#怪しい香り、後回し
 def update_face_lib(face_name_roma,face_name_roma_new):#try-exceptないけど大丈夫かわかんない関数くん
 
     '''
@@ -494,7 +503,7 @@ def update_face_lib(face_name_roma,face_name_roma_new):#try-exceptないけど�
 
     return True
 
-
+#怪しい香り、後回し
 def find_face_name_and_roma_by_id(face_id):
     # カードIDからカード名を取得
     try:
@@ -505,7 +514,7 @@ def find_face_name_and_roma_by_id(face_id):
     except Exception as e:
         logger.info(f"[ERROR] 顔データの取得中にエラーが発生しました: {e}")
         face_data = None
-    finally:   
+    finally:
         conn.close()
     return face_data
 
