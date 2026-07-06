@@ -5,8 +5,6 @@ import time
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
-
-
 LEFT_EYE  = [362, 385, 387, 263, 373, 380]#左目の位置を指定
 RIGHT_EYE = [33,  160, 158, 133, 153, 144]#右目の位置を指定
 
@@ -44,6 +42,8 @@ class BlinkDetector:
             num_faces = 1
         )
         self.landmarker = vision.FaceLandmarker.create_from_options(options)
+
+        
     def detect(self,frame):
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
@@ -70,6 +70,4 @@ class BlinkDetector:
             self.liveness_until = time.time() + 3
             self.blink_count = 0
             self.blink_frame_count = 0
-            return time.time() < self.liveness_until
-            
-        return False
+        return time.time() < self.liveness_until
