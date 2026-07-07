@@ -155,13 +155,12 @@ def insert_card(card_number, CARD_TYPE: CardType, user_id: int):
         raise
 
 
-def update_card(card_id, card_name, card_number, CARD_TYPE: CardType):
+def update_card(card_id, card_number, CARD_TYPE: CardType):
     """
     カード情報を更新する関数
 
     Args:
         card_id (int): 更新するカードのID
-        card_name (str): 新しいカード名
         card_number (str): 新しいカード番号
         CARD_TYPE (CardType): 新しいカードタイプ
     """
@@ -169,11 +168,11 @@ def update_card(card_id, card_name, card_number, CARD_TYPE: CardType):
         with get_connection() as conn:
             c = conn.cursor()
             c.execute(
-                'UPDATE card SET card_name = ?, card_number = ?, card_type = ? WHERE id = ?',
-                (card_name, card_number, CARD_TYPE.value, card_id)
+                'UPDATE card SET card_number = ?, card_type = ? WHERE id = ?',
+                (card_number, CARD_TYPE.value, card_id)
             )
     except sqlite3.Error:
-        logger.exception("カード更新エラー: id=%s, %s, %s, %s", card_id, card_name, card_number, CARD_TYPE.value)
+        logger.exception("カード更新エラー: id=%s, %s, %s, %s", card_id, card_number, CARD_TYPE.value)
         raise
 
 
