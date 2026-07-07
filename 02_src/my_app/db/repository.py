@@ -310,6 +310,31 @@ def delete_card_by_ids(ids):
         raise
 
 
+def find_cards_by_user_name(user_name, offset):
+    """
+    user_nameからcard_id, card_type, card_number, register_dateを検索する
+    Args:
+        user_name (_type_): 利用者名
+
+    Returns:
+        list(): カードID、カードの種類、カード番号、登録日
+    """
+
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.executemany("""
+                SELECT * FROM card
+                        SELECT * FROM card LEFT OUTER JOIN user ON card.user_id = user.user_id
+                        ORDER BY user_name [order] LIMIT 100 OFFSET ?
+                """
+                        (offset,))
+            return c.fetchall()
+    except sqlite3.Error:
+        logger.exception("user_name一括検索時エラー: user_name=%s", user_name)
+        raise
+
+
 
 
 

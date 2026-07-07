@@ -119,7 +119,7 @@ def check_alive():
                 card_reader_state = False
 
             if data.decode('utf-8') == "ALIVE" and not card_reader_state:
-                logger.info("カードリーダが指定台数接続されました")
+                logger.info("カードリーダーが指定台数接続されました")
                 card_reader_state = True
 
         except socket.timeout:
@@ -131,7 +131,7 @@ def check_alive():
             if system_state:
                 logger.error("解錠システム異常")
                 send_mail(system_mail_config["TITLE"],
-                          system_mail_config["TEXT"])
+                        system_mail_config["TEXT"])
                 logger.info('システム異常')
                 last_AliveTime = time.time()
                 system_state = False

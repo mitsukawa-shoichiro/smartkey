@@ -131,9 +131,10 @@ def cardView(page: ft.Page):
             columns=[
 
                 ft.DataColumn(ft.Text("ID"), on_sort=on_sort),
-                ft.DataColumn(ft.Text("名前")),
-                # ft.DataColumn(ft.Text("カード番号")),
+                ft.DataColumn(ft.Text("カードの種類")),
+                ft.DataColumn(ft.Text("カード番号")),
                 ft.DataColumn(ft.Text("登録日")),
+                ft.DataColumn(ft.Text("利用者ID")),
                 ft.DataColumn(ft.ElevatedButton(
                     "行を削除", on_click=lambda e: open_confirm_dialog(e), style=ft.ButtonStyle(
                         shape=ft.RoundedRectangleBorder(
@@ -163,8 +164,8 @@ def cardView(page: ft.Page):
 
         def load_table():
             nonlocal search_word, offset, all_page
-            cards = repo.find_by_user_name(
-                search_word, table.sort_ascending, offset * 100)
+            cards = repo.find_cards_by_user_name(
+                search_word, offset * 100)
             all_page = int(((repo.count_all_card(search_word)[0] - 1) / 100) + 1)
             checkbox_refs.clear()
             table.rows.clear()
@@ -175,7 +176,7 @@ def cardView(page: ft.Page):
                                                         shape=ft.RoundedRectangleBorder(
                                                             radius=0),)))
 
-            for card_id, card_name, card_number, register_date in cards:
+            for card_id, card_type, card_number, register_date, in cards:
                 cb = ft.Checkbox()
                 column.controls.append(
                     ft.Radio(value=str(card_id)))
@@ -185,8 +186,10 @@ def cardView(page: ft.Page):
                     ft.DataRow(
                         cells=[
                             ft.DataCell(ft.Text(f"{card_id:05d}", width=40)),
-                            ft.DataCell(ft.Text(card_name, width=280)),
+                            ft.DataCell(ft.Text(card_type, width=100)),
+                            ft.DataCell(ft.Text(card_number, width=120)),
                             ft.DataCell(ft.Text(register_date, width=80)),
+                            ft.DataCell(ft.Text(user_id, width=60)),
                             ft.DataCell(cb),
                         ]
                     )
@@ -231,17 +234,23 @@ def cardView(page: ft.Page):
         def open_edit_dialog(e):
             card_id = int(radio_group.value)
             dialog.title = ft.Text("カード名編集")
-            card_name = repo.find_card_name_by_id(
+            card = repo.find_card_by_id(
                 card_id)
-            name_and_type = card_name[0].split("_")
-            user_name = ft.TextField(
-                label="ユーザー名", value=name_and_type[0], autofocus=True, max_length=50,  on_submit=lambda e: card_type.focus())
+            # name_and_type = card_name[0].split("_")
+            # user_name = ft.TextField(
+            #     label="ユーザー名", value=name_and_type[0], autofocus=True, max_length=50,  on_submit=lambda e: card_type.focus())
             card_type = ft.TextField(
-                label="カードの種類", value=name_and_type[1], data=card_id, max_length=50, on_submit=lambda e: confirm_edit(e))
+                label="カードの種類", value=card[1], data=card_id, max_length=50, on_submit=lambda e: confirm_edit(e))
+            card_number = ft.TextField(
+                label = "カード番号", value = card[2]
+            )
+            user_id = ft.TextField(
+                label = "利用者ID", value = str(card[4])
+            )
 
             dialog.content = ft.Column(
                 [
-                    user_name,
+                    # user_name,
                     card_type
 
                 ],
@@ -257,6 +266,8 @@ def cardView(page: ft.Page):
 
         # 削除の確認ダイアログのアクション
         def confirm_delete(e):
+            # card_ids = [repo.find_card_name_by_id(
+            #     card_id) for card_id in selected_ids]
             page.open(dialog)
             repo.delete_card_by_ids(selected_ids)
             page.close(dialog)
@@ -267,8 +278,10 @@ def cardView(page: ft.Page):
                 ft.TextButton("閉じる", autofocus=True,
                             on_click=lambda e:  page.close(dialog)),
             ]
-            for selected_id in selected_ids:
-                logger.info(f"{selected_id[0]}が削除されました")
+            for selected_id in selecttd_ids:
+                logger.info(
+                    f"{selected_id[0]} を削除しました。"
+                )
 
             page.open(dialog)
 
@@ -288,7 +301,7 @@ def cardView(page: ft.Page):
             new_card_name = dialog.content.controls[0].value + \
                 "_" + dialog.content.controls[1].value
             old_card_name = repo.find_card_name_by_id(card_id)
-            repo.update_card_name(card_id, new_card_name)
+            repo.update_card(card_id, card_type, card_number, user_id)
             page.close(dialog)
             # 編集後のテーブルを再読み込み
             load_table()
