@@ -1,6 +1,6 @@
 from .utils.sesame_bluetooth import open_sesame_bt
 from .nfcutils.card_scan import scan_card
-from .db_manager import check_card, insert_card_id
+import db.repository as repo
 import sys
 import os
 import time
@@ -10,6 +10,11 @@ import logging
 import threading
 from service.utils.sesame import open_sesame, lock_sesame
 import json
+from db import repository as repo
+from app.models import ENUMS
+from app.models.access_log import AccessLog
+
+
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', 'config', 'backend', 'sesame_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
@@ -34,6 +39,18 @@ _auto_lock_timer = None     # 自動ロックの時間もっとけ
 # グローバル状態管理
 current_state = CardReaderState.AUTHENTICATING  # デフォルト状態
 
+#カードリーダー設定読み込み
+def load_config():
+    base_dir = os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))
+    )
+
+    CONFIG_PATH = os.path.normpath(
+        os.path.join(base_dir, "config", "usb_settings.json")
+    )
+    logger.info(f"USB設定ファイルのパス: {CONFIG_PATH}")
+    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)["devices"]
 
 def set_state(state: str):
     """
@@ -74,14 +91,28 @@ def get_card() -> str:
 last_card_id = None
 last_card_timestamp = 0
 
+def resolve_event_type(reader_serial: int) -> int:
+    """
+    カードIDとリーダーシリアル番号に基づいてイベントタイプを解決します。
+    :param reader_serial: リーダーシリアル番号
+    :return: イベントタイプ（1: 入室, 0: 退室）
+    """
+    config = load_config()
+    if config["出口"]["serial"] == reader_serial:
+        return ENUMS.EventType.EXIT
+    elif config["入口"]["serial"] == reader_serial:
+        return ENUMS.EventType.ENTRY
+    else:
+        logger.error(f"不明なリーダーIDです: {reader_serial}")
+        raise ValueError("不明なリーダーIDです")
 
-def receive_card(card_number: str, card_leader_id: int):
+def receive_card(card_number: str, reader_serial: int):
     """
     現在の状態に基づいてカードIDを処理します。
-    card_id: カードID card_leader_id:カードリーダー番号
+    card_id: カードID reader_serial:カードリーダー番号
     """
     global last_card_id, last_card_timestamp
-    card_id = check_card(card_number)
+    card_id = repo.check_card(card_number)
     if current_state == CardReaderState.AUTHENTICATING:
         if card_id:
             if card_id != last_card_id or (time.time() - last_card_timestamp > 6):
@@ -90,8 +121,22 @@ def receive_card(card_number: str, card_leader_id: int):
 
                 request_unlock()
 
-                insert_card_id(card_id, card_leader_id)#入退室ログに書き込み
-                logger.info(f"カード認証成功: {card_id} (リーダーID: {card_leader_id})")
+                user_id = repo.find_user_id_by_card_id(card_id)
+
+                event_type = resolve_event_type(reader_serial)
+
+                log = AccessLog(
+                    id=None,
+                    timestamp=None,
+                    method="カード",
+                    event_type=event_type,
+                    user_id=user_id,
+                    card_id=card_id
+                )
+
+                repo.insert_access_log(log) #入退室ログに書き込み
+
+                logger.info(f"カード認証成功: {card_id} (リーダーID: {reader_serial})")
 
 def schedule_auto_lock():
     global _auto_lock_timer

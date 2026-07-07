@@ -57,10 +57,10 @@ logger = logging.getLogger(__name__)  # logに書き込む用
 def sender():
     """非同期送信スレッド、ポーリングをブロックしない"""
     while True:
-        idm, i = event_q.get()
+        idm, reader_serial = event_q.get()
         try:
-            card_sys.receive_card(idm, i)
-            logger.info(f"送信成功（リーダー{i+1}）")
+            card_sys.receive_card(idm, reader_serial)
+            logger.info(f"送信成功（リーダー{reader_serial+1}）")
 
         except sqlite3.Error as e:
             logger.error(f"DBエラーにより送信失敗: {e}")

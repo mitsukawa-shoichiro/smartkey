@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, IntEnum
 
 class EntryStatus(Enum):
     ENTRY = "入室"
@@ -10,8 +10,12 @@ class CardType(Enum):
     ELSE_CARD = "その他"
 
 class Method(Enum):
-    WIFI = "wifi"
-    BLUE_TOOTH = "blue_tooth"
+    FACE = "face"
+    CARD = "card"
+
+class EventType(IntEnum):#カードリーダーのID(Configにて設定)からの入退室イベントタイプを定義
+    ENTRY = 1
+    EXIT = 0
 
 
 #status = EntryStatus("入室")

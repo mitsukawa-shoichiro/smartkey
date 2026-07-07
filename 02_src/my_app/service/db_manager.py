@@ -50,35 +50,35 @@ def check_card(cardIDM):
         conn.close()
 
 #怪しい香り、後回し
-def get_last_date_time(card_id, card_reader_id):
+def get_last_date_time(card_id, reader_serial):
     dt = None
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT timestamp FROM access_logs where card_id = ? AND eventtype = ? ORDER BY timestamp DESC LIMIT 1", (card_id, card_reader_id))
+            "SELECT timestamp FROM access_logs where card_id = ? AND eventtype = ? ORDER BY timestamp DESC LIMIT 1", (card_id, reader_serial))
         row = cursor.fetchone()
         if row:
             ts_str = row[0]
             dt = datetime.fromisoformat(ts_str)
         return dt
     except sqlite3.Error as e:
-        logger.exception("アクセスログ日時検索エラー: card_id=%s, card_reader_id=%s", card_id, card_reader_id)
+        logger.exception("アクセスログ日時検索エラー: card_id=%s, reader_serial=%s", card_id, reader_serial)
         raise
     finally:
         conn.close()
 
 
-#怪しい香り、後回し
-def insert_card_id(card_id, card_reader_id):
+#怪しい香り、後回し　移植完了
+def insert_card_id(card_id, reader_serial):
     # カードIDをaccess_logsテーブルに挿入します。
-    logger.info(f"カードIDを挿入: {card_id}, リーダーID: {card_reader_id}")
+    logger.info(f"カードIDを挿入: {card_id}, リーダーID: {reader_serial}")
     config = load_config()
 
-    if config["出口"]["serial"] == card_reader_id:
+    if config["出口"]["serial"] == reader_serial:
         eventtype = 1
-    elif config["入口"]["serial"] == card_reader_id:
+    elif config["入口"]["serial"] == reader_serial:
         eventtype = 0
     else:
         logger.error("不明なリーダーIDです")
@@ -98,7 +98,7 @@ def insert_card_id(card_id, card_reader_id):
             "INSERT INTO access_logs (method, card_id, eventtype) VALUES(?,?,?)", ('カード', card_id, eventtype))
         conn.commit()
     except sqlite3.Error as e:
-        logger.exception("アクセスログ登録エラー: card_id=%s, card_reader_id=%s", card_id, card_reader_id)
+        logger.exception("アクセスログ登録エラー: card_id=%s, reader_serial=%s", card_id, reader_serial)
         raise
     finally:
         conn.close()
@@ -116,7 +116,7 @@ def delete_card_by_ids(ids):
     finally:
         conn.close()
 
-#怪しい香り、後回し
+#怪しい香り、後回し　移植完了
 def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, offset, asc: bool = True):
     order = "ASC" if asc else "DESC"
     try:
@@ -153,7 +153,7 @@ def find_log(card_name, method, eventtype, start_datetime, end_datetime, limit, 
         conn.close()
     return logs
 
-#怪しい香り、後回し
+#怪しい香り、後回し　移植完了
 def count_filtered_logs(card_name=None, method=None, eventtype=None, start_datetime=None, end_datetime=None):
     try:
         conn = sqlite3.connect(DB_PATH)
@@ -215,7 +215,7 @@ def count_all_card(card_name):
     cursor = conn.cursor()
     try:
         cursor.execute(f"SELECT COUNT(*) FROM card WHERE card_name LIKE ?",
-                       (f"%{card_name}%", ))
+                        (f"%{card_name}%", ))
         count = cursor.fetchall()
     except sqlite3.Error as e:
         logger.exception("カード件数取得エラー: card_name=%s", card_name)

@@ -1,6 +1,6 @@
 import flet as ft
 import asyncio
-import service.db_manager as db
+import db.repository as repo
 import logging
 from service.card_sys import set_state, get_state, get_card
 from app.utils.thread_state import thread_handle, stop_event
@@ -116,7 +116,7 @@ async def delayed_transition(page: ft.Page):
         CARD_NUMBER = get_card()
 
         if CARD_NUMBER == first_card and first_card != "" and CARD_NUMBER != "":
-            if not db.check_card(CARD_NUMBER):
+            if not repo.check_card(CARD_NUMBER):
                 try:
 
                     sock.connect((HOST, PORT))
@@ -310,7 +310,8 @@ def register_input(page: ft.Page):
             ]
             page.open(add_confirm_dialog)
             return
-        db.insert_card(
+        #怪しい香り、後回し；；ここまじやばい、泣きそう
+        repo.insert_card(
             (card_name.value + '_' + card_name_type.value), CARD_NUMBER)
 
         page.close(add_confirm_dialog)

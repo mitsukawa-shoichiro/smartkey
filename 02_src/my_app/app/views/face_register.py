@@ -6,7 +6,7 @@ import threading
 import queue
 from datetime import datetime
 import tempfile, cv2, os
-import service.db_manager as db
+import service.db_manager as repo
 import random
 
 from app.utils.front_camera_moduel import CameraWorker_Front, CaptureBuffer
@@ -152,7 +152,7 @@ def face_register_view(page: ft.Page) -> ft.View:
         status.value = "カメラ起動中（別ウィンドウにプレビュー表示）"
         status.update()
 
-    #撮影枚数を提示    
+    #撮影枚数を提示
     capture_count = ft.Text(
         "撮影枚数：0枚",
         size=16,
@@ -288,7 +288,7 @@ def face_register_register(page: ft.Page) -> ft.View:
     # --- 画像プレビュー（最後の1枚） ---→全画像に変更
     image_paths = CaptureBuffer.files.copy()
     print(f"[INFO] プレビュー画像: {image_paths}")
-    
+
     preview_controls = []
     if len(image_paths) == 0:
         preview_controls.append(
@@ -319,7 +319,7 @@ def face_register_register(page: ft.Page) -> ft.View:
             scroll=ft.ScrollMode.AUTO,
         )
     hint = ft.Text(f"直近の撮影: {image_paths}", size=12, color=ft.Colors.BLUE_GREY_600)
-    
+
     preview = ft.Text("画像がありません", size=16, color=ft.Colors.RED)
     hint = ft.Text(
         f"撮影画像：{len(image_paths)}枚",
@@ -359,7 +359,7 @@ def face_register_register(page: ft.Page) -> ft.View:
         )
 
         # DB登録
-        db.insert_facedata(user_name.value, user_name_romaji.value)
+        repo.insert_facedata(user_name.value, user_name_romaji.value)
         for path in image_paths:
             if os.path.exists(path):
                 os.remove(path)    #一時画像ファイルの削除

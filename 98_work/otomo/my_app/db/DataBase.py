@@ -1,10 +1,10 @@
 import sqlite3
 import os
-import FaceDateBase 
+import FaceDataBase
 
 # --- FaceData テーブルの初期化 ---
-# 注意: FaceDateBase.DBInit() 内では FaceData テーブルが毎回 DROP されます（開発用）
-FaceDateBase.DBInit()
+# 注意: FaceDataBase.DBInit() 内では FaceData テーブルが毎回 DROP されます（開発用）
+FaceDataBase.DBInit()
 
 # --- データベース接続設定 ---
 db_path = os.path.join(os.path.dirname(__file__), "database.db")

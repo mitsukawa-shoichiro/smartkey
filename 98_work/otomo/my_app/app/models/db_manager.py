@@ -242,7 +242,7 @@ def insert_facedata(face_name, face_name_roma):
     except Exception as e:
         logger.info(f"[ERROR] 顔情報の登録中にエラーが発生しました: {e}")
     finally:
-        conn.close()    
+        conn.close()
 
 
 
@@ -291,12 +291,12 @@ def delete_face_lib_by_ids(ids):
     finally:
         conn.close()
 
-def find_by_face_name(searchword: str, asc: bool, offset: int):
+def find_by_face_name(search_word: str, asc: bool, offset: int):
     """
     名前またはローマ字で顔データを検索します。
 
     Args:
-        searchword (str): 検索キーワード（日本語またはローマ字）
+        search_word (str): 検索キーワード（日本語またはローマ字）
         asc (bool): 昇順または降順
         offset (int): ページオフセット（100件ごと）
 
@@ -308,7 +308,7 @@ def find_by_face_name(searchword: str, asc: bool, offset: int):
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
-        like_word = f"%{searchword}%" if searchword else "%"
+        like_word = f"%{search_word}%" if search_word else "%"
 
         cursor.execute(f"""
             SELECT *
@@ -323,16 +323,16 @@ def find_by_face_name(searchword: str, asc: bool, offset: int):
     except Exception as e:
         logger.info(f"[ERROR] 顔データの検索中にエラーが発生しました: {e}")
         faces = []
-    finally:    
+    finally:
         conn.close()
     return faces
 
-def count_all_face(searchword: str):
+def count_all_face(search_word: str):
     """
     名前またはローマ字で検索結果の総件数をカウントします。
 
     Args:
-        searchword (str): 検索キーワード（日本語またはローマ字）
+        search_word (str): 検索キーワード（日本語またはローマ字）
 
     Returns:
         int: 該当件数
@@ -341,7 +341,7 @@ def count_all_face(searchword: str):
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
-        like_word = f"%{searchword}%" if searchword else "%"
+        like_word = f"%{search_word}%" if search_word else "%"
 
         cursor.execute("""
             SELECT COUNT(*)
@@ -437,7 +437,7 @@ def find_face_name_and_roma_by_id(face_id):
     except Exception as e:
         logger.info(f"[ERROR] 顔データの取得中にエラーが発生しました: {e}")
         face_data = None
-    finally:   
+    finally:
         conn.close()
     return face_data
 
@@ -494,4 +494,4 @@ if  __name__ == "__main__":
     except Exception as e:
         logger.info(f"[ERROR] カードデータの削除中にエラーが発生しました: {e}")
     finally:
-        conn.close()    
+        conn.close()

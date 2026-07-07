@@ -1,6 +1,6 @@
 from datetime import datetime,date,time,timedelta
 import flet as ft
-import service.db_manager as db
+import db.repository as repo
 import asyncio
 import logging
 
@@ -157,7 +157,7 @@ def accesslogs(page: ft.Page):
             current_page = 0
 
             # 件数取得→総ページ
-            cnt = db.count_filtered_logs(search_cardname, search_method,search_eventtype, start_dt, end_dt)
+            cnt = repo.count_filtered_logs(search_cardname, search_method,search_eventtype, start_dt, end_dt)
             calc_total_pages(cnt)
 
             # テーブルロード
@@ -192,7 +192,7 @@ def accesslogs(page: ft.Page):
             "end_dt": None,
             }
             reset(e)
-            calc_total_pages(db.count_filtered_logs())
+            calc_total_pages(repo.count_filtered_logs())
             load_table(current_page)
 
         #日時入力のピッカーを開く処理
@@ -336,12 +336,12 @@ def accesslogs(page: ft.Page):
             offset = page_num * ITEMS_PER_PAGE  #取得する項目の先頭を計算
 
             #取得する件数と場所、順番を考慮し検索
-            logs = db.find_log(
+            logs = repo.find_log(
                     search_params["card_name"], search_params["method"], search_params["eventtype"],
                     search_params["start_dt"], search_params["end_dt"],
                     ITEMS_PER_PAGE, offset,table.sort_ascending
             )
-            #テーブル表示
+            #テーブル表示 todo 怪しい香り、後回し
             for _id, card_name, method, timestamp, eventtype in logs:
                 event_str = "入室" if eventtype == 0 else "退室"
                 table.rows.append(
@@ -352,6 +352,33 @@ def accesslogs(page: ft.Page):
                         ft.DataCell(ft.Text(event_str, width=80)),
                     ])
                 )
+            """
+            俺が直そうと思ってるやつ
+        def load_table(page_num: int):
+
+            table.rows.clear()  #テーブルをクリア
+            offset = page_num * ITEMS_PER_PAGE  #取得する項目の先頭を計算
+
+            #取得する件数と場所、順番を考慮し検索
+            logs = repo.find_log(
+                    search_params["method"], search_params["eventtype"],
+                    search_params["start_dt"], search_params["end_dt"],
+                    ITEMS_PER_PAGE, offset,table.sort_ascending
+            )
+
+            for _id, card_name, method, timestamp, eventtype in logs:
+                event_str = "入室" if eventtype == 0 else "退室"
+                table.rows.append(
+                    ft.DataRow(cells=[
+                        ft.DataCell(ft.Text(card_name, width=280)),
+                        ft.DataCell(ft.Text(method, width=80)),
+                        ft.DataCell(ft.Text(timestamp, width=140)),
+                        ft.DataCell(ft.Text(event_str, width=80)),
+                    ])
+                )
+
+            """
+
             #全体ページ数と現在のページを表示し、前へボタンと次へボタンを押下可能にするか判断
             page_label.value = f"{current_page+1} / {total_pages} ページ"
             prev_btn.disabled = current_page == 0
@@ -359,7 +386,7 @@ def accesslogs(page: ft.Page):
             page.update()
 
         if not search_mode:
-            calc_total_pages(db.count_filtered_logs())
+            calc_total_pages(repo.count_filtered_logs())
 
         #該当ページのログを取得
         load_table(current_page)

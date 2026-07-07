@@ -7,7 +7,7 @@ import cv2
 import tempfile
 import time
 
-import service.db_manager as db
+import service.db_manager as repo
 import service.utils.sesame as sesame
 import camera.face_util as face_util
 from camera.blink_detector import BlinkDetector

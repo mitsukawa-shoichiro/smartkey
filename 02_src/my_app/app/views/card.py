@@ -1,6 +1,6 @@
 import logging
 import flet as ft
-import service.db_manager as db
+import db.repository as repo
 import asyncio
 import sqlite3
 # card管理画面
@@ -163,9 +163,9 @@ def cardView(page: ft.Page):
 
         def load_table():
             nonlocal search_word, offset, all_page
-            cards = db.find_by_card_name(
+            cards = repo.find_by_card_name(
                 search_word, table.sort_ascending, offset * 100)
-            all_page = int(((db.count_all_card(search_word)[0] - 1) / 100) + 1)
+            all_page = int(((repo.count_all_card(search_word)[0] - 1) / 100) + 1)
             checkbox_refs.clear()
             table.rows.clear()
             column.controls.clear()
@@ -231,7 +231,7 @@ def cardView(page: ft.Page):
         def open_edit_dialog(e):
             card_id = int(radio_group.value)
             dialog.title = ft.Text("カード名編集")
-            card_name = db.find_card_name_by_id(
+            card_name = repo.find_card_name_by_id(
                 card_id)
             name_and_type = card_name[0].split("_")
             user_name = ft.TextField(
@@ -257,10 +257,10 @@ def cardView(page: ft.Page):
 
         # 削除の確認ダイアログのアクション
         def confirm_delete(e):
-            card_names = [db.find_card_name_by_id(
+            card_names = [repo.find_card_name_by_id(
                 card_id) for card_id in selected_ids]
             page.open(dialog)
-            db.delete_card_by_ids(selected_ids)
+            repo.delete_card_by_ids(selected_ids)
             page.close(dialog)
             load_table()
             dialog.title = ft.Text("削除完了")
@@ -289,8 +289,8 @@ def cardView(page: ft.Page):
 
             new_card_name = dialog.content.controls[0].value + \
                 "_" + dialog.content.controls[1].value
-            old_card_name = db.find_card_name_by_id(card_id)
-            db.update_card_name(card_id, new_card_name)
+            old_card_name = repo.find_card_name_by_id(card_id)
+            repo.update_card_name(card_id, new_card_name)
             page.close(dialog)
             # 編集後のテーブルを再読み込み
             load_table()

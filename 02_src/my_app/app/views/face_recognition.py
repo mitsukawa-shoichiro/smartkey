@@ -1,6 +1,6 @@
 import logging
 import flet as ft
-import service.db_manager as db
+import service.db_manager as repo
 import asyncio
 
 logger = logging.getLogger(__name__)#logに書き込む用
@@ -172,9 +172,9 @@ def faceView(page: ft.Page):
 
     def load_table():
         nonlocal search_word, offset, all_page
-        faces = db.find_by_face_name(
+        faces = repo.find_by_face_name(
             search_word, table.sort_ascending, offset * 100)
-        all_page = int(((db.count_all_face(search_word) - 1) / 100) + 1)
+        all_page = int(((repo.count_all_face(search_word) - 1) / 100) + 1)
         checkbox_refs.clear()
         table.rows.clear()
         column.controls.clear()
@@ -240,10 +240,10 @@ def faceView(page: ft.Page):
             page.open(dialog)
     # 削除の確認ダイアログのアクション
     def confirm_delete(e):
-        face_datas = [db.find_face_name_and_roma_by_id(
+        face_datas = [repo.find_face_name_and_roma_by_id(
             face_id) for face_id in selected_ids]
         page.open(dialog)
-        db.delete_face_by_ids(selected_ids)
+        repo.delete_face_by_ids(selected_ids)
         page.close(dialog)
         load_table()
         dialog.title = ft.Text("削除完了")
@@ -261,7 +261,7 @@ def faceView(page: ft.Page):
     def open_edit_dialog(e):
         face_id = int(radio_group.value)
         dialog.title = ft.Text("登録者名編集")
-        face_data_tuple = db.find_face_name_and_roma_by_id(
+        face_data_tuple = repo.find_face_name_and_roma_by_id(
             face_id)
         user_name = ft.TextField(
             label="登録者名", value=face_data_tuple[0], autofocus=True, max_length=50,  on_submit=lambda e: card_type.focus())
@@ -302,8 +302,8 @@ def faceView(page: ft.Page):
 
         new_face_name = dialog.content.controls[0].value
         new_face_name_roma = dialog.content.controls[1].value
-        old_face_data = db.find_face_name_and_roma_by_id(face_id)
-        db.update_face_name(face_id, new_face_name,new_face_name_roma)
+        old_face_data = repo.find_face_name_and_roma_by_id(face_id)
+        repo.update_face_name(face_id, new_face_name,new_face_name_roma)
         page.close(dialog)
         # 編集後のテーブルを再読み込み
         load_table()
