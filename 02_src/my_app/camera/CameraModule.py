@@ -167,7 +167,7 @@ class CameraWorker:
                 # 成功でも失敗でもまつ
                 time.sleep(0.5)
 
-                logger.info("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
+                logger.info("１サイクル終了、所要時間："+str(time.time()-time)+"秒")
 
         except KeyboardInterrupt:
             print("\n[INFO] ユーザー中断、プログラムを終了します。")
