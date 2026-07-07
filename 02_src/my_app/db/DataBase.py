@@ -103,8 +103,6 @@ def create_database():
     c.execute("""
         CREATE TABLE IF NOT EXISTS face (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            face_name TEXT NOT NULL,
-            face_name_roma TEXT NOT NULL,
             register_date DATE DEFAULT (DATE('now')),
             user_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE

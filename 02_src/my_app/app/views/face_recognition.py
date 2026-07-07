@@ -243,7 +243,7 @@ def faceView(page: ft.Page):
         face_datas = [repo.find_face_name_and_roma_by_id(
             face_id) for face_id in selected_ids]
         page.open(dialog)
-        repo.delete_face_by_ids(selected_ids)
+        repo.delete_face_by_ids(selected_ids)#ここに顔写真削除の関数呼び出して～～～！！！
         page.close(dialog)
         load_table()
         dialog.title = ft.Text("削除完了")

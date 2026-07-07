@@ -129,7 +129,7 @@ def check_card(cardIDM):
         raise
 
 
-def insert_card(card_name, card_number, CARD_TYPE: CardType, user_id: int):
+def insert_card(card_number, CARD_TYPE: CardType, user_id: int):
     """
     カードをデータベースに挿入する関数
 
@@ -146,12 +146,12 @@ def insert_card(card_name, card_number, CARD_TYPE: CardType, user_id: int):
         with get_connection() as conn:
             c = conn.cursor()
             c.execute(
-                'INSERT INTO card (card_name, card_number, card_type, user_id) VALUES (?, ?, ?, ?)',
-                (card_name, card_number, CARD_TYPE.value, user_id)
+                'INSERT INTO card (card_number, card_type, user_id) VALUES (?, ?, ?)',
+                (card_number, CARD_TYPE.value, user_id)
             )
-            return c.lastrowid  # 元は conn.lastrowid になっていたバグを修正
+            return c.lastrowid
     except sqlite3.Error:
-        logger.exception("カード挿入エラー: %s, %s, %s", card_name, card_number, CARD_TYPE.value)
+        logger.exception("カード挿入エラー: %s, %s, %s", card_number, CARD_TYPE.value)
         raise
 
 
@@ -526,26 +526,29 @@ def get_faces_by_user_id(user_id):
         raise
 
 
-def insert_face(face_name_jpn, face_name_roma, user_id):
+def insert_face(user_id):
     """
     顔情報をデータベースに挿入する関数
 
     Args:
-        face_name_jpn (str): 顔の名前（日本語）
-        face_name_roma (str): 顔の名前のローマ字表記
         user_id (int): ユーザーID
+
+    returns:
+        int: 挿入された顔ID
+
     """
     try:
         with get_connection() as conn:
             c = conn.cursor()
             c.execute(
-                'INSERT INTO face (face_name_jpn, face_name_roma, user_id) VALUES (?, ?, ?)',
-                (face_name_jpn, face_name_roma, user_id)
+                'INSERT INTO face (user_id) VALUES (?)',
+                (user_id)
             )
+        return c.lastrowid
     except sqlite3.Error:
         logger.exception(
-            "顔情報挿入エラー: face_name_jpn=%s, face_name_roma=%s, user_id=%s",
-            face_name_jpn, face_name_roma, user_id
+            "顔情報挿入エラー: user_id=%s",
+            user_id
         )
         raise
 

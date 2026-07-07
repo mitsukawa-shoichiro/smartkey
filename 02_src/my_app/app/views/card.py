@@ -163,7 +163,7 @@ def cardView(page: ft.Page):
 
         def load_table():
             nonlocal search_word, offset, all_page
-            cards = repo.find_by_card_name(
+            cards = repo.find_by_user_name(
                 search_word, table.sort_ascending, offset * 100)
             all_page = int(((repo.count_all_card(search_word)[0] - 1) / 100) + 1)
             checkbox_refs.clear()
@@ -257,8 +257,6 @@ def cardView(page: ft.Page):
 
         # 削除の確認ダイアログのアクション
         def confirm_delete(e):
-            card_names = [repo.find_card_name_by_id(
-                card_id) for card_id in selected_ids]
             page.open(dialog)
             repo.delete_card_by_ids(selected_ids)
             page.close(dialog)
@@ -269,8 +267,8 @@ def cardView(page: ft.Page):
                 ft.TextButton("閉じる", autofocus=True,
                             on_click=lambda e:  page.close(dialog)),
             ]
-            for card_name in card_names:
-                logger.info(f"{card_name[0]}が削除されました")
+            for selected_id in selected_ids:
+                logger.info(f"{selected_id[0]}が削除されました")
 
             page.open(dialog)
 
