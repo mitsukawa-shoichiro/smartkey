@@ -3,6 +3,7 @@ import flet as ft
 import db.repository as repo
 import asyncio
 import logging
+from app.models.ENUMS import EventType
 
 # テーブルの1ページが表示する件数
 ITEMS_PER_PAGE = 100
@@ -319,7 +320,7 @@ def accesslogs(page: ft.Page):
         table = ft.DataTable(
             columns=[
                         # ft.DataColumn(ft.Text("ログID", weight="bold", size=14)),
-                        ft.DataColumn(ft.Text("カード名", weight="bold", size=14)),
+                        ft.DataColumn(ft.Text("ユーザー名_カード名", weight="bold", size=14)),
                         ft.DataColumn(ft.Text("認証方式", weight="bold", size=14)),
                         ft.DataColumn(timestamp_row, on_sort=on_sort),  #入退室の日時でソート
                         ft.DataColumn(ft.Text("区分", weight="bold", size=14)),
@@ -337,47 +338,22 @@ def accesslogs(page: ft.Page):
 
             #取得する件数と場所、順番を考慮し検索
             logs = repo.find_log(
-                    search_params["card_name"], search_params["method"], search_params["eventtype"],
-                    search_params["start_dt"], search_params["end_dt"],
-                    ITEMS_PER_PAGE, offset,table.sort_ascending
-            )
-            #テーブル表示 todo 怪しい香り、後回し
-            for _id, card_name, method, timestamp, eventtype in logs:
-                event_str = "入室" if eventtype == 0 else "退室"
-                table.rows.append(
-                    ft.DataRow(cells=[
-                        ft.DataCell(ft.Text(card_name, width=280)),
-                        ft.DataCell(ft.Text(method, width=80)),
-                        ft.DataCell(ft.Text(timestamp, width=140)),
-                        ft.DataCell(ft.Text(event_str, width=80)),
-                    ])
-                )
-            """
-            俺が直そうと思ってるやつ
-        def load_table(page_num: int):
-
-            table.rows.clear()  #テーブルをクリア
-            offset = page_num * ITEMS_PER_PAGE  #取得する項目の先頭を計算
-
-            #取得する件数と場所、順番を考慮し検索
-            logs = repo.find_log(
                     search_params["method"], search_params["eventtype"],
                     search_params["start_dt"], search_params["end_dt"],
                     ITEMS_PER_PAGE, offset,table.sort_ascending
             )
-
-            for _id, card_name, method, timestamp, eventtype in logs:
-                event_str = "入室" if eventtype == 0 else "退室"
+            #テーブル表示 todo 怪しい香り、後回し
+            for log in logs:
+                event_str = "入室" if log.event_type == EventType.ENTRY else "退室"
+                card_type = repo.find_card_type_by_id(log.card_id) if log.card_id else ""
                 table.rows.append(
                     ft.DataRow(cells=[
-                        ft.DataCell(ft.Text(card_name, width=280)),
-                        ft.DataCell(ft.Text(method, width=80)),
-                        ft.DataCell(ft.Text(timestamp, width=140)),
+                        ft.DataCell(ft.Text(log.user_name_jpn + "_" + card_type, width=280)),
+                        ft.DataCell(ft.Text(log.method, width=80)),
+                        ft.DataCell(ft.Text(log.timestamp, width=140)),
                         ft.DataCell(ft.Text(event_str, width=80)),
                     ])
                 )
-
-            """
 
             #全体ページ数と現在のページを表示し、前へボタンと次へボタンを押下可能にするか判断
             page_label.value = f"{current_page+1} / {total_pages} ページ"

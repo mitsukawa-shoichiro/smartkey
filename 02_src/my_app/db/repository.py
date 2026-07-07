@@ -269,6 +269,29 @@ def find_user_id_by_card_id(card_id):
         raise
 
 
+def find_card_type_by_id(card_id):
+    """
+    カードIDからカード名を検索する関数
+
+    Args:
+        card_id(int): カードID
+
+    Returns:
+        (str): カード名
+    """
+
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute("SELECT card_type FROM card WHERE id = ?", (card_id,))
+            row = c.fetchone()
+            return row[0] if row else None
+
+    except sqlite3.Error:
+        logger.exception("カードIDでのカード名検索エラー: card_id=%s", card_id)
+        raise
+
+
 
 def delete_card_by_ids(ids):
     """
@@ -285,6 +308,10 @@ def delete_card_by_ids(ids):
     except sqlite3.Error:
         logger.exception("カード一括削除エラー: card_ids=%s", ids)
         raise
+
+
+
+
 
 
 
