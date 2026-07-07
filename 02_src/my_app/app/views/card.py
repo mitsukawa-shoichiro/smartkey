@@ -176,7 +176,7 @@ def cardView(page: ft.Page):
                                                         shape=ft.RoundedRectangleBorder(
                                                             radius=0),)))
 
-            for card_id, card_type, card_number, register_date, in cards:
+            for card_id, card_type, card_number, register_date, user_id in cards:
                 cb = ft.Checkbox()
                 column.controls.append(
                     ft.Radio(value=str(card_id)))
@@ -250,9 +250,9 @@ def cardView(page: ft.Page):
 
             dialog.content = ft.Column(
                 [
-                    # user_name,
-                    card_type
-
+                    card_type,
+                    card_number,
+                    user_id,
                 ],
                 height=80,
 
@@ -278,7 +278,7 @@ def cardView(page: ft.Page):
                 ft.TextButton("閉じる", autofocus=True,
                             on_click=lambda e:  page.close(dialog)),
             ]
-            for selected_id in selecttd_ids:
+            for selected_id in selected_ids:
                 logger.info(
                     f"{selected_id[0]} を削除しました。"
                 )
@@ -298,25 +298,37 @@ def cardView(page: ft.Page):
                 page.open(dialog)
                 return
 
-            new_card_name = dialog.content.controls[0].value + \
-                "_" + dialog.content.controls[1].value
-            old_card_name = repo.find_card_name_by_id(card_id)
-            repo.update_card(card_id, card_type, card_number, user_id)
+            # new_card_name = dialog.content.controls[0].value + \
+            #     "_" + dialog.content.controls[1].value
+            # old_card_name = repo.find_card_name_by_id(card_id)
+            # repo.update_card(card_id, card_type, card_number, user_id)
+            card_type = dialog.content.controls[0].value
+            card_number = dialog.content.controls[1].value
+            user_id = int(dialog.content.controls[2].value)
+
+            repo.update_card(
+                card_id,
+                card_type,
+                card_number,
+                user_id,
+            )
             page.close(dialog)
             # 編集後のテーブルを再読み込み
             load_table()
 
             # ダイアログを更新して完了メッセージを表示
             dialog.title = ft.Text("編集完了")
-            dialog.content = ft.Text(
-                f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
-            dialog.actions = [
-                ft.TextButton("閉じる", autofocus=True,
-                            on_click=lambda e: page.close(dialog)),
-            ]
-            logger.info(
-                f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
-            page.open(dialog)
+            dialog.content = ft.Text("カード情報を更新しました")
+            # dialog.content = ft.Text(
+            #     f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
+            # dialog.actions = [
+            #     ft.TextButton("閉じる", autofocus=True,
+            #                 on_click=lambda e: page.close(dialog)),
+            # ]
+            # logger.info(
+            #     f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
+            # page.open(dialog)
+
 
         def return_edit(e):
             page.close(dialog)
