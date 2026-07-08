@@ -240,19 +240,19 @@ def cardView(page: ft.Page):
             # user_name = ft.TextField(
             #     label="ユーザー名", value=name_and_type[0], autofocus=True, max_length=50,  on_submit=lambda e: card_type.focus())
             card_type = ft.TextField(
-                label="カードの種類", value=card[1], data=card_id, max_length=50, on_submit=lambda e: confirm_edit(e))
-            card_number = ft.TextField(
-                label = "カード番号", value = card[2]
-            )
-            user_id = ft.TextField(
-                label = "利用者ID", value = str(card[4])
-            )
+                label="カードの種類", value=card[0], autofocus=True, data=card_id, max_length=50, on_submit=lambda e: confirm_edit(e))
+            # card_number = ft.TextField(
+            #     label = "カード番号", value = card[1]
+            # )
+            # user_name = ft.TextField(
+            #     label = "利用者ID", value = str(card[2])
+            # )
 
             dialog.content = ft.Column(
                 [
                     card_type,
-                    card_number,
-                    user_id,
+                    # card_number,
+                    # user_name,
                 ],
                 height=80,
 
@@ -308,9 +308,9 @@ def cardView(page: ft.Page):
 
             repo.update_card(
                 card_id,
-                card_type,
-                card_number,
-                user_id,
+                card_type.value,
+                # card_number.value,
+                # int(user_id.value),
             )
             page.close(dialog)
             # 編集後のテーブルを再読み込み
