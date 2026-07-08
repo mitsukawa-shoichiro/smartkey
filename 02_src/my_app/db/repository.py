@@ -381,12 +381,12 @@ def insert_access_log(log: AccessLog):
         raise
 
 
-def find_log(method, event_type, start_datetime, end_datetime, limit, offset, asc: bool = True):
+def find_log(user_id, method, event_type, start_datetime, end_datetime, limit, offset, asc: bool = True):
     """
     入退室ログを条件検索する関数
 
     args:
-        card_name: カード名
+        user_id: ユーザーID(GUI側ではプルダウン選択を採用)
         method: 認証方法
         event_type: 入退室区分
         start_datetime: 日時指定(開始)
@@ -404,7 +404,6 @@ def find_log(method, event_type, start_datetime, end_datetime, limit, offset, as
 
             now = datetime.now()
 
-            card_name = f"%{card_name}%" if card_name else "%"
             method = f"%{method}%" if method else "%"
 
             start_datetime = start_datetime or (now - timedelta(days=365))
@@ -420,13 +419,13 @@ def find_log(method, event_type, start_datetime, end_datetime, limit, offset, as
                 f"""
                 SELECT id, method, timestamp, event_type, card_id, user_name_jpn
                 FROM access_logs
-                WHERE method LIKE ?
+                WHERE method LIKE ? AND user_id = ?
                 AND (? IS NULL OR event_type = ?)
                 AND timestamp BETWEEN ? AND ?
                 ORDER BY timestamp {order} LIMIT ? OFFSET ?
                 """,
-                (method, event_type, event_type,
-                 start_datetime_str, end_datetime_str, limit, offset)
+                (method, user_id, event_type, event_type,
+                start_datetime_str, end_datetime_str, limit, offset)
             )
 
             rows = c.fetchall()
@@ -446,17 +445,18 @@ def find_log(method, event_type, start_datetime, end_datetime, limit, offset, as
 
     except sqlite3.Error:
         logger.exception(
-            "アクセスログ検索エラー: card_name=%s, method=%s, event_type=%s",
-            card_name, method, event_type
+            "アクセスログ検索エラー: user_id=%s, method=%s, event_type=%s",
+            user_id, method, event_type
         )
         raise
 
 
-def count_filtered_logs(card_name=None, method=None, event_type=None, start_datetime=None, end_datetime=None):
+def count_filtered_logs(user_id=None, method=None, event_type=None, start_datetime=None, end_datetime=None):
     """
     find_log()をGUIで表示する際の件数を検索する関数
 
     args:
+        user_id: 検索する際のゆーざーID
         card_name: カード名
         method: 認証方法
         event_type: 入退室区分
@@ -470,7 +470,7 @@ def count_filtered_logs(card_name=None, method=None, event_type=None, start_date
             c = conn.cursor()
 
             now = datetime.now()
-            card_name = f"%{card_name}%" if card_name else "%"
+
             method = f"%{method}%" if method else "%"
             start_datetime = start_datetime or (now - timedelta(days=365))
             end_datetime = end_datetime or now
@@ -482,21 +482,21 @@ def count_filtered_logs(card_name=None, method=None, event_type=None, start_date
                 SELECT COUNT(*)
                 FROM access_logs
                 JOIN card ON access_logs.card_id = card.id
-                WHERE card.card_name LIKE ?
+                WHERE user_id = ?
                 AND method LIKE ?
                 AND (? IS NULL OR access_logs.event_type = ?)
                 AND access_logs.timestamp BETWEEN ? AND ?
             """
 
             c.execute(query, (
-                card_name, method, event_type, event_type,
+                user_id, method, event_type, event_type,
                 start_datetime_str, end_datetime_str
             ))
             return c.fetchone()[0]
     except sqlite3.Error:
         logger.exception(
-            "アクセスログ件数取得エラー: card_name=%s, method=%s, event_type=%s",
-            card_name, method, event_type
+            "アクセスログ件数取得エラー: user_id=%s, method=%s, event_type=%s",
+            user_id, method, event_type
         )
         raise
 
@@ -505,7 +505,7 @@ def count_filtered_logs(card_name=None, method=None, event_type=None, start_date
 # 顔テーブル
 # ===================================================
 
-def get_faces_by_user_id(user_id):
+def get_faces_by_user_id(user_id, asc, offset):
     """
     指定されたユーザーIDに関連するすべての顔情報を取得する関数
 

@@ -1,6 +1,7 @@
 import logging
 import flet as ft
-import service.db_manager as repo
+import db.repository as repo
+import service.face_service as face_service
 import asyncio
 
 logger = logging.getLogger(__name__)#logに書き込む用
@@ -184,7 +185,7 @@ def faceView(page: ft.Page):
                                                     shape=ft.RoundedRectangleBorder(
                                                         radius=0),)))
 
-        for face_id, face_name, face_name_roma, register_date in faces:
+        for face_id, register_date in faces:
             cb = ft.Checkbox()
             column.controls.append(
                 ft.Radio(value=str(face_id)))
@@ -194,8 +195,6 @@ def faceView(page: ft.Page):
                 ft.DataRow(
                     cells=[
                         ft.DataCell(ft.Text(f"{face_id:05d}", width=40)),
-                        ft.DataCell(ft.Text(face_name, width=140)),
-                        ft.DataCell(ft.Text(face_name_roma, width=140)),
                         ft.DataCell(ft.Text(register_date, width=80)),
                         ft.DataCell(cb),
                     ]
@@ -243,7 +242,7 @@ def faceView(page: ft.Page):
         face_datas = [repo.find_face_name_and_roma_by_id(
             face_id) for face_id in selected_ids]
         page.open(dialog)
-        repo.delete_face_by_ids(selected_ids)#ここに顔写真削除の関数呼び出して～～～！！！
+        face_service.delete_user_with_cleanup(selected_ids)#ここに顔写真削除の関数呼び出して～～～！！！
         page.close(dialog)
         load_table()
         dialog.title = ft.Text("削除完了")

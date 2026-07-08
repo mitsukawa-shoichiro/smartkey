@@ -17,7 +17,7 @@ def accesslogs(page: ft.Page):
         total_pages = 1            # 総ページ数（動的に計算）
         search_mode = False        # False: 全件モード / True: 検索モード
         search_params = {          # 検索条件を保持
-            "card_name": None,
+            "user_name": None,
             "method": None,
             "eventtype": None,
             "start_dt": None,
@@ -87,7 +87,7 @@ def accesslogs(page: ft.Page):
 
             # 値が入力されなかった場合はNoneを返す
             search_method = searchmethod.value.strip() if searchmethod.value else None
-            search_cardname = searchcardname.value.strip() if searchcardname.value else None
+            search_user_name = searchcardname.value.strip() if searchcardname.value else None
             search_eventtype = int(searcheventtype.value.strip()) if searcheventtype.value else None
 
             start_dt = None
@@ -147,7 +147,7 @@ def accesslogs(page: ft.Page):
 
             #検索条件に値を保持
             search_params = {
-                "card_name": search_cardname,
+                "user_name": search_user_name,
                 "method": search_method,
                 "eventtype": search_eventtype,
                 "start_dt": start_dt,
@@ -158,7 +158,7 @@ def accesslogs(page: ft.Page):
             current_page = 0
 
             # 件数取得→総ページ
-            cnt = repo.count_filtered_logs(search_cardname, search_method,search_eventtype, start_dt, end_dt)
+            cnt = repo.count_filtered_logs(search_user_name, search_method,search_eventtype, start_dt, end_dt)
             calc_total_pages(cnt)
 
             # テーブルロード
@@ -166,7 +166,7 @@ def accesslogs(page: ft.Page):
             scroll_table.scroll_to(offset=0, duration=0)
 
         #ソートを切り替え、ページをリセットし、新しい順で再描画
-        async def togle_sort(e):
+        async def toggle_sort(e):
             nonlocal current_page
             table.sort_ascending = not table.sort_ascending
             current_page = 0
@@ -177,16 +177,16 @@ def accesslogs(page: ft.Page):
             scroll_table.update()
             load_table(current_page)
 
-        #togle_sortの呼び出し
+        #toggle_sortの呼び出し
         async def on_sort(e):
-            await togle_sort(e)
+            await toggle_sort(e)
 
         #全件検索してテーブルに表示
         def show_all_logs(e):
             nonlocal current_page,search_params
             current_page = 0
             search_params = {          # 検索条件を保持
-            "card_name": None,
+            "user_name": None,
             "method": None,
             "eventtype": None,
             "start_dt": None,
