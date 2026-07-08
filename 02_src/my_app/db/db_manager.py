@@ -1,6 +1,7 @@
 """
 db接続とテーブル作成を行うモジュール
-
+DB接続は必ずこのモジュールから行うようにしてください
+DB接続、テーブル作成のみをこのモジュールの責務としています。
 """
 
 import sqlite3
@@ -19,16 +20,16 @@ def create_database():
     データベースとテーブルを作成する関数(存在しない場合のみ)
 
     userテーブル:
-    id, user_name_jpn, user_name_roma
+    id, user_name, user_kana
 
     cardテーブル:
-    id, card_type, card_number, register_date
+    id, card_type, card_number, register_date, user_id(user.id)
 
     access_logsテーブル:
     id, timestamp, method, event_type, user_id(user.id)
 
     faceテーブル:
-    id, face_name, face_name_roma, register_date, user_id(user.id)
+    id, register_date, user_id(user.id)
 
     """
 
@@ -46,8 +47,8 @@ def create_database():
             '''
             CREATE TABLE user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_name_jpn TEXT NOT NULL,
-            user_name_roma TEXT NOT NULL
+            user_name TEXT NOT NULL,
+            user_kana TEXT NOT NULL
             )
             '''
         )

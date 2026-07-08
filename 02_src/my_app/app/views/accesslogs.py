@@ -348,7 +348,7 @@ def accesslogs(page: ft.Page):
                 card_type = repo.find_card_type_by_id(log.card_id) if log.card_id else ""
                 table.rows.append(
                     ft.DataRow(cells=[
-                        ft.DataCell(ft.Text(log.user_name_jpn + "_" + card_type, width=280)),
+                        ft.DataCell(ft.Text(log.user_name + "_" + card_type, width=280)),
                         ft.DataCell(ft.Text(log.method, width=80)),
                         ft.DataCell(ft.Text(log.timestamp, width=140)),
                         ft.DataCell(ft.Text(event_str, width=80)),
