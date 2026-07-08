@@ -287,7 +287,7 @@ def find_card_type_by_id(card_id):
             return row[0] if row else None
 
     except sqlite3.Error:
-        logger.exception("カードIDでのカード名検索エラー: card_id=%s", card_id)
+        logger.exception("カードIDでのカード種類検索エラー: card_id=%s", card_id)
         raise
 
 
@@ -309,6 +309,54 @@ def delete_card_by_ids(ids):
         raise
 
 
+def find_cards_by_user_name(user_name, offset):
+    """
+    user_nameからcard_id, card_type, card_number, register_dateを検索する
+    Args:
+        user_name (_type_): 利用者名
+
+    Returns:
+        list(): カードID、カードの種類、カード番号、登録日
+    """
+
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.executemany("""
+                SELECT * FROM card LEFT OUTER JOIN user ON card.user_id = user.user_id WHERE user.user_name LIKE?
+                        ORDER BY user_name [order] LIMIT 100 OFFSET ?
+                """
+                        (offset,))
+            return c.fetchall()
+    except sqlite3.Error:
+        logger.exception("user_name一括検索時エラー: user_name=%s", user_name)
+        raise
+
+def find_card_by_id(card_id):
+    """card_idからcardを特定
+
+    Args:
+        card_id (_type_): カードID
+
+    Returns:
+        card: カード
+    """
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute("""
+            SELECT
+                    id,
+                    card_type,
+                    card_number,
+                    register_date,
+                    user_id
+                FROM card WHERE id = ?
+                """,(card_id,))
+            return c.fetchone()
+    except sqlite3.Error:
+        logger.exception("カードIDでのカード検索エラー id=%s", card_id)
+        raise
 
 
 
@@ -426,7 +474,7 @@ def find_log(method, event_type, start_datetime, end_datetime, limit, offset, as
                 ORDER BY timestamp {order} LIMIT ? OFFSET ?
                 """,
                 (method, event_type, event_type,
-                 start_datetime_str, end_datetime_str, limit, offset)
+                start_datetime_str, end_datetime_str, limit, offset)
             )
 
             rows = c.fetchall()
