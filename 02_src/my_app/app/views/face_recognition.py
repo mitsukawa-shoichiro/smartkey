@@ -12,6 +12,8 @@ import asyncio
 import flet as ft
 import db.repository as repo
 import service.face_service as face_service
+import sqlite3
+from views.common import show_error_dialog, filter_user_options
 
 logger = logging.getLogger(__name__)
 
@@ -33,11 +35,28 @@ def faceView(page: ft.Page):
     # ===================================================
     # 画面表示のたびに最新のユーザー一覧を取得
     users = repo.get_all_users()
-    #プルダウンに変換
-    autocomplete_options = [
-        ft.AutoCompleteOption(key=str(u.id), text=f"{u.user_name}({u.user_kana})")
-        for u in users
-    ]
+
+    def on_user_selected(e: ft.ControlEvent):
+        """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
+        nonlocal selected_user_id, offset
+        selected_user_id = int(e.selection.key)
+        offset = 0
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
+
+    def on_user_search_change(e: ft.ControlEvent):
+        """
+        入力のたびに候補を絞り込み直す。ひらがな/カタカナ/ローマ字の
+        表記ゆれをjapanese_text.matchesで吸収する(Flet標準の絞り込みでは非対応)。
+        """
+        search_user.suggestions = filter_user_options(users, e.control.value)
+        search_user.update()
+
+    search_user = ft.AutoComplete(
+        suggestions=filter_user_options(users, ""),
+        on_select=on_user_selected,
+        on_change=on_user_search_change,
+    )
 
     # ===================================================
     # UIコントロールの定義
@@ -68,12 +87,6 @@ def faceView(page: ft.Page):
         #遷移ページの再定義
         scroll_table.scroll_to(offset=0, duration=0)
 
-    #プルダウン定義
-    face_name = ft.AutoComplete(
-        suggestions=autocomplete_options,
-        on_select=on_user_selected,
-    )
-
     #条件リセットボタン定義
     reset_btn = ft.ElevatedButton(
         content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
@@ -89,7 +102,7 @@ def faceView(page: ft.Page):
 
     #検索窓定義
     search_zone = ft.Row(
-        controls=[face_name],
+        controls=[search_user],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=0
     )
@@ -147,7 +160,7 @@ def faceView(page: ft.Page):
 
         selected_user_id = None
         table.sort_ascending = True
-        face_name.value = ""  # プルダウン入力欄のクリア
+        search_user.value = ""  # プルダウン入力欄のクリア
         offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
@@ -201,15 +214,22 @@ def faceView(page: ft.Page):
         #スコープ外のグローバル変数を扱う
         nonlocal selected_user_id, offset, all_page
 
-        #絞り込み条件なし
-        if selected_user_id is None:
-            faces = repo.find_all_faces(table.sort_ascending, offset * 100)
-            total = repo.count_all_face()
-        #絞り込み条件あり
-        else:
-            faces = repo.find_faces_by_user_id(
-                selected_user_id, table.sort_ascending, offset * 100)
-            total = repo.count_faces_by_user_id(selected_user_id)
+        try:
+            #絞り込み条件なし
+            if selected_user_id is None:
+                faces = repo.find_all_faces(table.sort_ascending, offset * 100)
+                total = repo.count_all_face()
+            #絞り込み条件あり
+            else:
+                faces = repo.find_faces_by_user_id(
+                    selected_user_id, table.sort_ascending, offset * 100)
+                total = repo.count_faces_by_user_id(selected_user_id)
+
+        except sqlite3.Error:
+            logger.exception("顔情報の読み込みに失敗しました")
+            show_error_dialog(page, "顔情報の取得に失敗しました。しばらくしてから再度お試しください。")
+            return
+
 
         all_page = int(((total - 1) / 100) + 1)
 
@@ -304,7 +324,7 @@ def faceView(page: ft.Page):
         page.open(dialog)
 
     # ===================================================
-    # レイアウト定義
+    # レイアウト定義、実際に配置
     # ===================================================
 
     #ラジオボタンを含めテーブル行を再定義

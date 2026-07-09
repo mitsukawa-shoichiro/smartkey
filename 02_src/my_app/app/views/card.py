@@ -1,391 +1,359 @@
+"""
+カード管理画面(GUI)
+
+カード情報(card)の一覧表示・ユーザー名でのプルダウン検索・
+ページ更新・複数選択削除を行う画面。
+
+"""
 import logging
-import flet as ft
-import db.repository as repo
 import asyncio
 import sqlite3
-# card管理画面
+import flet as ft
+import db.repository as repo
+from app.models.ENUMS import CardType
+from views.common import show_error_dialog, filter_user_options
 
 logger = logging.getLogger(__name__)
 
+# CardType(Enum) -> 画面表示用の日本語ラベル
+CARD_TYPE_LABELS = {
+    CardType.IC_CARD: "交通系ICカード",
+    CardType.CREDIT_CARD: "クレジットカード",
+    CardType.ELSE_CARD: "その他"
+}
+
+
 def cardView(page: ft.Page):
+    # ===================================================
+    # 状態変数
+    # ===================================================
+    offset = 0                     # 現在のページ番号(0始まり)
+    all_page = 1                   # 全ページ数
+    selected_user_id = None        # プルダウンで選択中のユーザーID(未選択ならNone=全件表示)
+    selected_ids = []              # チェックボックスで選択されたcard_idのリスト
+    checkbox_refs = {}             # {card_id: Checkboxコントロール} の対応表
 
-    try:
+    page.title = "カード管理画面"
 
+    # ===================================================
+    # ユーザー検索用プルダウンの候補データ
+    # ===================================================
+    # 画面表示のたびに最新のユーザー一覧を取得する
+    users = repo.get_all_users()
+
+    def on_user_selected(e: ft.ControlEvent):
+        """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
+        nonlocal selected_user_id, offset
+        selected_user_id = int(e.selection.key)
         offset = 0
-        all_page = 1
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
-        search_word = ""
+    def on_user_search_change(e: ft.ControlEvent):
+        """
+        入力のたびに候補を絞り込み直す。ひらがな/カタカナ/ローマ字の
+        表記ゆれをjapanese_text.matchesで吸収する(Flet標準の絞り込みでは非対応)。
+        """
+        search_user.suggestions = filter_user_options(users, e.control.value)
+        search_user.update()
 
-        page.title = "card管理画面"
+    search_user = ft.AutoComplete(
+        suggestions=filter_user_options(users, ""),
+        on_select=on_user_selected,
+        on_change=on_user_search_change,
+    )
 
-        # チェックボックスの参照を保持する辞書
-        checkbox_refs = {}
 
-        # 選択されたカードのIDを保持するリスト
-        selected_ids = []
+    # ===================================================
+    # UIコントロールの定義
+    # ===================================================
+    # ダイアログの定義
+    dialog = ft.AlertDialog(modal=True)
 
-        dialog = ft.AlertDialog(
-            modal=True,
-        )
+    # カラム定義
+    column = ft.Column(controls=[], spacing=16, expand=True)
 
-        column = ft.Column(
-            controls=[],
-            spacing=16,
-            expand=True,
-        )
+    # ラジオボタングループの定義
+    radio_group = ft.RadioGroup(
+        content=column,
+        on_change=lambda e: print(f"選ばれたID: {radio_group.value}")
+    )
 
-        radio_group = ft.RadioGroup(
-            content=column,
-            on_change=lambda e: print(f"選ばれたID: {radio_group.value}")
-        )
+    # 選択されたユーザーの定義
+    def on_user_selected(e: ft.ControlEvent):
+        """プルダウンでユーザーが選択された時: そのuser_idで絞り込み検索する"""
+        nonlocal selected_user_id, offset
+        selected_user_id = int(e.selection.key)
+        offset = 0
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
-        card_name = ft.TextField(label="カード名検索", autofocus=True,
-                                on_submit=lambda e: search(e),
-                                max_length=50)
-        search_btn = ft.ElevatedButton(
-            content=ft.Icon(ft.Icons.SEARCH, size=30, color=ft.Colors.WHITE),
-            on_click=lambda e: search(e),
-            width=40,
-            height=48,
-            bgcolor=ft.Colors.LIGHT_BLUE,
-            style=ft.ButtonStyle(
-                shape=ft.RoundedRectangleBorder(
-                    radius=0),
-                padding=ft.padding.all(0)
-            ),
-        )
+    # プルダウン定義
+    user_search = ft.AutoComplete(
+        suggestions=autocomplete_options,
+        on_select=on_user_selected,
+    )
 
-        async def refresh(e):
-            nonlocal search_word, offset, reset_btn
-            reset_btn.disabled = True
-            page.update()
-
-            search_word = ""
-            table.sort_ascending = True
-            card_name.value = ""
-            card_name.focus()
-            offset = 0
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
-
-            await asyncio.sleep(0.2)
-
-            reset_btn.disabled = False
-            page.update()
-
-        async def on_refresh(e):
-            await refresh(e)
-
-        async def sort_table(e):
-            nonlocal offset
-            table.sort_ascending = not table.sort_ascending
-            offset = 0
-            scroll_table.visible = False
-            scroll_table.update()
-            await asyncio.sleep(0.01)
-            scroll_table.visible = True
-            scroll_table.update()
-            load_table()
-
-        async def on_sort(e):
-            await sort_table(e)
-
-        reset_btn = ft.ElevatedButton(content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
-                                    on_click=on_refresh,
-                                    bgcolor=ft.Colors.RED_50,
-                                    width=60,
-                                    height=30,
-                                    style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(
-                radius=0),
+    # リセットボタン定義
+    reset_btn = ft.ElevatedButton(
+        content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
+        on_click=lambda e: page.run_task(refresh, e),
+        bgcolor=ft.Colors.RED_50,
+        width=60,
+        height=30,
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=0),
             padding=ft.padding.all(0)
-        ),)
+        ),
+    )
 
-        search_zone = ft.Row(
-            controls=[
-                card_name,
-                search_btn
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,
-            spacing=0
-        )
-        search_zone_row = ft.Row(
-            controls=[
-                search_zone,
-                reset_btn,
-            ],
-            alignment=ft.MainAxisAlignment.START,
-            spacing=50
+    # 検索欄定義
+    search_zone = ft.Row(
+        controls=[user_search],
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=0
+    )
 
-        )
-        prev_btn = ft.ElevatedButton("⬅ 前へ",   on_click=lambda e: prev_page(
-            e), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
-        page_label = ft.Text("")  # 後で更新
-        next_btn = ft.ElevatedButton("次へ ➡",   on_click=lambda e: next_page(
-            e), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
-        btn_zone = ft.Row([prev_btn, page_label, next_btn],
-                        alignment=ft.MainAxisAlignment.CENTER)
+    # リセットボタン含め検索欄を再定義
+    search_zone_row = ft.Row(
+        controls=[search_zone, reset_btn],
+        alignment=ft.MainAxisAlignment.START,
+        spacing=50
+    )
 
-        # カードの一覧を表示するためのテーブル
-        table = ft.DataTable(
-            columns=[
+    # 前ページ遷移ボタン定義
+    prev_btn = ft.ElevatedButton(
+        "⬅ 前へ", on_click=lambda e: prev_page(e),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6))
+    )
 
-                ft.DataColumn(ft.Text("ID"), on_sort=on_sort),
-                ft.DataColumn(ft.Text("カードの種類")),
-                ft.DataColumn(ft.Text("カード番号")),
-                ft.DataColumn(ft.Text("登録日")),
-                ft.DataColumn(ft.Text("利用者ID")),
-                ft.DataColumn(ft.ElevatedButton(
-                    "行を削除", on_click=lambda e: open_confirm_dialog(e), style=ft.ButtonStyle(
-                        shape=ft.RoundedRectangleBorder(
-                            radius=0),)))
-            ],
-            rows=[],
+    # 現在ページ定義
+    page_label = ft.Text("")  # load_table内で更新
 
-            sort_column_index=0,
-            sort_ascending=True,
-        )
+    # 次ページ遷移ボタン定義
+    next_btn = ft.ElevatedButton(
+        "次へ ➡", on_click=lambda e: next_page(e),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6))
+    )
 
-        def prev_page(e):
-            nonlocal offset, all_page
-            if offset != 0:
-                offset -= 1
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
+    # ボタン群をまとめて再定義
+    btn_zone = ft.Row([prev_btn, page_label, next_btn], alignment=ft.MainAxisAlignment.CENTER)
 
-        def next_page(e):
-            nonlocal offset, all_page
-            if (offset + 1) != all_page:
-                offset += 1
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
+    # テーブル本体の定義
+    table = ft.DataTable(
+        columns=[
+            ft.DataColumn(ft.Text("ID"), on_sort=lambda e: page.run_task(sort_table, e)),
+            ft.DataColumn(ft.Text("カードの種類")),
+            ft.DataColumn(ft.Text("登録日")),
+            ft.DataColumn(ft.ElevatedButton(
+                "行を削除", on_click=lambda e: open_confirm_dialog(e),
+                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+            ))
+        ],
+        rows=[],
+        sort_column_index=0,
+        sort_ascending=True,
+    )
 
-        # テーブルの行をロードする関数
+    # ===================================================
+    # 更新、ソート関数
+    # ===================================================
 
-        def load_table():
-            nonlocal search_word, offset, all_page
-            cards = repo.find_cards_by_user_name(
-                search_word, offset * 100)
-            all_page = int(((repo.count_all_card(search_word)[0] - 1) / 100) + 1)
-            checkbox_refs.clear()
-            table.rows.clear()
-            column.controls.clear()
-            column.controls.append(ft.Container(height=-2))
-            column.controls.append(ft.ElevatedButton(text="カード名編集",
-                                                    data=radio_group.value, on_click=open_edit_dialog, style=ft.ButtonStyle(
-                                                        shape=ft.RoundedRectangleBorder(
-                                                            radius=0),)))
+    async def refresh(e):
+        """リセットボタン: 検索条件・並び順・ページを全部初期状態に戻す"""
+        nonlocal selected_user_id, offset, reset_btn
+        reset_btn.disabled = True
+        page.update()
 
-            for card_id, card_type, card_number, register_date, user_id in cards:
-                cb = ft.Checkbox()
-                column.controls.append(
-                    ft.Radio(value=str(card_id)))
+        selected_user_id = None
+        table.sort_ascending = True
+        user_search.value = ""  # プルダウン入力欄のクリア
+        offset = 0
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
-                checkbox_refs[card_id] = cb
-                table.rows.append(
-                    ft.DataRow(
-                        cells=[
-                            ft.DataCell(ft.Text(f"{card_id:05d}", width=40)),
-                            ft.DataCell(ft.Text(card_type, width=100)),
-                            ft.DataCell(ft.Text(card_number, width=120)),
-                            ft.DataCell(ft.Text(register_date, width=80)),
-                            ft.DataCell(ft.Text(user_id, width=60)),
-                            ft.DataCell(cb),
-                        ]
-                    )
-                )
+        await asyncio.sleep(0.2)
+        reset_btn.disabled = False
+        page.update()
 
-            radio_group.value = cards[0][0] if cards else None
-            page_label.value = f"{offset+1} / {all_page} ページ"
-            prev_btn.disabled = offset == 0
-            next_btn.disabled = (offset + 1) == all_page
-            page.update()
-            print(f"tables!{table.sort_ascending}")
-            return
+    async def sort_table(e):
+        """IDカラムのヘッダークリック: 昇順/降順を切り替えて再読込"""
+        nonlocal offset
+        table.sort_ascending = not table.sort_ascending
+        offset = 0
+        scroll_table.visible = False
+        scroll_table.update()
+        await asyncio.sleep(0.01)
+        scroll_table.visible = True
+        scroll_table.update()
+        load_table()
 
-        # 選択した行を削除するための確認ダイアログを開く関数
+    # ===================================================
+    # ページ遷移関数
+    # ===================================================
 
-        def open_confirm_dialog(e):
+    def prev_page(e):
+        """前ページへ遷移"""
+        nonlocal offset
+        if offset != 0:
+            offset -= 1
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
-            nonlocal selected_ids
-            selected_ids = [card_id for card_id,
-                            cb in checkbox_refs.items() if cb.value]
+    def next_page(e):
+        """次ページへ遷移"""
+        nonlocal offset
+        if (offset + 1) != all_page:
+            offset += 1
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
-            if not selected_ids:
-                dialog.title = ft.Text("削除の確認")
-                dialog.content = ft.Text("削除する行が選択されていません。")
-                dialog.actions = [
-                    ft.TextButton("閉じる", autofocus=True,
-                                on_click=lambda e: page.close(dialog)),
-                ]
-                page.open(dialog)
+    # ===================================================
+    # テーブル読み込み関数
+    # ===================================================
 
-            else:
-                dialog.title = ft.Text("削除の確認")
-                dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しますか？")
-                dialog.actions = [
-                    ft.TextButton("キャンセル", autofocus=True,
-                                on_click=lambda e: page.close(dialog)),
-                    ft.TextButton("はい", on_click=confirm_delete),
-                ]
-                page.open(dialog)
-
-        # カード名を編集するためのダイアログを開く関数
-        def open_edit_dialog(e):
-            card_id = int(radio_group.value)
-            dialog.title = ft.Text("カード名編集")
-            card = repo.find_card_by_id(
-                card_id)
-            # name_and_type = card_name[0].split("_")
-            # user_name = ft.TextField(
-            #     label="ユーザー名", value=name_and_type[0], autofocus=True, max_length=50,  on_submit=lambda e: card_type.focus())
-            card_type = ft.TextField(
-                label="カードの種類", value=card[0], autofocus=True, data=card_id, max_length=50, on_submit=lambda e: confirm_edit(e))
-            # card_number = ft.TextField(
-            #     label = "カード番号", value = card[1]
-            # )
-            # user_name = ft.TextField(
-            #     label = "利用者ID", value = str(card[2])
-            # )
-
-            dialog.content = ft.Column(
-                [
-                    card_type,
-                    # card_number,
-                    # user_name,
-                ],
-                height=80,
-
-            )
-            dialog.actions = [
-                ft.TextButton("キャンセル", on_click=lambda e: page.close(dialog)),
-                ft.TextButton("保存", data=card_id,
-                            on_click=lambda e: confirm_edit(e)),
-            ]
-            page.open(dialog)
-
-        # 削除の確認ダイアログのアクション
-        def confirm_delete(e):
-            # card_ids = [repo.find_card_name_by_id(
-            #     card_id) for card_id in selected_ids]
-            page.open(dialog)
-            repo.delete_card_by_ids(selected_ids)
-            page.close(dialog)
-            load_table()
-            dialog.title = ft.Text("削除完了")
-            dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しました。")
-            dialog.actions = [
-                ft.TextButton("閉じる", autofocus=True,
-                            on_click=lambda e:  page.close(dialog)),
-            ]
-            for selected_id in selected_ids:
-                logger.info(
-                    f"{selected_id[0]} を削除しました。"
-                )
-
-            page.open(dialog)
-
-        # カード名を編集するためのダイアログのアクション
-        def confirm_edit(e):
-            card_id = e.control.data
-            if not dialog.content.controls[0].value or not dialog.content.controls[1].value:
-                page.close(dialog)
-                dialog.content = ft.Text("入力漏れがあります")
-                dialog.actions = [
-                    ft.TextButton(
-                        "閉じる", autofocus=True, on_click=lambda e: return_edit(e)),
-                ]
-                page.open(dialog)
-                return
-
-            # new_card_name = dialog.content.controls[0].value + \
-            #     "_" + dialog.content.controls[1].value
-            # old_card_name = repo.find_card_name_by_id(card_id)
-            # repo.update_card(card_id, card_type, card_number, user_id)
-            card_type = dialog.content.controls[0].value
-            card_number = dialog.content.controls[1].value
-            user_id = int(dialog.content.controls[2].value)
-
-            repo.update_card(
-                card_id,
-                card_type.value,
-                # card_number.value,
-                # int(user_id.value),
-            )
-            page.close(dialog)
-            # 編集後のテーブルを再読み込み
-            load_table()
-
-            # ダイアログを更新して完了メッセージを表示
-            dialog.title = ft.Text("編集完了")
-            dialog.content = ft.Text("カード情報を更新しました")
-            # dialog.content = ft.Text(
-            #     f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
-            # dialog.actions = [
-            #     ft.TextButton("閉じる", autofocus=True,
-            #                 on_click=lambda e: page.close(dialog)),
-            # ]
-            # logger.info(
-            #     f"カード名を '{old_card_name[0]}'から'{new_card_name}' に変更しました")
-            # page.open(dialog)
-
-
-        def return_edit(e):
-            page.close(dialog)
-            open_edit_dialog(e)
-        # 検索ボタンのクリックイベント
-
-        def search(e):
-            nonlocal search_word, offset
-            search_word = search_zone.controls[0].value
-            offset = 0
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
-
-        table_radio_box = ft.Row([
-            table,
-            ft.Container(width=0),  # テーブルとラジオボタンの間のスペース
-            radio_group
-        ], vertical_alignment=ft.CrossAxisAlignment.START)
-
-        scroll_table = ft.Column(
-            controls=[table_radio_box],
-            scroll=ft.ScrollMode.ALWAYS,
-            expand=True,
-
-        )
+    def load_table():
+        """
+        選択中のuser_id(無ければ全件)に基づいてカード情報を取得し、
+        テーブル・チェックボックス・ラジオボタンを再構築します。
+        """
+        nonlocal selected_user_id, offset, all_page
 
         try:
-            load_table()
-        except sqlite3.Error as e:
-            logger.error(f"カードテーブルの読み込みに失敗しました: {e}")
-            page.go("/index?error=カードテーブルの読み込みに失敗しました")
+            #全検索の場合
+            if selected_user_id is None:
+                cards = repo.find_all_cards(table.sort_ascending, offset * 100)
+                total = repo.count_all_card()
+            # 条件検索の場合
+            else:
+                cards = repo.find_cards_by_user_id(
+                    selected_user_id, table.sort_ascending, offset * 100)
+                total = repo.count_cards_by_user_id(selected_user_id)
+        except sqlite3.Error:
+            logger.exception("カード情報の読み込みに失敗しました")
+            show_error_dialog(page, "カード情報の取得に失敗しました。しばらくしてから再度お試しください。")
+            return
 
-        return ft.View(
-            "/card",
-            controls=[
-                search_zone_row,
-                ft.Text("カード一覧", size=30, weight=ft.FontWeight.BOLD),
-                ft.Container(height=10),
-                scroll_table,
-                btn_zone,
-                ft.Container(height=10),
-                ft.ElevatedButton(
-                    "戻る",
-                    icon=ft.Icons.ARROW_BACK,
-                    style=ft.ButtonStyle(
-                        shape=ft.RoundedRectangleBorder(radius=6),
-                    ),
-                    on_click=lambda e: page.go("/index"),
-                )
+        #諸パラメータ更新
+        all_page = int(((total - 1) / 100) + 1)
 
-            ],
-            padding=ft.Padding(left=120, top=20, right=0, bottom=50)
+        checkbox_refs.clear()
+        table.rows.clear()
+        column.controls.clear()
+        column.controls.append(ft.Container(height=-2))
 
+        # 該当カード情報分繰り返し
+        for card in cards:
+            # チェックボックスにID埋め込み
+            cb = ft.Checkbox()
+            column.controls.append(ft.Radio(value=str(card.id)))
+            checkbox_refs[card.id] = cb
 
-        )
-    except Exception as e:
-        logger.exception("カード管理画面の表示中にエラーが発生しました: %s", e)
-        page.go("/index?error=カード管理画面の表示中にエラーが発生しました")
-    finally:
+            # ENUMラベル変換
+            card_type_label = CARD_TYPE_LABELS.get(card.card_type, str(card.card_type))
+
+            # テーブルに情報を埋め込み
+            table.rows.append(
+                ft.DataRow(cells=[
+                    ft.DataCell(ft.Text(f"{card.id:05d}", width=40)),
+                    ft.DataCell(ft.Text(card_type_label, width=100)),
+                    ft.DataCell(ft.Text(card.register_date, width=80)),
+                    ft.DataCell(cb),
+                ])
+            )
+
+        #
+        radio_group.value = str(cards[0].id) if cards else None
+        page_label.value = f"{offset + 1} / {all_page} ページ"
+        prev_btn.disabled = offset == 0
+        next_btn.disabled = (offset + 1) == all_page
         page.update()
+
+    # ===================================================
+    # 削除
+    # ===================================================
+
+    def open_confirm_dialog(e):
+        """「行を削除」クリック: チェック済みの行を確認してから削除ダイアログを開く"""
+        nonlocal selected_ids
+        selected_ids = [card_id for card_id, cb in checkbox_refs.items() if cb.value]
+
+        if not selected_ids:
+            dialog.title = ft.Text("削除の確認")
+            dialog.content = ft.Text("削除する行が選択されていません。")
+            dialog.actions = [
+                ft.TextButton("閉じる", autofocus=True, on_click=lambda e: page.close(dialog)),
+            ]
+            page.open(dialog)
+        else:
+            dialog.title = ft.Text("削除の確認")
+            dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しますか?")
+            dialog.actions = [
+                ft.TextButton("キャンセル", autofocus=True, on_click=lambda e: page.close(dialog)),
+                ft.TextButton("はい", on_click=confirm_delete),
+            ]
+            page.open(dialog)
+
+    def confirm_delete(e):
+        """
+        削除確定: 選択されたcard_idを1件ずつ repo.delete_card に渡します。
+        """
+        try:
+            for card_id in selected_ids:
+                repo.delete_card(card_id)
+                logger.info(f"card_id={card_id}が削除されました")
+        except sqlite3.Error:
+            logger.exception("カード情報の削除に失敗しました")
+            page.close(dialog)
+            show_error_dialog(page, "削除に失敗しました。しばらくしてから再度お試しください。")
+            load_table()  # 途中まで消えている可能性があるので一覧を最新化しておく
+            return
+
+        load_table()
+
+        dialog.title = ft.Text("削除完了")
+        dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しました。")
+        dialog.actions = [
+            ft.TextButton("閉じる", autofocus=True, on_click=lambda e: page.close(dialog)),
+        ]
+        page.open(dialog)
+
+    # ===================================================
+    # レイアウト定義と配置
+    # ===================================================
+
+    #ラジオボックスをテーブルの隣に
+    table_radio_box = ft.Row(
+        [table, ft.Container(width=0), radio_group],
+        vertical_alignment=ft.CrossAxisAlignment.START
+    )
+
+    # スクロール化
+    scroll_table = ft.Column(
+        controls=[table_radio_box],
+        scroll=ft.ScrollMode.ALWAYS,
+        expand=True,
+    )
+
+    #テーブル読み込み
+    load_table()
+
+    #実際のページにする
+    return ft.View(
+        "/card",
+        controls=[
+            search_zone_row,
+            ft.Text("カード一覧", size=30, weight=ft.FontWeight.BOLD),
+            ft.Container(height=10),
+            scroll_table,
+            btn_zone,
+            ft.Container(height=10),
+            ft.ElevatedButton(
+                "戻る",
+                icon=ft.Icons.ARROW_BACK,
+                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
+                on_click=lambda e: page.go("/index"),
+            )
+        ],
+        padding=ft.Padding(left=120, top=20, right=0, bottom=50)
+    )
