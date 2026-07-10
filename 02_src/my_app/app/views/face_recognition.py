@@ -1,82 +1,177 @@
+"""
+顔認証管理画面(GUI)
+
+顔情報(face)の一覧表示・ユーザー名でのAutocomplete(プルダウン)検索・
+ページ管理・複数選択削除を行う画面。
+
+face自体は名前を持たない設計(名前はuserテーブル側)のため、
+「登録者名の編集」機能はこの画面には存在しません。飛ばしもしません。編集するものもないので致しません。
+"""
 import logging
-import flet as ft
-import service.db_manager as repo
 import asyncio
+import flet as ft
+import db.repository as repo
+import service.face_service as face_service
+import sqlite3
+from views.common import show_error_dialog, filter_user_options
 
-logger = logging.getLogger(__name__)#logに書き込む用
+logger = logging.getLogger(__name__)
 
-# card管理画面
 
 def faceView(page: ft.Page):
-    #region UI
-    offset = 0
-    all_page = 1
-
-    search_word = ""
+    # ===================================================
+    # 状態変数(宣言と初期値バインド)
+    # ===================================================
+    offset = 0                     # 現在のページ番号(0から)
+    all_page = 1                   # 全ページ数
+    selected_user_id = None        # Autocompleteで選択中のユーザーID(未選択ならNone=全件表示)
+    selected_ids = []              # チェックボックスで選択されたface_idのリスト
+    checkbox_refs = {}             # {face_id: Checkboxコントロール} の対応表
 
     page.title = "顔認証管理画面"
 
-    # チェックボックスの参照を保持する辞書
-    checkbox_refs = {}
+    # ===================================================
+    # ユーザー検索用プルダウンボックスの候補リスト
+    # ===================================================
+    # 画面表示のたびに最新のユーザー一覧を取得
+    users = repo.get_all_users()
 
-    # 選択されたカードのIDを保持するリスト
-    selected_ids = []
+    def on_user_selected(e: ft.ControlEvent):
+        """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
+        nonlocal selected_user_id, offset
+        selected_user_id = int(e.selection.key)
+        offset = 0
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
-    dialog = ft.AlertDialog(
-        modal=True,
+    def on_user_search_change(e: ft.ControlEvent):
+        """
+        入力のたびに候補を絞り込み直す。ひらがな/カタカナ/ローマ字の
+        表記ゆれをjapanese_text.matchesで吸収する(Flet標準の絞り込みでは非対応)。
+        """
+        search_user.suggestions = filter_user_options(users, e.control.value)
+        search_user.update()
+
+    search_user = ft.AutoComplete(
+        suggestions=filter_user_options(users, ""),
+        on_select=on_user_selected,
+        on_change=on_user_search_change,
     )
 
-    column = ft.Column(
-        controls=[],
-        spacing=16,
-        expand=True,
-    )
+    # ===================================================
+    # UIコントロールの定義
+    # ===================================================
+    #ダイアログ定義
+    dialog = ft.AlertDialog(modal=True)
 
+    #カラム定義
+    column = ft.Column(controls=[], spacing=16, expand=True)
+
+    #ラジオボタン定義
     radio_group = ft.RadioGroup(
         content=column,
         on_change=lambda e: print(f"選ばれたID: {radio_group.value}")
     )
 
-    face_name = ft.TextField(label="登録者検索", autofocus=True,
-                            on_submit=lambda e: search(e),
-                            max_length=50)
-    # endregion
-    search_btn = ft.ElevatedButton(
-        content=ft.Icon(ft.Icons.SEARCH, size=30, color=ft.Colors.WHITE),
-        on_click=lambda e: search(e),
-        width=40,
-        height=48,
-        bgcolor=ft.Colors.LIGHT_BLUE,
+    def on_user_selected(e: ft.ControlEvent):
+        """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
+
+        #スコープ外のグローバル変数を扱う
+        nonlocal selected_user_id, offset
+        #選択したIDをファイル内グローバル変数にバインド
+        selected_user_id = int(e.selection.key)
+        #ページ区切り再定義
+        offset = 0
+        #表を検索条件反映させた状態で再読み込み
+        load_table()
+        #遷移ページの再定義
+        scroll_table.scroll_to(offset=0, duration=0)
+
+    #条件リセットボタン定義
+    reset_btn = ft.ElevatedButton(
+        content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
+        on_click=lambda e: page.run_task(refresh, e),
+        bgcolor=ft.Colors.RED_50,
+        width=60,
+        height=30,
         style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(
-                radius=0),
+            shape=ft.RoundedRectangleBorder(radius=0),
             padding=ft.padding.all(0)
         ),
     )
 
-    #region Refresh
+    #検索窓定義
+    search_zone = ft.Row(
+        controls=[search_user],
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=0
+    )
+
+    #リセットボタン含めグループ化
+    search_zone_row = ft.Row(
+        controls=[search_zone, reset_btn],
+        alignment=ft.MainAxisAlignment.START,
+        spacing=50
+    )
+
+    #前ページ遷移ボタン定義
+    prev_btn = ft.ElevatedButton(
+        "⬅ 前へ", on_click=lambda e: prev_page(e),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6))
+    )
+
+    # 現在ページラベル定義：load_table内で更新
+    page_label = ft.Text("")
+
+    #次ページ遷移ボタン定義
+    next_btn = ft.ElevatedButton(
+        "次へ ➡", on_click=lambda e: next_page(e),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6))
+    )
+
+    #ボタン群定義
+    btn_zone = ft.Row([prev_btn, page_label, next_btn], alignment=ft.MainAxisAlignment.CENTER)
+
+    # 顔情報の一覧を表示するためのテーブル
+    table = ft.DataTable(
+        columns=[#一行に入る情報たち
+            ft.DataColumn(ft.Text("ID"), on_sort=lambda e: page.run_task(sort_table, e)),
+            ft.DataColumn(ft.Text("登録日")),
+            ft.DataColumn(ft.ElevatedButton(
+                "行を削除", on_click=lambda e: open_confirm_dialog(e),
+                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+            ))
+        ],
+        rows=[],
+        sort_column_index=0,
+        sort_ascending=True,
+    )
+
+    # ===================================================
+    # リセット、ソート関数
+    # ===================================================
+
     async def refresh(e):
-        nonlocal search_word, offset, reset_btn
+        """リセットボタン: 検索条件・並び順・ページを全部初期状態に戻す"""
+        #スコープ外のグローバル変数を扱う
+        nonlocal selected_user_id, offset, reset_btn
         reset_btn.disabled = True
         page.update()
 
-        search_word = ""
+        selected_user_id = None
         table.sort_ascending = True
-        face_name.value = ""
-        face_name.focus()
+        search_user.value = ""  # プルダウン入力欄のクリア
         offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
         await asyncio.sleep(0.2)
-
         reset_btn.disabled = False
         page.update()
 
-    async def on_refresh(e):
-        await refresh(e)
-
     async def sort_table(e):
+        """IDカラムのヘッダークリック: 昇順/降順を切り替えて再読込"""
+        #スコープ外のグローバル変数を扱う
         nonlocal offset
         table.sort_ascending = not table.sort_ascending
         offset = 0
@@ -87,263 +182,168 @@ def faceView(page: ft.Page):
         scroll_table.update()
         load_table()
 
-    async def on_sort(e):
-        await sort_table(e)
-    #endregion
-
-    #region Search
-    def search(e):
-        nonlocal search_word, offset
-        search_word = search_zone.controls[0].value
-        offset = 0
-        load_table()
-        scroll_table.scroll_to(offset=0, duration=0)
-
-    reset_btn = ft.ElevatedButton(content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
-                                on_click=on_refresh,
-                                bgcolor=ft.Colors.RED_50,
-                                width=60,
-                                height=30,
-                                style=ft.ButtonStyle(
-        shape=ft.RoundedRectangleBorder(
-            radius=0),
-        padding=ft.padding.all(0)
-    ),)
-
-    search_zone = ft.Row(
-        controls=[
-            face_name,
-            search_btn
-        ],
-        alignment=ft.MainAxisAlignment.CENTER,
-        spacing=0
-    )
-    search_zone_row = ft.Row(
-        controls=[
-            search_zone,
-            reset_btn,
-        ],
-        alignment=ft.MainAxisAlignment.START,
-        spacing=50
-
-    )
-    prev_btn = ft.ElevatedButton("⬅ 前へ",   on_click=lambda e: prev_page(
-        e), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
-    page_label = ft.Text("")  # 後で更新
-    next_btn = ft.ElevatedButton("次へ ➡",   on_click=lambda e: next_page(
-        e), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
-    btn_zone = ft.Row([prev_btn, page_label, next_btn],
-                    alignment=ft.MainAxisAlignment.CENTER)
-
-    # カードの一覧を表示するためのテーブル
-    table = ft.DataTable(
-        columns=[
-
-            ft.DataColumn(ft.Text("ID"), on_sort=on_sort),
-            ft.DataColumn(ft.Text("名前")),
-            ft.DataColumn(ft.Text("名前_ローマ字")),
-            ft.DataColumn(ft.Text("登録日")),
-            ft.DataColumn(ft.ElevatedButton(
-                "行を削除", on_click=lambda e: open_confirm_dialog(e), style=ft.ButtonStyle(
-                    shape=ft.RoundedRectangleBorder(
-                        radius=0),)))
-        ],
-        rows=[],
-
-        sort_column_index=0,
-        sort_ascending=True,
-    )
+    # ===================================================
+    # ページ送り関数
+    # ===================================================
 
     def prev_page(e):
-        nonlocal offset, all_page
+        #スコープ外のグローバル変数を扱う
+        nonlocal offset
         if offset != 0:
             offset -= 1
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
     def next_page(e):
-        nonlocal offset, all_page
+        #スコープ外のグローバル変数を扱う
+        nonlocal offset
         if (offset + 1) != all_page:
             offset += 1
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
-    # テーブルの行をロードする関数
+    # ===================================================
+    # テーブル読み込み関数
+    # ===================================================
 
     def load_table():
-        nonlocal search_word, offset, all_page
-        faces = repo.find_by_face_name(
-            search_word, table.sort_ascending, offset * 100)
-        all_page = int(((repo.count_all_face(search_word) - 1) / 100) + 1)
+        """
+        選択中のuser_id(無ければ全件)に基づいて顔情報を取得し、
+        テーブル・チェックボックス・ラジオボタンを再構築する。
+        """
+        #スコープ外のグローバル変数を扱う
+        nonlocal selected_user_id, offset, all_page
+
+        try:
+            #絞り込み条件なし
+            if selected_user_id is None:
+                faces = repo.find_all_faces(table.sort_ascending, offset * 100)
+                total = repo.count_all_face()
+            #絞り込み条件あり
+            else:
+                faces = repo.find_faces_by_user_id(
+                    selected_user_id, table.sort_ascending, offset * 100)
+                total = repo.count_faces_by_user_id(selected_user_id)
+
+        except sqlite3.Error:
+            logger.exception("顔情報の読み込みに失敗しました")
+            show_error_dialog(page, "顔情報の取得に失敗しました。しばらくしてから再度お試しください。")
+            return
+
+
+        all_page = int(((total - 1) / 100) + 1)
+
+        #初期化
         checkbox_refs.clear()
         table.rows.clear()
         column.controls.clear()
         column.controls.append(ft.Container(height=-2))
-        column.controls.append(ft.ElevatedButton(text="登録者名編集",
-                                                data=radio_group.value, on_click=open_edit_dialog, style=ft.ButtonStyle(
-                                                    shape=ft.RoundedRectangleBorder(
-                                                        radius=0),)))
 
-        for face_id, face_name, face_name_roma, register_date in faces:
+        #テーブル表示関数をヒットした件数分回す
+        for face in faces:
+            #チェックボックス定義、ID埋め込み
             cb = ft.Checkbox()
-            column.controls.append(
-                ft.Radio(value=str(face_id)))
+            column.controls.append(ft.Radio(value=str(face.id)))
+            checkbox_refs[face.id] = cb
 
-            checkbox_refs[face_id] = cb
+            #テーブル一行の表示
             table.rows.append(
-                ft.DataRow(
-                    cells=[
-                        ft.DataCell(ft.Text(f"{face_id:05d}", width=40)),
-                        ft.DataCell(ft.Text(face_name, width=140)),
-                        ft.DataCell(ft.Text(face_name_roma, width=140)),
-                        ft.DataCell(ft.Text(register_date, width=80)),
-                        ft.DataCell(cb),
-                    ]
-                )
+                ft.DataRow(cells=[
+                    ft.DataCell(ft.Text(f"{face.id:05d}", width=40)),
+                    ft.DataCell(ft.Text(face.register_date, width=80)),
+                    ft.DataCell(cb),
+                ])
             )
 
-        radio_group.value = faces[0][0] if faces else None
-        page_label.value = f"{offset+1} / {all_page} ページ"
+        #その他項目の設定
+        radio_group.value = str(faces[0].id) if faces else None
+        page_label.value = f"{offset + 1} / {all_page} ページ"
         prev_btn.disabled = offset == 0
         next_btn.disabled = (offset + 1) == all_page
+
+        #実際のページに
         page.update()
-        print(f"tables!{table.sort_ascending}")
-        return
-    #endregion
 
-    # 選択した行を削除するための確認ダイアログを開く関数
+    # ===================================================
+    # 削除
+    # ===================================================
 
-    #region edit
     def open_confirm_dialog(e):
+        """「行を削除」クリック: チェック済みの行を確認してから削除ダイアログを開く"""
 
+        #スコープ外のグローバル変数を扱う
         nonlocal selected_ids
-        selected_ids = [face_id for face_id,
-                        cb in checkbox_refs.items() if cb.value]
+        #チェックボックスから削除項目のID受け取り
+        selected_ids = [face_id for face_id, cb in checkbox_refs.items() if cb.value]
 
+        #削除項目無しで削除ボタンが押された
         if not selected_ids:
             dialog.title = ft.Text("削除の確認")
             dialog.content = ft.Text("削除する行が選択されていません。")
+            #ここがページ遷移
             dialog.actions = [
-                ft.TextButton("閉じる", autofocus=True,
-                            on_click=lambda e: page.close(dialog)),
+                ft.TextButton("閉じる", autofocus=True, on_click=lambda e: page.close(dialog)),
             ]
+            #実際のページに
             page.open(dialog)
 
+        #削除確認
         else:
             dialog.title = ft.Text("削除の確認")
-            dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しますか？")
+            dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しますか?")
+            #ページ遷移(分岐)
             dialog.actions = [
-                ft.TextButton("キャンセル", autofocus=True,
-                            on_click=lambda e: page.close(dialog)),
+                ft.TextButton("キャンセル", autofocus=True, on_click=lambda e: page.close(dialog)),
                 ft.TextButton("はい", on_click=confirm_delete),
             ]
+            #実際のページに
             page.open(dialog)
-    # 削除の確認ダイアログのアクション
+
     def confirm_delete(e):
-        face_datas = [repo.find_face_name_and_roma_by_id(
-            face_id) for face_id in selected_ids]
-        page.open(dialog)
-        repo.delete_face_by_ids(selected_ids)#ここに顔写真削除の関数呼び出して～～～！！！
-        page.close(dialog)
+        """
+        削除確定: 選択されたface_idを1件ずつ face_service.remove_face に渡す。
+        (画像ファイルとDB行の両方をまたぐ後始末はservice層の責務のため)
+        """
+
+        #削除処理、ログ出力
+        for face_id in selected_ids:
+            face_service.remove_face(face_id)
+            logger.info(f"face_id={face_id}が削除されました")
+
+        #削除後テーブル読み込み
         load_table()
+
+        #ダイアログ表示
         dialog.title = ft.Text("削除完了")
         dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しました。")
+        #ダイアログ終了ボタン定義
         dialog.actions = [
-            ft.TextButton("閉じる", autofocus=True,
-                        on_click=lambda e:  page.close(dialog)),
+            ft.TextButton("閉じる", autofocus=True, on_click=lambda e: page.close(dialog)),
         ]
-        for face_data in face_datas:
-            logger.info(f"{face_data[1]}が削除されました")
-
+        #実際のページに
         page.open(dialog)
 
-    # TODO 编辑记得把图片名字也改了
-    def open_edit_dialog(e):
-        face_id = int(radio_group.value)
-        dialog.title = ft.Text("登録者名編集")
-        face_data_tuple = repo.find_face_name_and_roma_by_id(
-            face_id)
-        user_name = ft.TextField(
-            label="登録者名", value=face_data_tuple[0], autofocus=True, max_length=50,  on_submit=lambda e: card_type.focus())
-        card_type = ft.TextField(
-            label="登録者名(ローマ字)", value=face_data_tuple[1], data=face_id, max_length=50, on_submit=lambda e: confirm_edit(e))
+    # ===================================================
+    # レイアウト定義、実際に配置
+    # ===================================================
 
-        dialog.content = ft.Column(
-            [
-                user_name,
-                card_type
+    #ラジオボタンを含めテーブル行を再定義
+    table_radio_box = ft.Row(
+        [table, ft.Container(width=0), radio_group],
+        vertical_alignment=ft.CrossAxisAlignment.START
+    )
 
-            ],
-            height=80,
-
-        )
-        dialog.actions = [
-            ft.TextButton("キャンセル", on_click=lambda e: page.close(dialog)),
-            ft.TextButton("保存", data=face_id,
-                        on_click=lambda e: confirm_edit(e)),
-        ]
-        page.open(dialog)
-
-
-
-
-    # 変更　二つ
-    def confirm_edit(e):
-        face_id = e.control.data
-        if not dialog.content.controls[0].value or not dialog.content.controls[1].value:
-            page.close(dialog)
-            dialog.content = ft.Text("入力漏れがあります")
-            dialog.actions = [
-                ft.TextButton(
-                    "閉じる", autofocus=True, on_click=lambda e: return_edit(e)),
-            ]
-            page.open(dialog)
-            return
-
-        new_face_name = dialog.content.controls[0].value
-        new_face_name_roma = dialog.content.controls[1].value
-        old_face_data = repo.find_face_name_and_roma_by_id(face_id)
-        repo.update_face_name(face_id, new_face_name,new_face_name_roma)
-        page.close(dialog)
-        # 編集後のテーブルを再読み込み
-        load_table()
-
-        # ダイアログを更新して完了メッセージを表示
-        dialog.title = ft.Text("編集完了")
-        dialog.content = ft.Text(
-            f"登録者名を '{old_face_data[0]}'から'{new_face_name}' に変更しました\n" +
-            f"登録者名ローマ字を '{old_face_data[1]}'から'{new_face_name_roma}' に変更しました"
-        )
-        dialog.actions = [
-            ft.TextButton("閉じる", autofocus=True,
-                        on_click=lambda e: page.close(dialog)),
-        ]
-        logging.info(
-            f"登録者名を '{old_face_data[0]}'から'{new_face_name}' に変更しました")
-        page.open(dialog)
-
-    def return_edit(e):
-        page.close(dialog)
-        open_edit_dialog(e)
-    # 検索ボタンのクリックイベント
-    #endregion
-
-
-    table_radio_box = ft.Row([
-        table,
-        ft.Container(width=0),  # テーブルとラジオボタンの間のスペース
-        radio_group
-    ], vertical_alignment=ft.CrossAxisAlignment.START)
-
+    #スクロール可能の定義
     scroll_table = ft.Column(
         controls=[table_radio_box],
         scroll=ft.ScrollMode.ALWAYS,
         expand=True,
-
     )
 
-
+    #テーブル本体
     load_table()
+
+    #ここでページ統合して表示
     return ft.View(
         "/face_recognition",
         controls=[
@@ -356,14 +356,9 @@ def faceView(page: ft.Page):
             ft.ElevatedButton(
                 "戻る",
                 icon=ft.Icons.ARROW_BACK,
-                style=ft.ButtonStyle(
-                    shape=ft.RoundedRectangleBorder(radius=6),
-                ),
+                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
                 on_click=lambda e: page.go("/index"),
             )
-
         ],
         padding=ft.Padding(left=120, top=20, right=0, bottom=50)
-
-
     )

@@ -57,8 +57,8 @@ def create_database():
     c.execute("""
         CREATE TABLE IF NOT EXISTS user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_name_jpn TEXT NOT NULL,
-            user_name_roma TEXT NOT NULL
+            user_name TEXT NOT NULL,
+            user_kana TEXT NOT NULL
         )
     """)
 
@@ -82,7 +82,7 @@ def create_database():
             method VARCHAR(32) NOT NULL,
             event_type INTEGER,
             user_id INTEGER,              -- 生きているuserへの参照(消えたらNULLでよい)
-            user_name_jpn TEXT,           -- ログ作成時点の名前のコピー(消えても残る)
+            user_name TEXT,           -- ログ作成時点の名前のコピー(消えても残る)
             card_id INTEGER,
             face_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL,
@@ -117,15 +117,6 @@ def create_database():
 
     conn.commit()
     conn.close()
-
-
-
-def insert_sameplelog_face(card_name, card_number):
-
-    c.execute(
-    "INSERT INTO access_logs (face_id, method, event_type) VALUES (?, ?, ?)",
-    (1, "顔認証", 1)
-    )
 
 def main():#バック開始に呼び出されるinit作業
     create_database()
