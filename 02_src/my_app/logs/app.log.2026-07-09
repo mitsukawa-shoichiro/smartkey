@@ -1,0 +1,169 @@
+2026-07-09 15:35:21 [INFO] logs.log_config_app:37 - Log configuration loaded successfully
+2026-07-09 15:35:21 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\main.pyw", line 5, in <module>
+    import flet as ft
+ModuleNotFoundError: No module named 'flet'
+2026-07-09 16:54:44 [INFO] logs.log_config_app:37 - Log configuration loaded successfully
+2026-07-09 16:54:44 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\main.pyw", line 5, in <module>
+    import flet as ft
+ModuleNotFoundError: No module named 'flet'
+2026-07-09 17:19:00 [INFO] logs.log_config_app:37 - Log configuration loaded successfully
+2026-07-09 17:19:01 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\main.pyw", line 6, in <module>
+    from app.views.router import route
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\router.py", line 4, in <module>
+    import app.views.card as card
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\card.py", line 3, in <module>
+    import db.repository as repo
+  File "C:\SmartKey\smartkey\02_src\my_app\db\repository.py", line 9, in <module>
+    from app.models.access_log import AccessLog  # データクラス
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\SmartKey\smartkey\02_src\my_app\app\models\access_log.py", line 4, in <module>
+    from ENUMS import EventType
+ModuleNotFoundError: No module named 'ENUMS'
+2026-07-09 17:23:55 [INFO] logs.log_config_app:37 - Log configuration loaded successfully
+2026-07-09 17:23:59 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\main.pyw", line 6, in <module>
+    from app.views.router import route
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\router.py", line 12, in <module>
+    import app.views.camera_register as camera_register
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\camera_register.py", line 5, in <module>
+    import face_recognition
+ModuleNotFoundError: No module named 'face_recognition'
+2026-07-09 17:54:23 [INFO] logs.log_config_app:37 - Log configuration loaded successfully
+2026-07-09 17:54:28 [INFO] flet:371 - Assets path configured: C:\SmartKey\smartkey\02_src\my_app\app
+2026-07-09 17:54:28 [INFO] flet:61 - Starting up TCP server on localhost:65168
+2026-07-09 17:54:28 [INFO] flet:171 - Flet app has started...
+2026-07-09 17:54:40 [INFO] flet:131 - App URL: tcp://localhost:65168
+2026-07-09 17:54:40 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-07-09 17:54:40 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-09 17:54:40 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-09 17:54:41 [INFO] flet:240 - App session started
+2026-07-09 17:54:41 [INFO] __main__:37 - GUIが起動されました
+2026-07-09 17:54:41 [INFO] app.views.router:28 - /に遷移しました
+2026-07-09 17:54:56 [INFO] app.views.login:48 - ログイン成功
+2026-07-09 17:54:56 [INFO] app.views.router:28 - /indexに遷移しました
+2026-07-09 17:54:56 [INFO] app.views.router:32 - index_viewに遷移しました。error_message=
+2026-07-09 17:55:27 [INFO] app.views.router:28 - /registerに遷移しました
+2026-07-09 17:55:27 [INFO] app.views.router:39 - registerに遷移しました
+2026-07-09 17:55:27 [INFO] app.views.register:39 - Sent message: registering
+2026-07-09 17:55:31 [INFO] app.views.register:29 - Sent message: authenticating
+2026-07-09 17:55:31 [INFO] app.views.router:28 - /indexに遷移しました
+2026-07-09 17:55:31 [INFO] app.views.router:32 - index_viewに遷移しました。error_message=
+2026-07-09 17:55:32 [INFO] app.views.router:28 - /accesslogsに遷移しました
+2026-07-09 17:55:32 [ERROR] db.repository:545 - アクセスログ件数取得エラー: card_name=%, method=%, event_type=None
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\db\repository.py", line 539, in count_filtered_logs
+    c.execute(query, (
+sqlite3.OperationalError: no such table: access_logs
+2026-07-09 17:55:32 [ERROR] app.views.accesslogs:455 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\accesslogs.py", line 365, in accesslogs
+    calc_total_pages(repo.count_filtered_logs())
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\SmartKey\smartkey\02_src\my_app\db\repository.py", line 539, in count_filtered_logs
+    c.execute(query, (
+sqlite3.OperationalError: no such table: access_logs
+2026-07-09 17:55:32 [INFO] app.views.router:28 - /index?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-07-09 17:55:32 [INFO] app.views.router:32 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-07-09 17:55:32 [ERROR] asyncio:1785 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\router.py", line 64, in page_route_change
+    page.update()
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-07-09 17:55:41 [INFO] app.views.router:28 - /cardに遷移しました
+2026-07-09 17:55:41 [ERROR] app.views.card:388 - カード管理画面の表示中にエラーが発生しました: 'str' object is not callable
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\card.py", line 359, in cardView
+    load_table()
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\card.py", line 167, in load_table
+    cards = repo.find_cards_by_user_name(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\SmartKey\smartkey\02_src\my_app\db\repository.py", line 325, in find_cards_by_user_name
+    c.executemany("""
+                  ^^^
+TypeError: 'str' object is not callable
+2026-07-09 17:55:41 [ERROR] asyncio:1785 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\router.py", line 64, in page_route_change
+    page.update()
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-07-09 17:55:41 [INFO] app.views.router:28 - /index?error=カード管理画面の表示中にエラーが発生しましたに遷移しました
+2026-07-09 17:55:41 [INFO] app.views.router:32 - index_viewに遷移しました。error_message=カード管理画面の表示中にエラーが発生しました
+2026-07-09 17:55:41 [INFO] app.views.router:28 - /cardに遷移しました
+2026-07-09 17:55:41 [ERROR] app.views.card:388 - カード管理画面の表示中にエラーが発生しました: 'str' object is not callable
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\card.py", line 359, in cardView
+    load_table()
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\card.py", line 167, in load_table
+    cards = repo.find_cards_by_user_name(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\SmartKey\smartkey\02_src\my_app\db\repository.py", line 325, in find_cards_by_user_name
+    c.executemany("""
+                  ^^^
+TypeError: 'str' object is not callable
+2026-07-09 17:55:41 [ERROR] asyncio:1785 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+  File "C:\SmartKey\smartkey\02_src\my_app\app\views\router.py", line 64, in page_route_change
+    page.update()
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-07-09 17:55:41 [INFO] app.views.router:28 - /index?error=カード管理画面の表示中にエラーが発生しましたに遷移しました
+2026-07-09 17:55:41 [INFO] app.views.router:32 - index_viewに遷移しました。error_message=カード管理画面の表示中にエラーが発生しました
+2026-07-09 18:01:36 [INFO] __main__:52 - Sent message: authenticating
+2026-07-09 18:01:36 [INFO] __main__:56 - GUIを終了しました

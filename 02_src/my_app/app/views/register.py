@@ -16,18 +16,18 @@ logger = logging.getLogger(__name__)
 
 def registering(page: ft.Page):
     try:
-        global stop_event, thread_handle
+        global stop_event, thread_handle  #グローバル変数として2変数を指定
 
-        def stop_loop(e):
+        def stop_loop(e):                               #stop_buttonをクリックした際のみここに来る
 
             stop_event.set()
             try:
 
-                sock.connect((HOST, PORT))
+                sock.connect((HOST, PORT))              #HOST,PORTはタプルに指定。変更不能
                 msg = "authenticating"
-                sock.sendall(msg.encode('utf-8'))
+                sock.sendall(msg.encode('utf-8'))       #socket通信では送れない文字列をutf-8で送信可能にしている
                 logger.info(f"Sent message: {msg}")
-            except Exception as e:
+            except Exception as e:                      #どのような例外でもeという名前で受け取る
                 logger.error(f"通信エラー: {e}")
             page.go("/index")
 
@@ -40,8 +40,8 @@ def registering(page: ft.Page):
         except Exception as e:
             logger.error(f"通信エラー: {e}")
 
-        page.vertical_alignment = ft.MainAxisAlignment.CENTER
-        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        page.vertical_alignment = ft.MainAxisAlignment.CENTER       #上下方向(vertical)は中央寄せで表示
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER    #水平方向(horizontal)も中央寄せで表示
         page.title = "ICカード情報読み込み中"
 
         loading_text = ft.Text("30秒以内に登録したいカードを\n出口のカードリーダーにかざしてください", size=35,
@@ -51,12 +51,13 @@ def registering(page: ft.Page):
             color=ft.Colors.LIGHT_BLUE_ACCENT,
             animating=True,
         )
+        #ローディング画面でくるくる回る演出が入る
 
         stop_btn = ft.Container(
             content=ft.TextButton(
                 text="キャンセル",
                 icon=ft.Icons.STOP,
-                on_click=stop_loop,
+                on_click=stop_loop,                 #クリックされた時のみstop_loopを呼ぶため()をつけない
                 style=ft.ButtonStyle(
                     shape=ft.RoundedRectangleBorder(radius=10),
                     color=ft.Colors.RED,
@@ -69,10 +70,10 @@ def registering(page: ft.Page):
             height=100,
             width=200,
             fit=ft.ImageFit.CONTAIN,
-
+            #画像ファイルの表示
 
         )
-        return ft.View(
+        return ft.View(                                                     #登録画面(View)を返す
             "/register",
             controls=[
                 ft.Container(
@@ -95,10 +96,10 @@ def registering(page: ft.Page):
             ],
         )
     except Exception as e:
-        logger.exception("カード登録画面の表示中にエラーが発生しました: %s", e)
+        logger.exception("カード登録画面の表示中にエラーが発生しました: %s", e)     #スタックトレースも含めて出力される
         page.go("/index?error=カード登録画面の表示中にエラーが発生しました")
 
-    finally:
+    finally:                #例外の有無にかかわらず実行される
         page.update()
 
 
@@ -211,7 +212,7 @@ def run_async_delayed_transition(page):
 
 
 def register_input(page: ft.Page):
-    page.vertical_alignment = ft.MainAxisAlignment.START
+    page.vertical_alignment = ft.MainAxisAlignment.START        #画面を上に寄せて表示
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     button_column = ft.Column(
@@ -223,7 +224,7 @@ def register_input(page: ft.Page):
                 style=ft.ButtonStyle(
                     shape=ft.RoundedRectangleBorder(radius=6),
                 ),
-                on_click=lambda e: open_add_confirm_dialog(e),
+                on_click=lambda e: open_add_confirm_dialog(e),      #無名関数でクリック時にopen_add_confirm_dialogを呼ぶ
             ),
             ft.ElevatedButton(
                 "キャンセル",
