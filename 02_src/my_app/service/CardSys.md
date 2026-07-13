@@ -29,8 +29,8 @@
 if SERVICE_PATH not in sys.path:
 
    sys.path.insert(0, SERVICE_PATH)
-    
-from service import card_sys
+
+from my_app.service import card_sys
 
 ## 状態を「登録」に設定
 card_sys.set_state("registering")

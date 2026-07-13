@@ -7,7 +7,7 @@ import json
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
-import logs.log_config_service
+import my_app.logs.log_config_service
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'mail.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:

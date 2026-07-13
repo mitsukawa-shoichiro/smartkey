@@ -6,10 +6,10 @@ import threading
 import queue
 from datetime import datetime
 import tempfile, cv2, os
-import app.models.db_manager as db
+import my_app.models.db_manager as db
 import random
 
-from app.utils.front_camera_module import CameraWorker_Front, CaptureBuffer
+from my_app.app.utils.front_camera_module import CameraWorker_Front, CaptureBuffer
 
 #region util
 import shutil
@@ -26,7 +26,7 @@ def SaveFaceData(src_path: str, new_name: str,target_dir=savedir) :
 
     _, ext = os.path.splitext(src_path)
     if not ext:
-        ext = ".jpg"  
+        ext = ".jpg"
 
     # 連番で空き名を探す
     counter = 1
@@ -69,7 +69,7 @@ def face_register_view(page: ft.Page) -> ft.View:
     def __cleanup(_=None):
 
         CameraWorker_Front.instance.close_camera = True
-        
+
     def capture_one(_):
         CameraWorker_Front.instance.front_capture_photo()
         if len(CaptureBuffer.files) > 0:
@@ -120,7 +120,7 @@ def face_register_view(page: ft.Page) -> ft.View:
                             size=12,
                             color=ft.Colors.BLUE_GREY_600,
                             text_align=ft.TextAlign.CENTER,
-                        ),             
+                        ),
                         ft.Text(
                             "または、本人登録画面で『キャンセル』を押してやり直すこともできます。",
                             size=12,
@@ -152,7 +152,7 @@ def face_register_view(page: ft.Page) -> ft.View:
     return v
     #endregion
 
-    
+
 # views/face_register.py 内の face_register_register
 import flet as ft
 
@@ -244,7 +244,7 @@ def face_register_register(page: ft.Page) -> ft.View:
         import re
         def is_romaji(s):
             return bool(re.fullmatch(r"[A-Za-z_]+", s))
-        
+
         if not is_romaji(user_name_romaji.value):
             add_confirm_dialog.title = ft.Text("エラー")
             add_confirm_dialog.content = ft.Text(
@@ -286,7 +286,7 @@ def face_register_register(page: ft.Page) -> ft.View:
     def open_cancel_confirm_dialog(e):
         add_confirm_dialog.title = ft.Text("キャンセル確認")
         add_confirm_dialog.content = ft.Text("登録をキャンセルしますか？（一時画像は残ります）")
-        add_confirm_dialog.actions = [  
+        add_confirm_dialog.actions = [
             ft.TextButton("はい", on_click=lambda e: page.go("/face_register")),
             ft.TextButton("いいえ", on_click=lambda e: page.close(add_confirm_dialog)),
         ]

@@ -1,17 +1,17 @@
 import flet as ft
-import app.views.login as login
-import app.views.index as index
-import app.views.card as card
-import app.views.accesslogs as accesslogs
-import app.views.register as register
+import my_app.app.views.login as login
+import my_app.app.views.index as index
+import my_app.app.views.card as card
+import my_app.app.views.accesslogs as accesslogs
+import my_app.app.views.register as register
 
-import app.views.face_register as face_register
-import app.views.face_recognition as face_recognition
+import my_app.app.views.face_register as face_register
+import my_app.app.views.face_recognition as face_recognition
 
-import app.views.camera_regist as camera_register
+import my_app.app.views.camera_regist as camera_register
 
 import threading
-from app.utils.thread_state import thread_handle, stop_event
+from my_app.app.utils.thread_state import thread_handle, stop_event
 import logging
 
 
@@ -40,7 +40,7 @@ def route(page: ft.Page):
             thread_handle.start()
         elif page.route == "/register/input":
             page.views.append(register.register_input(page))
-        
+
 
         elif page.route == "/face_register":
             page.views.append(face_register.face_register_view(page))
@@ -52,6 +52,6 @@ def route(page: ft.Page):
 
         elif page.route == "/camera_register":
             page.views.append(camera_register.camera_regist_view(page))
-        
+
         page.update()
     page.on_route_change = page_route_change

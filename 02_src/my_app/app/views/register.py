@@ -19,8 +19,8 @@ import threading
 import db.repository as repo
 from my_app.service.daemon_bridge import card_register_service as register_service
 from my_app.service.daemon_bridge import thread_state, register_listener
-from my_app.app.models.ENUMS import CardType
-from views.common import show_error_dialog, filter_user_options
+from my_app.models.ENUMS import CardType
+from my_app.app.views.common import show_error_dialog, filter_user_options
 
 logger = logging.getLogger(__name__)
 

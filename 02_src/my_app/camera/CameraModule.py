@@ -10,16 +10,16 @@ import time
 import service.db_manager as repo
 import service.utils.sesame as sesame
 import camera.face_util as face_util
-from camera.blink_detector import BlinkDetector
+from my_app.camera.blink_detector import BlinkDetector
 
-import logs.log_config_service
+import my_app.logs.log_config_service
 import logging
 
 # 顔認証とICカード認証で同じ開錠・自動施錠の処理つかっちゃう
-from service.card_sys import request_unlock
+from my_app.service.card_sys import request_unlock
 
 # 複数登録画像との距離・平均値で顔認証するよう
-from camera.face_util.face_stable import recognize_image_average
+from my_app.camera.face_util.face_stable import recognize_image_average
 
 #logに書き込む用
 logger = logging.getLogger(__name__)

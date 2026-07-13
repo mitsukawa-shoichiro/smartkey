@@ -1,6 +1,6 @@
 # reader_daemon.py
-from service import card_sys
-import logs.log_config_service
+from my_app.service import card_sys
+import my_app.logs.log_config_service
 import time
 import json
 import threading
@@ -10,7 +10,7 @@ import hashlib
 from smartcard.System import readers
 from smartcard.Exceptions import NoCardException
 from smartcard.util import toHexString
-from service.utils.usb_card_readers import get_readers
+from my_app.service.utils.usb_card_readers import get_readers
 import time
 import sys
 import os

@@ -1,5 +1,5 @@
 import logging
-import logs.log_config_service
+import my_app.logs.log_config_service
 import requests
 import time
 from .sendmail import send_mail
@@ -9,7 +9,7 @@ import os
 import sys
 import json
 import asyncio
-from utils.sesami_bluetooth import SsmBleClient
+from my_app.app.utils.sesami_bluetooth import SsmBleClient
 
 LOGS_PATH = os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..', '..'))

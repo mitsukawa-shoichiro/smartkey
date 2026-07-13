@@ -5,11 +5,11 @@ sqlの実行をまとめたモジュール
 import logging  # ログ用
 import sqlite3  # 本来知らなくて良いが、ログのExceptionの為導入
 from .db_manager import get_connection  # データベース接続用
-from app.models.ENUMS import EventType, CardType  # Enum
-from app.models.access_log import AccessLog  # データクラス
-from app.models.face import Face  # データクラス
-from app.models.user import User  # データクラス
-from app.models.card import Card  # データクラス
+from my_app.models.ENUMS import EventType, CardType  # Enum
+from my_app.models.access_log import AccessLog  # データクラス
+from my_app.models.face import Face  # データクラス
+from my_app.models.user import User  # データクラス
+from my_app.models.card import Card  # データクラス
 from datetime import datetime, timedelta  # 入退室ログの時間用に
 
 logger = logging.getLogger(__name__)

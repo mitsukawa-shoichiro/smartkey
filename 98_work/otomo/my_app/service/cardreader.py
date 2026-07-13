@@ -1,5 +1,5 @@
 # reader_daemon.py
-# from service import card_sys
+# from my_app.service import card_sys
 import time
 import json
 import threading
@@ -50,7 +50,7 @@ class CardReaderState(Enum):
     REGISTERING = "registering"      # カード登録状態
     AUTHENTICATING = "authenticating"  # カード認証状態
 
-class CardReader:   
+class CardReader:
     DEBUG=False
 
     state = "authenticating"
@@ -91,7 +91,7 @@ class CardReader:
     def reader_loop(self):
         print(COUNT_READER)
         if not self.DEBUG:
-            try:    
+            try:
                 reader_list = self.get_reader()
             except Exception as e:
                 print(f"ERROR: カードリーダー異常: {e}")
@@ -138,7 +138,7 @@ class CardReader:
                         number+=1
 
                 if (len(reader_list) < COUNT_READER) :
-                    break   
+                    break
 
             print(self.check_is_alive())
             time.sleep(1)  # CPU負荷軽減
@@ -167,7 +167,7 @@ class CardReader:
         if self.thread_card_check:
             self.thread_card_check.join(timeout=2)
             print("thread_card_check stopped.")
-        
+
 
 
     def check_is_alive(self):

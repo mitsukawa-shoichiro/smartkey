@@ -9,13 +9,13 @@ import win32service
 import win32event
 import servicemanager
 from pathlib import Path
-from db import schema
+from my_app.db import schema
 # region logs
 # logs ディレクトリのパスを sys.path に追加
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
-from logs.log_config_service import logger
+from my_app.logs.log_config_service import logger
 # endregion
 
 # server_dir = os.path.dirname(os.path.abspath(__file__))

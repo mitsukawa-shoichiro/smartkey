@@ -15,11 +15,11 @@ import threading
 import flet as ft
 
 import db.repository as repo
-from app.service import card_register_service as register_service
-from app.service.daemon_bridge import thread_state
-from app.service.daemon_bridge import register_listener
-from app.models.ENUMS import CardType
-from views.common import show_error_dialog, filter_user_options
+from my_app.app.service import card_register_service as register_service
+from my_app.app.service.daemon_bridge import thread_state
+from my_app.app.service.daemon_bridge import register_listener
+from my_app.models.ENUMS import CardType
+from my_app.app.views.common import show_error_dialog, filter_user_options
 
 logger = logging.getLogger(__name__)
 

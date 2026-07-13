@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
-from app.models.ENUMS import EventType
+from my_app.models.ENUMS import EventType
 
 """
 access_log用データクラス(エンティティ)

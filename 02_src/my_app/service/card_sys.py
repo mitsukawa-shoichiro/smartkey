@@ -8,11 +8,11 @@ from enum import Enum
 import asyncio
 import logging
 import threading
-from service.utils.sesame import open_sesame, lock_sesame
+from my_app.service.utils.sesame import open_sesame, lock_sesame
 import json
-from db import repository as repo
-from app.models import ENUMS
-from app.models.entity.access_log import AccessLog
+from my_app.db import repository as repo
+from my_app.models import ENUMS
+from my_app.models.entity.access_log import AccessLog
 
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(

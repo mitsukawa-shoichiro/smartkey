@@ -6,7 +6,7 @@ GUI層(view)側で必ずtry/exceptで受け止め、ユーザーに分かる形�
 この受け止め方(エラーダイアログの出し方)を1箇所にまとめ、各画面から使い回してください。
 """
 import flet as ft
-from app.utils import japanese_text as jt
+from my_app.app.utils import japanese_text as jt
 
 def show_error_dialog(page: ft.Page, message: str):
     """
