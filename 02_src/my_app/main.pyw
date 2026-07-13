@@ -3,7 +3,7 @@ import os
 import sys
 import logs.log_config_app
 import flet as ft
-from app.views.router import route
+from my_app.app.views.router import route
 import logging
 import json
 from service.card_sys import set_state, get_state

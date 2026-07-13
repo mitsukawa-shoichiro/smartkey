@@ -2,3 +2,10 @@
 __pycache__/
 *.pyc
 *.log
+.venv/
+*.dot
+settings.json
+.gitignore
+*.png
+*.db
+!storage/faces/.gitkeep
