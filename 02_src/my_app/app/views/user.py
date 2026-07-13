@@ -1,6 +1,5 @@
 """
 カードまたは顔写真を登録したユーザーの名前を一覧表示
-カード登録画面、顔登録画面への遷移
 ホーム画面に戻る機能の実装
 """
 import flet as ft
@@ -21,8 +20,14 @@ def userView(page: ft.page):
     offset = 0                     # 現在のページ番号(0始まり)
     all_page = 1                   # 全ページ数
     selected_user_id = None 
+    search_text = ""
 
     page.title = "ユーザ管理画面"
+
+    #============================================
+    #ユーザー検索の候補データ
+    #============================================
+    #画面表示のたびに最新のユーザー一覧を取得する
 
     users = repo.get_all_users()
 
@@ -47,6 +52,10 @@ def userView(page: ft.page):
         on_select=on_user_selected,
         on_change=on_user_search_change,
     )
+
+    #======================================================
+    #UIコントロールの定義
+    #======================================================
 
     #ダイアログの定義
     dialog = ft.AlertDialog(modal = True)
@@ -125,16 +134,18 @@ def userView(page: ft.page):
         columns=[
             ft.DataColumn(ft.Text("ID"), on_sort = lambda e: page.run_task(sort_table, e)),
             ft.DataColumn(ft.Text("名前")),
-            ft.DataColumn(ft.text("登録日")),
+            ft.DataColumn(ft.Text("カナ氏名")),
         ],
         rows = [],
         sort_column_index = 0,
         sort_ascending = True,
     )
 
-    """
-    更新、ソート関数
-    """
+    
+    # =================================================
+    # 更新、ソート関数
+    # =================================================
+    
 
     #リセットボタン（検索条件、並び順、ページを初期状態に戻す）
     async def refresh(e):
@@ -165,9 +176,11 @@ def userView(page: ft.page):
         scroll_table.update()
         load_table()
 
-    """
-    ページ遷移関数
-    """
+    
+    # ======================================
+    # ページ遷移関数
+    # ======================================
+    
     def prev_page(e):
         #前ページへ遷移
         nonlocal offset
@@ -184,9 +197,11 @@ def userView(page: ft.page):
         load_table()
         scroll_table.scroll_to(offset = 0, duration = 0)
 
-        """
-        テーブル読み込み関数
-        """
+        
+        # =============================================
+        # テーブル読み込み関数
+        # =============================================
+        
 
     def load_table():
         """
@@ -241,9 +256,11 @@ def userView(page: ft.page):
         next_btn.disabled = (offset + 1) == all_page
         page.update()
 
-        """
-        レイアウト定義と配置
-        """
+        
+        # ==============================================
+        # レイアウト定義と配置
+        # ==============================================
+        
     #ラジオボックスをテーブルの隣に
     table_radio_box = ft.Row(
         [table, ft.Container(width = 0), radio_group],

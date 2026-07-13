@@ -267,6 +267,43 @@ def count_all_card(card_name):
         logger.exception("カード件数取得エラー: card_name=%s", card_name)
         raise
 
+def find_user_name_jpn_and_user_id_by_user_name_kana(user_name_kana, asc: bool, offset):
+    """
+    カナ氏名からユーザーIDと名前を検索する関数
+
+    Args:
+        user_name_jpn (str): 名前
+        user_id (int): ユーザーID
+        asc (bool): 昇順 -> true, 降順 -> false
+        offset (int): GUIで表示するためのページ区分
+
+    Returns:
+        list: ユーザーID,名前（存在する場合）またはNone（存在しない場合）
+    """
+    order = "ASC" if asc else "DESC"
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute(
+                f"SELECT * FROM user WHERE user_name_kana LIKE ? ORDER BY id {order} LIMIT 100 OFFSET ?",
+                (f"%{user_name_kana}%", offset)
+            )
+            row = c.fetchone()
+            return row[0] if row else None
+    except sqlite3.Error:
+        logger.exception("カナ氏名からユーザーID、名前検索でエラー: user_name_kana = %s", user_name_kana)
+        raise
+
+def update_user(user_id, user_name_jpn, user_name_kana):
+    sql = """
+    UPDATE users
+    SET
+        user_name_jpn = ?,
+        user_name_kana = ?
+    WHERE user_id = ?
+    """
+    conn.execute(sql, (user_name_jpn, user_name_kana, user_id))
+    conn.commit()
 
 def find_user_id_by_card_id(card_id):
     """
