@@ -19,29 +19,17 @@ get_connection() は with 文で使うことを前提とした
 import os
 import sqlite3
 import logging
-from contextlib import contextmanager
+from .db_manager import get_connection
 
 logger = logging.getLogger(__name__)
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "database.db")
 
-
-@contextmanager
-def get_connection():
-    conn = sqlite3.connect(DB_PATH)
-    conn.execute("PRAGMA foreign_keys = ON")
-    try:
-        yield conn
-        conn.commit()
-    except Exception:
-        conn.rollback()
-        raise
-    finally:
-        conn.close()
 
 
 
 def create_database():
+
+
     """
     テーブル作成関数
     注意点:
@@ -50,6 +38,24 @@ def create_database():
         削除されたユーザーでも名前が何だったのか辿れるようにしています。
 
     """
+
+    """
+    テーブル詳細
+
+    userテーブル:
+    id, user_name, user_kana
+
+    cardテーブル:
+    id, card_type, card_number, register_date, user_id(user.id)
+
+    access_logsテーブル:
+    id, timestamp, method, event_type, user_name, card_id, face_id, user_id(user.id)
+
+    faceテーブル:
+    id, register_date, user_id(user.id)
+
+    """
+
     conn = get_connection()
     c = conn.cursor()
 
@@ -114,13 +120,3 @@ def create_database():
         "INSERT INTO face (face_name, face_name_roma) VALUES (?, ?)",
         ("山田太郎", "taro_yamada"),
     )
-
-    conn.commit()
-    conn.close()
-
-def main():#バック開始に呼び出されるinit作業
-    create_database()
-
-
-if __name__ == "__main__":
-    main()

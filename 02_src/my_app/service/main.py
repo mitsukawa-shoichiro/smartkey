@@ -8,7 +8,8 @@ import win32serviceutil
 import win32service
 import win32event
 import servicemanager
-from pathlib import Path 
+from pathlib import Path
+from db import schema
 # region logs
 # logs ディレクトリのパスを sys.path に追加
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -18,7 +19,7 @@ from logs.log_config_service import logger
 # endregion
 
 # server_dir = os.path.dirname(os.path.abspath(__file__))
-# card_reader_path = os.path.join(server_dir, "nfcutils", "card_check.py")
+# card_reader_path = os.path.join(server_dir, "nfcutils", "reader_daemon.py")
 # backsys_path = os.path.join(server_dir, "sendmail", "back_system.py")
 
 logger = logging.getLogger(__name__)
@@ -26,7 +27,7 @@ logger = logging.getLogger(__name__)
 sys.path.append(os.path.dirname(__file__))
 
 from backsys import back_system
-from nfcutils import card_check
+from daemon import reader_daemon
 
 
 def run_back():
@@ -34,17 +35,15 @@ def run_back():
     back_system.main()
 
 def run_card():
-    logger.info("CardCheck thread started")
-    card_check.main()
+    logger.info("reader_daemon thread started")
+    reader_daemon.main()
 
-import threading
 def main():
     logger.info("Service is starting...")
     db_path = Path("db/database.db")
     if not db_path.exists():
         logger.info("Database file does not exist. Creating database...")
-        from db import create_db
-        create_db.create_database()
+        schema.create_database()
         logger.info("Database created successfully.")
     else:
         logger.info("Database file exists.")

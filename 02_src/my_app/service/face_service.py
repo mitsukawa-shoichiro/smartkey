@@ -5,7 +5,7 @@
 
 
 from my_app.db import repository as repo
-from my_app.app.storage import face_storage
+from my_app.storage import face_storage
 import logging
 
 logger = logging.getLogger(__name__)

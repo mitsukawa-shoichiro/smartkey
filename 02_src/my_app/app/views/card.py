@@ -15,13 +15,6 @@ from views.common import show_error_dialog, filter_user_options
 
 logger = logging.getLogger(__name__)
 
-# CardType(Enum) -> 画面表示用の日本語ラベル
-CARD_TYPE_LABELS = {
-    CardType.IC_CARD: "交通系ICカード",
-    CardType.CREDIT_CARD: "クレジットカード",
-    CardType.ELSE_CARD: "その他"
-}
-
 
 def cardView(page: ft.Page):
     # ===================================================
@@ -88,12 +81,6 @@ def cardView(page: ft.Page):
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
-    # プルダウン定義
-    user_search = ft.AutoComplete(
-        suggestions=autocomplete_options,
-        on_select=on_user_selected,
-    )
-
     # リセットボタン定義
     reset_btn = ft.ElevatedButton(
         content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
@@ -109,7 +96,7 @@ def cardView(page: ft.Page):
 
     # 検索欄定義
     search_zone = ft.Row(
-        controls=[user_search],
+        controls=[search_user],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=0
     )
@@ -167,7 +154,7 @@ def cardView(page: ft.Page):
 
         selected_user_id = None
         table.sort_ascending = True
-        user_search.value = ""  # プルダウン入力欄のクリア
+        search_user.value = ""  # プルダウン入力欄のクリア
         offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
@@ -249,14 +236,11 @@ def cardView(page: ft.Page):
             column.controls.append(ft.Radio(value=str(card.id)))
             checkbox_refs[card.id] = cb
 
-            # ENUMラベル変換
-            card_type_label = CARD_TYPE_LABELS.get(card.card_type, str(card.card_type))
-
             # テーブルに情報を埋め込み
             table.rows.append(
                 ft.DataRow(cells=[
                     ft.DataCell(ft.Text(f"{card.id:05d}", width=40)),
-                    ft.DataCell(ft.Text(card_type_label, width=100)),
+                    ft.DataCell(ft.Text(card.card_type.value, width=100)),
                     ft.DataCell(ft.Text(card.register_date, width=80)),
                     ft.DataCell(cb),
                 ])

@@ -1,20 +1,15 @@
 """
 sqlの実行をまとめたモジュール
-完全に内部で完結してる変数を引数にとるときは(f"__sql__",(__name__))で渡しているが、
-ユーザーが自由に書き込める値はSQLインジェクション対策でバインド変数で埋めている、ハズ
-with get_connection()でDB接続の安全化を図っています。
-db_managerにDB接続を一任しています。
-リポジトリ層の責務はSQLの実行とエンティティ詰め込みまでとします。
-その他業務的な判断はサービス層で行うようにしてください。
+
 """
 import logging  # ログ用
 import sqlite3  # 本来知らなくて良いが、ログのExceptionの為導入
 from .db_manager import get_connection  # データベース接続用
 from app.models.ENUMS import EventType, CardType  # Enum
-from app.models.entity.access_log import AccessLog  # データクラス
-from app.models.entity.face import Face  # データクラス
-from app.models.entity.user import User  # データクラス
-from app.models.entity.card import Card
+from app.models.access_log import AccessLog  # データクラス
+from app.models.face import Face  # データクラス
+from app.models.user import User  # データクラス
+from app.models.card import Card  # データクラス
 from datetime import datetime, timedelta  # 入退室ログの時間用に
 
 logger = logging.getLogger(__name__)
@@ -72,7 +67,8 @@ def update_user(user_id, user_name, user_kana):
 def delete_user(user_id):
     """
     ユーザーを削除する関数
-    (card, faceはON DELETE CASCADEにより連動して自動削除される。写真はservice/face_storageで)
+    (card, faceはON DELETE CASCADEにより連動して自動削除される。
+    画像ファイルの後始末はこの関数の責務外。service層で対応すること)
 
     Args:
         user_id (int): 削除するユーザーのID
@@ -177,7 +173,7 @@ def insert_card(card_number: str, CARD_TYPE: CardType, user_id: int):
             return c.lastrowid
     except sqlite3.Error:
         logger.exception("カード挿入エラー: card_number=%s, card_type=%s, user_id=%s",
-                        card_number, CARD_TYPE.value, user_id)
+                          card_number, CARD_TYPE.value, user_id)
         raise
 
 
@@ -222,8 +218,8 @@ def find_all_cards(asc: bool, offset: int):
             )
             rows = c.fetchall()
             return [
-                Card(id=row[0], card_type=CardType(row[1]), card_number=row[2],
-                    register_date=row[3], user_id=row[4])
+                Card(id=row[0], card_type=CardType(int(row[1])), card_number=row[2],
+                     register_date=row[3], user_id=row[4])
                 for row in rows
             ]
     except sqlite3.Error:
@@ -276,8 +272,8 @@ def find_cards_by_user_id(user_id: int, asc: bool, offset: int):
             )
             rows = c.fetchall()
             return [
-                Card(id=row[0], card_type=CardType(row[1]), card_number=row[2],
-                    register_date=row[3], user_id=row[4])
+                Card(id=row[0], card_type=CardType(int(row[1])), card_number=row[2],
+                     register_date=row[3], user_id=row[4])
                 for row in rows
             ]
     except sqlite3.Error:
@@ -333,13 +329,13 @@ def find_user_id_by_card_id(card_id):
 # 入退室ログテーブル
 # ===================================================
 
-def get_last_date_time(card_id, event_type: EventType):
+def get_last_date_time(card_id, EVENT_TYPE: EventType):
     """
     指定されたカードIDの最新の入退室ログの日時を取得します。
 
     Args:
         card_id (int): カードID
-        event_type (EventType): イベントタイプ
+        EVENT_TYPE (EventType): イベントタイプ
 
     Returns:
         str: 最新の入退室ログの日時（存在する場合）またはNone（存在しない場合）
@@ -351,7 +347,7 @@ def get_last_date_time(card_id, event_type: EventType):
                 'SELECT timestamp FROM access_logs '
                 'WHERE card_id = ? AND event_type = ? '
                 'ORDER BY timestamp DESC LIMIT 1',
-                (card_id, event_type)
+                (card_id, EVENT_TYPE)
             )
             last_timestamp = c.fetchone()
             return last_timestamp[0] if last_timestamp else None
@@ -360,34 +356,35 @@ def get_last_date_time(card_id, event_type: EventType):
         raise
 
 
-
 # todo:
 # 退室の時は必ずカードにするように！！！
+# サービスロジックこっちじゃなくて呼び出し側でやって！
+# 詳細はservice.db_manager:L74参照
 def insert_access_log(log: AccessLog):
     """
     入退室ログをデータベースに挿入する関数
     カード認証・顔認証どちらの記録もこの関数で受け付ける。
-    使わない側のid(card_idまたはface_id)はNoneのままで。
+    使わない側のid(card_idまたはface_id)はNoneのままでよい。
 
     Args:
         log (AccessLog): 入退室ログのデータ
 
     Returns:
-        AccessLog: id・user_nameのスナップショットを埋めた状態のlog
+        AccessLog: id・user_name_jpnのスナップショットを埋めた状態のlog
     """
     try:
         with get_connection() as conn:
             c = conn.cursor()
 
             # repository層: ここでスナップショットを埋めてからINSERT
-            c.execute("SELECT user_name FROM user WHERE id = ?", (log.user_id,))
+            c.execute("SELECT user_name_jpn FROM user WHERE id = ?", (log.user_id,))
             row = c.fetchone()
-            log.user_name = row[0] if row else None
+            log.user_name_jpn = row[0] if row else None
 
             c.execute(
-                "INSERT INTO access_logs (method, event_type, user_id, user_name, card_id, face_id) "
+                "INSERT INTO access_logs (method, event_type, user_id, user_name_jpn, card_id, face_id) "
                 "VALUES (?, ?, ?, ?, ?, ?)",
-                (log.method, log.event_type, log.user_id, log.user_name, log.card_id, log.face_id)
+                (log.method, log.event_type, log.user_id, log.user_name_jpn, log.card_id, log.face_id)
             )
             log.id = c.lastrowid  # 書き戻し(update)に備えてidも埋めておく
             return log
@@ -399,7 +396,7 @@ def insert_access_log(log: AccessLog):
 def update_access_log(log: AccessLog):
     """
     既存の入退室ログを更新する関数。
-    find_log() で取得した AccessLog をそのまま渡す
+    find_log() で取得した AccessLog をそのまま渡すことを想定している。
     log.id が必須(どの行を更新するかの特定に使う)。
 
     Args:
@@ -427,8 +424,8 @@ def update_access_log(log: AccessLog):
 
 def find_log(method, event_type, start_datetime, end_datetime, limit, offset, asc: bool = True):
     """
-    入退室ログを条件検索する関数
-    めんどいので表結合してないです
+    入退室ログを条件検索する関数(card結合なし版)
+    access_logs自身が持つカラムだけで検索するため、JOINは行わない。
 
     args:
         method: 認証方法
@@ -458,10 +455,10 @@ def find_log(method, event_type, start_datetime, end_datetime, limit, offset, as
             end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
             # methodは部分一致検索、event_typeは完全一致検索
-            # event_typeがNoneの場合は全てのevent_typeが対象
+            # event_typeがNoneの場合は全てのevent_typeを対象とする
             c.execute(
                 f"""
-                SELECT id, timestamp, method, event_type, user_id, user_name, card_id, face_id
+                SELECT id, timestamp, method, event_type, user_id, user_name_jpn, card_id, face_id
                 FROM access_logs
                 WHERE method LIKE ?
                 AND (? IS NULL OR event_type = ?)
@@ -469,7 +466,7 @@ def find_log(method, event_type, start_datetime, end_datetime, limit, offset, as
                 ORDER BY timestamp {order} LIMIT ? OFFSET ?
                 """,
                 (method, event_type, event_type,
-                start_datetime_str, end_datetime_str, limit, offset)
+                 start_datetime_str, end_datetime_str, limit, offset)
             )
             rows = c.fetchall()
             return [
@@ -479,7 +476,7 @@ def find_log(method, event_type, start_datetime, end_datetime, limit, offset, as
                     method=row[2],
                     event_type=row[3],
                     user_id=row[4],
-                    user_name=row[5],
+                    user_name_jpn=row[5],
                     card_id=row[6],
                     face_id=row[7],
                 )
@@ -495,7 +492,7 @@ def find_log(method, event_type, start_datetime, end_datetime, limit, offset, as
 
 def count_filtered_logs(method=None, event_type=None, start_datetime=None, end_datetime=None):
     """
-    GUIでログ表示する際の件数を検索する関数
+    find_log()をGUIで表示する際の件数を検索する関数(card結合なし版)
 
     args:
         method: 認証方法
@@ -544,7 +541,7 @@ def count_filtered_logs(method=None, event_type=None, start_datetime=None, end_d
 
 def find_all_faces(asc: bool, offset: int):
     """
-    顔情報を全件、ページ毎に取得する関数(プルダウン未選択時のGUI表示用)
+    顔情報を全件、ページングして取得する関数(ユーザー未選択時のGUI表示用)
 
     Args:
         asc (bool): 昇順 -> true, 降順 -> false
@@ -594,8 +591,8 @@ def count_all_face():
 
 def find_faces_by_user_id(user_id: int, asc: bool, offset: int):
     """
-    指定されたユーザーIDに関連する顔情報を、ページ毎に取得する関数
-    (プルダウンでユーザーが選択された時のGUI表示用)
+    指定されたユーザーIDに関連する顔情報を、ページングして取得する関数
+    (Autocompleteでユーザーが選択された時のGUI表示用)
 
     Args:
         user_id (int): 取得する顔情報に関連するユーザーのID
@@ -651,7 +648,7 @@ def count_faces_by_user_id(user_id: int):
 def get_face_ids_by_user_id(user_id: int):
     """
     指定されたユーザーIDに関連する顔情報のIDだけを取得する関数。
-    userのCASCADE削除に伴う画像ファイルの後始末など、IDだけあれば良いとき用
+    (userのCASCADE削除に伴う画像ファイルの後始末など、IDだけあれば良い場面向け)
 
     Args:
         user_id (int): ユーザーID
@@ -694,7 +691,7 @@ def insert_face(user_id: int):
         raise
 
 
-# ここでは画像の削除はしていません！！！(画像削除はface_storage/face_service)
+# ここでは画像の削除はしていません！！！(画像削除はface_storage/face_serviceの責務)
 def delete_face(face_id):
     """
     顔情報を顔idで指定して一枚削除する関数
@@ -716,7 +713,8 @@ def delete_faces_by_user_id(user_id):
     指定されたユーザーIDに関連するすべての顔情報を削除する関数。
 
     注意: userテーブルのCASCADE設定により、user削除時はこの関数を経由せず
-    face行がDB側で自動的に削除される。ユーザーを残したいとき用
+    face行がDB側で自動的に削除される。この関数はfaceだけを個別に
+    (userは残したまま)一括削除したい場合向け。
 
     Args:
         user_id (int): 削除する顔情報に関連するユーザーのID

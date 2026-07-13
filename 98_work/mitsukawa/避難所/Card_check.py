@@ -1,64 +1,57 @@
 """
-カード登録画面GUI作成モジュール
-登録処理に関してはView側の負担は最低限にすべく
-バックとのやり取り、ロジックはcard_register_service、
-状態管理はthread_state、
-カード番号受け取り、保管はregister_listener
-これらに責務を切り分けています。
+カード登録フロー(GUI)
 
-未対処リスク
+出口リーダーに新規カードをかざしてもらい、IDmを取得したうえで
+ユーザー・カード種別を選んで登録する一連の画面。
 
+判断ロジック(daemonとの通信、IDm待機、重複チェック、DB登録)は
+service/card_register_service.py が担う。このファイルはその結果を見て
+画面(ダイアログ・遷移)を組み立てることに専念する。
 """
-
-
-import flet as ft
 import asyncio
 import logging
 import threading
 
+import flet as ft
+
 import db.repository as repo
-from my_app.service.daemon_bridge import card_register_service as register_service
-from my_app.service.daemon_bridge import thread_state, register_listener
-from my_app.app.models.ENUMS import CardType
+from app.service import card_register_service as register_service
+from app.service.daemon_bridge import thread_state
+from app.service.daemon_bridge import register_listener
+from app.models.ENUMS import CardType
 from views.common import show_error_dialog, filter_user_options
 
 logger = logging.getLogger(__name__)
 
+
 # ===================================================
-# カード登録待機画面
+# 登録待機画面
 # ===================================================
+
 def registering(page: ft.Page):
+    """「カードをかざしてください」の待機画面。表示と同時に登録モードへ切り替える。"""
     try:
-
-        def stop_loop(e):                               #stop_buttonをクリックした際のみここに来る
-
+        def stop_loop(e):
+            """キャンセルボタン: 登録モードを抜けて索引画面へ戻る"""
             register_service.cancel_registration_session()
             page.go("/index")
 
         register_service.start_registration_session()
 
-        page.vertical_alignment = ft.MainAxisAlignment.CENTER       #上下方向(vertical)は中央寄せで表示
-        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER    #水平方向(horizontal)も中央寄せで表示
+        page.vertical_alignment = ft.MainAxisAlignment.CENTER
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         page.title = "ICカード情報読み込み中"
 
         loading_text = ft.Text(
             "30秒以内に登録したいカードを\n出口のカードリーダーにかざしてください",
-            size=35,
-            text_align=ft.TextAlign.CENTER
+            size=35, text_align=ft.TextAlign.CENTER
         )
-
         loading_spinner = ft.CupertinoActivityIndicator(
-            radius=50,
-            color=ft.Colors.LIGHT_BLUE_ACCENT,
-            animating=True,
+            radius=50, color=ft.Colors.LIGHT_BLUE_ACCENT, animating=True,
         )
-        #ローディング画面でくるくる回る演出が入る
-
         stop_btn = ft.Container(
             content=ft.TextButton(
-                text="キャンセル",
-                icon=ft.Icons.STOP,
-                on_click=stop_loop,                 #クリックされた時のみstop_loopを呼ぶため()をつけない
+                text="キャンセル", icon=ft.Icons.STOP, on_click=stop_loop,
                 style=ft.ButtonStyle(
                     shape=ft.RoundedRectangleBorder(radius=10),
                     color=ft.Colors.RED,
@@ -66,15 +59,9 @@ def registering(page: ft.Page):
                 )
             )
         )
-        img = ft.Image(
-            src=f"img/card_reader.JPG",
-            height=100,
-            width=200,
-            fit=ft.ImageFit.CONTAIN,
-            #画像ファイルの表示
+        img = ft.Image(src="img/card_reader.JPG", height=100, width=200, fit=ft.ImageFit.CONTAIN)
 
-        )
-        return ft.View(                                                     #登録画面(View)を返す
+        return ft.View(
             "/register",
             controls=[
                 ft.Container(
@@ -87,7 +74,6 @@ def registering(page: ft.Page):
                             ft.Container(content=loading_spinner),
                             ft.Container(height=40),
                             stop_btn
-
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -96,35 +82,29 @@ def registering(page: ft.Page):
                 )
             ],
         )
-    except Exception as e:
-        logger.exception("カード登録画面の表示中にエラーが発生しました: %s", e)     #スタックトレースも含めて出力される
+    except Exception:
+        logger.exception("カード登録画面の表示中にエラーが発生しました")
         page.go("/index?error=カード登録画面の表示中にエラーが発生しました")
-
-    finally:                #例外の有無にかかわらず実行される
+    finally:
         page.update()
 
 
 # ===================================================
-# カード番号ポーリングループ待機
+# IDm受信待ちのポーリングループ(別スレッドで動く)
 # ===================================================
 
 async def delayed_transition(page: ft.Page):
-
     """
-    登録受信待機スレッドを立ち上げ、読み取り結果を受け取る関数
-    細かい動きはregister_serviceに任せています。
+    service層の wait_for_new_card の結果を見て、画面を組み立てるだけの関数。
+    判断ロジック(何秒待つか、重複かどうか等)は一切持たない。
     """
-    # 30秒間読み取り結果を待機
     result = await register_service.wait_for_new_card(timeout_total_s=30)
 
-    # ダイアログ定義
     dialog = ft.AlertDialog(modal=True)
 
-    # キャンセル時
     if result.status == register_service.STATUS_CANCELLED:
         return
 
-    # 二重登録時
     if result.status == register_service.STATUS_DUPLICATE:
         dialog.title = ft.Text("エラー")
         dialog.content = ft.Text("このカードは既に登録されています")
@@ -134,52 +114,41 @@ async def delayed_transition(page: ft.Page):
         page.open(dialog)
         return
 
-    # 登録成功時
     if result.status == register_service.STATUS_SUCCESS:
         page.go("/register/input")
         return
 
-    # タイムアウト時
-    if result.status == register_service.STATUS_TIMEOUT:
-        dialog.title = ft.Text("タイムアウト")
-        dialog.content = ft.Column(
-            controls=[
+    # STATUS_TIMEOUT
+    dialog.title = ft.Text("タイムアウト")
+    dialog.content = ft.Column(
+        controls=[
             ft.Container(height=10),
-            ft.Text("30秒経過したためタイムアウトしました。"),
-            ft.Text("リトライしますか？")
-            ],
-            height=70
-        )
+            ft.Text("30秒経ったため処理を中断しました。"),
+            ft.Text("リトライしますか。")
+        ],
+        height=70
+    )
 
     def retry(e):
-        "リトライ用関数：現在の状態をリフレッシュして再び30秒待機を回す関数"
-        # 現在ページの破棄
-        page.views.pop()
-        # 新規ページの作成
+        page.views.pop()  # 古い待機Viewを取り除いてから積み直す
         page.views.append(registering(page))
-        # スレッドの作成、thread_stateに格納
         thread_state.thread_handle = threading.Thread(
-            target=lambda: run_async_delayed_transition(page)
-        )
-        # スレッド開始
+            target=lambda: run_async_delayed_transition(page))
         thread_state.thread_handle.daemon = True
         thread_state.thread_handle.start()
-        # ダイアログ終了
         page.close(dialog)
-        # ページ更新
         page.update()
 
-    # リトライ確認ダイアログ
     dialog.actions = [
         ft.TextButton("はい", autofocus=True, on_click=retry),
         ft.TextButton("いいえ", on_click=lambda e: page.go("/index"))
     ]
-    # ダイアログ表示
     page.open(dialog)
 
-    #待機ページ開始
+
 def run_async_delayed_transition(page):
     asyncio.run(delayed_transition(page))
+
 
 # ===================================================
 # カード情報入力画面
@@ -191,7 +160,6 @@ def register_input(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     selected_user_id = None
-    # 読み取り結果を取得
     card_number = register_listener.get_card_number()
 
     dialog = ft.AlertDialog(modal=True)
@@ -199,34 +167,34 @@ def register_input(page: ft.Page):
     # ユーザー選択用Autocomplete(face_view.pyと同じパターン)
     users = repo.get_all_users()
 
-    # ユーザーID保存
     def on_user_selected(e: ft.ControlEvent):
         nonlocal selected_user_id
         selected_user_id = int(e.selection.key)
 
-    # 検索内容反映関数
     def on_user_search_change(e: ft.ControlEvent):
         user_field.suggestions = filter_user_options(users, e.control.value)
         user_field.update()
 
-    # プルダウン定義
     user_field = ft.AutoComplete(
         suggestions=filter_user_options(users, ""),
         on_select=on_user_selected,
         on_change=on_user_search_change,
     )
 
-    # カード種類プルダウン定義
     card_type_dropdown = ft.Dropdown(
         label="カードの種類",
         width=320,
         options=[
-            ft.dropdown.Option(key=ct.value, text=ct.value)
-            for ct in CardType
+            ft.dropdown.Option(key=str(CardType.EMPLOYEE.value), text="社員証"),
+            ft.dropdown.Option(key=str(CardType.VISITOR.value), text="来客証"),
         ],
     )
 
-    # 登録確認関数
+    card_number_display = ft.TextField(
+        label="読み取ったカード番号", value=card_number or "(未取得)",
+        width=320, read_only=True,
+    )
+
     def open_add_confirm_dialog(e):
         if selected_user_id is None or not card_type_dropdown.value:
             dialog.title = ft.Text("エラー")
@@ -245,7 +213,6 @@ def register_input(page: ft.Page):
         ]
         page.open(dialog)
 
-    # キャンセル確認関数
     def open_cancel_confirm_dialog(e):
         dialog.title = ft.Text("キャンセル確認")
         dialog.content = ft.Text("登録をキャンセルしますか?")
@@ -255,7 +222,6 @@ def register_input(page: ft.Page):
         ]
         page.open(dialog)
 
-    # キャンセル完了関数
     def complete_cancel_confirm_dialog(e):
         register_listener.clear_card_number()
         page.close(dialog)
@@ -266,9 +232,7 @@ def register_input(page: ft.Page):
         ]
         page.open(dialog)
 
-    # カード登録関数
     def execute_register(e):
-        # カード番号無い時(異常事態)
         if not card_number:
             logger.critical("カード番号を取得できませんでした")
             page.close(dialog)
@@ -281,12 +245,11 @@ def register_input(page: ft.Page):
             return
 
         try:
-            card_type = CardType(card_type_dropdown.value)
-            # 登録処理呼び出し
+            card_type = CardType(int(card_type_dropdown.value))
             register_service.register_card(card_number, card_type, selected_user_id)
         except Exception:
             logger.exception("カード登録に失敗しました: card_number=%s, user_id=%s",
-                            card_number, selected_user_id)
+                              card_number, selected_user_id)
             page.close(dialog)
             show_error_dialog(page, "カードの登録に失敗しました。しばらくしてから再度お試しください。")
             return
@@ -300,7 +263,6 @@ def register_input(page: ft.Page):
         ]
         page.open(dialog)
 
-    # ボタン群定義
     button_column = ft.Column(
         controls=[
             ft.ElevatedButton(
@@ -319,7 +281,6 @@ def register_input(page: ft.Page):
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     )
 
-    # ページにする
     return ft.View(
         "/register/input",
         controls=[
@@ -329,6 +290,7 @@ def register_input(page: ft.Page):
                         content=ft.Column(
                             controls=[
                                 ft.Text("カード登録", size=28, weight=ft.FontWeight.BOLD),
+                                card_number_display,
                                 user_field,
                                 card_type_dropdown,
                                 ft.Container(height=20),
