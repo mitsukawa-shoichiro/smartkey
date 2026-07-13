@@ -1,0 +1,3103 @@
+2026-06-25 11:24:45 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 11:24:46 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 11:24:46 [INFO] flet:61 - Starting up TCP server on localhost:62704
+2026-06-25 11:24:46 [INFO] flet:171 - Flet app has started...
+2026-06-25 11:24:49 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 11:24:50 [INFO] flet:131 - App URL: tcp://localhost:62704
+2026-06-25 11:24:50 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 11:24:50 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 11:24:50 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 11:24:50 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 11:24:50 [INFO] flet:61 - Starting up TCP server on localhost:62712
+2026-06-25 11:24:50 [INFO] flet:171 - Flet app has started...
+2026-06-25 11:24:50 [INFO] flet:131 - App URL: tcp://localhost:62712
+2026-06-25 11:24:50 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 11:24:50 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 11:24:50 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 11:24:50 [INFO] flet:240 - App session started
+2026-06-25 11:24:50 [INFO] root:37 - GUIが起動されました
+2026-06-25 11:24:50 [INFO] root:16 - /に遷移しました
+2026-06-25 11:24:50 [INFO] flet:240 - App session started
+2026-06-25 11:24:50 [INFO] root:37 - GUIが起動されました
+2026-06-25 11:24:50 [INFO] root:16 - /に遷移しました
+2026-06-25 11:24:58 [INFO] root:52 - Sent message: authenticating
+2026-06-25 11:24:58 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 11:35:00 [INFO] root:52 - Sent message: authenticating
+2026-06-25 11:35:00 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 13:08:40 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 13:08:42 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 13:08:42 [INFO] flet:61 - Starting up TCP server on localhost:53015
+2026-06-25 13:08:42 [INFO] flet:171 - Flet app has started...
+2026-06-25 13:08:42 [INFO] flet:131 - App URL: tcp://localhost:53015
+2026-06-25 13:08:42 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 13:08:42 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:08:42 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:08:42 [INFO] flet:240 - App session started
+2026-06-25 13:08:42 [INFO] root:37 - GUIが起動されました
+2026-06-25 13:08:42 [INFO] root:16 - /に遷移しました
+2026-06-25 13:08:59 [INFO] root:47 - ログイン成功
+2026-06-25 13:08:59 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:09:01 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:09:01 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=Error('テストエラー')>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 23, in page_route_change
+    page.views.append(card.cardView(page))
+                      ~~~~~~~~~~~~~^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\card.py", line 332, in cardView
+    load_table()
+    ~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\views\card.py", line 161, in load_table
+    raise sqlite3.Error("テストエラー")  # テスト用に例外を発生させる
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.Error: テストエラー
+2026-06-25 13:09:58 [INFO] root:52 - Sent message: authenticating
+2026-06-25 13:09:58 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 13:23:53 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 13:23:54 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 13:23:54 [INFO] flet:61 - Starting up TCP server on localhost:49346
+2026-06-25 13:23:54 [INFO] flet:171 - Flet app has started...
+2026-06-25 13:23:54 [INFO] flet:131 - App URL: tcp://localhost:49346
+2026-06-25 13:23:54 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 13:23:54 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:23:54 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:23:54 [INFO] flet:240 - App session started
+2026-06-25 13:23:54 [INFO] root:37 - GUIが起動されました
+2026-06-25 13:23:54 [INFO] root:16 - /に遷移しました
+2026-06-25 13:24:05 [INFO] root:47 - ログイン成功
+2026-06-25 13:24:05 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:24:06 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:24:06 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:24:06 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:24:08 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:24:08 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:24:08 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:24:09 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:24:09 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:24:09 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:24:36 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=Error('テストエラー')>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\card.py", line 117, in <lambda>
+    prev_btn = ft.ElevatedButton("⬅ 前へ",   on_click=lambda e: prev_page(
+                                                                ~~~~~~~~~^
+        e), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)))
+        ^^
+  File "C:\smartkey\02_src\my_app\app\views\card.py", line 148, in prev_page
+    load_table()
+    ~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\views\card.py", line 161, in load_table
+    raise sqlite3.Error("テストエラー")  # テスト用に例外を発生させる
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.Error: テストエラー
+2026-06-25 13:24:41 [INFO] root:52 - Sent message: authenticating
+2026-06-25 13:24:41 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 13:24:44 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 13:24:45 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 13:24:45 [INFO] flet:61 - Starting up TCP server on localhost:59556
+2026-06-25 13:24:45 [INFO] flet:171 - Flet app has started...
+2026-06-25 13:24:45 [INFO] flet:131 - App URL: tcp://localhost:59556
+2026-06-25 13:24:45 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 13:24:45 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:24:45 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:24:45 [INFO] flet:240 - App session started
+2026-06-25 13:24:45 [INFO] root:37 - GUIが起動されました
+2026-06-25 13:24:45 [INFO] root:16 - /に遷移しました
+2026-06-25 13:25:07 [INFO] root:47 - ログイン成功
+2026-06-25 13:25:07 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:25:10 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:25:10 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:25:10 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:25:15 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:25:15 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:25:15 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:25:39 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:25:39 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:25:39 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:25:48 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:25:48 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:25:48 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:25:48 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:25:48 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:25:48 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:26:55 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:26:55 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:26:55 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:29:13 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 13:29:13 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:29:13 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=OperationalError('no such table: access_logs')>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 25, in page_route_change
+    page.views.append(accesslogs.accesslogs(page))
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 361, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:30:11 [INFO] root:52 - Sent message: authenticating
+2026-06-25 13:30:11 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 13:40:24 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 13:40:25 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 13:40:25 [INFO] flet:61 - Starting up TCP server on localhost:56019
+2026-06-25 13:40:25 [INFO] flet:171 - Flet app has started...
+2026-06-25 13:40:25 [INFO] flet:131 - App URL: tcp://localhost:56019
+2026-06-25 13:40:25 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 13:40:25 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:40:25 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:40:25 [INFO] flet:240 - App session started
+2026-06-25 13:40:25 [INFO] root:37 - GUIが起動されました
+2026-06-25 13:40:25 [INFO] root:16 - /に遷移しました
+2026-06-25 13:40:36 [INFO] root:47 - ログイン成功
+2026-06-25 13:40:36 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:40:52 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:40:52 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:40:52 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:40:54 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:40:54 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:40:54 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:41:12 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 13:41:12 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:41:12 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=OperationalError('no such table: access_logs')>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 25, in page_route_change
+    page.views.append(accesslogs.accesslogs(page))
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 361, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:42:20 [INFO] root:52 - Sent message: authenticating
+2026-06-25 13:42:20 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 13:42:22 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 13:42:24 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 13:42:24 [INFO] flet:61 - Starting up TCP server on localhost:56064
+2026-06-25 13:42:24 [INFO] flet:171 - Flet app has started...
+2026-06-25 13:42:24 [INFO] flet:131 - App URL: tcp://localhost:56064
+2026-06-25 13:42:24 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 13:42:24 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:42:24 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:42:24 [INFO] flet:240 - App session started
+2026-06-25 13:42:24 [INFO] root:37 - GUIが起動されました
+2026-06-25 13:42:24 [INFO] root:16 - /に遷移しました
+2026-06-25 13:42:32 [INFO] root:47 - ログイン成功
+2026-06-25 13:42:32 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:42:54 [INFO] root:16 - /registerに遷移しました
+2026-06-25 13:42:54 [INFO] root:39 - Sent message: registering
+2026-06-25 13:42:56 [INFO] root:29 - Sent message: authenticating
+2026-06-25 13:42:56 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:43:02 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:43:02 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:43:02 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:43:03 [INFO] root:16 - /cardに遷移しました
+2026-06-25 13:43:03 [ERROR] root:335 - カードテーブルの読み込みに失敗しました: テストエラー
+2026-06-25 13:43:03 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:43:12 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 13:43:12 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:43:12 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=OperationalError('no such table: access_logs')>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 25, in page_route_change
+    page.views.append(accesslogs.accesslogs(page))
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 361, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:43:25 [INFO] root:52 - Sent message: authenticating
+2026-06-25 13:43:25 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 13:48:38 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 13:48:39 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 13:48:39 [INFO] flet:61 - Starting up TCP server on localhost:51084
+2026-06-25 13:48:39 [INFO] flet:171 - Flet app has started...
+2026-06-25 13:48:39 [INFO] flet:131 - App URL: tcp://localhost:51084
+2026-06-25 13:48:39 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 13:48:39 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:48:39 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 13:48:39 [INFO] flet:240 - App session started
+2026-06-25 13:48:39 [INFO] root:37 - GUIが起動されました
+2026-06-25 13:48:39 [INFO] root:16 - /に遷移しました
+2026-06-25 13:48:51 [INFO] root:47 - ログイン成功
+2026-06-25 13:48:51 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:48:53 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 13:48:53 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:48:53 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:48:53 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=OperationalError('no such table: access_logs')>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 25, in page_route_change
+    page.views.append(accesslogs.accesslogs(page))
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 361, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:48:53 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 13:48:53 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:48:53 [INFO] root:16 - /indexに遷移しました
+2026-06-25 13:48:53 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=OperationalError('no such table: access_logs')>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 25, in page_route_change
+    page.views.append(accesslogs.accesslogs(page))
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 361, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:50:20 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 13:50:20 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:50:20 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=OperationalError('no such table: access_logs')>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 25, in page_route_change
+    page.views.append(accesslogs.accesslogs(page))
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 361, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 13:50:20 [INFO] root:16 - /indexに遷移しました
+
+
+
+2026-06-25 13:50:56 [INFO] root:52 - Sent message: authenticating
+2026-06-25 13:50:56 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 14:30:47 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 14:30:48 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 14:30:48 [INFO] flet:61 - Starting up TCP server on localhost:56024
+2026-06-25 14:30:48 [INFO] flet:171 - Flet app has started...
+2026-06-25 14:30:48 [INFO] flet:131 - App URL: tcp://localhost:56024
+2026-06-25 14:30:48 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 14:30:48 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:30:48 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:30:48 [INFO] flet:240 - App session started
+2026-06-25 14:30:48 [INFO] root:37 - GUIが起動されました
+2026-06-25 14:30:48 [INFO] root:16 - /に遷移しました
+2026-06-25 14:30:58 [INFO] root:47 - ログイン成功
+2026-06-25 14:30:58 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:30:59 [INFO] root:16 - /cardに遷移しました
+2026-06-25 14:30:59 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 14:30:59 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 14:30:59 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:31:00 [INFO] root:16 - /cardに遷移しました
+2026-06-25 14:31:00 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 14:31:00 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 14:31:00 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:31:01 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 14:31:01 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:31:01 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:31:01 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:31:01 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 36, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:31:01 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 14:31:01 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 14:31:01 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:31:01 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:31:01 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:31:01 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:31:01 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:31:01 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:31:01 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 36, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 458, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:31:01 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:31:01 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 36, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 458, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:31:01 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 36, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:31:01 [INFO] root:16 - /index/?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 14:31:01 [INFO] root:16 - /index/?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 14:31:01 [INFO] root:16 - /index/?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 14:31:01 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:31:02 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 14:31:02 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:31:02 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:31:02 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:31:02 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 36, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:31:02 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:31:02 [INFO] root:16 - /index/?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 14:31:05 [INFO] root:52 - Sent message: authenticating
+2026-06-25 14:31:05 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 14:34:06 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 14:34:07 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 14:34:07 [INFO] flet:61 - Starting up TCP server on localhost:57262
+2026-06-25 14:34:07 [INFO] flet:171 - Flet app has started...
+2026-06-25 14:34:07 [INFO] flet:131 - App URL: tcp://localhost:57262
+2026-06-25 14:34:07 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 14:34:07 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:34:07 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:34:07 [INFO] flet:240 - App session started
+2026-06-25 14:34:07 [INFO] root:37 - GUIが起動されました
+2026-06-25 14:34:07 [INFO] root:16 - /に遷移しました
+2026-06-25 14:34:17 [INFO] root:47 - ログイン成功
+2026-06-25 14:34:17 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:34:18 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 14:34:18 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:34:18 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:34:18 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:34:18 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 36, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:34:18 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:35:01 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 14:35:01 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:35:01 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:35:01 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:35:01 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 36, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:35:01 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:35:01 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 36, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:35:01 [INFO] root:16 - /accesslogsに遷移しました
+2026-06-25 14:35:01 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:35:01 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:35:01 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:35:01 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 36, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:35:01 [INFO] root:16 - /indexに遷移しました
+2026-06-25 14:35:01 [INFO] root:16 - /index/?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 14:45:10 [INFO] root:52 - Sent message: authenticating
+2026-06-25 14:45:10 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 14:45:13 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 14:45:14 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 14:45:14 [INFO] flet:61 - Starting up TCP server on localhost:64387
+2026-06-25 14:45:14 [INFO] flet:171 - Flet app has started...
+2026-06-25 14:45:14 [INFO] flet:131 - App URL: tcp://localhost:64387
+2026-06-25 14:45:14 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 14:45:14 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:45:14 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:45:15 [INFO] flet:240 - App session started
+2026-06-25 14:45:15 [INFO] root:37 - GUIが起動されました
+2026-06-25 14:45:15 [INFO] root:18 - /に遷移しました
+2026-06-25 14:45:22 [INFO] root:47 - ログイン成功
+2026-06-25 14:45:22 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:24 [INFO] root:18 - /cardに遷移しました
+2026-06-25 14:45:24 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 14:45:24 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 14:45:24 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:24 [INFO] root:18 - /cardに遷移しました
+2026-06-25 14:45:24 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 14:45:24 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 14:45:24 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:25 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:45:25 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:45:25 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:45:25 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:25 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:45:25 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:27 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:45:27 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:45:27 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:45:27 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:27 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:45:27 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:33 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:45:33 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:45:33 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:45:33 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:33 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:45:33 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:33 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:45:56 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:45:56 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:45:56 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:45:56 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:45:56 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:56 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:45:56 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:56 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:45:56 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:45:56 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:56 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:45:56 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:45:56 [INFO] root:18 - /index/?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 14:50:17 [INFO] root:52 - Sent message: authenticating
+2026-06-25 14:50:17 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 14:50:30 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 14:50:31 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 14:50:31 [INFO] flet:61 - Starting up TCP server on localhost:50154
+2026-06-25 14:50:31 [INFO] flet:171 - Flet app has started...
+2026-06-25 14:50:31 [INFO] flet:131 - App URL: tcp://localhost:50154
+2026-06-25 14:50:31 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 14:50:31 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:50:31 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:50:32 [INFO] flet:240 - App session started
+2026-06-25 14:50:32 [INFO] root:37 - GUIが起動されました
+2026-06-25 14:50:32 [INFO] root:18 - /に遷移しました
+2026-06-25 14:50:41 [INFO] root:47 - ログイン成功
+2026-06-25 14:50:41 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:42 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:50:42 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:50:42 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:50:42 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:42 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:50:42 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:42 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:50:42 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:50:42 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:50:42 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:50:42 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:50:42 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:42 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:50:42 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 453, in accesslogs
+    page.go("/index/?error=ログ閲覧画面の表示中にエラーが発生しました")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 943, in go
+    self.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 27, in page_route_change
+    page.views.append(accesslogs.accesslogs(page))
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 456, in accesslogs
+    page.go("/index")  # 例外が発生した場合でも、必ずindexに戻る
+    ~~~~~~~^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 943, in go
+    self.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:50:42 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:42 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:42 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:42 [INFO] root:18 - /index/?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 14:50:47 [INFO] root:52 - Sent message: authenticating
+2026-06-25 14:50:47 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 14:50:48 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 14:50:49 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 14:50:49 [INFO] flet:61 - Starting up TCP server on localhost:58297
+2026-06-25 14:50:49 [INFO] flet:171 - Flet app has started...
+2026-06-25 14:50:49 [INFO] flet:131 - App URL: tcp://localhost:58297
+2026-06-25 14:50:49 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 14:50:49 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:50:49 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:50:49 [INFO] flet:240 - App session started
+2026-06-25 14:50:49 [INFO] root:37 - GUIが起動されました
+2026-06-25 14:50:49 [INFO] root:18 - /に遷移しました
+2026-06-25 14:50:56 [INFO] root:47 - ログイン成功
+2026-06-25 14:50:56 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:57 [INFO] root:18 - /cardに遷移しました
+2026-06-25 14:50:57 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 14:50:57 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 14:50:57 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:57 [INFO] root:18 - /cardに遷移しました
+2026-06-25 14:50:57 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 14:50:57 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 14:50:57 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:58 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:50:58 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:50:58 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:50:58 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:58 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:50:58 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:50:58 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:50:58 [INFO] root:18 - /index/?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 14:50:58 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:51:07 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:51:07 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:51:07 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:51:07 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:51:07 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:51:07 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:51:07 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:53:34 [INFO] root:52 - Sent message: authenticating
+2026-06-25 14:53:34 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 14:54:00 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 14:54:01 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 14:54:01 [INFO] flet:61 - Starting up TCP server on localhost:51198
+2026-06-25 14:54:01 [INFO] flet:171 - Flet app has started...
+2026-06-25 14:54:01 [INFO] flet:131 - App URL: tcp://localhost:51198
+2026-06-25 14:54:01 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 14:54:01 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:54:01 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 14:54:01 [INFO] flet:240 - App session started
+2026-06-25 14:54:01 [INFO] root:37 - GUIが起動されました
+2026-06-25 14:54:01 [INFO] root:18 - /に遷移しました
+2026-06-25 14:54:13 [INFO] root:47 - ログイン成功
+2026-06-25 14:54:13 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:54:14 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:54:14 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:54:14 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:54:14 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:54:14 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:54:14 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:54:14 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:54:14 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:54:14 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:54:14 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:54:14 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:54:14 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:56:38 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 14:56:38 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:56:38 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 14:56:38 [INFO] root:18 - /index/?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 14:56:38 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 14:56:38 [INFO] root:18 - /indexに遷移しました
+2026-06-25 14:56:38 [INFO] root:18 - /index/?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 14:56:45 [INFO] root:52 - Sent message: authenticating
+2026-06-25 14:56:45 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 15:02:02 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 15:02:03 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 15:02:03 [INFO] flet:61 - Starting up TCP server on localhost:64190
+2026-06-25 15:02:03 [INFO] flet:171 - Flet app has started...
+2026-06-25 15:02:03 [INFO] flet:131 - App URL: tcp://localhost:64190
+2026-06-25 15:02:03 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 15:02:03 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:02:03 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:02:03 [INFO] flet:240 - App session started
+2026-06-25 15:02:03 [INFO] root:37 - GUIが起動されました
+2026-06-25 15:02:03 [INFO] root:18 - /に遷移しました
+2026-06-25 15:02:13 [INFO] root:47 - ログイン成功
+2026-06-25 15:02:13 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:02:13 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:02:14 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:02:14 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:02:14 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:02:14 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:02:14 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:02:14 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:02:14 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:02:14 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:05:02 [INFO] root:52 - Sent message: authenticating
+2026-06-25 15:05:02 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 15:05:10 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 15:05:11 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 15:05:11 [INFO] flet:61 - Starting up TCP server on localhost:59727
+2026-06-25 15:05:11 [INFO] flet:171 - Flet app has started...
+2026-06-25 15:05:11 [INFO] flet:131 - App URL: tcp://localhost:59727
+2026-06-25 15:05:11 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 15:05:11 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:05:11 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:05:12 [INFO] flet:240 - App session started
+2026-06-25 15:05:12 [INFO] root:37 - GUIが起動されました
+2026-06-25 15:05:12 [INFO] root:18 - /に遷移しました
+2026-06-25 15:05:19 [INFO] root:47 - ログイン成功
+2026-06-25 15:05:19 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:05:19 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:05:21 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:05:21 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:05:21 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:05:21 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:05:21 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:05:21 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:05:21 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:05:21 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:05:28 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:05:28 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:05:28 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:05:28 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:05:28 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:05:28 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:05:28 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:05:28 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:07:39 [INFO] root:52 - Sent message: authenticating
+2026-06-25 15:07:39 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 15:07:42 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 15:07:43 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 15:07:43 [INFO] flet:61 - Starting up TCP server on localhost:50545
+2026-06-25 15:07:43 [INFO] flet:171 - Flet app has started...
+2026-06-25 15:07:43 [INFO] flet:131 - App URL: tcp://localhost:50545
+2026-06-25 15:07:43 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 15:07:43 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:07:43 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:07:44 [INFO] flet:240 - App session started
+2026-06-25 15:07:44 [INFO] root:37 - GUIが起動されました
+2026-06-25 15:07:44 [INFO] root:18 - /に遷移しました
+2026-06-25 15:07:51 [INFO] root:47 - ログイン成功
+2026-06-25 15:07:51 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:07:51 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:07:52 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:07:52 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:07:52 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:07:52 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:07:52 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 15:07:52 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:07:52 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:07:52 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:10:39 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:10:39 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:10:39 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:10:39 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:10:39 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 15:10:39 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:10:39 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:10:39 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:10:39 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:10:39 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:10:39 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:10:39 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:10:39 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 15:10:39 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:10:39 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:10:39 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:10:41 [INFO] root:52 - Sent message: authenticating
+2026-06-25 15:10:41 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 15:10:47 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 15:10:48 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 15:10:48 [INFO] flet:61 - Starting up TCP server on localhost:55898
+2026-06-25 15:10:48 [INFO] flet:171 - Flet app has started...
+2026-06-25 15:10:48 [INFO] flet:131 - App URL: tcp://localhost:55898
+2026-06-25 15:10:48 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 15:10:48 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:10:48 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:10:48 [INFO] flet:240 - App session started
+2026-06-25 15:10:48 [INFO] root:37 - GUIが起動されました
+2026-06-25 15:10:48 [INFO] root:18 - /に遷移しました
+2026-06-25 15:10:57 [INFO] root:47 - ログイン成功
+2026-06-25 15:10:57 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:10:57 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:10:58 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:10:58 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:10:58 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:10:58 [INFO] root:18 - /index?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 15:10:58 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 15:10:58 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:10:58 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:10:58 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:10:58 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:10:58 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:10:58 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:10:58 [INFO] root:18 - /index?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 15:10:58 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 15:10:58 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:10:58 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:10:58 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:11:00 [INFO] root:52 - Sent message: authenticating
+2026-06-25 15:11:00 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 15:14:20 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 15:14:21 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 15:14:21 [INFO] flet:61 - Starting up TCP server on localhost:54177
+2026-06-25 15:14:21 [INFO] flet:171 - Flet app has started...
+2026-06-25 15:14:21 [INFO] flet:131 - App URL: tcp://localhost:54177
+2026-06-25 15:14:21 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 15:14:21 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:14:21 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:14:21 [INFO] flet:240 - App session started
+2026-06-25 15:14:21 [INFO] root:37 - GUIが起動されました
+2026-06-25 15:14:21 [INFO] root:18 - /に遷移しました
+2026-06-25 15:14:30 [INFO] root:47 - ログイン成功
+2026-06-25 15:14:30 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:14:30 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:14:32 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:14:32 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:14:32 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:14:32 [INFO] root:18 - /index?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 15:14:32 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:14:32 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 15:17:19 [INFO] root:18 - /cardに遷移しました
+2026-06-25 15:17:19 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 15:17:19 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 15:17:19 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:17:19 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:17:56 [INFO] root:18 - /cardに遷移しました
+2026-06-25 15:17:56 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 15:17:56 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 15:17:56 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:17:56 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:17:59 [INFO] root:52 - Sent message: authenticating
+2026-06-25 15:17:59 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 15:18:17 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 15:18:18 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 15:18:18 [INFO] flet:61 - Starting up TCP server on localhost:52342
+2026-06-25 15:18:18 [INFO] flet:171 - Flet app has started...
+2026-06-25 15:18:18 [INFO] flet:131 - App URL: tcp://localhost:52342
+2026-06-25 15:18:18 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 15:18:18 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:18:18 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:18:19 [INFO] flet:240 - App session started
+2026-06-25 15:18:19 [INFO] root:37 - GUIが起動されました
+2026-06-25 15:18:19 [INFO] root:18 - /に遷移しました
+2026-06-25 15:18:31 [INFO] root:47 - ログイン成功
+2026-06-25 15:18:31 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:18:31 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:18:32 [INFO] root:18 - /cardに遷移しました
+2026-06-25 15:18:32 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 15:18:32 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 15:18:32 [INFO] root:18 - /index?error=カードテーブルの読み込みに失敗しましたに遷移しました
+2026-06-25 15:18:32 [INFO] root:22 - index_viewに遷移しました。error_message=カードテーブルの読み込みに失敗しました
+2026-06-25 15:18:33 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:18:33 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:18:33 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:18:33 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:18:33 [INFO] root:18 - /index?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 15:18:33 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 15:18:33 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 15:18:33 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:18:33 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 15:18:33 [INFO] root:18 - /index?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 15:18:33 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 15:18:33 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 15:19:08 [INFO] root:52 - Sent message: authenticating
+2026-06-25 15:19:08 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 15:24:18 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 15:24:19 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 15:24:19 [INFO] flet:61 - Starting up TCP server on localhost:59449
+2026-06-25 15:24:19 [INFO] flet:171 - Flet app has started...
+2026-06-25 15:24:19 [INFO] flet:131 - App URL: tcp://localhost:59449
+2026-06-25 15:24:19 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 15:24:19 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:24:19 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 15:24:19 [INFO] flet:240 - App session started
+2026-06-25 15:24:19 [INFO] root:37 - GUIが起動されました
+2026-06-25 15:24:19 [INFO] root:18 - /に遷移しました
+2026-06-25 15:24:27 [INFO] root:47 - ログイン成功
+2026-06-25 15:24:27 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:24:27 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:24:29 [INFO] root:18 - /registerに遷移しました
+2026-06-25 15:24:29 [INFO] root:40 - Sent message: registering
+2026-06-25 15:24:41 [INFO] root:30 - Sent message: authenticating
+2026-06-25 15:24:41 [INFO] root:18 - /indexに遷移しました
+2026-06-25 15:24:41 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 15:25:00 [INFO] root:18 - ログアウトしました
+2026-06-25 15:25:00 [INFO] root:18 - /に遷移しました
+2026-06-25 15:25:03 [INFO] root:52 - Sent message: authenticating
+2026-06-25 15:25:03 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 16:14:01 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 16:14:02 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 16:14:02 [INFO] flet:61 - Starting up TCP server on localhost:63822
+2026-06-25 16:14:02 [INFO] flet:171 - Flet app has started...
+2026-06-25 16:14:02 [INFO] flet:131 - App URL: tcp://localhost:63822
+2026-06-25 16:14:02 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 16:14:02 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 16:14:02 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 16:14:02 [INFO] flet:240 - App session started
+2026-06-25 16:14:02 [INFO] root:37 - GUIが起動されました
+2026-06-25 16:14:02 [INFO] root:18 - /に遷移しました
+2026-06-25 16:14:10 [INFO] root:47 - ログイン成功
+2026-06-25 16:14:10 [INFO] root:18 - /indexに遷移しました
+2026-06-25 16:14:10 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 16:14:12 [INFO] root:18 - /cardに遷移しました
+2026-06-25 16:14:12 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 16:14:12 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 16:14:12 [INFO] root:18 - /index?error=カードテーブルの読み込みに失敗しましたに遷移しました
+2026-06-25 16:14:12 [INFO] root:22 - index_viewに遷移しました。error_message=カードテーブルの読み込みに失敗しました
+2026-06-25 16:14:12 [INFO] root:18 - /cardに遷移しました
+2026-06-25 16:14:12 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 16:14:12 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 16:14:12 [INFO] root:18 - /index?error=カードテーブルの読み込みに失敗しましたに遷移しました
+2026-06-25 16:14:12 [INFO] root:22 - index_viewに遷移しました。error_message=カードテーブルの読み込みに失敗しました
+2026-06-25 16:14:15 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 16:14:15 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 16:14:15 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 16:14:15 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 16:14:15 [INFO] root:18 - /index?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 16:14:15 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 16:14:17 [INFO] root:18 - /registerに遷移しました
+2026-06-25 16:14:17 [INFO] root:40 - Sent message: registering
+2026-06-25 16:14:18 [INFO] root:30 - Sent message: authenticating
+2026-06-25 16:14:18 [INFO] root:18 - /indexに遷移しました
+2026-06-25 16:14:18 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 16:14:39 [INFO] root:52 - Sent message: authenticating
+2026-06-25 16:14:39 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 17:31:33 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 17:31:35 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 17:31:35 [INFO] flet:61 - Starting up TCP server on localhost:50150
+2026-06-25 17:31:35 [INFO] flet:171 - Flet app has started...
+2026-06-25 17:31:35 [INFO] flet:131 - App URL: tcp://localhost:50150
+2026-06-25 17:31:35 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 17:31:35 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 17:31:35 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 17:31:35 [INFO] flet:240 - App session started
+2026-06-25 17:31:35 [INFO] root:37 - GUIが起動されました
+2026-06-25 17:31:35 [INFO] root:18 - /に遷移しました
+2026-06-25 17:31:44 [INFO] root:47 - ログイン成功
+2026-06-25 17:31:44 [INFO] root:18 - /indexに遷移しました
+2026-06-25 17:31:44 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 17:31:54 [INFO] root:18 - /registerに遷移しました
+2026-06-25 17:31:54 [INFO] root:40 - Sent message: registering
+2026-06-25 17:31:54 [INFO] root:57 - カードリーダー1をチェック中: SONY FeliCa Port/PaSoRi 4.0 0
+2026-06-25 17:31:54 [INFO] root:57 - カードリーダー1をチェック中: SONY FeliCa Port/PaSoRi 4.0 0
+2026-06-25 17:33:00 [INFO] root:30 - Sent message: authenticating
+2026-06-25 17:33:00 [INFO] root:18 - /indexに遷移しました
+2026-06-25 17:33:00 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 17:33:03 [INFO] root:18 - /registerに遷移しました
+2026-06-25 17:33:03 [INFO] root:40 - Sent message: registering
+2026-06-25 17:33:03 [INFO] root:57 - カードリーダー1をチェック中: SONY FeliCa Port/PaSoRi 4.0 0
+2026-06-25 17:33:03 [INFO] root:57 - カードリーダー1をチェック中: SONY FeliCa Port/PaSoRi 4.0 0
+2026-06-25 17:33:04 [INFO] root:30 - Sent message: authenticating
+2026-06-25 17:33:04 [INFO] root:18 - /indexに遷移しました
+2026-06-25 17:33:04 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 17:33:05 [INFO] root:18 - /cardに遷移しました
+2026-06-25 17:33:05 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 17:33:05 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 17:33:05 [INFO] root:18 - /index?error=カードテーブルの読み込みに失敗しましたに遷移しました
+2026-06-25 17:33:05 [INFO] root:22 - index_viewに遷移しました。error_message=カードテーブルの読み込みに失敗しました
+2026-06-25 17:33:34 [INFO] root:52 - Sent message: authenticating
+2026-06-25 17:33:34 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 17:39:10 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 17:39:12 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 17:39:12 [INFO] flet:61 - Starting up TCP server on localhost:58526
+2026-06-25 17:39:12 [INFO] flet:171 - Flet app has started...
+2026-06-25 17:39:12 [INFO] flet:131 - App URL: tcp://localhost:58526
+2026-06-25 17:39:12 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 17:39:12 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 17:39:12 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 17:39:13 [INFO] flet:240 - App session started
+2026-06-25 17:39:13 [INFO] root:37 - GUIが起動されました
+2026-06-25 17:39:13 [INFO] root:18 - /に遷移しました
+2026-06-25 17:39:26 [INFO] root:47 - ログイン成功
+2026-06-25 17:39:26 [INFO] root:18 - /indexに遷移しました
+2026-06-25 17:39:26 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 17:39:28 [INFO] root:18 - /cardに遷移しました
+2026-06-25 17:39:28 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 17:39:28 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 17:39:28 [INFO] root:18 - /index?error=カードテーブルの読み込みに失敗しましたに遷移しました
+2026-06-25 17:39:28 [INFO] root:22 - index_viewに遷移しました。error_message=カードテーブルの読み込みに失敗しました
+2026-06-25 17:40:49 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 17:40:49 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 17:40:49 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 17:40:49 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 17:40:49 [INFO] root:18 - /index?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 17:40:49 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 17:40:56 [INFO] root:18 - /cardに遷移しました
+2026-06-25 17:40:56 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 17:40:56 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 17:40:56 [INFO] root:18 - /index?error=カードテーブルの読み込みに失敗しましたに遷移しました
+2026-06-25 17:40:56 [INFO] root:22 - index_viewに遷移しました。error_message=カードテーブルの読み込みに失敗しました
+2026-06-25 17:45:00 [INFO] root:52 - Sent message: authenticating
+2026-06-25 17:45:00 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 17:45:29 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 17:45:31 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 17:45:31 [INFO] flet:61 - Starting up TCP server on localhost:59072
+2026-06-25 17:45:31 [INFO] flet:171 - Flet app has started...
+2026-06-25 17:45:31 [INFO] flet:131 - App URL: tcp://localhost:59072
+2026-06-25 17:45:31 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 17:45:31 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 17:45:31 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 17:45:31 [INFO] flet:240 - App session started
+2026-06-25 17:45:31 [INFO] root:37 - GUIが起動されました
+2026-06-25 17:45:31 [INFO] root:18 - /に遷移しました
+2026-06-25 17:45:53 [INFO] root:52 - Sent message: authenticating
+2026-06-25 17:45:53 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 17:46:13 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 17:46:14 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 17:46:14 [INFO] flet:61 - Starting up TCP server on localhost:52625
+2026-06-25 17:46:14 [INFO] flet:171 - Flet app has started...
+2026-06-25 17:46:14 [INFO] flet:131 - App URL: tcp://localhost:52625
+2026-06-25 17:46:14 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 17:46:14 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 17:46:14 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 17:46:14 [INFO] flet:240 - App session started
+2026-06-25 17:46:14 [INFO] root:37 - GUIが起動されました
+2026-06-25 17:46:14 [INFO] root:18 - /に遷移しました
+2026-06-25 17:46:25 [INFO] root:47 - ログイン成功
+2026-06-25 17:46:25 [INFO] root:18 - /indexに遷移しました
+2026-06-25 17:46:25 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 17:46:36 [INFO] root:18 - /cardに遷移しました
+2026-06-25 17:46:36 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 17:46:36 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 17:46:36 [INFO] root:18 - /index?error=カードテーブルの読み込みに失敗しましたに遷移しました
+2026-06-25 17:46:36 [INFO] root:22 - index_viewに遷移しました。error_message=カードテーブルの読み込みに失敗しました
+2026-06-25 17:55:37 [INFO] root:18 - /cardに遷移しました
+2026-06-25 17:55:37 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 17:55:37 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 17:55:37 [INFO] root:18 - /index?error=カードテーブルの読み込みに失敗しましたに遷移しました
+2026-06-25 17:55:37 [INFO] root:22 - index_viewに遷移しました。error_message=カードテーブルの読み込みに失敗しました
+2026-06-25 17:55:37 [INFO] root:18 - /cardに遷移しました
+2026-06-25 17:55:37 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 17:55:37 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 17:55:37 [INFO] root:18 - /index?error=カードテーブルの読み込みに失敗しましたに遷移しました
+2026-06-25 17:55:37 [INFO] root:22 - index_viewに遷移しました。error_message=カードテーブルの読み込みに失敗しました
+2026-06-25 17:55:53 [INFO] root:18 - /accesslogsに遷移しました
+2026-06-25 17:55:53 [ERROR] app.models.db_manager:101 - アクセスログ件数取得エラー: card_name=%, method=%, eventtype=None
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 17:55:53 [ERROR] root:452 - ログ閲覧画面の表示中にエラーが発生しました: no such table: access_logs
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\views\accesslogs.py", line 362, in accesslogs
+    calc_total_pages(db.count_filtered_logs())
+                     ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 95, in count_filtered_logs
+    cursor.execute(query, (
+    ~~~~~~~~~~~~~~^^^^^^^^^
+        card_name, method, eventtype, eventtype,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        start_datetime_str, end_datetime_str
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^^
+sqlite3.OperationalError: no such table: access_logs
+2026-06-25 17:55:53 [INFO] root:18 - /index?error=ログ閲覧画面の表示中にエラーが発生しましたに遷移しました
+2026-06-25 17:55:53 [ERROR] asyncio:1871 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("'NoneType' object has no attribute '_build_add_commands'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 38, in page_route_change
+    page.update()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 735, in update
+    r = self.__update(self)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 801, in __update
+    commands, added_controls, removed_controls = self.__prepare_update(*controls)
+                                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 817, in __prepare_update
+    control.build_update_commands(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._index, commands, added_controls, removed_controls
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\control.py", line 490, in build_update_commands
+    innerCmds = ctrl._build_add_commands(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_build_add_commands'
+2026-06-25 17:55:53 [INFO] root:22 - index_viewに遷移しました。error_message=ログ閲覧画面の表示中にエラーが発生しました
+2026-06-25 17:56:03 [INFO] root:52 - Sent message: authenticating
+2026-06-25 17:56:03 [INFO] __main__:56 - GUIを終了しました
+2026-06-25 17:56:20 [INFO] root:36 - Log configuration loaded successfully
+2026-06-25 17:56:21 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-25 17:56:21 [INFO] flet:61 - Starting up TCP server on localhost:56522
+2026-06-25 17:56:21 [INFO] flet:171 - Flet app has started...
+2026-06-25 17:56:21 [INFO] flet:131 - App URL: tcp://localhost:56522
+2026-06-25 17:56:21 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-25 17:56:21 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 17:56:21 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-25 17:56:22 [INFO] flet:240 - App session started
+2026-06-25 17:56:22 [INFO] root:37 - GUIが起動されました
+2026-06-25 17:56:22 [INFO] root:18 - /に遷移しました
+2026-06-25 17:56:31 [INFO] root:47 - ログイン成功
+2026-06-25 17:56:31 [INFO] root:18 - /indexに遷移しました
+2026-06-25 17:56:31 [INFO] root:22 - index_viewに遷移しました。error_message=
+2026-06-25 17:56:33 [INFO] root:18 - /cardに遷移しました
+2026-06-25 17:56:33 [ERROR] app.models.db_manager:119 - カード検索エラー: card_name=
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\app\models\db_manager.py", line 115, in find_by_card_name
+    cursor.execute(f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY card_id {order} LIMIT 100 OFFSET ?",
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                (f"%{card_name}%", offset))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: card
+2026-06-25 17:56:33 [ERROR] root:336 - カードテーブルの読み込みに失敗しました: no such table: card
+2026-06-25 17:56:33 [INFO] root:18 - /index?error=カードテーブルの読み込みに失敗しましたに遷移しました
+2026-06-25 17:56:33 [INFO] root:22 - index_viewに遷移しました。error_message=カードテーブルの読み込みに失敗しました
+2026-06-25 17:57:17 [INFO] root:52 - Sent message: authenticating
+2026-06-25 17:57:17 [INFO] __main__:56 - GUIを終了しました

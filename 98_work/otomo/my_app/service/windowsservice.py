@@ -17,7 +17,7 @@ import datetime
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
-import logs.log_config_service
+import my_app.logs.log_config_service
 # endregion
 
 # server_dir = os.path.dirname(os.path.abspath(__file__))
@@ -45,13 +45,13 @@ def reboot_computer_at_time():
         else:
             reboot_time_tomorrow = reboot_time_today + datetime.timedelta(days=1)
             wait_seconds = (reboot_time_tomorrow - now).total_seconds()
-        
+
         time.sleep(wait_seconds)
 
         logging.info("パソコン再起動します")
         os.system("shutdown /r /t 0")
 
-from service.backsystem import BackSystem
+from my_app.service.backsystem import BackSystem
 
 class SmartKeyService(win32serviceutil.ServiceFramework):
     _svc_name_        = "SmartKeyService"

@@ -1,5 +1,5 @@
 import logging
-import logs.log_config_service
+import my_app.logs.log_config_service
 import requests
 import time
 from .sendmail import send_mail

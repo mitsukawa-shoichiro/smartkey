@@ -7,7 +7,7 @@ import logging
 import asyncio
 import sqlite3
 import db.repository as repo
-from views.common import show_error_dialog, filter_user_options
+from my_app.app.views.common import show_error_dialog, filter_user_options
 
 
 logger = logging.getLogger(__name__)
@@ -19,8 +19,9 @@ def userView(page: ft.page):
     # ===================================================
     offset = 0                     # 現在のページ番号(0始まり)
     all_page = 1                   # 全ページ数
-    selected_user_id = None 
-    search_text = ""
+
+    selected_user_id = None
+
 
     page.title = "ユーザ管理画面"
 
@@ -225,7 +226,7 @@ def userView(page: ft.page):
             logger.exception("ユーザー情報の読み込みに失敗しました")
             show_error_dialog(page, "ユーザー情報の取得に失敗しました。しばらくしてから再度お試しください。")
             return
-        
+
         #諸パラメーター更新
         all_page = int(((total - 1)/100)+1)
 

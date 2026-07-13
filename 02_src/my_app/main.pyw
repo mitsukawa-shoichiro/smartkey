@@ -1,19 +1,21 @@
-import atexit
 import os
 import sys
-import logs.log_config_app
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import atexit
+import my_app.logs.log_config_app
 import flet as ft
-from app.views.router import route
+from my_app.app.views.router import route
 import logging
 import json
-from service.card_sys import set_state, get_state
-from app.utils.thread_state import stop_event
+from my_app.service.card_sys import set_state, get_state
 import socket
 
 HOST = '127.0.0.1'
 PORT = 10000
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 # region logs
 # logs ディレクトリのパスを sys.path に追加
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'logs'))

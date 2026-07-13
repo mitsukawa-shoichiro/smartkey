@@ -14,7 +14,7 @@ import servicemanager
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
-import logs.log_config_service
+import my_app.logs.log_config_service
 # endregion
 
 # server_dir = os.path.dirname(os.path.abspath(__file__))
@@ -25,7 +25,7 @@ import logs.log_config_service
 
 sys.path.append(os.path.dirname(__file__))
 
-from service.backsystem import BackSystem
+from my_app.service.backsystem import BackSystem
 
 if __name__ == "__main__":
     BackSystem()

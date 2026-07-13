@@ -1,13 +1,13 @@
 import atexit
 import os
 import sys
-import logs.log_config_app
+import my_app.logs.log_config_app
 import flet as ft
-from app.views.router import route
+from my_app.app.views.router import route
 import logging
 import json
-from service.cardsystem import set_state, get_state
-from app.utils.thread_state import stop_event
+from my_app.service.cardsystem import set_state, get_state
+from my_app.app.utils.thread_state import stop_event
 import socket
 
 HOST = '127.0.0.1'
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 # endregion
 
 
-from app.utils.front_camera_moduel import send_message
+from my_app.app.utils.front_camera_moduel import send_message
 
 def main(page: ft.Page):
     page.window.width = 1024
@@ -33,7 +33,7 @@ def main(page: ft.Page):
     page.window.min_height = 768
     page.window.resizable = True
     page.title = "ドア開閉システム"
-    route(page) 
+    route(page)
     page.go("/")
     send_message("startRegisting")
     logging.info("GUIが起動されました")

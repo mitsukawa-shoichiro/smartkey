@@ -1,5 +1,5 @@
 # reader_daemon.py
-# from service import card_sys
+# from my_app.service import card_sys
 import time
 import json
 import threading
@@ -117,7 +117,7 @@ class CardReader:
         sock.settimeout(0.25)
         sock.sendto(message.encode('utf-8'), (self.SOCKET_HOST, self.HEARTBEAT_PORT))
         sock.close()
-        return True 
+        return True
 
 
     #endregion
@@ -128,7 +128,7 @@ class CardReader:
     #region　カード認証機能
     def reader_loop(self):
         print(COUNT_READER)
-        try:    
+        try:
             reader_list = self.get_reader()
         except Exception as e:
             print(f"ERROR: カードリーダー異常: {e}")
@@ -177,7 +177,7 @@ class CardReader:
             if (len(reader_list) < COUNT_READER) and not self.DEBUG:
                 msg = "NOT_ENOUGH_READERS"
                 self.send_message(msg)
-                break   
+                break
             else:
                 msg = "ALIVE"
                 send_count+=1
@@ -213,7 +213,7 @@ class CardReader:
         if self.thread_card_check:
             self.thread_card_check.join(timeout=2)
             print("thread_card_check stopped.")
-        
+
         if self.thread_reciever:
             self.thread_card_check.join(timeout=2)
             print("thread_card_check stopped.")

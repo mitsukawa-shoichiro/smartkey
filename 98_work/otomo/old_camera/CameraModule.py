@@ -13,7 +13,7 @@ import time
 #import service.db_manager as db
 #import service.utils.sesame as sesami
 #import camera.face_util as face_util
-#import logs.log_config_service
+#import my_app.logs.log_config_service
 
 import logging
 

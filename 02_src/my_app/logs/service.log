@@ -1,11 +1,29 @@
-2026-06-26 13:51:42 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
-2026-06-26 13:51:42 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-    import camera.CameraModule; print('camera.CameraModule import OK')
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\smartkey\02_src\my_app\camera\CameraModule.py", line 18, in <module>
-    from service.cardsystem import request_unlock
-  File "C:\smartkey\02_src\my_app\service\cardsystem.py", line 4, in <module>
-    from service.db_manager import check_card, insert_card_access_log
-ImportError: cannot import name 'insert_card_access_log' from 'service.db_manager' (C:\smartkey\02_src\my_app\service\db_manager.py)
+2026-07-13 13:37:48 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-13 13:37:49 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-13 13:37:49 [INFO] windowsservice:63 - back_system thread started
+2026-07-13 13:37:49 [INFO] backsys.back_system:145 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-13 13:37:49 [INFO] windowsservice:67 - CardCheck thread started
+2026-07-13 13:37:49 [INFO] nfcutils.card_check:120 - 設定台数: 1
+2026-07-13 13:37:49 [INFO] backsys.back_system:102 - 死活監視システム起動...
+2026-07-13 13:37:50 [INFO] nfcutils.card_check:75 - カードリーダーの数: 0
+2026-07-13 13:37:50 [ERROR] nfcutils.card_check:82 - カードリーダーの数が不足しているためカードの読み込みがスタートしていません: 0 / 1
+2026-07-13 13:37:50 [ERROR] backsys.back_system:114 - カードリーダーが指定台数分接続されていません
+2026-07-13 13:37:50 [INFO] backsys.sendmail:41 - メール送信成功
+2026-07-13 13:37:50 [INFO] backsys.sendmail:44 - メール送信完了
+2026-07-13 13:37:50 [INFO] backsys.back_system:117 - カードリーダー異常
+2026-07-13 13:37:50 [INFO] backsys.back_system:61 - バッテリー残量: 100
+2026-07-13 13:40:15 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-13 13:43:30 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-13 13:43:31 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-13 13:43:31 [INFO] windowsservice:63 - back_system thread started
+2026-07-13 13:43:31 [INFO] backsys.back_system:145 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-13 13:43:31 [INFO] windowsservice:67 - CardCheck thread started
+2026-07-13 13:43:31 [INFO] nfcutils.card_check:120 - 設定台数: 1
+2026-07-13 13:43:31 [INFO] backsys.back_system:102 - 死活監視システム起動...
+2026-07-13 13:43:31 [INFO] nfcutils.card_check:75 - カードリーダーの数: 0
+2026-07-13 13:43:31 [ERROR] nfcutils.card_check:82 - カードリーダーの数が不足しているためカードの読み込みがスタートしていません: 0 / 1
+2026-07-13 13:43:31 [ERROR] backsys.back_system:114 - カードリーダーが指定台数分接続されていません
+2026-07-13 13:43:32 [INFO] backsys.sendmail:41 - メール送信成功
+2026-07-13 13:43:32 [INFO] backsys.sendmail:44 - メール送信完了
+2026-07-13 13:43:32 [INFO] backsys.back_system:117 - カードリーダー異常
+2026-07-13 13:43:32 [INFO] backsys.back_system:61 - バッテリー残量: 100

@@ -1,51 +1,52 @@
+"""
+カード登録画面GUI作成モジュール
+登録処理に関してはView側の負担は最低限にすべく
+バックとのやり取り、ロジックはcard_register_service、
+状態管理はthread_state、
+カード番号受け取り、保管はregister_listener
+これらに責務を切り分けています。
+
+未対処リスク
+
+"""
+
+
 import flet as ft
 import asyncio
-import db.repository as repo
 import logging
-from service.card_sys import set_state, get_state, get_card
-from app.utils.thread_state import thread_handle, stop_event
-import socket
 import threading
-CARD_NUMBER = None
 
-HOST = '127.0.0.1'
-PORT = 10000
+import db.repository as repo
+from my_app.service.daemon_bridge import card_register_service as register_service
+from my_app.service.daemon_bridge import thread_state, register_listener
+from my_app.models.ENUMS import CardType
+from my_app.app.views.common import show_error_dialog, filter_user_options
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 logger = logging.getLogger(__name__)
 
+# ===================================================
+# カード登録待機画面
+# ===================================================
 def registering(page: ft.Page):
     try:
-        global stop_event, thread_handle  #グローバル変数として2変数を指定
 
         def stop_loop(e):                               #stop_buttonをクリックした際のみここに来る
 
-            stop_event.set()
-            try:
-
-                sock.connect((HOST, PORT))              #HOST,PORTはタプルに指定。変更不能
-                msg = "authenticating"
-                sock.sendall(msg.encode('utf-8'))       #socket通信では送れない文字列をutf-8で送信可能にしている
-                logger.info(f"Sent message: {msg}")
-            except Exception as e:                      #どのような例外でもeという名前で受け取る
-                logger.error(f"通信エラー: {e}")
+            register_service.cancel_registration_session()
             page.go("/index")
 
-        try:
-
-            sock.connect((HOST, PORT))
-            msg = "registering"
-            sock.sendall(msg.encode('utf-8'))
-            logger.info(f"Sent message: {msg}")
-        except Exception as e:
-            logger.error(f"通信エラー: {e}")
+        register_service.start_registration_session()
 
         page.vertical_alignment = ft.MainAxisAlignment.CENTER       #上下方向(vertical)は中央寄せで表示
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER    #水平方向(horizontal)も中央寄せで表示
         page.title = "ICカード情報読み込み中"
 
-        loading_text = ft.Text("30秒以内に登録したいカードを\n出口のカードリーダーにかざしてください", size=35,
-                            text_align=ft.TextAlign.CENTER)
+        loading_text = ft.Text(
+            "30秒以内に登録したいカードを\n出口のカードリーダーにかざしてください",
+            size=35,
+            text_align=ft.TextAlign.CENTER
+        )
+
         loading_spinner = ft.CupertinoActivityIndicator(
             radius=50,
             color=ft.Colors.LIGHT_BLUE_ACCENT,
@@ -103,138 +104,214 @@ def registering(page: ft.Page):
         page.update()
 
 
+# ===================================================
+# カード番号ポーリングループ待機
+# ===================================================
+
 async def delayed_transition(page: ft.Page):
 
-    global stop_event, CARD_NUMBER
-    first_card = None
-    dialog = ft.AlertDialog(
-        modal=True
-    )
-    i = 0
+    """
+    登録受信待機スレッドを立ち上げ、読み取り結果を受け取る関数
+    細かい動きはregister_serviceに任せています。
+    """
+    # 30秒間読み取り結果を待機
+    result = await register_service.wait_for_new_card(timeout_total_s=30)
 
-    while not stop_event.is_set() and i < 30:
-        first_card = get_card()
-        CARD_NUMBER = get_card()
+    # ダイアログ定義
+    dialog = ft.AlertDialog(modal=True)
 
-        if CARD_NUMBER == first_card and first_card != "" and CARD_NUMBER != "":
-            if not repo.check_card(CARD_NUMBER):
-                try:
+    # キャンセル時
+    if result.status == register_service.STATUS_CANCELLED:
+        return
 
-                    sock.connect((HOST, PORT))
-                    msg = "authenticating"
-                    sock.sendall(msg.encode('utf-8'))
-                    logger.info(f"Sent message: {msg}")
-                except Exception as e:
-                    logger.error(f"通信エラー: {e}")
+    # 二重登録時
+    if result.status == register_service.STATUS_DUPLICATE:
+        dialog.title = ft.Text("エラー")
+        dialog.content = ft.Text("このカードは既に登録されています")
+        dialog.actions = [
+            ft.TextButton("戻る", autofocus=True, on_click=lambda e: page.go("/index"))
+        ]
+        page.open(dialog)
+        return
 
-                page.go("/register/input")
-                break
-            else:
-                dialog.title = ft.Text("エラー")
-                dialog.content = ft.Text("このカードは既に登録されています")
-                dialog.actions = [
-                    ft.TextButton("戻る", autofocus=True,
-                        on_click=lambda e: page.go("/index"))
-                ]
-                page.open(dialog)
-                await asyncio.sleep(1)
-                try:
+    # 登録成功時
+    if result.status == register_service.STATUS_SUCCESS:
+        page.go("/register/input")
+        return
 
-                    sock.connect((HOST, PORT))
-                    msg = "authenticating"
-                    sock.sendall(msg.encode('utf-8'))
-                    logger.info(f"Sent message: {msg}")
-                except Exception as e:
-                    logger.error(f"通信エラー: {e}")
-                break
-
-        elif first_card != "" and CARD_NUMBER != "":
-            dialog.title = ft.Text("エラー")
-            dialog.content = ft.Text("このカードは対応されてません")
-            dialog.actions = [
-                ft.TextButton("戻る", autofocus=True,
-                    on_click=lambda e: page.go("/index"))
-            ]
-            page.open(dialog)
-            try:
-
-                sock.connect((HOST, PORT))
-                msg = "authenticating"
-                sock.sendall(msg.encode('utf-8'))
-                logger.info(f"Sent message: {msg}")
-            except Exception as e:
-                logger.error(f"通信エラー: {e}")
-
-            break
-
-        i += 1
-
-        await asyncio.sleep(1)
-    if i == 30:
+    # タイムアウト時
+    if result.status == register_service.STATUS_TIMEOUT:
         dialog.title = ft.Text("タイムアウト")
         dialog.content = ft.Column(
             controls=[
-                ft.Container(height=10),
-                ft.Text("30秒経ったため処理を中断しました。"),
-                ft.Text("リトライしますか。")
+            ft.Container(height=10),
+            ft.Text("30秒経過したためタイムアウトしました。"),
+            ft.Text("リトライしますか？")
             ],
             height=70
         )
-        dialog.actions = [
-            ft.TextButton("はい", autofocus=True,
-                on_click=lambda e: retry(e)),
-            ft.TextButton("いいえ",
-                on_click=lambda e: page.go("/index"))
-        ]
-        try:
 
-            sock.connect((HOST, PORT))
-            msg = "authenticating"
-            sock.sendall(msg.encode('utf-8'))
-            logger.info(f"Sent message: {msg}")
-        except Exception as e:
-            logger.error(f"通信エラー: {e}")
-        page.open(dialog)
+    def retry(e):
+        "リトライ用関数：現在の状態をリフレッシュして再び30秒待機を回す関数"
+        # 現在ページの破棄
+        page.views.pop()
+        # 新規ページの作成
+        page.views.append(registering(page))
+        # スレッドの作成、thread_stateに格納
+        thread_state.thread_handle = threading.Thread(
+            target=lambda: run_async_delayed_transition(page)
+        )
+        # スレッド開始
+        thread_state.thread_handle.daemon = True
+        thread_state.thread_handle.start()
+        # ダイアログ終了
+        page.close(dialog)
+        # ページ更新
+        page.update()
 
-        def retry(e):
-            global stop_event, thread_handle
-            stop_event.clear()
-            page.views.append(registering(page))
-            thread_handle = threading.Thread(
-                target=lambda: run_async_delayed_transition(page))
-            thread_handle.daemon = True
-            thread_handle.start()
-            page.close(dialog)
+    # リトライ確認ダイアログ
+    dialog.actions = [
+        ft.TextButton("はい", autofocus=True, on_click=retry),
+        ft.TextButton("いいえ", on_click=lambda e: page.go("/index"))
+    ]
+    # ダイアログ表示
+    page.open(dialog)
 
-
+    #待機ページ開始
 def run_async_delayed_transition(page):
     asyncio.run(delayed_transition(page))
 
+# ===================================================
+# カード情報入力画面
+# ===================================================
 
 def register_input(page: ft.Page):
-    page.vertical_alignment = ft.MainAxisAlignment.START        #画面を上に寄せて表示
+    """検知済みのIDmに対して、所有者(user)とカード種別を選んで登録する画面"""
+    page.vertical_alignment = ft.MainAxisAlignment.START
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
+    selected_user_id = None
+    # 読み取り結果を取得
+    card_number = register_listener.get_card_number()
+
+    dialog = ft.AlertDialog(modal=True)
+
+    # ユーザー選択用Autocomplete(face_view.pyと同じパターン)
+    users = repo.get_all_users()
+
+    # ユーザーID保存
+    def on_user_selected(e: ft.ControlEvent):
+        nonlocal selected_user_id
+        selected_user_id = int(e.selection.key)
+
+    # 検索内容反映関数
+    def on_user_search_change(e: ft.ControlEvent):
+        user_field.suggestions = filter_user_options(users, e.control.value)
+        user_field.update()
+
+    # プルダウン定義
+    user_field = ft.AutoComplete(
+        suggestions=filter_user_options(users, ""),
+        on_select=on_user_selected,
+        on_change=on_user_search_change,
+    )
+
+    # カード種類プルダウン定義
+    card_type_dropdown = ft.Dropdown(
+        label="カードの種類",
+        width=320,
+        options=[
+            ft.dropdown.Option(key=ct.value, text=ct.value)
+            for ct in CardType
+        ],
+    )
+
+    # 登録確認関数
+    def open_add_confirm_dialog(e):
+        if selected_user_id is None or not card_type_dropdown.value:
+            dialog.title = ft.Text("エラー")
+            dialog.content = ft.Text("入力漏れがあります")
+            dialog.actions = [
+                ft.TextButton("OK", autofocus=True, on_click=lambda e: page.close(dialog)),
+            ]
+            page.open(dialog)
+            return
+
+        dialog.title = ft.Text("カード登録の確認")
+        dialog.content = ft.Text("このカードを登録しますか?")
+        dialog.actions = [
+            ft.TextButton("はい", on_click=execute_register),
+            ft.TextButton("いいえ", autofocus=True, on_click=lambda e: page.close(dialog)),
+        ]
+        page.open(dialog)
+
+    # キャンセル確認関数
+    def open_cancel_confirm_dialog(e):
+        dialog.title = ft.Text("キャンセル確認")
+        dialog.content = ft.Text("登録をキャンセルしますか?")
+        dialog.actions = [
+            ft.TextButton("はい", on_click=complete_cancel_confirm_dialog),
+            ft.TextButton("いいえ", autofocus=True, on_click=lambda e: page.close(dialog)),
+        ]
+        page.open(dialog)
+
+    # キャンセル完了関数
+    def complete_cancel_confirm_dialog(e):
+        register_listener.clear_card_number()
+        page.close(dialog)
+        dialog.title = ft.Text("キャンセル完了")
+        dialog.content = ft.Text("カードの登録がキャンセルされました。")
+        dialog.actions = [
+            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/index")),
+        ]
+        page.open(dialog)
+
+    # カード登録関数
+    def execute_register(e):
+        # カード番号無い時(異常事態)
+        if not card_number:
+            logger.critical("カード番号を取得できませんでした")
+            page.close(dialog)
+            dialog.title = ft.Text("エラー")
+            dialog.content = ft.Text("カード番号を取得できませんでした")
+            dialog.actions = [
+                ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/index")),
+            ]
+            page.open(dialog)
+            return
+
+        try:
+            card_type = CardType(card_type_dropdown.value)
+            # 登録処理呼び出し
+            register_service.register_card(card_number, card_type, selected_user_id)
+        except Exception:
+            logger.exception("カード登録に失敗しました: card_number=%s, user_id=%s",
+                            card_number, selected_user_id)
+            page.close(dialog)
+            show_error_dialog(page, "カードの登録に失敗しました。しばらくしてから再度お試しください。")
+            return
+
+        page.close(dialog)
+
+        dialog.title = ft.Text("登録完了")
+        dialog.content = ft.Text("カードの登録が完了しました。")
+        dialog.actions = [
+            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/index")),
+        ]
+        page.open(dialog)
+
+    # ボタン群定義
     button_column = ft.Column(
         controls=[
             ft.ElevatedButton(
-                "登録",
-                icon=ft.Icons.CHECK,
-                width=200,
-                style=ft.ButtonStyle(
-                    shape=ft.RoundedRectangleBorder(radius=6),
-                ),
-                on_click=lambda e: open_add_confirm_dialog(e),      #無名関数でクリック時にopen_add_confirm_dialogを呼ぶ
+                "登録", icon=ft.Icons.CHECK, width=200,
+                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
+                on_click=open_add_confirm_dialog,
             ),
             ft.ElevatedButton(
-                "キャンセル",
-                icon=ft.Icons.ARROW_BACK,
-                width=200,
-                color=ft.Colors.RED,
-                style=ft.ButtonStyle(
-                    shape=ft.RoundedRectangleBorder(radius=6),
-                ),
-                on_click=lambda e: open_cancel_confirm_dialog(e),
+                "キャンセル", icon=ft.Icons.ARROW_BACK, width=200, color=ft.Colors.RED,
+                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
+                on_click=open_cancel_confirm_dialog,
             ),
         ],
         spacing=20,
@@ -242,100 +319,18 @@ def register_input(page: ft.Page):
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     )
 
-    add_confirm_dialog = ft.AlertDialog(
-        modal=True,
-    )
-
-    def open_add_confirm_dialog(e):
-        if not card_name.value or not card_name_type.value:
-            logger.error("入力漏れがあります")
-            add_confirm_dialog.title = ft.Text("エラー")
-            add_confirm_dialog.content = ft.Text("入力漏れがあります")
-            add_confirm_dialog.actions = [
-                ft.TextButton("OK", autofocus=True,
-                    on_click=lambda e: page.close(add_confirm_dialog)),
-            ]
-            page.open(add_confirm_dialog)
-            return
-        add_confirm_dialog.title = ft.Text("カード登録の確認")
-        add_confirm_dialog.content = ft.Text(
-            f"ユーザー名: {card_name.value}、カードの種類: {card_name_type.value} を登録しますか？")
-        add_confirm_dialog.actions = [
-            ft.TextButton("はい", on_click=lambda e: execute_register(e),),
-            ft.TextButton("いいえ", autofocus=True,
-                on_click=lambda e: page.close(add_confirm_dialog)),
-        ]
-        page.open(add_confirm_dialog)
-
-    def open_cancel_confirm_dialog(e):
-        add_confirm_dialog.title = ft.Text("キャンセル確認")
-        add_confirm_dialog.content = ft.Text("登録をキャンセルしますか？")
-        add_confirm_dialog.actions = [
-            ft.TextButton(
-                "はい", on_click=lambda e: complete_cancel_confirm_dialog(e)),
-            ft.TextButton("いいえ", autofocus=True,
-                on_click=lambda e: page.close(add_confirm_dialog)),
-        ]
-        page.open(add_confirm_dialog)
-
-    def complete_add_confirm_dialog(e):
-        add_confirm_dialog.title = ft.Text("登録完了")
-        add_confirm_dialog.content = ft.Text("カードの登録が完了しました。")
-        add_confirm_dialog.actions = [
-            ft.TextButton("OK", autofocus=True,
-                on_click=lambda e: page.go("/index")),
-        ]
-        page.open(add_confirm_dialog)
-
-    def complete_cancel_confirm_dialog(e):
-        page.close(add_confirm_dialog)
-        add_confirm_dialog.title = ft.Text("キャンセル完了")
-        add_confirm_dialog.content = ft.Text("カードの登録がキャンセルされました。")
-        add_confirm_dialog.actions = [
-            ft.TextButton("OK", autofocus=True,
-                on_click=lambda e: page.go("/index")),
-        ]
-        page.open(add_confirm_dialog)
-
-    def execute_register(e):
-        global CARD_NUMBER
-        print(f"[{CARD_NUMBER}]")
-        if not CARD_NUMBER:
-            logger.critical("カード番号を取得できませんでした")
-            page.close(add_confirm_dialog)
-            add_confirm_dialog.title = ft.Text("エラー")
-            add_confirm_dialog.content = ft.Text("カード番号を取得できませんでした")
-            add_confirm_dialog.actions = [
-                ft.TextButton("OK", autofocus=True,
-                    on_click=lambda e: page.go("/index")),
-            ]
-            page.open(add_confirm_dialog)
-            return
-        #怪しい香り、後回し；；ここまじやばい、泣きそう
-        repo.insert_card(
-            (card_name.value + '_' + card_name_type.value), CARD_NUMBER)
-
-        page.close(add_confirm_dialog)
-        logger.info(f"{card_name.value + '_' + card_name_type.value}を追加しました")
-        complete_add_confirm_dialog(e)
-
-    card_name = ft.TextField(
-        label="ユーザー名", autofocus=True, width=320, border_radius=8, on_submit=lambda e: card_name_type.focus(), max_length=50)
-    card_name_type = ft.TextField(
-        label="カードの種類", width=320, border_radius=8, on_submit=lambda e: open_add_confirm_dialog(e), max_length=50)
-
+    # ページにする
     return ft.View(
         "/register/input",
         controls=[
-            ft.Row(  # 横方向の中央寄せ用
+            ft.Row(
                 controls=[
                     ft.Container(
                         content=ft.Column(
                             controls=[
-                                ft.Text("カード登録", size=28,
-                                        weight=ft.FontWeight.BOLD),
-                                card_name,
-                                card_name_type,
+                                ft.Text("カード登録", size=28, weight=ft.FontWeight.BOLD),
+                                user_field,
+                                card_type_dropdown,
                                 ft.Container(height=20),
                                 button_column,
                             ],
@@ -347,10 +342,8 @@ def register_input(page: ft.Page):
                         width=400,
                     )
                 ],
-                alignment=ft.MainAxisAlignment.CENTER,  # 横中央
+                alignment=ft.MainAxisAlignment.CENTER,
                 expand=True,
             )
         ]
     )
-
-

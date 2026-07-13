@@ -6,8 +6,10 @@ import face_recognition
 
 #region config
 import json
-camera_config_path = "config/camera_settings.json"
-card_config_path = "config/usb_settings.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+camera_config_path = os.path.join(BASE_DIR, "..", "..", "config", "camera_settings.json")
+card_config_path = os.path.join(BASE_DIR, "..", "..", "config", "usb_settings.json")
 
 
 with open(camera_config_path, "r", encoding="utf-8") as fc:
@@ -94,7 +96,7 @@ def set_camera_config(camera_enum: IndexEnum, camera_index: int):
 #endregion
 
 #region card_util methods
-from service.nfcutils.card_scan import scan_cardreader
+from my_app.service.nfcutils.card_scan import scan_cardreader
 def detect_cardreader() -> int:
     print("dectedreader")
     readerindex=int(scan_cardreader())
