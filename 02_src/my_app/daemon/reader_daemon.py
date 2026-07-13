@@ -37,7 +37,7 @@ REGISTERING_TIMEOUT_S = 45
 state_changed_at = time.time()
 
 
-BASE_DIR = os.path.dirname(__file__) + "\\..\\..\\config"
+BASE_DIR = os.path.dirname(__file__) + "\\..\\config"
 config_path = os.path.join(BASE_DIR, "usb_settings.json")
 
 with open(config_path, "r", encoding="utf-8") as f:
