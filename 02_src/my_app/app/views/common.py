@@ -6,7 +6,7 @@ GUI層(view)側で必ずtry/exceptで受け止め、ユーザーに分かる形�
 この受け止め方(エラーダイアログの出し方)を1箇所にまとめ、各画面から使い回してください。
 """
 import flet as ft
-from utils import japanese_text as jt
+from app.utils import japanese_text as jt
 
 def show_error_dialog(page: ft.Page, message: str):
     """
@@ -29,9 +29,9 @@ def show_error_dialog(page: ft.Page, message: str):
 
 
 
-def build_user_option(user) -> ft.AutoCompleteOption:
-    """User1件からAutoCompleteOptionを組み立てる(表示は漢字名(カナ名))"""
-    return ft.AutoCompleteOption(key=str(user.id), text=f"{user.user_name}({user.user_kana})")
+def build_user_option(user) -> ft.AutoCompleteSuggestion:
+    """User1件からAutoCompleteSuggestionを組み立てる(表示は漢字名(カナ名))"""
+    return ft.AutoCompleteSuggestion(key=str(user.id), value=f"{user.user_name}({user.user_kana})")
 
 
 def filter_user_options(users, query: str):
@@ -43,7 +43,7 @@ def filter_user_options(users, query: str):
         query (str): 検索キーワード
 
     Returns:
-        list[ft.AutoCompleteOption]: プルダウン形式のリスト
+        list[ft.AutoCompleteSuggestion]: プルダウン形式のリスト
     """
     # 検索が空欄時
     if not query:

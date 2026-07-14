@@ -14,7 +14,7 @@ import db.repository as repo
 import asyncio
 import logging
 from app.models.ENUMS import EventType
-from views.common import filter_user_options
+from app.views.common import filter_user_options
 
 # テーブルの1ページが表示する件数
 ITEMS_PER_PAGE = 100

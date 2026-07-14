@@ -11,7 +11,7 @@ import sqlite3
 import flet as ft
 import db.repository as repo
 from app.models.ENUMS import CardType
-from views.common import show_error_dialog, filter_user_options
+from app.views.common import show_error_dialog, filter_user_options
 
 logger = logging.getLogger(__name__)
 

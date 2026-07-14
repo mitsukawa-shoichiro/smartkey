@@ -67,6 +67,18 @@ def run_card():
     logger.info("CardCheck thread started")
     card_check.main()
 
+from camera.CameraModule import CameraWorker
+camera_worker = None
+def run_camera():
+    global camera_worker
+
+    try:
+        logger.info("かめらわーかーすれっどすたーと")
+        camera_worker = CameraWorker()
+        camera_worker.back_end_system()
+    except Exception:
+        logger.exception("えらーや")
+
 class SmartKeyService(win32serviceutil.ServiceFramework):
     _svc_name_        = "SmartKeyService"
     _svc_display_name_ = "Smart Key Python Service"
@@ -84,11 +96,19 @@ class SmartKeyService(win32serviceutil.ServiceFramework):
         # スレッド起動
         t1 = threading.Thread(target=run_back, daemon=True)
         t2 = threading.Thread(target=run_card, daemon=True)
+        t_camera = threading.Thread(target=run_camera, daemon=True)
+
+        self.threads = [t1, t2, t_camera]
+
         if shutdown_bool:
-            t3 = threading.Thread(target=reboot_computer_at_time, daemon=True)
-            t3.start()
-        t1.start(); t2.start()
-        self.threads = [t1, t2, t3]
+            t_shutdown = threading.Thread(
+                target = reboot_computer_at_time,
+                daemon = True
+            )
+            self.threads.append(t_shutdown)
+
+        for thread in self.threads:
+            thread.start()
 
         # 停止要求を待機
         win32event.WaitForSingleObject(self.hWaitStop, win32event.INFINITE)
@@ -103,7 +123,13 @@ class SmartKeyService(win32serviceutil.ServiceFramework):
 
     # サービス停止
     def SvcStop(self):
+        global camera_worker
+
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
+
+        if camera_worker is not None:
+            camera_worker.stop()
+
         win32event.SetEvent(self.hWaitStop)
 
 if __name__ == "__main__":

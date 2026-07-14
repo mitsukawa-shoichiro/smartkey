@@ -1,0 +1,14 @@
+{
+    "rgb_camera_index": 0,
+    "ir_camera_index": 1,
+    "similarity_threshold": 0.42,
+    "margin_threshold": 0.04,
+    "required_success_frames": 5,
+    "unlock_cooldown_sec": 6,
+    "ir_min_mean": 25,
+    "ir_min_face_mean": 35,
+    "max_frame_gap_ms": 150,
+    "pad_threshold": 0.8,
+    "pad_window_size": 5,
+    "pad_required_passes": 5
+}
