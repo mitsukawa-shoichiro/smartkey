@@ -318,29 +318,27 @@ def find_user_name_jpn_and_user_id_by_user_name_kana(user_name_kana, asc: bool, 
         list: ユーザーID,名前（存在する場合）またはNone（存在しない場合）
     """
     order = "ASC" if asc else "DESC"
-    try:
-        with get_connection() as conn:
-            c = conn.cursor()
-            c.execute(
-                f"SELECT * FROM user WHERE user_name_kana LIKE ? ORDER BY id {order} LIMIT 100 OFFSET ?",
-                (f"%{user_name_kana}%", offset)
-            )
-            row = c.fetchone()
-            return row[0] if row else None
-    except sqlite3.Error:
-        logger.exception("カナ氏名からユーザーID、名前検索でエラー: user_name_kana = %s", user_name_kana)
-        raise
-
+    
+    with get_connection() as conn:
+        c = conn.cursor()
+        c.execute(
+            f"SELECT * FROM user WHERE user_name_kana LIKE ? ORDER BY id {order} LIMIT 100 OFFSET ?",
+            (f"%{user_name_kana}%", offset)
+        )
+        rows = c.fetchall()
+        return rows
+    
 def update_user(user_id, user_name_jpn, user_name_kana):
-    sql = """
-    UPDATE users
-    SET
-        user_name_jpn = ?,
-        user_name_kana = ?
-    WHERE user_id = ?
-    """
-    conn.execute(sql, (user_name_jpn, user_name_kana, user_id))
-    conn.commit()
+    with get_connection() as conn:
+        conn.execute( """
+        UPDATE user
+        SET
+            user_name_jpn = ?,
+            user_name_kana = ?
+        WHERE user_id = ?
+        """,
+        (user_name_jpn, user_name_kana, user_id))
+        conn.commit()
 
 def find_user_id_by_card_id(card_id):
     """
