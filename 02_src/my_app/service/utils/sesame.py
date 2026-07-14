@@ -3,6 +3,7 @@ import datetime
 import base64
 import requests
 import json
+import db.repository as repo
 from Crypto.Hash import CMAC
 from Crypto.Cipher import AES
 import os
@@ -22,10 +23,10 @@ secret_key = sesame_config["secret_key"]
 
 
 
-def send_sesame_command(cmd: int):
+def send_sesame_command(cmd, user_id):
     try:
         # SESAMEの履歴用文字列つくる
-        history = str(random.random())
+        history = str(user_id)
         base64_history = base64.b64encode(bytes(history, 'utf-8')).decode()
 
         # APIキーをヘッダーにせってい
@@ -54,10 +55,10 @@ def send_sesame_command(cmd: int):
     except Exception as e:
         logger.error("エラー:" + str(e))
 
-def open_sesame():
+def open_sesame(user_id):
     # 83 であける
-    send_sesame_command(83)
+    send_sesame_command(83, user_id)
 
-def lock_sesame():
+def lock_sesame(user_id):
     # 82 で閉める
-    send_sesame_command(82)
+    send_sesame_command(82, user_id)
