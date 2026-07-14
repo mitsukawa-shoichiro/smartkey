@@ -10,18 +10,20 @@ import time
 import service.db_manager as repo
 import service.utils.sesame as sesame
 import camera.face_util as face_util
-from my_app.camera.blink_detector import BlinkDetector
+
+from my_app.camera.BlinkDetector import BlinkDetector
+from camera.face_authenticator import FaceAuthenticator
 
 import my_app.logs.log_config_service
 import logging
 
-# 顔認証とICカード認証で同じ開錠・自動施錠の処理つかっちゃう
+# 人脸识别和IC卡认证共用相同的解锁与自动上锁处理
 from my_app.service.card_sys import request_unlock
 
-# 複数登録画像との距離・平均値で顔認証するよう
+# 通过与多张注册图像的距离及其平均值进行人脸识别
 from my_app.camera.face_util.face_stable import recognize_image_average
 
-#logに書き込む用
+# 用于写入日志
 logger = logging.getLogger(__name__)
 
 #region ReadConfig
@@ -40,13 +42,28 @@ ROOT_DIR = BASE_DIR.parent            # root/
 DB_DIR = ROOT_DIR / "db" / "Facelib"         # root/db/Facelib
 print("datapath is " + str(DB_DIR))
 
+FACE_AUTH_CONFIG_PATH = (
+    Path(__file__).resolve().parent.parent
+    / "config"
+    / "face_auth.json"
+)
+
+with FACE_AUTH_CONFIG_PATH.open("r", encoding = "utf-8") as file:
+    face_auth_config = json.load(file)
+
+RGB_CAMERA_INDEX = int(face_auth_config["rgb_camera_index"])
+IR_CAMERA_INDEX = int(face_auth_config["ir_camera_index"])
+
+if RGB_CAMERA_INDEX == IR_CAMERA_INDEX:
+    raise ValueError("RGBカメラとIRカメラは別のindex！！！！！！１")
+
 #endregion
 
 
 class CaptureBuffer:
     '''
-    一時的にキャプチャ画像（フレーム）を保存するためのバッファクラス。
-    一時ディレクトリを作成し、そこに最新のキャプチャ画像を保存・取得する。
+    用于临时保存捕获图像（帧）的缓冲区类
+    该类会创建一个临时目录, 并在其中保存和获取最新的捕获图像
     '''
     # 一時ディレクトリを作成（prefix="facecap_"）
     tempdir = tempfile.TemporaryDirectory(prefix="facecap_")
@@ -56,30 +73,32 @@ class CaptureBuffer:
     @classmethod
     def save_frame(cls, frame, filename="shot.jpg"):
         '''
-        フレームを一時ディレクトリに保存する。
-        既存の一時ファイル情報をクリアしてから新しいファイルを作成する。
+        将帧保存到临时目录中
+        先清除已有的临时文件信息, 然后创建新的文件
+
         Args:
-            frame: OpenCVで取得した画像データ(numpy配列)
-            filename: 保存ファイル名（デフォルトは "shot.jpg")
+            frame: 使用 OpenCV 获取的图像数据（NumPy 数组）
+            filename: 保存文件名（默认值为 "shot.jpg"）
         '''
-        # 保存先パスを作成
+        # 创建保存路径
         path = os.path.join(cls.tempdir.name, filename)
-        # 画像を書き込み
+        # 写入图像
         cv2.imwrite(path, frame)
-        # ファイルパスを記録
+        # 记录文件路径
         cls.files.append(path)
 
     @classmethod
     def clean_frame(cls):
-        # 保存ファイルリストをクリア
+        # 清空已保存的文件列表
         cls.files.clear()
 
     @classmethod
     def get_newest_shot(cls):
         '''
-        一時ディレクトリ内の最新のキャプチャ画像ファイルのパスを返す。 \\
-        戻り値:
-            最新のファイルパス。存在しない場合は None を返す。
+        返回临时目录中最新捕获图像文件的路径
+
+        返回值:
+            最新文件的路径。若不存在, 则返回None
         '''
         if len(cls.files) > 0:
             return CaptureBuffer.files[-1]
@@ -88,15 +107,15 @@ class CaptureBuffer:
 
 
 class CameraWorker:
-    """バックグラウンドスレッド：カメラ起動 -> プレビュー表示 -> CAPTURE/STOP"""
+    """后台线程：启动摄像头 → 显示预览 → CAPTURE / STOP"""
     isRegistering: bool = False
 
-    FACE_UNLOCK_COOLDOWN_SEC = 6    # 同じ顔で連続開錠しないための待ち時間
-    REQUIRED_MATCH_COUNT = 3        # 何フレーム連続で成功したらとおすか
-    last_face_name = None           # 最後に開錠した顔のなまえ
-    last_face_timestamp = 0         # 最後に開錠したじかん
-    current_match_name = None       # 今やってる人物名
-    current_match_count = 0         # 今の成功回数
+    FACE_UNLOCK_COOLDOWN_SEC = 6    # 防止同一人连续解锁的等待时间
+    REQUIRED_MATCH_COUNT = 3        # 连续认证成功多少帧后才允许通过
+    last_face_name = None           # 上一次成功解锁的人脸姓名
+    last_face_timestamp = 0         # 上一次成功解锁的时间
+    current_match_name = None       # 当前正在认证的人物姓名
+    current_match_count = 0         # 当前连续认证成功次数
 
     __BACK_END_CAMERA:threading.Thread = None
     __SOCKET_THREAD:threading.Thread = None
@@ -107,39 +126,87 @@ class CameraWorker:
 
     systemstop:bool=False
 
+    def __new__(cls, *args, **kwargs):
+        if cls.instance is None:
+            cls.instance = super().__new__(cls)
+        return cls.instance
+
     def __init__(self):
-        if CameraWorker.instance is None:
-            print("CameraWorker初期化")
-            CameraWorker.instance = self
-            self.blink_detector = BlinkDetector()
+        if getattr(self, "_initialized", False):
+            return
 
-            if self.__SOCKET_THREAD is None:
-                self.__SOCKET_THREAD = threading.Thread(target=self.socket_receiver, daemon=True)
-                self.__SOCKET_THREAD.start()
+        print("CameraWorker初期化")
+        CameraWorker.instance = self
+        # self.blink_detector = BlinkDetector()
 
-            cap_indoor=cv2.VideoCapture(indoor_index, cv2.CAP_DSHOW)
-            self.cap_dict[indoor_index]=(cap_indoor)
-            print("入口を追加")
-            if outdoor_index!=indoor_index:
-                print("出口を追加")
-                cap_outdoor=cv2.VideoCapture(outdoor_index, cv2.CAP_DSHOW)
-                self.cap_dict[outdoor_index]=(cap_outdoor)
+        self.face_authenticator = FaceAuthenticator(
+            face_dir = DB_DIR,
+            config = face_auth_config,
+        )
+
+        self.latest_rgb_frame = None
+        self.latest_ir_frame = None
+        self.cap_dict = {}
+        self.systemstop = False
+        self.isRegistering = False
+
+        # 打开用于人脸识别的摄像头
+        for index in (RGB_CAMERA_INDEX, IR_CAMERA_INDEX):
+            cap = cv2.VideoCapture(index, cv2.CAP_DSHOW)
+
+            if not cap.isOpened():
+                print(f"カメラひらけん {index}")
+                cap.release()
+                cap = None
+
+            # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
+            self.cap_dict[index] = cap
+
+        if self.__SOCKET_THREAD is None:
+            self.__SOCKET_THREAD = threading.Thread(target=self.socket_receiver, daemon=True)
+            self.__SOCKET_THREAD.start()
+
+        # cap_indoor=cv2.VideoCapture(indoor_index, cv2.CAP_DSHOW)
+        # self.cap_dict[indoor_index]=(cap_indoor)
+
+        # print("入口を追加")
+        # if outdoor_index!=indoor_index:
+        #     print("出口を追加")
+        #     cap_outdoor=cv2.VideoCapture(outdoor_index, cv2.CAP_DSHOW)
+        #     self.cap_dict[outdoor_index]=(cap_outdoor)
+
+        self._initialized = True
 
     def stop(self):
         self.systemstop=True
 
     def back_end_system(self):
         print("カメラ起動！")
-        was_registering = None  # 直前の状態を記録（None/True/False）
+        was_registering = None  # 记录上一次的状态（None/True/False）
+        capture_failure_count = 0
+
         try:
+            if not all(
+                cap is not None and cap.isOpened()
+                for cap in self.cap_dict.values()
+            ):
+                self.open_all_cameras()
+
             while not self.systemstop:  # 常に動作
                 # 状態遷移を検出
                 timg=time.time()
+
                 if self.isRegistering:
                     if was_registering is not True:
                         # False -> True に遷移した瞬間だけ一度だけ実行
                         self.release_all_cameras()
+                        self.latest_rgb_frame = None
+                        self.latest_ir_frame = None
+                        self.face_authenticator._reset()
                         print("[INFO] 登録モードのためカメラを一時解放しました")
+
                     was_registering = True
                     print("⏸️ 登録中のため認証処理を一時停止")
                     time.sleep(0.5)  # ポーリング間隔（短め）
@@ -147,65 +214,198 @@ class CameraWorker:
                 else:
                     if was_registering is True:
                         # True -> False に遷移した瞬間だけ再オープン
-                        self.open_all_cameras()
+                        if not self.open_all_cameras():
+                            time.sleep(3.0)
+                            continue
+
+                        self.face_authenticator.known_embeddings = (
+                            self.face_authenticator.load_known_embeddings()
+                        )
                         print("[INFO] 登録完了。カメラを再オープンしました")
+
                     was_registering = False
 
                 # 通常フロー（認証）
-                CaptureBuffer.clean_frame()
-                for i, cap in self.cap_dict.items():
-                    ok, frame = cap.read()
-                    if not ok:
-                        continue
-                    if not self.blink_detector.detect(frame):
-                        continue
-                    CaptureBuffer.save_frame(frame, f"camera_{i}.jpg")
-                    print("写真を保存"+str(i))
+                rgb_cap = self.cap_dict.get(RGB_CAMERA_INDEX)
+                ir_cap = self.cap_dict.get(IR_CAMERA_INDEX)
+
+                if (
+                    rgb_cap is None
+                    or ir_cap is None
+                    or not rgb_cap.isOpened()
+                    or not ir_cap.isOpened()
+                ):
+                    capture_failure_count += 1
+
+                    if capture_failure_count >= 5:
+                        self.open_all_cameras()
+                        capture_failure_count = 0
+
+                    time.sleep(0.5)
+                    continue
+
+                pair_started = time.monotonic()
+
+                rgb_grabbed = rgb_cap.grab()
+                ir_grabbed = ir_cap.grab()
+
+                if not rgb_grabbed or not ir_grabbed:
+                    capture_failure_count += 1
+
+                    if capture_failure_count >= 5:
+                        self.open_all_cameras()
+                        capture_failure_count = 0
+
+                    time.sleep(0.5)
+                    continue
+
+                rgb_ok, rgb_frame = rgb_cap.retrieve()
+                ir_ok, ir_frame = ir_cap.retrieve()
+
+                if (
+                    not rgb_ok
+                    or not ir_ok
+                    or rgb_frame is None
+                    or ir_frame is None
+                ):
+                    capture_failure_count += 1
+
+                    if capture_failure_count >= 5:
+                        self.open_all_cameras()
+                        capture_failure_count = 0
+
+                    time.sleep(0.5)
+                    continue
+
+                pair_elapsed_ms = (
+                    time.monotonic() - pair_started
+                ) * 1000.0
+
+                if pair_elapsed_ms > float(
+                    face_auth_config.get("max_frame_gap_ms", 150)
+                ):
+                    time.sleep(0.1)
+                    continue
+
+                capture_failure_count = 0
+                self.latest_rgb_frame = rgb_frame
+                self.latest_ir_frame = ir_frame
 
                 # 認証
                 self.__Authentication()
                 # 成功でも失敗でもまつ
-                time.sleep(0.5)
+                time.sleep(0.15)
 
-                logger.info("１サイクル終了、所要時間："+str(time.time()-time)+"秒")
+                logger.info("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
 
         except KeyboardInterrupt:
             print("\n[INFO] ユーザー中断、プログラムを終了します。")
         finally:
+            self.latest_rgb_frame = None
+            self.latest_ir_frame = None
+            self.release_all_cameras()
             print("\nバックシステム終了")
             cv2.destroyAllWindows()
 
     def release_all_cameras(self):
         if self.cap_dict:
             for i, cap in self.cap_dict.items():
-                cap.release()
-                print(f"[INFO] カメラ {i} のリソースを解放しました。")
+                if cap is not None:
+                    cap.release()
+                    print(f"[INFO] カメラ {i} のリソースを解放しました。")
 
     def open_all_cameras(self):
-        for i in self.cap_dict.keys():
+        self.release_all_cameras()
+
+        opened_cameras = {}
+
+        for i in (RGB_CAMERA_INDEX, IR_CAMERA_INDEX):
             cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
-            self.cap_dict[i] = cap
+
+            if not cap.isOpened():
+                cap.release()
+                cap = cv2.VideoCapture(i, cv2.CAP_MSMF)
+
+            if not cap.isOpened():
+                cap.release()
+
+                for opened_cap in opened_cameras.values():
+                    opened_cap.release()
+
+                self.cap_dict = {
+                    RGB_CAMERA_INDEX: None,
+                    IR_CAMERA_INDEX: None,
+                }
+                return False
+
+            cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+            opened_cameras[i] = cap
             print(f"[INFO] カメラ {i} を開きました。")
 
-
+        self.cap_dict = opened_cameras
+        return True
 
     def __Authentication(self):
+        """
+        使用RGB和IR进行人脸识别
+        """
+
+        rgb_frame = self.latest_rgb_frame
+        ir_frame = self.latest_ir_frame
+
+        if rgb_frame is None or ir_frame is None:
+            return False
+        
+        name, info = self.face_authenticator.authenticate(
+            rgb_frame,
+            ir_frame
+        )
+
+        if name is None:
+            reason = info.get("reason", "unknown")
+
+            if reason == "need_more_frames":
+                print(
+                    f"認証: {info['name']}"
+                    f"{info['count']} / {info['required']}"
+                    f"score={info['score']:.4f}"
+                )
+            elif reason != "cooldown":
+                print(f"顔があかん: ")
+            
+            return False
+        
+        logger.info(
+            "顔いいじゃん: name=%s score=%.4f margin=%.4f",
+            name,
+            info["score"],
+            info["margin"]
+        )
+
+        self.__open_sesame()
+        return True
+
+
+
+
+
+    def __Authentication_old(self):
         for file_path in CaptureBuffer.files:
-            # 1枚一致ではなく、登録画像との距離・平均値で認証する
+            # 不以单张图像是否匹配作为判断, 而是根据与多张注册图像的距离及其平均值进行认证
             name_roma, info = recognize_image_average(file_path, DB_DIR)
 
-            # 今回のフレームで認証できなかったら次の画像にいく
+            # 如果当前帧认证失败, 则处理下一帧图像
             if name_roma is None:
                 continue
 
-            # 同じ人物が連続で認証されたか確認するよ
+            # 确认是否为同一人连续认证成功
             if self.current_match_name == name_roma:
                 self.current_match_count += 1
             else:
                 self.current_match_name = name_roma
                 self.current_match_count = 1
 
-            # 判定状況をログとして見えるようにするよ
+            # 将判定状态输出到日志中, 以便查看
             print(
                 f"認証候補: {name_roma} "
                 f"{self.current_match_count}/{self.REQUIRED_MATCH_COUNT} "
@@ -214,17 +414,17 @@ class CameraWorker:
                 f"hits={info['registered_match_count']}/{info['required_registered_matches']}"
             )
 
-            # 必要回数連続で成功するまではあけない
+            # 在连续成功达到规定次数之前不解锁
             if self.current_match_count < self.REQUIRED_MATCH_COUNT:
                 return False
 
-            # 次の判定用に連続カウントリセット
+            # 重置连续认证计数, 以便进行下一次判定
             self.current_match_name = None
             self.current_match_count = 0
 
             now = time.time()
 
-            # 同じ顔で、前回の開錠から指定秒数以内なら開錠しない
+            # 如果是同一张脸, 并且距离上次解锁未超过指定秒数, 则不执行解锁
             if (
                 self.last_face_name == name_roma
                 and now - self.last_face_timestamp < self.FACE_UNLOCK_COOLDOWN_SEC
@@ -232,21 +432,21 @@ class CameraWorker:
                 print(f"開錠スキップ: {name_roma}")
                 return True
 
-            # 開錠した顔とじかん記録
+            # 记录成功解锁的人脸姓名和解锁时间
             self.last_face_name = name_roma
             self.last_face_timestamp = now
 
-            # どのカメラで認証されたかを表示
+            # 显示通过哪个摄像头完成了认证
             match = re.search(r"camera_(\d+)\.jpg", file_path)
             if match:
                 index = int(match.group(1))
                 print("撮影されたカメラのindexは" + str(index))
 
-            # あける
+            # 解锁
             self.__open_sesame()
             return True
 
-        # どのカメラ画像でも一致しなかった場合は連続成功をリセット
+        # 如果所有摄像头图像都未匹配成功, 则重置连续成功计数
         self.current_match_name = None
         self.current_match_count = 0
         return False
@@ -254,7 +454,7 @@ class CameraWorker:
 
 
     def __open_sesame(self):
-        # 開錠 -> 一定時間後の自動施錠も予約！！！！！！
+        # 解锁后, 预约在指定时间后自动上锁！！！！！！
         request_unlock()
         print("認証成功")
 
@@ -264,35 +464,43 @@ class CameraWorker:
     PORT = 44444
 
     def socket_receiver(self):
+        sock = None
+
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.settimeout(1.0)
             sock.bind((self.HOST, self.PORT))
             print(f"🟢 UDPポート {self.PORT} を監視中...")
         except OSError as e:
             print(f"⚠️ ポートバインドエラー: {e}")
             print(f"ポート {self.PORT} は既に使用されている可能性があります")
+
+            if sock is not None:
+                sock.close()
+
             return
 
-        while True:
-            try:
-                data, addr = sock.recvfrom(1024)
-                recv_msg = data.decode('utf-8').strip()
-                print(f"📩 {addr} からのメッセージを受信：{recv_msg}")
+        try:
+            while not self.systemstop:
+                try:
+                    data, addr = sock.recvfrom(1024)
+                    recv_msg = data.decode('utf-8').strip()
+                    print(f"📩 {addr} からのメッセージを受信：{recv_msg}")
 
-                if recv_msg == "startRegistering":
-                    self.isRegistering = True
-                    print("✅ 現在の状態：登録中")
-                elif recv_msg == "finishRegistering":
-                    self.isRegistering = False
-                    print("❎ 現在の状態：未登録")
-                else:
-                    print(f"⚠️ 不明なメッセージ：{recv_msg}")
-            except socket.timeout:
-                continue
-            except Exception as e:
-                print(f"❌ 受信エラー: {e}")
-                break
+                    if recv_msg == "startRegistering":
+                        self.isRegistering = True
+                        print("✅ 現在の状態：登録中")
+                    elif recv_msg == "finishRegistering":
+                        self.isRegistering = False
+                        print("❎ 現在の状態：未登録")
+                    else:
+                        print(f"⚠️ 不明なメッセージ：{recv_msg}")
+                except socket.timeout:
+                    continue
+                except Exception as e:
+                    print(f"❌ 受信エラー: {e}")
+                    break
+        finally:
+            sock.close()
 
     #endregion
-
-

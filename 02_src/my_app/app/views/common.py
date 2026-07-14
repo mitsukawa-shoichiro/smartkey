@@ -198,11 +198,16 @@ def build_user_autocomplete(users, on_selected):
         on_selected: 選択時に呼ばれるコールバック。引数として user_id(int) を受け取る。
 
     Returns:
+<<<<<<< HEAD
         ft.AutoComplete
+=======
+        list[ft.AutoCompleteSuggestion]: プルダウン形式のリスト
+>>>>>>> c97526c97dad2adba6f899b406e0418d8c2b66d9
     """
     def handle_select(e: ft.ControlEvent):
         on_selected(extract_user_id_from_key(e.selection.key))
 
+<<<<<<< HEAD
     return ft.Container(
         width=300,
         content=ft.AutoComplete(
@@ -225,3 +230,9 @@ def build_card(content, col=None):
         ),
         col=col,
     )
+=======
+    return [
+        build_user_option(u) for u in users
+        if jt.matches(query, u.user_name, u.user_kana)
+    ]
+>>>>>>> c97526c97dad2adba6f899b406e0418d8c2b66d9

@@ -7,7 +7,7 @@ import logging
 import asyncio
 import sqlite3
 import db.repository as repo
-from my_app.app.views.common import show_error_dialog, filter_user_options
+from my_app.app.views.common import show_error_dialog
 
 
 logger = logging.getLogger(__name__)
@@ -21,37 +21,32 @@ def userView(page: ft.page):
     all_page = 1                   # 全ページ数
 
     selected_user_id = None
+    search_text = ""
 
 
     page.title = "ユーザ管理画面"
+    #=====================================================
+    #ユーザー検索
+    #=====================================================
+    def search():
+        nonlocal search_text, offset
 
-    #============================================
-    #ユーザー検索の候補データ
-    #============================================
-    #画面表示のたびに最新のユーザー一覧を取得する
+        search_text = search_box.value.strip()
+        offset = 0
 
-    users = repo.get_all_users()
+        load_table()
 
-    def on_user_selected(e: ft.ControlEvent):
-            """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
-            nonlocal selected_user_id, offset
-            selected_user_id = int(e.selection.key)
-            offset = 0
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
-
-    def on_user_search_change(e: ft.ControlEvent):
-        """
-        入力のたびに候補を絞り込み直す。ひらがな/カタカナ/ローマ字の
-        表記ゆれをjapanese_text.matchesで吸収する(Flet標準の絞り込みでは非対応)。
-        """
-        search_user.suggestions = filter_user_options(users, e.control.value)
-        search_user.update()
-
-    search_user = ft.AutoComplete(
-        suggestions=filter_user_options(users, ""),
-        on_select=on_user_selected,
-        on_change=on_user_search_change,
+    #検索窓
+    search_box = ft.Textfield(
+        label = "名前・カナ氏名",
+        hint_text = "部分一致検索",
+        width = 300,
+        on_submit = lambda e: search(),
+    )
+    #検索ボタン
+    search_button = ft.ElevatedButton(
+        "検索",
+        on_click=lambda e: search(),
     )
 
     #======================================================
@@ -70,20 +65,6 @@ def userView(page: ft.page):
         on_change = lambda e:print(f"選ばれたID:{radio_group.value}")
     )
 
-    #選択されたユーザの定義
-    def on_user_selected(e: ft.ControlEvent):
-        #プルダウンでユーザーが選択された時、そのuser_idで絞り込み検索する
-        nonlocal selected_user_id, offset
-        selected_user_id = int(e.selection.key)
-        offset = 0
-        load_table()
-        scroll_table.scroll_to(offset = 0, duration = 0)
-
-    #プルダウン定義
-    user_search = ft.AutoComplete(
-        suggestions = autocomplete_options,
-        on_select = on_user_selected,
-    )
 
     #リセットボタン定義
     reset_btn = ft.ElevatedButton(
@@ -100,7 +81,7 @@ def userView(page: ft.page):
 
     #検索欄定義
     search_zone = ft.Row(
-        controls = [user_search],
+        controls = [search_box,search_button],
         alignment = ft.MainAxisAlignment.CENTER,
         spacing = 0
     )
@@ -156,7 +137,9 @@ def userView(page: ft.page):
 
         selected_user_id = None
         table.sort_ascending = True
-        user_search.value = ""  #プルダウン入力をクリア
+        nonlocal search_text
+        search_box.value = ""  #検索窓をクリア
+        search_text = ""
         offset = 0
         load_table()
         scroll_table.scroll_to(offset = 0, duration = 0)
@@ -186,7 +169,7 @@ def userView(page: ft.page):
         #前ページへ遷移
         nonlocal offset
         if offset != 0:
-            offset -= -1
+            offset -= 1
         load_table()
         scroll_table.scroll_to(offset = 0, duration = 0)
 
@@ -213,15 +196,14 @@ def userView(page: ft.page):
 
         try:
             #全検索の場合
-            if selected_user_id is None:
+            if search_text == "":
                 users = repo.find_all_users(table.sort_ascending, offset * 100)
                 total = repo.count_all_user()
             #条件検索の場合
             else:
-                users = repo.find_users_by_user_id(
-                    selected_user_id, table.sort_ascending, offset * 100
+                users = repo.find_user_name_and_user_id_by_user_kana(
+                    search_text, table.sort_ascending, offset * 100
                 )
-                total = repo.count_users_by_user_id(selected_user_id)
         except sqlite3.Error:
             logger.exception("ユーザー情報の読み込みに失敗しました")
             show_error_dialog(page, "ユーザー情報の取得に失敗しました。しばらくしてから再度お試しください。")
@@ -239,23 +221,50 @@ def userView(page: ft.page):
         for user in users:
             #チェックボックスにユーザーIDを埋め込み
             cb = ft.Checkbox()
-            column.controls.append(ft.Ratio(value = str(user.id)))
+            column.controls.append(ft.Radio(value = str(user.user_id)))
             # checkbox_refs[user.id] = cb
 
             #テーブルに情報を埋め込み
-            table.rows.append(
-                ft.DataRow(cells=[
-                    ft.DataCell(ft.Text(f"{user.id:05d}", width = 40)),
-                    ft.DataCell(ft.Text(user.register_date, width = 80)),
-                    ft.DataCell(cb),
-                ])
-            )
+            row = ft.DataRow(
+                    cells=[
+                        ft.DataCell(ft.Text(str(user.user_id))),
+
+                        ft.DataCell(
+                            ft.TextField(
+                                value=user.user_name_jpn,
+                                border=ft.InputBorder.NONE,
+                            )
+                        ),
+
+                        ft.DataCell(
+                            ft.TextField(
+                                value=user.user_kana,
+                                border=ft.InputBorder.NONE,
+                            )
+                        ),
+                    ]
+                )
+            row.cells[1].content.on_blur = \
+                lambda e, r=row, uid=user.user_id: save_user(uid, r)
+
+            row.cells[2].content.on_blur = \
+                lambda e, r=row, uid=user.user_id: save_user(uid, r)
+
+            table.rows.append(row)
 
         radio_group.value = str(users[0].id) if users else None
         page_label.value = f"{offset + 1}/{all_page} ページ"
         prev_btn.disabled = offset == 0
         next_btn.disabled = (offset + 1) == all_page
         page.update()
+
+    #ユーザー情報が変更された時保存する
+    def save_user(user_id, row):
+        repo.update_user(
+            user_id,    #user_idはセル番号0扱い
+            row.cells[1].content.value,
+            row.cells[2].content.value
+        )
 
         
         # ==============================================

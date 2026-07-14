@@ -17,7 +17,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-#_fernet = Fernet(face_key_manager.load_key())
+# _fernet = Fernet(face_key_manager.load_key())
 
 #
 FACES_DIR = os.path.abspath(
