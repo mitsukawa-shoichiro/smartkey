@@ -304,12 +304,12 @@ def count_cards_by_user_id(user_id: int):
         logger.exception("カード件数取得エラー: user_id=%s", user_id)
         raise
 
-def find_user_name_jpn_and_user_id_by_user_name_kana(user_name_kana, asc: bool, offset):
+def find_user_name_and_user_id_by_user_kana(user_kana, asc: bool, offset):
     """
     カナ氏名からユーザーIDと名前を検索する関数
 
     Args:
-        user_name_jpn (str): 名前
+        user_name (str): 名前
         user_id (int): ユーザーID
         asc (bool): 昇順 -> true, 降順 -> false
         offset (int): GUIで表示するためのページ区分
@@ -318,27 +318,43 @@ def find_user_name_jpn_and_user_id_by_user_name_kana(user_name_kana, asc: bool, 
         list: ユーザーID,名前（存在する場合）またはNone（存在しない場合）
     """
     order = "ASC" if asc else "DESC"
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute(
+                f"SELECT * FROM user WHERE user_kana LIKE ? ORDER BY id {order} LIMIT 100 OFFSET ?",
+                (f"%{user_kana}%", offset)
+            )
+            rows = c.fetchall() #全件検索のためfetchoneではなくfetchallに
+            return rows
+    except sqlite3.Error():
+        logger.exception("IDと名前の取得エラー: user_kana = %s", user_kana)
+        raise
     
-    with get_connection() as conn:
-        c = conn.cursor()
-        c.execute(
-            f"SELECT * FROM user WHERE user_name_kana LIKE ? ORDER BY id {order} LIMIT 100 OFFSET ?",
-            (f"%{user_name_kana}%", offset)
-        )
-        rows = c.fetchall()
-        return rows
-    
-def update_user(user_id, user_name_jpn, user_name_kana):
-    with get_connection() as conn:
-        conn.execute( """
-        UPDATE user
-        SET
-            user_name_jpn = ?,
-            user_name_kana = ?
-        WHERE user_id = ?
-        """,
-        (user_name_jpn, user_name_kana, user_id))
-        conn.commit()
+def update_user(user_id, user_name, user_kana):
+    """
+    ユーザー情報を更新する関数
+
+    Args:
+        user_name(str):名前
+        user_kana(str):カナ氏名
+    Returns:
+        list: ユーザーID、名前、カナ氏名（存在する場合）またはNone（存在しない場合）
+    """
+    try:
+        with get_connection() as conn:
+            conn.execute( """
+            UPDATE user
+            SET
+                user_name = ?,
+                user_kana = ?
+            WHERE user_id = ?
+            """,
+            (user_name, user_kana, user_id))
+            conn.commit()
+    except sqlite3.Error():
+        logger.exception("更新エラー: user_id = %s", user_id)
+        raise
 
 def find_user_id_by_card_id(card_id):
     """

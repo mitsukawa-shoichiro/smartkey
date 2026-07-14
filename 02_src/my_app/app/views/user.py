@@ -201,7 +201,7 @@ def userView(page: ft.page):
                 total = repo.count_all_user()
             #条件検索の場合
             else:
-                users = repo.find_user_name_jpn_and_user_id_by_user_name_kana(
+                users = repo.find_user_name_and_user_id_by_user_kana(
                     search_text, table.sort_ascending, offset * 100
                 )
         except sqlite3.Error:
@@ -238,7 +238,7 @@ def userView(page: ft.page):
 
                         ft.DataCell(
                             ft.TextField(
-                                value=user.user_name_kana,
+                                value=user.user_kana,
                                 border=ft.InputBorder.NONE,
                             )
                         ),
