@@ -3,18 +3,16 @@ import logging
 import os
 import socket
 import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import atexit
+import my_app.logs.log_config_app
 import flet as ft
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-os.chdir(BASE_DIR)
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
-
-import logs.log_config_app
-from app.views.router import route
-from ui.theme import apply_page_theme
-
+from my_app.app.views.router import route
+import logging
+import json
+from my_app.service.card_sys import set_state, get_state
+import socket
 
 HOST = "127.0.0.1"
 PORT = 10000

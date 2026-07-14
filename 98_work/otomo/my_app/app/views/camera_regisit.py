@@ -95,7 +95,7 @@ def set_camera_config(camera_enum: IndexEnum, camera_index: int):
 #endregion
 
 #region card_util methods
-from service.nfcutils.card_scan import scan_cardreader
+from my_app.service.nfcutils.card_scan import scan_cardreader
 def detect_cardreader() -> int:
     print("dectedreader")
     readerindex=int(scan_cardreader())

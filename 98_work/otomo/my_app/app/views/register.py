@@ -2,8 +2,8 @@ import flet as ft
 import asyncio
 import service.db_manager as db
 import logging
-from service.cardsystem import set_state, get_state, get_card
-from app.utils.thread_state import thread_handle, stop_event
+from my_app.service.cardsystem import set_state, get_state, get_card
+from my_app.app.utils.thread_state import thread_handle, stop_event
 import socket
 import threading
 CARD_NUMBER = None

@@ -11,17 +11,17 @@ import service.db_manager as repo
 import service.utils.sesame as sesame
 import camera.face_util as face_util
 
-from camera.BlinkDetector import BlinkDetector
+from my_app.camera.BlinkDetector import BlinkDetector
 from camera.face_authenticator import FaceAuthenticator
 
-import logs.log_config_service
+import my_app.logs.log_config_service
 import logging
 
 # 人脸识别和IC卡认证共用相同的解锁与自动上锁处理
-from service.card_sys import request_unlock
+from my_app.service.card_sys import request_unlock
 
 # 通过与多张注册图像的距离及其平均值进行人脸识别
-from camera.face_util.face_stable import recognize_image_average
+from my_app.camera.face_util.face_stable import recognize_image_average
 
 # 用于写入日志
 logger = logging.getLogger(__name__)

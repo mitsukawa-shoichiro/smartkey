@@ -1,0 +1,26 @@
+2026-06-24 09:14:42 [INFO] root:36 - Log configuration loaded successfully
+2026-06-24 09:14:43 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-24 09:14:43 [INFO] flet:61 - Starting up TCP server on localhost:53837
+2026-06-24 09:14:43 [INFO] flet:171 - Flet app has started...
+2026-06-24 09:14:47 [INFO] flet:131 - App URL: tcp://localhost:53837
+2026-06-24 09:14:47 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-24 09:14:47 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-24 09:14:47 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-24 09:14:47 [INFO] flet:240 - App session started
+2026-06-24 09:14:47 [INFO] root:37 - GUIが起動されました
+2026-06-24 09:14:47 [INFO] root:16 - /に遷移しました
+2026-06-24 09:14:48 [INFO] root:36 - Log configuration loaded successfully
+2026-06-24 09:14:48 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-06-24 09:14:48 [INFO] flet:61 - Starting up TCP server on localhost:63788
+2026-06-24 09:14:48 [INFO] flet:171 - Flet app has started...
+2026-06-24 09:14:48 [INFO] flet:131 - App URL: tcp://localhost:63788
+2026-06-24 09:14:48 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-06-24 09:14:48 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-24 09:14:48 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-06-24 09:14:49 [INFO] flet:240 - App session started
+2026-06-24 09:14:49 [INFO] root:37 - GUIが起動されました
+2026-06-24 09:14:49 [INFO] root:16 - /に遷移しました
+2026-06-24 09:14:52 [INFO] root:52 - Sent message: authenticating
+2026-06-24 09:14:52 [INFO] __main__:56 - GUIを終了しました
+2026-06-24 16:39:18 [INFO] root:52 - Sent message: authenticating
+2026-06-24 16:39:18 [INFO] __main__:56 - GUIを終了しました

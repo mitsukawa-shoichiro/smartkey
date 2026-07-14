@@ -10,7 +10,8 @@ DBで保存するのは少し困難としたため、画像ファイルで直に
 
 import os
 import logging
-# from cryptgraphy.fernet import Fernet
+#from cryptgraphy.fernet import Fernet
+#from my_app.service import face_key_manager
 
 
 

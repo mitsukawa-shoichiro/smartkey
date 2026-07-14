@@ -13,10 +13,10 @@ import threading
 import datetime
 # region logs
 # logs ディレクトリのパスを sys.path に追加
-LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if LOGS_PATH not in sys.path:
-    sys.path.insert(0, LOGS_PATH)
-import logs.log_config_service
+BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+if BASE_PATH not in sys.path:
+    sys.path.insert(0, BASE_PATH)
+import my_app.logs.log_config_service
 logger = logging.getLogger(__name__)  # logに書き込む用
 # endregion
 
@@ -57,15 +57,15 @@ def reboot_computer_at_time():
         os.system("shutdown /r /t 0")
 
 
-from backsys import back_system
-from nfcutils import card_check
+from my_app.service.backsys import back_system
+from my_app.daemon import reader_daemon
 def run_back():
     logger.info("back_system thread started")
     back_system.main()
 
 def run_card():
     logger.info("CardCheck thread started")
-    card_check.main()
+    reader_daemon.main()
 
 from camera.CameraModule import CameraWorker
 camera_worker = None

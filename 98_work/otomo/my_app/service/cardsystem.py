@@ -1,7 +1,7 @@
-from service.utils.sesami_bluetooth import open_sesame_bt
-from service.utils.sesame import open_sesame
-from service.nfcutils.card_scan import scan_card
-from service.db_manager import check_card, insert_card_access_log
+from my_app.service.utils.sesami_bluetooth import open_sesame_bt
+from my_app.service.utils.sesame import open_sesame
+from my_app.service.nfcutils.card_scan import scan_card
+from my_app.service.db_manager import check_card, insert_card_access_log
 import sys
 import os
 import time
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)#log書き込む陽
 
 
 import threading
-from service.utils.sesame import open_sesame, lock_sesame
+from my_app.service.utils.sesame import open_sesame, lock_sesame
 
 import json
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(

@@ -8,11 +8,11 @@ from enum import Enum
 import asyncio
 import logging
 import threading
-from service.utils.sesame import open_sesame, lock_sesame
+from my_app.service.utils.sesame import open_sesame, lock_sesame
 import json
-from db import repository as repo
-from app.models import ENUMS
-from app.models.access_log import AccessLog
+from my_app.db import repository as repo
+from my_app.models import ENUMS
+from my_app.models.entity.access_log import AccessLog
 
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
@@ -34,7 +34,6 @@ DB_PATH = os.path.join(BASE_DIR, 'dataBase.db')
 sys.path.append('DataBase')
 
 AUTO_LOCK_SECONDS = 10      # 開錠から自動施錠までの時間
-_auto_lock_timer = None     # 自動ロックの時間もっとけ
 
 # グローバル状態管理
 current_state = CardReaderState.AUTHENTICATING  # デフォルト状態
@@ -108,48 +107,42 @@ def resolve_event_type(reader_serial: int) -> int:
 
 def receive_card(card_number: str, reader_serial: int):
     """
-    現在の状態に基づいてカードIDを処理します。
-    card_id: カードID reader_serial:カードリーダー番号
+    カードIDの認証判断、解錠リクエスト、入退室ログ書き込み処理をする関数です。
+
+    args:
+        card_number : カードIDM(製造ID)
+        reader_serial : リーダーID(0:1)
+
+    params:
+        last_card_id : 最後に認証したカードID
+        last_card_time_stamp : 最後に認証した時刻
+
     """
     global last_card_id, last_card_timestamp
     card_id = repo.check_card(card_number)
-    if current_state == CardReaderState.AUTHENTICATING:
-        if card_id:
-            if card_id != last_card_id or (time.time() - last_card_timestamp > 6):
-                last_card_id = card_id
-                last_card_timestamp = time.time()
+    if card_id:
+        if card_id != last_card_id or (time.time() - last_card_timestamp > 6):
+            last_card_id = card_id
+            last_card_timestamp = time.time()
 
-                request_unlock()
+            request_unlock()
 
-                user_id = repo.find_user_id_by_card_id(card_id)
+            user_id = repo.find_user_id_by_card_id(card_id)
 
-                event_type = resolve_event_type(reader_serial)
+            event_type = resolve_event_type(reader_serial)
 
-                log = AccessLog(
-                    id=None,
-                    timestamp=None,
-                    method="カード",
-                    event_type=event_type,
-                    user_id=user_id,
-                    card_id=card_id
-                )
+            log = AccessLog(
+                id=None,
+                timestamp=None,
+                method="カード",
+                event_type=event_type,
+                user_id=user_id,
+                card_id=card_id
+            )
 
-                repo.insert_access_log(log) #入退室ログに書き込み
+            repo.insert_access_log(log) #入退室ログに書き込み
 
-                logger.info(f"カード認証成功: {card_id} (リーダーID: {reader_serial})")
-
-def schedule_auto_lock():
-    global _auto_lock_timer
-
-    # タイマー動いてたらとめる
-    if _auto_lock_timer is not None and _auto_lock_timer.is_alive():
-        _auto_lock_timer.cancel()
-
-    # 指定時間後にしめる
-    _auto_lock_timer = threading.Timer(AUTO_LOCK_SECONDS, request_lock)
-    _auto_lock_timer.daemon = True
-    _auto_lock_timer.start()
-
+            logger.info(f"カード認証成功: {card_id} (リーダーID: {reader_serial})")
 
 def request_unlock():
     success = False

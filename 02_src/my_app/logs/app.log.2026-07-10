@@ -1,0 +1,17 @@
+2026-07-10 09:50:13 [INFO] logs.log_config_app:37 - Log configuration loaded successfully
+2026-07-10 09:50:14 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\main.pyw", line 6, in <module>
+    from app.views.router import route
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 4, in <module>
+    import app.views.card as card
+  File "C:\smartkey\02_src\my_app\app\views\card.py", line 12, in <module>
+    import db.repository as repo
+  File "C:\smartkey\02_src\my_app\db\repository.py", line 14, in <module>
+    from app.models.entity.access_log import AccessLog  # データクラス
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\models\entity\__init__.py", line 1, in <module>
+    from .access_log import AccessLog
+  File "C:\smartkey\02_src\my_app\app\models\entity\access_log.py", line 4, in <module>
+    from models.ENUMS import EventType
+ModuleNotFoundError: No module named 'models'

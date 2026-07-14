@@ -1,15 +1,14 @@
 import socket
 import flet as ft
-import cv2
 import os
 import threading
 import queue
 from datetime import datetime
 import tempfile, cv2, os
-import service.db_manager as repo
+import db.repository as repo
 import random
 
-from app.utils.front_camera_moduel import CameraWorker_Front, CaptureBuffer
+from my_app.app.utils.front_camera_moduel import CameraWorker_Front, CaptureBuffer
 
 #region util
 import shutil

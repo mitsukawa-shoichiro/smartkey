@@ -17,7 +17,7 @@ import datetime
 # LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 # if LOGS_PATH not in sys.path:
 #     sys.path.insert(0, LOGS_PATH)
-import logs.log_config_service
+import my_app.logs.log_config_service
 import logging
 # endregion
 
@@ -52,8 +52,8 @@ def reboot_computer_at_time():
         logging.info("パソコン再起動します")
         os.system("shutdown /r /t 0")
 
-from service.backsystem import back_system
-from camera.CameraModule import CameraWorker
+from my_app.service.backsystem import back_system
+from my_app.camera.CameraModule import CameraWorker
 
 
 

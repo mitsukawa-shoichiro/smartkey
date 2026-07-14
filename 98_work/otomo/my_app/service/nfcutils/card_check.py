@@ -1,6 +1,6 @@
 # # reader_daemon.py
-# from service import cardsystem
-# import logs.log_config_service
+# from my_app.service import cardsystem
+# import my_app.logs.log_config_service
 # import time
 # import json
 # import threading

@@ -10,10 +10,11 @@ db_managerにDB接続を一任しています。
 import logging  # ログ用
 import sqlite3  # 本来知らなくて良いが、ログのExceptionの為導入
 from .db_manager import get_connection  # データベース接続用
-from app.models.ENUMS import EventType, CardType  # Enum
-from app.models.entity.access_log import AccessLog  # データクラス
-from app.models.entity.face import Face  # データクラス
-from app.models.entity.user import User  # データクラス
+from my_app.models.ENUMS import EventType, CardType  # Enum
+from my_app.models.entity.access_log import AccessLog  # データクラス
+from my_app.models.entity.face import Face  # データクラス
+from my_app.models.entity.user import User  # データクラス
+from my_app.models.entity.card import Card
 from datetime import datetime, timedelta  # 入退室ログの時間用に
 
 logger = logging.getLogger(__name__)
@@ -147,21 +148,20 @@ def check_card(cardIDM):
         with get_connection() as conn:
             c = conn.cursor()
             c.execute('SELECT id FROM card WHERE card_number = ?', (cardIDM,))
-            card_id = c.fetchone()  # 元は conn.fetchone() になっていたバグを修正
+            card_id = c.fetchone()
             return card_id[0] if card_id else None
     except sqlite3.Error:
         logger.exception("カード検索エラー: id=%s", cardIDM)
         raise
 
 
-def insert_card(card_name, card_number, card_type: CardType, user_id: int):
+def insert_card(card_number: str, CARD_TYPE: CardType, user_id: int):
     """
     カードをデータベースに挿入する関数
 
     Args:
-        card_name (str): カード名
-        card_number (str): カード番号
-        card_type (CardType): カードタイプ
+        card_number (str): カード番号(IDm)
+        CARD_TYPE (CardType): カードタイプ
         user_id (int): 所有者のユーザーID
 
     Returns:
@@ -171,40 +171,19 @@ def insert_card(card_name, card_number, card_type: CardType, user_id: int):
         with get_connection() as conn:
             c = conn.cursor()
             c.execute(
-                'INSERT INTO card (card_name, card_number, card_type, user_id) VALUES (?, ?, ?, ?)',
-                (card_name, card_number, card_type.value, user_id)
+                'INSERT INTO card (card_number, card_type, user_id) VALUES (?, ?, ?)',
+                (card_number, CARD_TYPE.value, user_id)
             )
-            return c.lastrowid  # 元は conn.lastrowid になっていたバグを修正
+            return c.lastrowid
     except sqlite3.Error:
-        logger.exception("カード挿入エラー: %s, %s, %s", card_name, card_number, card_type.value)
-        raise
-
-
-def update_card(card_id, card_name, card_number, card_type: CardType):
-    """
-    カード情報を更新する関数
-
-    Args:
-        card_id (int): 更新するカードのID
-        card_name (str): 新しいカード名
-        card_number (str): 新しいカード番号
-        card_type (CardType): 新しいカードタイプ
-    """
-    try:
-        with get_connection() as conn:
-            c = conn.cursor()
-            c.execute(
-                'UPDATE card SET card_name = ?, card_number = ?, card_type = ? WHERE id = ?',
-                (card_name, card_number, card_type.value, card_id)
-            )
-    except sqlite3.Error:
-        logger.exception("カード更新エラー: id=%s, %s, %s, %s", card_id, card_name, card_number, card_type.value)
+        logger.exception("カード挿入エラー: card_number=%s, card_type=%s, user_id=%s",
+                        card_number, CARD_TYPE.value, user_id)
         raise
 
 
 def delete_card(card_id):
     """
-    カード情報を削除する関数
+    カードを削除する関数
 
     Args:
         card_id (int): 削除するカードのID
@@ -218,38 +197,43 @@ def delete_card(card_id):
         raise
 
 
-def find_by_card_name(card_name, asc: bool, offset):
+def find_all_cards(asc: bool, offset: int):
     """
-    カード名でカード情報を取得する関数
+    カード情報を全件、ページングして取得する関数(ユーザー未選択時のGUI表示用)
 
     Args:
-        card_name (str): カード名
         asc (bool): 昇順 -> true, 降順 -> false
         offset (int): GUIで表示するためのページ区分
 
     Returns:
-        list: カード情報
+        list[Card]: カード情報のリスト
     """
     order = "ASC" if asc else "DESC"
     try:
         with get_connection() as conn:
             c = conn.cursor()
             c.execute(
-                f"SELECT * FROM card WHERE card_name LIKE ? ORDER BY id {order} LIMIT 100 OFFSET ?",
-                (f"%{card_name}%", offset)
+                f"""
+                SELECT id, card_type, card_number, register_date, user_id
+                FROM card
+                ORDER BY id {order} LIMIT 100 OFFSET ?
+                """,
+                (offset,)
             )
-            return c.fetchall()
+            rows = c.fetchall()
+            return [
+                Card(id=row[0], card_type=CardType(row[1]), card_number=row[2],
+                    register_date=row[3], user_id=row[4])
+                for row in rows
+            ]
     except sqlite3.Error:
-        logger.exception("カード検索エラー: card_name=%s", card_name)
+        logger.exception("カード全件取得エラー")
         raise
 
 
-def count_all_card(card_name):
+def count_all_card():
     """
-    find_by_card_nameをGUIで表示する際の件数を検索する関数
-
-    Args:
-        card_name (str): カード名
+    find_all_cards()をGUIで表示する際の全体件数を取得する関数
 
     Returns:
         int: 件数
@@ -257,16 +241,120 @@ def count_all_card(card_name):
     try:
         with get_connection() as conn:
             c = conn.cursor()
-            c.execute(
-                "SELECT COUNT(*) FROM card WHERE card_name LIKE ?",
-                (f"%{card_name}%",)
-            )
-            count = c.fetchone()
-            return count[0]
+            c.execute("SELECT COUNT(*) FROM card")
+            return c.fetchone()[0]
     except sqlite3.Error:
-        logger.exception("カード件数取得エラー: card_name=%s", card_name)
+        logger.exception("カード件数取得エラー")
         raise
 
+
+def find_cards_by_user_id(user_id: int, asc: bool, offset: int):
+    """
+    指定されたユーザーIDに関連するカード情報を、ページングして取得する関数
+    (Autocompleteでユーザーが選択された時のGUI表示用)
+
+    Args:
+        user_id (int): 取得するカード情報に関連するユーザーのID
+        asc (bool): 昇順 -> true, 降順 -> false
+        offset (int): GUIで表示するためのページ区分
+
+    Returns:
+        list[Card]: カード情報のリスト
+    """
+    order = "ASC" if asc else "DESC"
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute(
+                f"""
+                SELECT id, card_type, card_number, register_date, user_id
+                FROM card
+                WHERE user_id = ?
+                ORDER BY id {order} LIMIT 100 OFFSET ?
+                """,
+                (user_id, offset)
+            )
+            rows = c.fetchall()
+            return [
+                Card(id=row[0], card_type=CardType(row[1]), card_number=row[2],
+                    register_date=row[3], user_id=row[4])
+                for row in rows
+            ]
+    except sqlite3.Error:
+        logger.exception("カード取得エラー: user_id=%s", user_id)
+        raise
+
+
+def count_cards_by_user_id(user_id: int):
+    """
+    find_cards_by_user_id()をGUIで表示する際の件数を取得する関数
+
+    Args:
+        user_id (int): ユーザーID
+
+    Returns:
+        int: 件数
+    """
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute("SELECT COUNT(*) FROM card WHERE user_id = ?", (user_id,))
+            return c.fetchone()[0]
+    except sqlite3.Error:
+        logger.exception("カード件数取得エラー: user_id=%s", user_id)
+        raise
+
+def find_user_name_and_user_id_by_user_kana(user_kana, asc: bool, offset):
+    """
+    カナ氏名からユーザーIDと名前を検索する関数
+
+    Args:
+        user_name (str): 名前
+        user_id (int): ユーザーID
+        asc (bool): 昇順 -> true, 降順 -> false
+        offset (int): GUIで表示するためのページ区分
+
+    Returns:
+        list: ユーザーID,名前（存在する場合）またはNone（存在しない場合）
+    """
+    order = "ASC" if asc else "DESC"
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute(
+                f"SELECT * FROM user WHERE user_kana LIKE ? ORDER BY id {order} LIMIT 100 OFFSET ?",
+                (f"%{user_kana}%", offset)
+            )
+            rows = c.fetchall() #全件検索のためfetchoneではなくfetchallに
+            return rows
+    except sqlite3.Error():
+        logger.exception("IDと名前の取得エラー: user_kana = %s", user_kana)
+        raise
+    
+def update_user(user_id, user_name, user_kana):
+    """
+    ユーザー情報を更新する関数
+
+    Args:
+        user_name(str):名前
+        user_kana(str):カナ氏名
+    Returns:
+        list: ユーザーID、名前、カナ氏名（存在する場合）またはNone（存在しない場合）
+    """
+    try:
+        with get_connection() as conn:
+            conn.execute( """
+            UPDATE user
+            SET
+                user_name = ?,
+                user_kana = ?
+            WHERE user_id = ?
+            """,
+            (user_name, user_kana, user_id))
+            conn.commit()
+    except sqlite3.Error():
+        logger.exception("更新エラー: user_id = %s", user_id)
+        raise
 
 def find_user_id_by_card_id(card_id):
     """
@@ -288,7 +376,6 @@ def find_user_id_by_card_id(card_id):
             row = c.fetchone()
             return row[0] if row else None
     except sqlite3.Error:
-        # 元は裸の except: だったため sqlite3.Error に限定し、raise も追加
         logger.exception("カードIDからユーザーID検索でエラー: card_id=%s", card_id)
         raise
 
@@ -322,6 +409,7 @@ def get_last_date_time(card_id, event_type: EventType):
     except sqlite3.Error:
         logger.exception("入退室ログ取得エラー: card_id=%s", card_id)
         raise
+
 
 
 # todo:

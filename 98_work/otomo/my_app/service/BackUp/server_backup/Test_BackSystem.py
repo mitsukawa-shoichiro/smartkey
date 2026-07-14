@@ -11,7 +11,7 @@ LOGS_PATH = os.path.abspath(os.path.join(
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
 
-import logs.log_config_service
+import my_app.logs.log_config_service
 # region Read Config
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..',  'config', 'backend', 'backendsys.json'))
@@ -37,13 +37,13 @@ x_api_key = sesami_config["x_api_key"]
 sleep_time = int(battery_config["sleep_time"])
 battery_Limit = int(battery_config["battery_limit"])  # バッテリー残量の閾値
 # endregion
-from service.cardreader import CardReader
-from service.utils.sendmail import send_mail
+from my_app.service.cardreader import CardReader
+from my_app.service.utils.sendmail import send_mail
 class BackSystem():
     HOST = '127.0.0.1'
     PORT = 54321
 
-    cardReader: CardReader 
+    cardReader: CardReader
     backsystem_instance: "BackSystem"
     def __init__(self):
         print("⏱️ sesameのバッテリーとサーバー状態を確認中...")
@@ -126,7 +126,7 @@ class BackSystem():
 
                 msg = data.decode('utf-8', 'ignore')
                 logging.info(f"Sending heartbeat message: {msg}")
-                
+
                 last_alive_time = time.time()
 
                 if msg == "DEAD" and card_reader_state:
@@ -160,11 +160,11 @@ class BackSystem():
                 # 触发重启
                 self.reopen_card_check()
                 DEAD_TIMES+=1
-            
+
             if DEAD_TIMES>=3:
                 logging.error("解錠システム異常が3回発生しました、システムを停止します")
                 break
-        
+
             time.sleep(0.1)
 
     def reopen_card_check(self):
@@ -181,6 +181,6 @@ class BackSystem():
 
 def main():
     BackSystem()
-    
+
 if __name__ == "__main__":
     BackSystem()

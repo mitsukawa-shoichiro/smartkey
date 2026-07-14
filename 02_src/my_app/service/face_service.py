@@ -4,8 +4,8 @@
 """
 
 
-from db import repository as repo
-from service import face_storage
+from my_app.db import repository as repo
+from my_app.service import face_storage
 import logging
 
 logger = logging.getLogger(__name__)

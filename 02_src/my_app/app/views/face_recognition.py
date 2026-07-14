@@ -13,7 +13,7 @@ import flet as ft
 import db.repository as repo
 import service.face_service as face_service
 import sqlite3
-from app.views.common import show_error_dialog, filter_user_options
+from my_app.app.views.common import show_error_dialog, filter_user_options
 
 logger = logging.getLogger(__name__)
 

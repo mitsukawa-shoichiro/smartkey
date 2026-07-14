@@ -5,13 +5,13 @@
 ## 構成
 
 - `log_config_app.py`
-  アプリケーション全体のロギング設定モジュールです。`import logs.log_config_app` でどこからでも利用できます。
+  アプリケーション全体のロギング設定モジュールです。`import my_app.logs.log_config_app` でどこからでも利用できます。
   - ログは `app.log` に出力されます。
 
   - INFO以上のログがファイルに記録され、DEBUG以上のログがコンソールに表示されます。
 
 - `log_config_service.py`
-  サービス用のロギング設定モジュールです。`import logs.log_config_service` で利用できます。
+  サービス用のロギング設定モジュールです。`import my_app.logs.log_config_service` で利用できます。
   - ログは `service.log` に出力されます。
 
   - WARNING以上のログがファイルに記録され、DEBUG以上のログがコンソールに表示されます。

@@ -11,7 +11,7 @@ Windowsサービスとして動作し、カードリーダーやバックシス�
 - `backsys/back_system.py`
   バックエンドシステムの監視・制御ロジック。
 
-- `nfcutils/card_check.py`
+- `daemon/reader_daemon.py`
   NFCカードリーダーの認証・管理ロジック。
 
 - `windowsservice.py`

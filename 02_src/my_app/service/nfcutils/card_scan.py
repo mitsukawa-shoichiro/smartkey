@@ -4,7 +4,7 @@ from smartcard.Exceptions import NoCardException
 import json
 import os
 import pythoncom
-from service.utils.usb_card_readers import get_readers
+from my_app.service.utils.usb_card_readers import get_readers
 import logging
 
 logger = logging.getLogger(__name__)  # logに書き込む用

@@ -1,0 +1,11 @@
+2026-06-26 13:51:42 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-06-26 13:51:42 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import camera.CameraModule; print('camera.CameraModule import OK')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\smartkey\02_src\my_app\camera\CameraModule.py", line 18, in <module>
+    from service.cardsystem import request_unlock
+  File "C:\smartkey\02_src\my_app\service\cardsystem.py", line 4, in <module>
+    from service.db_manager import check_card, insert_card_access_log
+ImportError: cannot import name 'insert_card_access_log' from 'service.db_manager' (C:\smartkey\02_src\my_app\service\db_manager.py)
