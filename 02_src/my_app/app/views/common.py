@@ -126,6 +126,14 @@ _CARD_TYPE_COLORS = {
 }
 
 def card_type_badge(card_type_value: str):
+    bg, fg = _CARD_TYPE_COLORS.get(card_type_value, ("#EEF1F5", "#5A6675"))
+    return ft.Container(
+        content=ft.Text(card_type_value, size=12, color=fg, weight=ft.FontWeight.W_500),
+        bgcolor=bg,
+        padding=ft.padding.symmetric(horizontal=10, vertical=4),
+        border_radius=Theme.RADIUS_SM,
+        alignment=ft.alignment.center,
+    )
 
 
 def show_error_dialog(page: ft.Page, message: str, go_home: bool = False):

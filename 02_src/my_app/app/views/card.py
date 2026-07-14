@@ -9,9 +9,12 @@ import logging
 import asyncio
 import sqlite3
 import flet as ft
-import db.repository as repo
+import my_app.db.repository as repo
 from my_app.models.ENUMS import CardType
-from my_app.app.views.common import show_error_dialog, filter_user_options
+from my_app.app.views.common import (
+    show_error_dialog, build_user_autocomplete,
+    Theme, card, section_title,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -27,34 +30,28 @@ def cardView(page: ft.Page):
     checkbox_refs = {}             # {card_id: Checkboxコントロール} の対応表
 
     page.title = "カード管理画面"
+    page.bgcolor = Theme.BG
 
     # ===================================================
     # ユーザー検索用プルダウンの候補データ
     # ===================================================
     # 画面表示のたびに最新のユーザー一覧を取得する
-    users = repo.get_all_users()
+    try:
+        users = repo.get_all_users()
+    except sqlite3.Error :
+        logger.error("ユーザー情報取得エラー")
+        show_error_dialog(page, "必要情報の取得に失敗しました", go_home=True)
+        return ft.View("/user", controls=[])
 
-    def on_user_selected(e: ft.ControlEvent):
+    def on_user_selected(user_id: int):
         """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
         nonlocal selected_user_id, offset
-        selected_user_id = int(e.selection.key)
+        selected_user_id = user_id
         offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
-    def on_user_search_change(e: ft.ControlEvent):
-        """
-        入力のたびに候補を絞り込み直す。ひらがな/カタカナ/ローマ字の
-        表記ゆれをjapanese_text.matchesで吸収する(Flet標準の絞り込みでは非対応)。
-        """
-        search_user.suggestions = filter_user_options(users, e.control.value)
-        search_user.update()
-
-    search_user = ft.AutoComplete(
-        suggestions=filter_user_options(users, ""),
-        on_select=on_user_selected,
-        on_change=on_user_search_change,
-    )
+    user_search = build_user_autocomplete(users, on_user_selected)
 
 
     # ===================================================
@@ -65,21 +62,6 @@ def cardView(page: ft.Page):
 
     # カラム定義
     column = ft.Column(controls=[], spacing=16, expand=True)
-
-    # ラジオボタングループの定義
-    radio_group = ft.RadioGroup(
-        content=column,
-        on_change=lambda e: print(f"選ばれたID: {radio_group.value}")
-    )
-
-    # 選択されたユーザーの定義
-    def on_user_selected(e: ft.ControlEvent):
-        """プルダウンでユーザーが選択された時: そのuser_idで絞り込み検索する"""
-        nonlocal selected_user_id, offset
-        selected_user_id = int(e.selection.key)
-        offset = 0
-        load_table()
-        scroll_table.scroll_to(offset=0, duration=0)
 
     # リセットボタン定義
     reset_btn = ft.ElevatedButton(
@@ -96,7 +78,7 @@ def cardView(page: ft.Page):
 
     # 検索欄定義
     search_zone = ft.Row(
-        controls=[search_user],
+        controls=[user_search],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=0
     )
@@ -132,6 +114,7 @@ def cardView(page: ft.Page):
             ft.DataColumn(ft.Text("ID"), on_sort=lambda e: page.run_task(sort_table, e)),
             ft.DataColumn(ft.Text("カードの種類")),
             ft.DataColumn(ft.Text("登録日")),
+            ft.DataColumn(ft.Text("ユーザー名")),
             ft.DataColumn(ft.ElevatedButton(
                 "行を削除", on_click=lambda e: open_confirm_dialog(e),
                 style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
@@ -141,6 +124,8 @@ def cardView(page: ft.Page):
         sort_column_index=0,
         sort_ascending=True,
     )
+
+
 
     # ===================================================
     # 更新、ソート関数
@@ -154,7 +139,7 @@ def cardView(page: ft.Page):
 
         selected_user_id = None
         table.sort_ascending = True
-        search_user.value = ""  # プルダウン入力欄のクリア
+        user_search.value = ""  # プルダウン入力欄のクリア
         offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
@@ -239,15 +224,14 @@ def cardView(page: ft.Page):
             # テーブルに情報を埋め込み
             table.rows.append(
                 ft.DataRow(cells=[
-                    ft.DataCell(ft.Text(f"{card.id:05d}", width=40)),
-                    ft.DataCell(ft.Text(card.card_type.value, width=100)),
-                    ft.DataCell(ft.Text(card.register_date, width=80)),
+                    ft.DataCell(ft.Text(f"{card.id:05d}", width=100)),
+                    ft.DataCell(ft.Text(card.card_type.value, width=140)),
+                    ft.DataCell(ft.Text(card.register_date, width=140)),
+                    ft.DataCell(ft.Text(card.user_name, width=100)),
                     ft.DataCell(cb),
                 ])
             )
 
-        #
-        radio_group.value = str(cards[0].id) if cards else None
         page_label.value = f"{offset + 1} / {all_page} ページ"
         prev_btn.disabled = offset == 0
         next_btn.disabled = (offset + 1) == all_page
@@ -306,15 +290,14 @@ def cardView(page: ft.Page):
     # レイアウト定義と配置
     # ===================================================
 
-    #ラジオボックスをテーブルの隣に
-    table_radio_box = ft.Row(
-        [table, ft.Container(width=0), radio_group],
-        vertical_alignment=ft.CrossAxisAlignment.START
+    table_row = ft.Row(
+        [table],
+        alignment=ft.MainAxisAlignment.CENTER,
     )
 
     # スクロール化
     scroll_table = ft.Column(
-        controls=[table_radio_box],
+        controls=[table_row],
         scroll=ft.ScrollMode.ALWAYS,
         expand=True,
     )
@@ -322,22 +305,54 @@ def cardView(page: ft.Page):
     #テーブル読み込み
     load_table()
 
-    #実際のページにする
+    # ===================================================
+    # commonスタイル適用
+    # ===================================================
+
+    search_card = card(
+        ft.Column(
+            controls=[
+                section_title("カード管理", "登録済みのカードを名前で閲覧・検索・削除できます"),
+                ft.Container(height=4),
+                search_zone_row,
+            ],
+            spacing=8,
+        )
+    )
+
+    table_card = card(
+        ft.Column(
+            controls=[
+                section_title("カード一覧"),
+                ft.Container(height=8),
+                scroll_table,
+                ft.Container(height=8),
+                btn_zone,
+            ],
+            spacing=8,
+            expand=True,
+        )
+    )
+
+    # ===================================================
+    # 実際にページに
+    # ===================================================
     return ft.View(
         "/card",
         controls=[
-            search_zone_row,
-            ft.Text("カード一覧", size=30, weight=ft.FontWeight.BOLD),
-            ft.Container(height=10),
-            scroll_table,
-            btn_zone,
+            search_card,
+            ft.Container(height=16),
+            table_card,
             ft.Container(height=10),
             ft.ElevatedButton(
                 "戻る",
                 icon=ft.Icons.ARROW_BACK,
-                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
+                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Theme.RADIUS_SM)),
                 on_click=lambda e: page.go("/index"),
-            )
+            ),
+            ft.Container(height=40),
         ],
-        padding=ft.Padding(left=120, top=20, right=0, bottom=50)
+        bgcolor=Theme.BG,
+        padding=ft.Padding(left=40, top=24, right=40, bottom=40),
+        scroll=ft.ScrollMode.AUTO,
     )

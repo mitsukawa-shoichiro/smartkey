@@ -13,7 +13,7 @@ import flet as ft
 import db.repository as repo
 import service.face_service as face_service
 import sqlite3
-from my_app.app.views.common import show_error_dialog, filter_user_options
+from my_app.app.views.common import show_error_dialog, build_user_autocomplete
 
 logger = logging.getLogger(__name__)
 
@@ -36,27 +36,15 @@ def faceView(page: ft.Page):
     # 画面表示のたびに最新のユーザー一覧を取得
     users = repo.get_all_users()
 
-    def on_user_selected(e: ft.ControlEvent):
+    def on_user_selected(user_id: int):
         """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
         nonlocal selected_user_id, offset
-        selected_user_id = int(e.selection.key)
+        selected_user_id = user_id
         offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
-    def on_user_search_change(e: ft.ControlEvent):
-        """
-        入力のたびに候補を絞り込み直す。ひらがな/カタカナ/ローマ字の
-        表記ゆれをjapanese_text.matchesで吸収する(Flet標準の絞り込みでは非対応)。
-        """
-        search_user.suggestions = filter_user_options(users, e.control.value)
-        search_user.update()
-
-    search_user = ft.AutoComplete(
-        suggestions=filter_user_options(users, ""),
-        on_select=on_user_selected,
-        on_change=on_user_search_change,
-    )
+    search_user = build_user_autocomplete(users, on_user_selected)
 
     # ===================================================
     # UIコントロールの定義
@@ -137,6 +125,7 @@ def faceView(page: ft.Page):
         columns=[#一行に入る情報たち
             ft.DataColumn(ft.Text("ID"), on_sort=lambda e: page.run_task(sort_table, e)),
             ft.DataColumn(ft.Text("登録日")),
+            ft.DataColumn(ft.Text("ユーザー名")),
             ft.DataColumn(ft.ElevatedButton(
                 "行を削除", on_click=lambda e: open_confirm_dialog(e),
                 style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
@@ -251,6 +240,7 @@ def faceView(page: ft.Page):
                 ft.DataRow(cells=[
                     ft.DataCell(ft.Text(f"{face.id:05d}", width=40)),
                     ft.DataCell(ft.Text(face.register_date, width=80)),
+                    ft.DataCell(ft.Text(face.user_name, width=100)),
                     ft.DataCell(cb),
                 ])
             )
@@ -342,6 +332,11 @@ def faceView(page: ft.Page):
 
     #テーブル本体
     load_table()
+
+    # ===================================================
+    #
+    # ===================================================
+
 
     #ここでページ統合して表示
     return ft.View(
