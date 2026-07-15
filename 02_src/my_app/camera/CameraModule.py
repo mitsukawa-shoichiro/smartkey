@@ -7,12 +7,9 @@ import cv2
 import tempfile
 import time
 
-import service.db_manager as repo
-import service.utils.sesame as sesame
-import camera.face_util as face_util
-
-from my_app.camera.BlinkDetector import BlinkDetector
-from camera.face_authenticator import FaceAuthenticator
+# import service.db_manager as repo
+# import service.utils.sesame as sesame
+from my_app.camera.face_authenticator import FaceAuthenticator
 
 import my_app.logs.log_config_service
 import logging
@@ -21,7 +18,7 @@ import logging
 from my_app.service.card_sys import request_unlock
 
 # 通过与多张注册图像的距离及其平均值进行人脸识别
-from my_app.camera.face_util.face_stable import recognize_image_average
+# from my_app.camera.face_util.face_stable import recognize_image_average
 
 # 用于写入日志
 logger = logging.getLogger(__name__)

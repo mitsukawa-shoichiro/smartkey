@@ -14,11 +14,18 @@ class InsightFaceEngine:
 
         self.app.prepare(ctx_id = -1, det_size = (640, 640))
 
+    def detect_faces(self, bgr_frame):
+        if bgr_frame is None:
+            return []
+        
+        return self.app.get(bgr_frame)
+
     def extract_one(self, bgr_frame):
         """
         仅检测到一人时返回人脸信息🐸
         """
-        faces = self.app.get(bgr_frame)
+    
+        faces = self.detect_faces(bgr_frame)
 
         if len(faces) != 1:
             return None, {"reason": f"face_count={len(faces)}"}

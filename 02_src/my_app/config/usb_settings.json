@@ -1,7 +1,7 @@
 {
   "設置台数": 1,
   "devices": {
-    "テスト": {
+    "入口": {
       "index": 0,
       "name": "SONY FeliCa Port/PaSoRi 4.0",
       "vid": "054C",

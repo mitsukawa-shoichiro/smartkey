@@ -45,9 +45,17 @@ with open(config_path, "r", encoding="utf-8") as f:
 
 COUNT_READER = config["設置台数"]
 
+devices = config.get("devices", {})
+
+register_device = (devices.get("出口") or devices.get("入口") or devices.get("テスト"))
+
+if register_device is None:
+    raise ValueError("カードリーダー設定なし")
+
+REGISTER_READER_SERIAL = register_device["serial"]
+
 # 登録モードでIDmを受け付けるのは「出口」リーダーのみ(GUI案内文と一致させる)。
 # get_readers()が返す reader_serial は config["devices"]["出口"]["serial"] と同じ値になる。
-EXIT_READER_SERIAL = config["devices"]["出口"]["serial"]
 
 
 # region logs
@@ -179,7 +187,7 @@ def reader_loop():
                         if state == "registering":
                             # 登録モード中は通常の認証フローに流さず、
                             # 出口リーダーで読めたIDmだけGUIへ通知する。
-                            if reader_serial == EXIT_READER_SERIAL:
+                            if reader_serial == REGISTER_READER_SERIAL:
                                 notify_registered_card(idm)
                         else:
                             event_q.put((idm, reader_serial))

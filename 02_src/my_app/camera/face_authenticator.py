@@ -4,13 +4,13 @@ import cv2
 import numpy as np
 from pathlib import Path
 
-from camera.face_util.insightface_engine import InsightFaceEngine
-from camera.liveness_gate import LivenessGate
+from my_app.camera.face_util.insightface_engine import InsightFaceEngine
+from my_app.camera.liveness_gate import LivenessGate
 
 import logging
 from collections import deque
 
-from camera.passive_pad import PassivePad
+from my_app.camera.passive_pad import PassivePad
 
 logger = logging.getLogger(__name__)
 

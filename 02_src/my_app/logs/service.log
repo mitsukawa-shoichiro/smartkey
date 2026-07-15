@@ -27,3 +27,764 @@
 2026-07-13 13:43:32 [INFO] backsys.sendmail:44 - メール送信完了
 2026-07-13 13:43:32 [INFO] backsys.back_system:117 - カードリーダー異常
 2026-07-13 13:43:32 [INFO] backsys.back_system:61 - バッテリー残量: 100
+2026-07-14 15:37:25 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 15:37:50 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 15:37:51 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import my_app.service.windowsservice; print('windowsservice OK')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\smartkey\02_src\my_app\service\windowsservice.py", line 61, in <module>
+    from my_app.daemon import reader_daemon
+  File "C:\smartkey\02_src\my_app\daemon\reader_daemon.py", line 50, in <module>
+    EXIT_READER_SERIAL = config["devices"]["出口"]["serial"]
+                         ~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: '出口'
+2026-07-14 16:18:35 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 16:18:36 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\service\windowsservice.py", line 61, in <module>
+    from my_app.daemon import reader_daemon
+  File "C:\smartkey\02_src\my_app\daemon\reader_daemon.py", line 50, in <module>
+    EXIT_READER_SERIAL = config["devices"]["出口"]["serial"]
+                         ~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: '出口'
+2026-07-14 16:31:41 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 16:39:08 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 16:39:25 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 16:39:25 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-07-14 16:39:25 [INFO] flet:61 - Starting up TCP server on localhost:62541
+2026-07-14 16:39:25 [INFO] flet:171 - Flet app has started...
+2026-07-14 16:39:25 [INFO] flet:131 - App URL: tcp://localhost:62541
+2026-07-14 16:39:25 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-07-14 16:39:25 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 16:39:25 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 16:39:25 [INFO] flet:240 - App session started
+2026-07-14 16:39:25 [INFO] __main__:64 - GUI started
+2026-07-14 16:39:25 [INFO] my_app.app.views.router:28 - /に遷移しました
+2026-07-14 16:39:46 [INFO] my_app.app.views.login:48 - ログイン成功
+2026-07-14 16:39:46 [INFO] my_app.app.views.router:28 - /indexに遷移しました
+2026-07-14 16:39:46 [INFO] my_app.app.views.router:32 - index_viewに遷移しました。error_message=
+2026-07-14 16:39:47 [INFO] my_app.app.views.router:28 - /face_registerに遷移しました
+2026-07-14 16:40:02 [INFO] __main__:73 - Sent message: authenticating
+2026-07-14 16:40:02 [INFO] __main__:77 - GUI stopped
+2026-07-14 16:43:24 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 16:43:44 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 16:43:44 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-07-14 16:43:44 [INFO] flet:61 - Starting up TCP server on localhost:53892
+2026-07-14 16:43:44 [INFO] flet:171 - Flet app has started...
+2026-07-14 16:43:44 [INFO] flet:131 - App URL: tcp://localhost:53892
+2026-07-14 16:43:44 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-07-14 16:43:44 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 16:43:44 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 16:43:44 [INFO] flet:240 - App session started
+2026-07-14 16:43:44 [INFO] __main__:64 - GUI started
+2026-07-14 16:43:44 [INFO] my_app.app.views.router:28 - /に遷移しました
+2026-07-14 16:43:49 [INFO] my_app.app.views.login:48 - ログイン成功
+2026-07-14 16:43:49 [INFO] my_app.app.views.router:28 - /indexに遷移しました
+2026-07-14 16:43:49 [INFO] my_app.app.views.router:32 - index_viewに遷移しました。error_message=
+2026-07-14 16:43:51 [INFO] my_app.app.views.router:28 - /face_registerに遷移しました
+2026-07-14 16:44:58 [INFO] my_app.app.views.router:28 - /face_register/inputに遷移しました
+2026-07-14 16:45:31 [INFO] __main__:73 - Sent message: authenticating
+2026-07-14 16:45:31 [INFO] __main__:77 - GUI stopped
+2026-07-14 16:45:51 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 16:45:51 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-07-14 16:45:51 [INFO] flet:61 - Starting up TCP server on localhost:49318
+2026-07-14 16:45:51 [INFO] flet:171 - Flet app has started...
+2026-07-14 16:45:51 [INFO] flet:131 - App URL: tcp://localhost:49318
+2026-07-14 16:45:51 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-07-14 16:45:51 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 16:45:51 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 16:45:51 [INFO] flet:240 - App session started
+2026-07-14 16:45:51 [INFO] __main__:64 - GUI started
+2026-07-14 16:45:51 [INFO] my_app.app.views.router:28 - /に遷移しました
+2026-07-14 16:46:05 [INFO] my_app.app.views.login:48 - ログイン成功
+2026-07-14 16:46:05 [INFO] my_app.app.views.router:28 - /indexに遷移しました
+2026-07-14 16:46:05 [INFO] my_app.app.views.router:32 - index_viewに遷移しました。error_message=
+2026-07-14 16:46:12 [INFO] my_app.app.views.router:28 - /face_registerに遷移しました
+2026-07-14 16:46:28 [INFO] my_app.app.views.router:28 - /face_register/inputに遷移しました
+2026-07-14 16:46:48 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:46:51 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:46:52 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:46:52 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:46:59 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:13 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:13 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:13 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:14 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:14 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:14 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:14 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:14 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:14 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:25 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:25 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:25 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:26 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:26 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:26 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:26 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:26 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:26 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:26 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:26 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:27 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:27 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:27 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:27 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:27 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:28 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:28 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:28 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:28 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:28 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:29 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:29 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:29 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:29 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:29 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:30 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:30 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:30 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:30 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:34 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:34 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:34 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:35 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:35 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:35 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=AttributeError("module 'db.repository' has no attribute 'insert_facedata'")>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_register.py", line 361, in execute_register
+    repo.insert_facedata(user_name.value, user_name_romaji.value)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'db.repository' has no attribute 'insert_facedata'. Did you mean: 'insert_face'?
+2026-07-14 16:48:43 [INFO] __main__:73 - Sent message: authenticating
+2026-07-14 16:48:43 [INFO] __main__:77 - GUI stopped
+2026-07-14 17:12:37 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 17:12:37 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-07-14 17:12:37 [INFO] flet:61 - Starting up TCP server on localhost:54446
+2026-07-14 17:12:37 [INFO] flet:171 - Flet app has started...
+2026-07-14 17:12:37 [INFO] flet:131 - App URL: tcp://localhost:54446
+2026-07-14 17:12:37 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-07-14 17:12:37 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 17:12:37 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 17:12:37 [INFO] flet:240 - App session started
+2026-07-14 17:12:37 [INFO] __main__:64 - GUI started
+2026-07-14 17:12:37 [INFO] my_app.app.views.router:28 - /に遷移しました
+2026-07-14 17:12:41 [INFO] my_app.app.views.login:48 - ログイン成功
+2026-07-14 17:12:41 [INFO] my_app.app.views.router:28 - /indexに遷移しました
+2026-07-14 17:12:41 [INFO] my_app.app.views.router:32 - index_viewに遷移しました。error_message=
+2026-07-14 17:12:45 [INFO] my_app.app.views.router:28 - /face_registerに遷移しました
+2026-07-14 17:13:13 [INFO] my_app.app.views.router:28 - /face_register/inputに遷移しました
+2026-07-14 17:13:24 [INFO] my_app.app.views.router:28 - /face_registerに遷移しました
+2026-07-14 17:13:44 [INFO] __main__:73 - Sent message: authenticating
+2026-07-14 17:13:44 [INFO] __main__:77 - GUI stopped
+2026-07-14 17:18:22 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 17:18:22 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-07-14 17:18:22 [INFO] flet:61 - Starting up TCP server on localhost:62662
+2026-07-14 17:18:22 [INFO] flet:171 - Flet app has started...
+2026-07-14 17:18:22 [INFO] flet:131 - App URL: tcp://localhost:62662
+2026-07-14 17:18:22 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-07-14 17:18:22 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 17:18:22 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 17:18:22 [INFO] flet:240 - App session started
+2026-07-14 17:18:22 [INFO] __main__:64 - GUI started
+2026-07-14 17:18:22 [INFO] my_app.app.views.router:28 - /に遷移しました
+2026-07-14 17:18:26 [INFO] my_app.app.views.login:48 - ログイン成功
+2026-07-14 17:18:26 [INFO] my_app.app.views.router:28 - /indexに遷移しました
+2026-07-14 17:18:26 [INFO] my_app.app.views.router:32 - index_viewに遷移しました。error_message=
+2026-07-14 17:18:28 [INFO] my_app.app.views.router:28 - /face_registerに遷移しました
+2026-07-14 17:18:29 [INFO] my_app.app.views.router:28 - /indexに遷移しました
+2026-07-14 17:18:29 [INFO] my_app.app.views.router:32 - index_viewに遷移しました。error_message=
+2026-07-14 17:18:31 [INFO] my_app.app.views.router:28 - /face_recognitionに遷移しました
+2026-07-14 17:18:31 [ERROR] db.repository:129 - ユーザー全件取得エラー
+Traceback (most recent call last):
+  File "C:\smartkey\02_src\my_app\db\repository.py", line 122, in get_all_users
+    c.execute('SELECT id, user_name, user_kana FROM user')
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: user
+2026-07-14 17:18:31 [ERROR] asyncio:1889 - Future exception was never retrieved
+future: <Future finished exception=OperationalError('no such table: user')>
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\core\page.py", line 906, in wrapper
+    handler(*args)
+    ~~~~~~~^^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\router.py", line 56, in page_route_change
+    page.views.append(face_recognition.faceView(page))
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\smartkey\02_src\my_app\app\views\face_recognition.py", line 37, in faceView
+    users = repo.get_all_users()
+  File "C:\smartkey\02_src\my_app\db\repository.py", line 122, in get_all_users
+    c.execute('SELECT id, user_name, user_kana FROM user')
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: user
+2026-07-14 17:18:34 [INFO] __main__:73 - Sent message: authenticating
+2026-07-14 17:18:34 [INFO] __main__:77 - GUI stopped
+2026-07-14 17:18:39 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 17:18:39 [INFO] flet:371 - Assets path configured: C:\smartkey\02_src\my_app\app
+2026-07-14 17:18:39 [INFO] flet:61 - Starting up TCP server on localhost:55608
+2026-07-14 17:18:39 [INFO] flet:171 - Flet app has started...
+2026-07-14 17:18:39 [INFO] flet:131 - App URL: tcp://localhost:55608
+2026-07-14 17:18:39 [INFO] flet_desktop:62 - Starting Flet View app...
+2026-07-14 17:18:39 [INFO] flet_desktop:86 - Looking for Flet executable at: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 17:18:39 [INFO] flet_desktop:88 - Flet View found in: C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2026-07-14 17:18:39 [INFO] flet:240 - App session started
+2026-07-14 17:18:39 [INFO] __main__:64 - GUI started
+2026-07-14 17:18:39 [INFO] my_app.app.views.router:28 - /に遷移しました
+2026-07-14 17:18:42 [INFO] my_app.app.views.login:48 - ログイン成功
+2026-07-14 17:18:42 [INFO] my_app.app.views.router:28 - /indexに遷移しました
+2026-07-14 17:18:42 [INFO] my_app.app.views.router:32 - index_viewに遷移しました。error_message=
+2026-07-14 17:18:46 [INFO] __main__:73 - Sent message: authenticating
+2026-07-14 17:18:46 [INFO] __main__:77 - GUI stopped
+2026-07-14 17:34:42 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 17:35:09 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 17:36:57 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 17:38:44 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-14 17:38:50 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully

@@ -19,13 +19,14 @@ PORT = 10000
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGS_PATH = os.path.abspath(os.path.join(BASE_DIR, "logs"))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
 
 logger = logging.getLogger(__name__)
 
-
+from my_app.ui.theme import apply_page_theme
 def main(page: ft.Page):
     apply_page_theme(page)
     page.window.resizable = True
