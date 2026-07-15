@@ -2,6 +2,6 @@
 
 pushd "%~dp0"
 
-py service/windowsservice.py stop
+C:\smartkey\.venv\Scripts\python.exe service\windowsservice.py stop
 
 pause

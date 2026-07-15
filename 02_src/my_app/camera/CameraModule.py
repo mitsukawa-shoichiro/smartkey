@@ -7,9 +7,9 @@ import cv2
 import tempfile
 import time
 
-import service.db_manager as repo
-import service.utils.sesame as sesame
-import camera.face_util as face_util
+import my_app.db.repository as repo
+import my_app.service.utils.sesame as sesame
+import my_app.camera.face_util as face_util
 
 from my_app.camera.BlinkDetector import BlinkDetector
 from camera.face_authenticator import FaceAuthenticator
@@ -355,7 +355,7 @@ class CameraWorker:
 
         if rgb_frame is None or ir_frame is None:
             return False
-        
+
         name, info = self.face_authenticator.authenticate(
             rgb_frame,
             ir_frame
@@ -372,9 +372,9 @@ class CameraWorker:
                 )
             elif reason != "cooldown":
                 print(f"顔があかん: ")
-            
+
             return False
-        
+
         logger.info(
             "顔いいじゃん: name=%s score=%.4f margin=%.4f",
             name,

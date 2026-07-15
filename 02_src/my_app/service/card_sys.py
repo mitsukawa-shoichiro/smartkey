@@ -128,6 +128,8 @@ def receive_card(card_number: str, reader_serial: int):
             request_unlock()
 
             user_id = repo.find_user_id_by_card_id(card_id)
+            open_sesame(user_id)
+            lock_sesame(user_id)
 
             event_type = resolve_event_type(reader_serial)
 
