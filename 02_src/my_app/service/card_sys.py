@@ -1,6 +1,5 @@
 from .utils.sesame_bluetooth import open_sesame_bt
 from .nfcutils.card_scan import scan_card
-import db.repository as repo
 import sys
 import os
 import time

@@ -1,6 +1,7 @@
 {
-    "rgb_camera_index": 0,
-    "ir_camera_index": 1,
+    "rgb_camera_index": 1,
+    "ir_device_id_contains": "VID_0C45&PID_6366",
+    "ir_startup_timeout_sec": 5.0,
     "similarity_threshold": 0.42,
     "margin_threshold": 0.04,
     "required_success_frames": 5,

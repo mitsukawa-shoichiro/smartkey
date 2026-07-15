@@ -28,9 +28,9 @@ def same_get_serials():
 
     dev = config["devices"]
     try:
-        info = dev["テスト"]#入口に直して
+        info = dev["入口"]#入口に直して
     except Exception:
-        info = dev["テスト"]#出口に直して
+        info = dev["出口"]#出口に直して
     vid = info["vid"]
     pid = info["pid"]
     s = info["serial"]
@@ -66,7 +66,7 @@ def get_readers():
     name_list = []
     devices = config["devices"]
     print(type(devices))
-    for direction in ["テスト"]:    #for direction in ["入口", "出口"]:使うときはこれに直して
+    for direction, info in devices.items(): #for direction in ["入口", "出口"]:使うときはこれに直して
         info = devices[direction]
         desired_order.append(info["serial"])
         pid_list.append(info["pid"])

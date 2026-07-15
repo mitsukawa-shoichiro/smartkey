@@ -2,7 +2,7 @@ import flet as ft
 import os
 import cv2
 import re
-import face_recognition
+from my_app.camera.face_util.insightface_engine import InsightFaceEngine
 
 #region config
 import json
@@ -27,21 +27,61 @@ print(card_config)
 
 
 #region face util functions
+_face_engine = None
+
+def get_face_engine():
+    """
+    顔検出モデルを最初の一回だけつくる
+    """
+    global _face_engine
+
+    if _face_engine is None:
+        _face_engine = InsightFaceEngine()
+
+    return _face_engine
+
 def detect(image_path: str, model="hog", out_path="detected.jpg") -> int:
     """
     画像から顔を検出して矩形を描画し、保存する。
     検出数を返す。
     """
-    img = face_recognition.load_image_file(image_path)
-    face_locations = face_recognition.face_locations(img, model=model)
+    img_cv = cv2.imread(image_path)
 
-    img_cv = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    for (top, right, bottom, left) in face_locations:
-        cv2.rectangle(img_cv, (left, top), (right, bottom), (0, 255, 0), 2)
+    if img_cv is None:
+        raise ValueError(
+            f"画像を読み込めません: {image_path}"
+        )
+
+    faces = get_face_engine().detect_faces(img_cv)
+    image_height, image_width = img_cv.shape[:2]
+
+    for face in faces:
+        x1, y1, x2, y2 = [
+            int(round(float(value)))
+            for value in face.bbox
+        ]
+
+        x1 = max(0, min(x1, image_width - 1))
+        x2 = max(0, min(x2, image_width))
+        y1 = max(0, min(y1, image_height - 1))
+        y2 = max(0, min(y2, image_height))
+
+        cv2.rectangle(
+            img_cv,
+            (x1, y1),
+            (x2, y2),
+            (0, 255, 0),
+            2,
+        )
 
     cv2.imwrite(out_path, img_cv)
-    print(f"[OK] {len(face_locations)} 枚の顔を検出、保存先: {out_path}")
-    return len(face_locations)
+
+    print(
+        f"[OK] {len(faces)} 枚の顔を検出、"
+        f"保存先: {out_path}"
+    )
+
+    return len(faces)
 
 def Detect_face(camera_count=4) -> int:
     index = -1
@@ -84,7 +124,9 @@ def Detect_face(camera_count=4) -> int:
 from enum import Enum
 
 class IndexEnum(Enum):
-    テスト = "テスト"#テストのためテストに変更
+    入口 = "入口"
+    出口 = "出口"
+    テスト = "テスト"
 
 
 def set_camera_config(camera_enum: IndexEnum, camera_index: int):
@@ -124,9 +166,9 @@ def camera_register_view(page: ft.Page) -> ft.View:
 
     card_outdoor_text = ft.Text("現在:"+str(card_config["devices"][IndexEnum.テスト.value]["index"]), size=20)
 
-    face_indoor_text = ft.Text("現在:"+str(camera_config["devices"][IndexEnum.テスト.value]["index"]), size=20)
+    face_indoor_text = ft.Text("現在:" + str(camera_config["devices"][IndexEnum.入口.value]["index"]),size=20)
 
-    face_outdoor_text = ft.Text("現在:"+str(camera_config["devices"][IndexEnum.テスト.value]["index"]), size=20)
+    face_outdoor_text = ft.Text("現在:" + str(camera_config["devices"][IndexEnum.出口.value]["index"]),size=20)
 
 
     #region face_util_method
@@ -156,11 +198,13 @@ def camera_register_view(page: ft.Page) -> ft.View:
             update_text_face()
 
     def update_text_face():
-        with open(camera_config_path, "r", encoding="utf-8") as fc:
+        with open(camera_config_path, "r", encoding="utf-8",) as fc:
             camera_config = json.load(fc)
+
         print(camera_config)
-        face_indoor_text.value = "現在:"+str(camera_config["devices"][IndexEnum.テスト.value]["index"])#ここも入口出口！
-        face_outdoor_text.value = "現在:"+str(camera_config["devices"][IndexEnum.テスト.value]["index"])
+
+        face_indoor_text.value = ("現在:" + str(camera_config["devices"][IndexEnum.入口.value]["index"]))
+        face_outdoor_text.value = ("現在:" + str(camera_config["devices"][IndexEnum.出口.value]["index"]))
 
     #endregion
 
@@ -206,12 +250,12 @@ def camera_register_view(page: ft.Page) -> ft.View:
 
     set_face_indoor_button = ft.ElevatedButton(
         text="入口カメラに設定",
-        on_click=lambda e: SetCameraIndex(IndexEnum.テスト),
+        on_click=lambda e: SetCameraIndex(IndexEnum.入口),
         width=200,
     )
     set_face_outdoor_button = ft.ElevatedButton(
         text="出口カメラに設定",
-        on_click=lambda e: SetCameraIndex(IndexEnum.テスト),
+        on_click=lambda e: SetCameraIndex(IndexEnum.出口),
         width=200,
     )
 

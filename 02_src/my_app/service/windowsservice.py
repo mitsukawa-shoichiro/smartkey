@@ -67,7 +67,7 @@ def run_card():
     logger.info("CardCheck thread started")
     reader_daemon.main()
 
-from camera.CameraModule import CameraWorker
+from my_app.camera.CameraModule import CameraWorker
 camera_worker = None
 def run_camera():
     global camera_worker
