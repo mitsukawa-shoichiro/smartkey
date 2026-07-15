@@ -242,8 +242,7 @@ def cardView(page: ft.Page):
             show_error_dialog(page, "カード情報の取得に失敗しました。しばらくしてから再度お試しください。")
             return
 
-        if not cards:
-            empty_state("まだカードが登録されていません")
+
 
         #諸パラメータ更新
         all_page = int(((total - 1) / 100) + 1)
@@ -345,6 +344,7 @@ def cardView(page: ft.Page):
             spacing=8,
         )
     )
+
     # テーブル用カード(土台のパネル)
     table_card = card(
         ft.Column(

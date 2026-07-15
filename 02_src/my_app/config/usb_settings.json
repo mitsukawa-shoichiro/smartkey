@@ -1,12 +1,17 @@
 {
-  "設置台数": 1,
+  "設置台数": 2,
   "devices": {
-    "テスト": {
-      "index": 0,
+    "入口": {
       "name": "SONY FeliCa Port/PaSoRi 4.0",
       "vid": "054C",
       "pid": "0DC9",
-      "serial": "0476720"
+      "serial": "0371756"
+    },
+    "出口": {
+      "name": "SONY FeliCa Port/PaSoRi 4.0",
+      "vid": "054C",
+      "pid": "0DC9",
+      "serial": "0373604"
     }
   }
 }
