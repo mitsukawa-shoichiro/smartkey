@@ -127,7 +127,7 @@ def receive_card(card_number: str, reader_serial: int):
 
             user_id = repo.find_user_id_by_card_id(card_id)
 
-            request_unlock(card_id)
+            request_unlock(user_id)
 
             event_type = resolve_event_type(reader_serial)
 
@@ -154,11 +154,11 @@ def request_unlock(user_id: int):
         success = unlock_bt(user_id)
         logger.info("bluetoothでの解錠完了")
 
-def request_lock():
+def request_lock(user_id: int):
     # wifiの時SESAME APIであける
     try:
         if connect_config == "wifi":
-            lock()
+            lock(user_id)
         elif connect_config == "bluetooth":
             logger.warning("Bluetooth lock is not implemented")
             #Bluetoothでは未実装
@@ -166,17 +166,17 @@ def request_lock():
         #例外の詳細を変数eに格納
         logger.exception(f"Auto lock failed:{e}")
 
-def unlock():
+def unlock(user_id):
     # Wi-Fiで開錠する
-    return open_sesame()
+    return open_sesame(user_id)
 
-def lock():
+def lock(user_id):
     # Wi-Fiで施錠する
-    lock_sesame()
+    lock_sesame(user_id)
 
-def unlock_bt():
+def unlock_bt(user_id):
     """
     Bluetoothを使用して解錠操作を実行します。
     """
-    asyncio.run(open_sesame_bt())
+    asyncio.run(open_sesame_bt(user_id))
 
