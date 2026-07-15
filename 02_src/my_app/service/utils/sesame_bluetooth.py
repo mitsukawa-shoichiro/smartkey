@@ -206,7 +206,7 @@ class SsmBleClient:
         ccm_iv = self._encrypt_counter.to_bytes(
             8, "little") + nouse + self._random_code
         cobj = AES.new(self._token, AES.MODE_CCM, ccm_iv,
-                       mac_len=4, msg_len=len(data), assoc_len=1)
+                    mac_len=4, msg_len=len(data), assoc_len=1)
         cobj.update(bytes([0x00]))
         enc_data, tag = cobj.encrypt_and_digest(data)
         tag4 = tag[0:4]

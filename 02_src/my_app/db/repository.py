@@ -13,8 +13,10 @@ from .db_manager import get_connection  # データベース接続用
 from my_app.models.ENUMS import EventType, CardType  # Enum
 from my_app.models.entity.access_log import AccessLog  # データクラス
 from my_app.models.entity.face import Face  # データクラス
+from my_app.models.entity.face_with_user import FaceWithUser  # データクラス
 from my_app.models.entity.user import User  # データクラス
 from my_app.models.entity.card import Card
+from my_app.models.entity.card_with_user import CardWithUser
 from datetime import datetime, timedelta  # 入退室ログの時間用に
 
 logger = logging.getLogger(__name__)
@@ -214,16 +216,17 @@ def find_all_cards(asc: bool, offset: int):
             c = conn.cursor()
             c.execute(
                 f"""
-                SELECT id, card_type, card_number, register_date, user_id
+                SELECT card.id, card_type, card_number, register_date, user_id, user.user_name
                 FROM card
-                ORDER BY id {order} LIMIT 100 OFFSET ?
+                LEFT JOIN user ON card.user_id = user.id
+                ORDER BY card.id {order} LIMIT 100 OFFSET ?
                 """,
                 (offset,)
             )
             rows = c.fetchall()
             return [
-                Card(id=row[0], card_type=CardType(row[1]), card_number=row[2],
-                    register_date=row[3], user_id=row[4])
+                CardWithUser(id=row[0], card_type=CardType(row[1]), card_number=row[2],
+                    register_date=row[3], user_id=row[4], user_name=row[5])
                 for row in rows
             ]
     except sqlite3.Error:
@@ -267,17 +270,18 @@ def find_cards_by_user_id(user_id: int, asc: bool, offset: int):
             c = conn.cursor()
             c.execute(
                 f"""
-                SELECT id, card_type, card_number, register_date, user_id
+                SELECT card.id, card_type, card_number, register_date, user_id, user.user_name
                 FROM card
+                LEFT JOIN user ON user_id = user.id
                 WHERE user_id = ?
-                ORDER BY id {order} LIMIT 100 OFFSET ?
+                ORDER BY card.id {order} LIMIT 100 OFFSET ?
                 """,
                 (user_id, offset)
             )
             rows = c.fetchall()
             return [
-                Card(id=row[0], card_type=CardType(row[1]), card_number=row[2],
-                    register_date=row[3], user_id=row[4])
+                CardWithUser(id=row[0], card_type=CardType(row[1]), card_number=row[2],
+                    register_date=row[3], user_id=row[4], user_name=row[5])
                 for row in rows
             ]
     except sqlite3.Error:
@@ -330,31 +334,8 @@ def find_user_name_and_user_id_by_user_kana(user_kana, asc: bool, offset):
     except sqlite3.Error():
         logger.exception("IDと名前の取得エラー: user_kana = %s", user_kana)
         raise
-    
-def update_user(user_id, user_name, user_kana):
-    """
-    ユーザー情報を更新する関数
 
-    Args:
-        user_name(str):名前
-        user_kana(str):カナ氏名
-    Returns:
-        list: ユーザーID、名前、カナ氏名（存在する場合）またはNone（存在しない場合）
-    """
-    try:
-        with get_connection() as conn:
-            conn.execute( """
-            UPDATE user
-            SET
-                user_name = ?,
-                user_kana = ?
-            WHERE user_id = ?
-            """,
-            (user_name, user_kana, user_id))
-            conn.commit()
-    except sqlite3.Error():
-        logger.exception("更新エラー: user_id = %s", user_id)
-        raise
+
 
 def find_user_id_by_card_id(card_id):
     """
@@ -610,15 +591,16 @@ def find_all_faces(asc: bool, offset: int):
             c = conn.cursor()
             c.execute(
                 f"""
-                SELECT id, register_date, user_id
+                SELECT face.id, register_date, user_id, user.user_name
                 FROM face
-                ORDER BY id {order} LIMIT 100 OFFSET ?
+                LEFT JOIN user ON user_id = user.id
+                ORDER BY face.id {order} LIMIT 100 OFFSET ?
                 """,
                 (offset,)
             )
             rows = c.fetchall()
             return [
-                Face(id=row[0], register_date=row[1], user_id=row[2])
+                FaceWithUser(id=row[0], register_date=row[1], user_id=row[2], user_name=row[3])
                 for row in rows
             ]
     except sqlite3.Error:
@@ -662,16 +644,17 @@ def find_faces_by_user_id(user_id: int, asc: bool, offset: int):
             c = conn.cursor()
             c.execute(
                 f"""
-                SELECT id, register_date, user_id
+                SELECT face.id, register_date, user_id, user.user_name
                 FROM face
+                LEFT JOIN user ON face.user_id = user.id
                 WHERE user_id = ?
-                ORDER BY id {order} LIMIT 100 OFFSET ?
+                ORDER BY face.id {order} LIMIT 100 OFFSET ?
                 """,
                 (user_id, offset)
             )
             rows = c.fetchall()
             return [
-                Face(id=row[0], register_date=row[1], user_id=row[2])
+                FaceWithUser(id=row[0], register_date=row[1], user_id=row[2], user_name=row[3])
                 for row in rows
             ]
     except sqlite3.Error:

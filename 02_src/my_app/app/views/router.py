@@ -7,7 +7,7 @@ import my_app.app.views.register as register
 
 
 import my_app.app.views.face_register as face_register
-import my_app.app.views.face_recognition as face_recognition
+import my_app.app.views.face as face
 
 import my_app.app.views.camera_register as camera_register
 
@@ -52,8 +52,8 @@ def route(page: ft.Page):
             page.views.append(face_register.face_register_view(page))
         elif e.route == "/face_register/input":
             page.views.append(face_register.face_register_register(page))
-        elif e.route == "/face_recognition":
-            page.views.append(face_recognition.faceView(page))
+        elif e.route == "/face":
+            page.views.append(face.faceView(page))
 
 
         elif e.route == "/camera_register":

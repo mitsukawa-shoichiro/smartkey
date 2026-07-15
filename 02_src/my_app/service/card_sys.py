@@ -124,9 +124,9 @@ def receive_card(card_number: str, reader_serial: int):
             last_card_id = card_id
             last_card_timestamp = time.time()
 
-            request_unlock()
-
             user_id = repo.find_user_id_by_card_id(card_id)
+
+            request_unlock(card_id)
 
             event_type = resolve_event_type(reader_serial)
 
@@ -143,14 +143,14 @@ def receive_card(card_number: str, reader_serial: int):
 
             logger.info(f"カード認証成功: {card_id} (リーダーID: {reader_serial})")
 
-def request_unlock():
+def request_unlock(user_id: int):
     success = False
     # 接続方式で開錠   開錠成功＝successとして開錠された時のみunlockを要求
     if connect_config == "wifi":
-        success = unlock()
+        success = unlock(user_id)
         logger.info("wifiでの解錠完了")
     elif connect_config == "bluetooth":
-        success = unlock_bt()
+        success = unlock_bt(user_id)
         logger.info("bluetoothでの解錠完了")
 
 def request_lock():

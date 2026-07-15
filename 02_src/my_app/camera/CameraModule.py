@@ -405,7 +405,7 @@ class CameraWorker:
 
         if rgb_frame is None or ir_frame is None:
             return False
-        
+
         name, info = self.face_authenticator.authenticate(
             rgb_frame,
             ir_frame
@@ -422,9 +422,9 @@ class CameraWorker:
                 )
             elif reason != "cooldown":
                 print(f"顔があかん: ")
-            
+
             return False
-        
+
         logger.info(
             "顔いいじゃん: name=%s score=%.4f margin=%.4f",
             name,
