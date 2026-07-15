@@ -14,7 +14,7 @@ import db.repository as repo
 import asyncio
 import logging
 from my_app.models.ENUMS import EventType
-from my_app.app.views.common import filter_user_options
+from my_app.app.views.common import build_user_autocomplete
 
 # テーブルの1ページが表示する件数
 ITEMS_PER_PAGE = 100

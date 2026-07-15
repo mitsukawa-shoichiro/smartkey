@@ -2,8 +2,8 @@
 カード管理画面(GUI)
 
 カード情報(card)の一覧表示・ユーザー名でのプルダウン検索・
-ページ更新・複数選択削除を行う画面。
-
+ページ更新・複数選択削除を行う画面。共通部分はcommon.pyへ切り出し!
+sho
 """
 import logging
 import asyncio
@@ -13,7 +13,10 @@ import my_app.db.repository as repo
 from my_app.models.ENUMS import CardType
 from my_app.app.views.common import (
     show_error_dialog, build_user_autocomplete,
-    Theme, card, section_title,
+    Theme, card, section_title, card_type_badge,
+    centered_cell, back_button, empty_state, pager,
+    secondary_button, danger_button,
+    show_confirm_dialog, show_info_dialog,
 )
 
 logger = logging.getLogger(__name__)
@@ -51,6 +54,7 @@ def cardView(page: ft.Page):
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
+    # プルダウンはcommonに外注
     user_search = build_user_autocomplete(users, on_user_selected)
 
 
@@ -91,38 +95,62 @@ def cardView(page: ft.Page):
     )
 
     # 前ページ遷移ボタン定義
-    prev_btn = ft.ElevatedButton(
-        "⬅ 前へ", on_click=lambda e: prev_page(e),
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6))
-    )
+    prev_btn = secondary_button("⬅ 前へ", lambda e: prev_page(e))
 
     # 現在ページ定義
     page_label = ft.Text("")  # load_table内で更新
 
     # 次ページ遷移ボタン定義
-    next_btn = ft.ElevatedButton(
-        "次へ ➡", on_click=lambda e: next_page(e),
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6))
-    )
+    next_btn = secondary_button("次へ ➡", lambda e: next_page(e))
 
     # ボタン群をまとめて再定義
-    btn_zone = ft.Row([prev_btn, page_label, next_btn], alignment=ft.MainAxisAlignment.CENTER)
+    btn_zone = pager(prev_btn, page_label, next_btn)
 
-    # テーブル本体の定義
+    # テーブル本体, カラムヘッダーの定義
     table = ft.DataTable(
         columns=[
-            ft.DataColumn(ft.Text("ID"), on_sort=lambda e: page.run_task(sort_table, e)),
-            ft.DataColumn(ft.Text("カードの種類")),
-            ft.DataColumn(ft.Text("登録日")),
-            ft.DataColumn(ft.Text("ユーザー名")),
-            ft.DataColumn(ft.ElevatedButton(
-                "行を削除", on_click=lambda e: open_confirm_dialog(e),
-                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-            ))
+            ft.DataColumn( # セル中央揃えもcommon.centered_cellに外注
+                centered_cell(ft.Text("ID", weight=ft.FontWeight.BOLD), 100),
+                on_sort=lambda e: page.run_task(sort_table, e),
+            ),
+            ft.DataColumn(
+                centered_cell(
+                    ft.Text("カードの種類", weight=ft.FontWeight.BOLD),
+                    140
+                )
+            ),
+            ft.DataColumn(
+                centered_cell(
+                    ft.Text("登録日", weight=ft.FontWeight.BOLD),
+                    140
+                )
+            ),
+            ft.DataColumn(
+                centered_cell(
+                    ft.Text("ユーザー名", weight=ft.FontWeight.BOLD),
+                    140
+                )
+            ),
+            ft.DataColumn(
+                centered_cell(
+                    danger_button("行を削除", lambda e: open_confirm_dialog(e), ft.Icons.DELETE_OUTLINE),
+                    140
+                )
+            ),
         ],
+
         rows=[],
-        sort_column_index=0,
+        #sort_column_index=0, ソート用矢印を最初だけ消すためにコメントアウト
+
+        # 各種設定
         sort_ascending=True,
+        heading_row_color=Theme.HEADING_BG,
+        heading_row_height=48,
+        data_row_min_height=52,
+        data_row_max_height=52,
+        divider_thickness=1,
+        horizontal_lines=ft.BorderSide(1, Theme.BORDER),
+        column_spacing=20,
     )
 
 
@@ -133,14 +161,20 @@ def cardView(page: ft.Page):
 
     async def refresh(e):
         """リセットボタン: 検索条件・並び順・ページを全部初期状態に戻す"""
-        nonlocal selected_user_id, offset, reset_btn
+        nonlocal selected_user_id, offset, reset_btn, user_search
         reset_btn.disabled = True
         page.update()
 
         selected_user_id = None
         table.sort_ascending = True
-        user_search.value = ""  # プルダウン入力欄のクリア
         offset = 0
+
+        # プルダウンはvalueだけリセットしても表示が変わらないので都度作り直し
+        user_search = build_user_autocomplete(users, on_user_selected)
+        search_zone.controls = [user_search]
+        search_zone.update()
+
+        # テーブルをロードし直し
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
@@ -151,13 +185,15 @@ def cardView(page: ft.Page):
     async def sort_table(e):
         """IDカラムのヘッダークリック: 昇順/降順を切り替えて再読込"""
         nonlocal offset
+        table.sort_column_index = 0
         table.sort_ascending = not table.sort_ascending
         offset = 0
-        scroll_table.visible = False
-        scroll_table.update()
-        await asyncio.sleep(0.01)
-        scroll_table.visible = True
-        scroll_table.update()
+        # ここは処理が重いのか何なのかついていたもの、ちかちかするのでコメントアウト
+        # scroll_table.visible = False
+        # scroll_table.update()
+        # await asyncio.sleep(0.01)
+        # scroll_table.visible = True
+        # scroll_table.update()
         load_table()
 
     # ===================================================
@@ -206,6 +242,9 @@ def cardView(page: ft.Page):
             show_error_dialog(page, "カード情報の取得に失敗しました。しばらくしてから再度お試しください。")
             return
 
+        if not cards:
+            empty_state("まだカードが登録されていません")
+
         #諸パラメータ更新
         all_page = int(((total - 1) / 100) + 1)
 
@@ -221,14 +260,13 @@ def cardView(page: ft.Page):
             column.controls.append(ft.Radio(value=str(card.id)))
             checkbox_refs[card.id] = cb
 
-            # テーブルに情報を埋め込み
             table.rows.append(
-                ft.DataRow(cells=[
-                    ft.DataCell(ft.Text(f"{card.id:05d}", width=100)),
-                    ft.DataCell(ft.Text(card.card_type.value, width=140)),
-                    ft.DataCell(ft.Text(card.register_date, width=140)),
-                    ft.DataCell(ft.Text(card.user_name, width=100)),
-                    ft.DataCell(cb),
+                ft.DataRow(cells=[ # セル中央揃え、セル内色塗りバッジを外注
+                    ft.DataCell(centered_cell(ft.Text(f"{card.id:05d}", color=Theme.TEXT_MUTED), 100)),
+                    ft.DataCell(centered_cell(card_type_badge(card.card_type.value), 140)),
+                    ft.DataCell(centered_cell(ft.Text(str(card.register_date), color=Theme.TEXT_MUTED), 140)),
+                    ft.DataCell(centered_cell(ft.Text(card.user_name or "(未設定)"), 140)),
+                    ft.DataCell(centered_cell(cb, 140)),
                 ])
             )
 
@@ -242,25 +280,16 @@ def cardView(page: ft.Page):
     # ===================================================
 
     def open_confirm_dialog(e):
-        """「行を削除」クリック: チェック済みの行を確認してから削除ダイアログを開く"""
-        nonlocal selected_ids
-        selected_ids = [card_id for card_id, cb in checkbox_refs.items() if cb.value]
-
+        selected_ids = [cid for cid, cb in checkbox_refs.items() if cb.value]
         if not selected_ids:
-            dialog.title = ft.Text("削除の確認")
-            dialog.content = ft.Text("削除する行が選択されていません。")
-            dialog.actions = [
-                ft.TextButton("閉じる", autofocus=True, on_click=lambda e: page.close(dialog)),
-            ]
-            page.open(dialog)
-        else:
-            dialog.title = ft.Text("削除の確認")
-            dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しますか?")
-            dialog.actions = [
-                ft.TextButton("キャンセル", autofocus=True, on_click=lambda e: page.close(dialog)),
-                ft.TextButton("はい", on_click=confirm_delete),
-            ]
-            page.open(dialog)
+            show_info_dialog(page, "削除する行が選択されていません。", title="削除の確認")
+            return
+        show_confirm_dialog(
+            page,
+            f"{len(selected_ids)} 件を削除しますか?",
+            on_confirm=lambda: confirm_delete(selected_ids),
+            title="削除の確認",
+        )
 
     def confirm_delete(e):
         """
@@ -279,17 +308,13 @@ def cardView(page: ft.Page):
 
         load_table()
 
-        dialog.title = ft.Text("削除完了")
-        dialog.content = ft.Text(f"{len(selected_ids)} 件を削除しました。")
-        dialog.actions = [
-            ft.TextButton("閉じる", autofocus=True, on_click=lambda e: page.close(dialog)),
-        ]
-        page.open(dialog)
+        show_info_dialog(page, f"{len(selected_ids)} 件を削除しました。", title="削除完了")
 
     # ===================================================
     # レイアウト定義と配置
     # ===================================================
 
+    # データテーブルはそのまま中央ぞろえできないので一回Row化
     table_row = ft.Row(
         [table],
         alignment=ft.MainAxisAlignment.CENTER,
@@ -309,20 +334,21 @@ def cardView(page: ft.Page):
     # commonスタイル適用
     # ===================================================
 
+    # 検索欄用カード(土台のパネル)
     search_card = card(
         ft.Column(
-            controls=[
-                section_title("カード管理", "登録済みのカードを名前で閲覧・検索・削除できます"),
+            controls=[ # サブタイトル入れたかったのに泣く泣く断念；；カンマ入れた後に文字列で小っちゃく薄く下に文字書けるます！
+                section_title("ユーザー名で検索",),
                 ft.Container(height=4),
                 search_zone_row,
             ],
             spacing=8,
         )
     )
-
+    # テーブル用カード(土台のパネル)
     table_card = card(
         ft.Column(
-            controls=[
+            controls=[# 上に同じ
                 section_title("カード一覧"),
                 ft.Container(height=8),
                 scroll_table,
@@ -337,22 +363,18 @@ def cardView(page: ft.Page):
     # ===================================================
     # 実際にページに
     # ===================================================
+    # ここまでdef cardViewの関数
     return ft.View(
         "/card",
-        controls=[
-            search_card,
-            ft.Container(height=16),
-            table_card,
-            ft.Container(height=10),
-            ft.ElevatedButton(
-                "戻る",
-                icon=ft.Icons.ARROW_BACK,
-                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Theme.RADIUS_SM)),
-                on_click=lambda e: page.go("/index"),
-            ),
-            ft.Container(height=40),
+        controls=[# 上から順に
+            search_card,# 検索欄
+            ft.Container(height=16),# 余白
+            table_card,# テーブル
+            ft.Container(height=10),# 余白
+            back_button(page),
+            ft.Container(height=40), # 余白(ここゼロにすると外側の余白に内側が侵食されて見切れちゃうので注意)
         ],
         bgcolor=Theme.BG,
-        padding=ft.Padding(left=40, top=24, right=40, bottom=40),
+        padding=ft.Padding(left=40, top=24, right=40, bottom=40),# 外側の余白
         scroll=ft.ScrollMode.AUTO,
     )

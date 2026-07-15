@@ -272,7 +272,7 @@ def find_cards_by_user_id(user_id: int, asc: bool, offset: int):
                 f"""
                 SELECT card.id, card_type, card_number, register_date, user_id, user.user_name
                 FROM card
-                LEFT JOIN user ON user_id = user.user_id
+                LEFT JOIN user ON user_id = user.id
                 WHERE user_id = ?
                 ORDER BY card.id {order} LIMIT 100 OFFSET ?
                 """,
@@ -281,7 +281,7 @@ def find_cards_by_user_id(user_id: int, asc: bool, offset: int):
             rows = c.fetchall()
             return [
                 CardWithUser(id=row[0], card_type=CardType(row[1]), card_number=row[2],
-                    register_date=row[3], user_id=row[4], user_name=[5])
+                    register_date=row[3], user_id=row[4], user_name=row[5])
                 for row in rows
             ]
     except sqlite3.Error:
@@ -646,7 +646,7 @@ def find_faces_by_user_id(user_id: int, asc: bool, offset: int):
                 f"""
                 SELECT face.id, register_date, user_id, user.user_name
                 FROM face
-                LEFT JOIN user ON face.user_id = user.user_id
+                LEFT JOIN user ON face.user_id = user.id
                 WHERE user_id = ?
                 ORDER BY face.id {order} LIMIT 100 OFFSET ?
                 """,
