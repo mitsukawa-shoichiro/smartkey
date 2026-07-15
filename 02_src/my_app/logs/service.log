@@ -1,29 +1,25 @@
-2026-07-13 13:37:48 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-13 13:37:49 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-13 13:37:49 [INFO] windowsservice:63 - back_system thread started
-2026-07-13 13:37:49 [INFO] backsys.back_system:145 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-13 13:37:49 [INFO] windowsservice:67 - CardCheck thread started
-2026-07-13 13:37:49 [INFO] nfcutils.card_check:120 - 設定台数: 1
-2026-07-13 13:37:49 [INFO] backsys.back_system:102 - 死活監視システム起動...
-2026-07-13 13:37:50 [INFO] nfcutils.card_check:75 - カードリーダーの数: 0
-2026-07-13 13:37:50 [ERROR] nfcutils.card_check:82 - カードリーダーの数が不足しているためカードの読み込みがスタートしていません: 0 / 1
-2026-07-13 13:37:50 [ERROR] backsys.back_system:114 - カードリーダーが指定台数分接続されていません
-2026-07-13 13:37:50 [INFO] backsys.sendmail:41 - メール送信成功
-2026-07-13 13:37:50 [INFO] backsys.sendmail:44 - メール送信完了
-2026-07-13 13:37:50 [INFO] backsys.back_system:117 - カードリーダー異常
-2026-07-13 13:37:50 [INFO] backsys.back_system:61 - バッテリー残量: 100
-2026-07-13 13:40:15 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-13 13:43:30 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-13 13:43:31 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-13 13:43:31 [INFO] windowsservice:63 - back_system thread started
-2026-07-13 13:43:31 [INFO] backsys.back_system:145 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-13 13:43:31 [INFO] windowsservice:67 - CardCheck thread started
-2026-07-13 13:43:31 [INFO] nfcutils.card_check:120 - 設定台数: 1
-2026-07-13 13:43:31 [INFO] backsys.back_system:102 - 死活監視システム起動...
-2026-07-13 13:43:31 [INFO] nfcutils.card_check:75 - カードリーダーの数: 0
-2026-07-13 13:43:31 [ERROR] nfcutils.card_check:82 - カードリーダーの数が不足しているためカードの読み込みがスタートしていません: 0 / 1
-2026-07-13 13:43:31 [ERROR] backsys.back_system:114 - カードリーダーが指定台数分接続されていません
-2026-07-13 13:43:32 [INFO] backsys.sendmail:41 - メール送信成功
-2026-07-13 13:43:32 [INFO] backsys.sendmail:44 - メール送信完了
-2026-07-13 13:43:32 [INFO] backsys.back_system:117 - カードリーダー異常
-2026-07-13 13:43:32 [INFO] backsys.back_system:61 - バッテリー残量: 100
+2026-07-15 08:03:21 [ERROR] backsys.back_system:132 - 解錠システム異常
+2026-07-15 08:03:21 [ERROR] backsys.sendmail:43 - メール送信失敗: [Errno 11001] getaddrinfo failed
+2026-07-15 08:03:21 [INFO] backsys.sendmail:44 - メール送信完了
+2026-07-15 08:03:21 [INFO] backsys.back_system:135 - システム異常
+2026-07-15 08:03:21 [INFO] backsys.back_system:141 - システム正常に戻りました
+2026-07-15 08:03:51 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 50313)
+2026-07-15 08:03:51 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 08:07:28 [INFO] backsys.back_system:61 - バッテリー残量: 100
+2026-07-15 08:07:28 [ERROR] backsys.back_system:76 - セサミと接続できません
+2026-07-15 08:54:52 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 61567)
+2026-07-15 08:54:52 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:07:28 [INFO] backsys.back_system:61 - バッテリー残量: 100
+2026-07-15 09:07:28 [ERROR] backsys.back_system:76 - セサミと接続できません
+2026-07-15 09:30:40 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 60213)
+2026-07-15 09:30:40 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:35:57 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 63200)
+2026-07-15 09:35:57 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:37:34 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 65303)
+2026-07-15 09:37:34 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:39:22 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 51798)
+2026-07-15 09:39:22 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:41:39 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 55893)
+2026-07-15 09:41:39 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:42:06 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 54840)
+2026-07-15 09:42:06 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
