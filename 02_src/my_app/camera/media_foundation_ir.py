@@ -1,6 +1,7 @@
 import asyncio
 import threading
 import time
+
 import numpy as np
 
 from winrt.windows.graphics.imaging import BitmapPixelFormat
@@ -9,23 +10,23 @@ from winrt.windows.media.capture import (
     MediaCaptureInitializationSettings,
     MediaCaptureMemoryPreference,
     MediaCaptureSharingMode,
-    StreamingCaptureMode,
+    StreamingCaptureMode
 )
-
 from winrt.windows.media.capture.frames import (
     MediaFrameReaderStartStatus,
     MediaFrameSourceGroup,
-    MediaFrameSourceKind,
+    MediaFrameSourceKind
 )
 from winrt.windows.storage.streams import Buffer
 
 
 class MediaFoundationIRCamera:
     """
-    Media FoundationからIR画像を取得する
+    通过Media Foundation获取IR图像
     """
+
     def __init__(self, device_id_contains, startup_timeout = 5.0, max_age_ms = 150.0):
-        self.device_id_contains = device_id_contains.upper()
+        self.device_id_contains = (device_id_contains.upper())
         self.startup_timeout = float(startup_timeout)
         self.max_age_ms = float(max_age_ms)
 
@@ -36,7 +37,10 @@ class MediaFoundationIRCamera:
 
         self._latest_frame = None
         self._latest_at = 0.0
+
         self._grabbed_frame = None
+        self._grabbed_at = None
+
         self._opened = False
 
         self.last_error = None
@@ -44,23 +48,16 @@ class MediaFoundationIRCamera:
         self.source_id = None
 
         self.start()
-    
+
     def start(self):
-        """
-        IR取得用スレッドを開始
-        """
-        if self._thread is not None and self._thread.is_alive():
+        if (self._thread is not None and self._thread.is_alive()):
             return self.isOpened()
-        
+
         self._stop_event.clear()
         self._ready_event.clear()
         self.last_error = None
 
-        self._thread = threading.Thread(
-            target = self._thread_main,
-            name = "MediaFoundationIRCamera",
-            daemon = True
-        )
+        self._thread = threading.Thread(target=self._thread_main, name="MediaFoundationIRCamera", daemon=True)
         self._thread.start()
 
         self._ready_event.wait(self.startup_timeout)
@@ -68,78 +65,84 @@ class MediaFoundationIRCamera:
         if not self.isOpened():
             self.release()
             return False
-        
+
         return True
-    
+
     def isOpened(self):
         return (self._opened and self._thread is not None and self._thread.is_alive())
-    
+
     def grab(self):
         """
-        最新IRフレームを取得対象として固定
+        固定最新的IR帧及其获取时间
         """
         with self._lock:
             if self._latest_frame is None:
                 self._grabbed_frame = None
+                self._grabbed_at = None
                 return False
 
-            age_ms = (time.monotonic() - self._latest_at) * 1000
+            age_ms = (time.monotonic() - self._latest_at) * 1000.0
 
             if age_ms > self.max_age_ms:
                 self._grabbed_frame = None
+                self._grabbed_at = None
                 return False
-            
-            self._grabbed_frame = self._latest_frame.copy()
+
+            self._grabbed_frame = (self._latest_frame.copy())
+            self._grabbed_at = float(self._latest_at)
+
             return True
-        
-    def retrieve(self):
+
+    def retrieve_with_timestamp(self):
         """
-        grabで固定したIRフレームを返す
+        返回已固定的IR图像及其获取时间
         """
         with self._lock:
-            if self._grabbed_frame is None:
-                return False, None
-            
-            return True, self._grabbed_frame.copy()
-        
-    def read(self):
+            if (self._grabbed_frame is None or self._grabbed_at is None):
+                return False, None, None
+
+            return (True, self._grabbed_frame.copy(), self._grabbed_at)
+
+    def retrieve(self):
+        ok, frame, _ = (self.retrieve_with_timestamp())
+        return ok, frame
+
+    def read_with_timestamp(self):
         if not self.grab():
-            return False, None
-        
-        return self.retrieve()
-    
+            return False, None, None
+
+        return self.retrieve_with_timestamp()
+
+    def read(self):
+        ok, frame, _ = (self.read_with_timestamp())
+        return ok, frame
+
     def release(self):
-        """
-        IRカメラと取得スレッドを停止
-        """
         self._stop_event.set()
 
-        if (
-            self._thread is not None
-            and self._thread.is_alive()
-            and self._thread is not threading.current_thread()
-        ):
-            self._thread.join(timeout = 3.0)
+        if (self._thread is not None and self._thread.is_alive() and self._thread is not threading.current_thread()):
+            self._thread.join(timeout=3.0)
 
         self._opened = False
 
         with self._lock:
             self._latest_frame = None
+            self._latest_at = 0.0
             self._grabbed_frame = None
-            self._latest_at = 0
+            self._grabbed_at = None
 
         self._thread = None
 
     def _thread_main(self):
         try:
             asyncio.run(self._capture_loop())
-        except Exception as e:
-            self.last_error = e
+        except Exception as error:
+            self.last_error = error
             self._opened = False
             self._ready_event.set()
 
     async def _find_ir_source(self):
-        groups = await MediaFrameSourceGroup.find_all_async()
+        groups = await (MediaFrameSourceGroup.find_all_async())
         candidates = []
 
         for group in groups:
@@ -156,7 +159,6 @@ class MediaFoundationIRCamera:
                 if not is_target_ir:
                     continue
 
-                # RGBとIRをまとめたグループを優先する
                 has_target_rgb = any(
                     item.source_kind
                     == MediaFrameSourceKind.COLOR
@@ -168,74 +170,82 @@ class MediaFoundationIRCamera:
                 candidates.append((has_target_rgb, group, source_info))
 
         if not candidates:
-            raise RuntimeError("USBカメラのIRないよーーー；；")
-        
-        _, group, source_info = max(candidates, key = lambda item: item[0])
+            raise RuntimeError("対象USBカメラのIRソースnai")
+
+        _, group, source_info = max(candidates, key=lambda item: item[0])
 
         return group, source_info
-    
+
     async def _capture_loop(self):
         capture = None
         reader = None
 
         try:
-            group, source_info = await self._find_ir_source()
+            group, source_info = (await self._find_ir_source())
 
-            self.group_name = group.display_name
+            self.group_name = (group.display_name)
             self.source_id = source_info.id
 
-            settings = MediaCaptureInitializationSettings()
+            settings = (MediaCaptureInitializationSettings())
             settings.source_group = group
             settings.sharing_mode = (MediaCaptureSharingMode.SHARED_READ_ONLY)
             settings.memory_preference = (MediaCaptureMemoryPreference.CPU)
             settings.streaming_capture_mode = (StreamingCaptureMode.VIDEO)
 
             capture = MediaCapture()
+
             await capture.initialize_with_settings_async(settings)
-            
+
             ir_source = capture.frame_sources[source_info.id]
-            reader = await capture.create_frame_reader_async(ir_source)
+
+            reader = await (capture.create_frame_reader_async(ir_source))
 
             status = await reader.start_async()
 
-            if status != MediaFrameReaderStartStatus.SUCCESS:
-                raise RuntimeError(f"IRreaderないよーーー {status}")
-            
+            if (status != MediaFrameReaderStartStatus.SUCCESS):
+                raise RuntimeError(f"IRリーダーを開始できません {status}")
+
             self._opened = True
             self._ready_event.set()
 
             while not self._stop_event.is_set():
-                reference = reader.try_acquire_latest_frame()
+                reference = (reader.try_acquire_latest_frame())
 
                 if reference is None:
                     await asyncio.sleep(0.005)
                     continue
 
                 try:
-                    video_frame = reference.video_media_frame
-                    bitmap = video_frame.software_bitmap
+                    video_frame = (reference.video_media_frame)
+
+                    if video_frame is None:
+                        continue
+
+                    bitmap = (video_frame.software_bitmap)
 
                     if bitmap is None:
                         continue
 
-                    if bitmap.bitmap_pixel_format != BitmapPixelFormat.GRAY8:
+                    if (bitmap.bitmap_pixel_format != BitmapPixelFormat.GRAY8):
                         raise RuntimeError(f"IR画像がGRAY8じゃない {bitmap.bitmap_pixel_format}")
-                    
+
                     width = bitmap.pixel_width
                     height = bitmap.pixel_height
 
                     buffer = Buffer(width * height)
                     bitmap.copy_to_buffer(buffer)
 
-                    frame = np.frombuffer(memoryview(buffer), dtype = np.uint8, count = width * height).reshape(height, width).copy()
+                    frame = np.frombuffer(memoryview(buffer), dtype=np.uint8, count=width * height).reshape(height, width).copy()
+
+                    captured_at = time.monotonic()
 
                     with self._lock:
                         self._latest_frame = frame
-                        self._latest_at = time.monotonic()
-                    
+                        self._latest_at = (captured_at)
+
                 finally:
                     reference.close()
-        
+
         finally:
             self._opened = False
             self._ready_event.set()

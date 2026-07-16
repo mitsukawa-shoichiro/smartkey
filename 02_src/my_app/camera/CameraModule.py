@@ -156,6 +156,9 @@ class CameraWorker:
 
         self.latest_rgb_frame = None
         self.latest_ir_frame = None
+        self.latest_rgb_timestamp = None
+        self.latest_ir_timestamp = None
+        self.last_auth_reason = "no_face"
         self.cap_dict = {}
         self.systemstop = False
         self.isRegistering = False
@@ -196,6 +199,7 @@ class CameraWorker:
 
             while not self.systemstop:  # 常に動作
                 # 状態遷移を検出
+                cycle_started = time.monotonic()
                 timg=time.time()
 
                 if self.isRegistering:
@@ -204,6 +208,8 @@ class CameraWorker:
                         self.release_all_cameras()
                         self.latest_rgb_frame = None
                         self.latest_ir_frame = None
+                        self.latest_rgb_timestamp = None
+                        self.latest_ir_timestamp = None
                         self.face_authenticator._reset()
                         print("[INFO] 登録モードのためカメラを一時解放しました")
 
@@ -218,9 +224,8 @@ class CameraWorker:
                             time.sleep(3.0)
                             continue
 
-                        self.face_authenticator.known_embeddings = (
-                            self.face_authenticator.load_known_embeddings()
-                        )
+                        self.face_authenticator.reload_database_embeddings()
+                        
                         print("[INFO] 登録完了。カメラを再オープンしました")
 
                     was_registering = False
@@ -244,9 +249,9 @@ class CameraWorker:
                     time.sleep(0.5)
                     continue
 
-                pair_started = time.monotonic()
-
                 rgb_grabbed = rgb_cap.grab()
+                rgb_timestamp = time.monotonic()
+
                 ir_grabbed = ir_cap.grab()
 
                 if not rgb_grabbed or not ir_grabbed:
@@ -260,13 +265,19 @@ class CameraWorker:
                     continue
 
                 rgb_ok, rgb_frame = rgb_cap.retrieve()
-                ir_ok, ir_frame = ir_cap.retrieve()
+
+                (
+                    ir_ok,
+                    ir_frame,
+                    ir_timestamp,
+                ) = ir_cap.retrieve_with_timestamp()
 
                 if (
                     not rgb_ok
                     or not ir_ok
                     or rgb_frame is None
                     or ir_frame is None
+                    or ir_timestamp is None
                 ):
                     capture_failure_count += 1
 
@@ -277,24 +288,52 @@ class CameraWorker:
                     time.sleep(0.5)
                     continue
 
-                pair_elapsed_ms = (
-                    time.monotonic() - pair_started
+                frame_gap_ms = abs(
+                    rgb_timestamp - ir_timestamp
                 ) * 1000.0
 
-                if pair_elapsed_ms > float(
-                    face_auth_config.get("max_frame_gap_ms", 150)
+                if frame_gap_ms > float(
+                    face_auth_config["max_frame_gap_ms"]
                 ):
-                    time.sleep(0.1)
+                    logger.debug(
+                        "RGB・IRフレーム差が大きいため破棄: %.1fms",
+                        frame_gap_ms,
+                    )
+                    time.sleep(0.01)
                     continue
 
                 capture_failure_count = 0
+
                 self.latest_rgb_frame = rgb_frame
                 self.latest_ir_frame = ir_frame
+                self.latest_rgb_timestamp = rgb_timestamp
+                self.latest_ir_timestamp = ir_timestamp
 
                 # 認証
                 self.__Authentication()
+
                 # 成功でも失敗でもまつ
-                time.sleep(0.15)
+                idle_interval = float(
+                    face_auth_config.get("authentication_idle_interval_sec", 0.8))
+
+                active_interval = float(
+                    face_auth_config.get("authentication_active_interval_sec", 0.35))
+
+                if self.last_auth_reason in (
+                    "no_face",
+                    "cooldown",
+                    "authenticated",
+                    "no_frame"
+                ):
+                    authentication_interval = idle_interval
+                else:
+                    authentication_interval = active_interval
+
+                elapsed = time.monotonic() - cycle_started
+                remaining = authentication_interval - elapsed
+
+                if remaining > 0:
+                    time.sleep(remaining)
 
                 logger.info("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
 
@@ -303,6 +342,9 @@ class CameraWorker:
         finally:
             self.latest_rgb_frame = None
             self.latest_ir_frame = None
+            self.latest_rgb_timestamp = None
+            self.latest_ir_timestamp = None
+            self.last_auth_reason = "no_face"
             self.release_all_cameras()
             print("\nバックシステム終了")
             cv2.destroyAllWindows()
@@ -399,37 +441,51 @@ class CameraWorker:
         """
         使用RGB和IR进行人脸识别
         """
-
         rgb_frame = self.latest_rgb_frame
         ir_frame = self.latest_ir_frame
 
         if rgb_frame is None or ir_frame is None:
+            self.last_auth_reason = "no_frame"
             return False
 
-        name, info = self.face_authenticator.authenticate(
-            rgb_frame,
-            ir_frame
+        name, info = (
+            self.face_authenticator.authenticate(
+                rgb_frame,
+                ir_frame,
+                rgb_timestamp=self.latest_rgb_timestamp,
+                ir_timestamp=self.latest_ir_timestamp
+            )
         )
 
-        if name is None:
-            reason = info.get("reason", "unknown")
+        reason = info.get("reason", "unknown")
+        self.last_auth_reason = reason
 
+        if name is None:
             if reason == "need_more_frames":
                 print(
-                    f"認証: {info['name']}"
-                    f"{info['count']} / {info['required']}"
-                    f"score={info['score']:.4f}"
+                    f"認証候補: {info.get('name')} "
+                    f"{info.get('count', 0)}/"
+                    f"{info.get('required', 0)} "
+                    f"score={info.get('score', 0.0):.4f} "
+                    f"PAD={info.get('pad_score', 0.0):.4f}"
                 )
-            elif reason != "cooldown":
-                print(f"顔があかん: ")
+
+            elif reason not in ("cooldown", "no_face"):
+                print(f"顔があかんわ {reason} faces={info.get('face_count', 0)}")
 
             return False
 
+        self.last_auth_reason = "authenticated"
+
         logger.info(
-            "顔いいじゃん: name=%s score=%.4f margin=%.4f",
+            "びじゅいいじゃん "
+            "user_id=%s name=%s "
+            "score=%.4f margin=%.4f faces=%s",
+            info.get("user_id"),
             name,
-            info["score"],
-            info["margin"]
+            info.get("score", 0.0),
+            info.get("margin", 0.0),
+            info.get("face_count", 0)
         )
 
         self.__open_sesame()

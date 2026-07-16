@@ -762,3 +762,51 @@ def delete_faces_by_user_id(user_id):
     except sqlite3.Error:
         logger.exception("顔情報削除エラー: user_id=%s", user_id)
         raise
+
+def get_all_faces_for_authentication():
+    """
+    顔認証で使用する全face_idとユーザー情報を取得する。
+    画像・特徴量ファイルはservice層で読み込む。
+    """
+    try:
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT
+                    face.id,
+                    face.register_date,
+                    face.user_id,
+                    user.user_name
+                FROM face
+                INNER JOIN user
+                    ON user.id = face.user_id
+                WHERE face.user_id IS NOT NULL
+                ORDER BY face.user_id ASC, face.id ASC
+            """)
+
+            return [
+                FaceWithUser(
+                    id=row[0],
+                    register_date=row[1],
+                    user_id=row[2],
+                    user_name=row[3],
+                )
+                for row in cursor.fetchall()
+            ]
+
+    except sqlite3.Error:
+        logger.exception("顔認証用データ取得エラー")
+        raise
+
+
+def get_all_face_ids():
+    """DBに登録されている全face_idを取得する"""
+    try:
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id FROM face")
+            return [row[0] for row in cursor.fetchall()]
+
+    except sqlite3.Error:
+        logger.exception("顔ID一覧取得エラー")
+        raise
