@@ -11,9 +11,7 @@ pillow==11.3.0
 setuptools==81.0.0
 insightface==1.0.1
 onnxruntime==1.22.0
-<<<<<<< HEAD
 mediapipe==0.10.35
-=======
 winrt-runtime==3.2.1
 winrt-Windows.Foundation==3.2.1
 winrt-Windows.Foundation.Collections==3.2.1
@@ -23,4 +21,3 @@ winrt-Windows.Media.Capture.Frames==3.2.1
 winrt-Windows.Media.MediaProperties==3.2.1
 winrt-Windows.Graphics.Imaging==3.2.1
 winrt-Windows.Storage.Streams==3.2.1
->>>>>>> e7fbc3123e54ca3b5baa217e612e0dd311ea3027
