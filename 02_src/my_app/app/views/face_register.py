@@ -7,6 +7,7 @@ from datetime import datetime
 import tempfile, cv2, os
 import db.repository as repo
 import random
+import asyncio
 
 from my_app.app.utils.front_camera_moduel import CameraWorker_Front, CaptureBuffer
 
@@ -289,17 +290,19 @@ def face_register_register(page: ft.Page) -> ft.View:
     print(f"[INFO] プレビュー画像: {image_paths}")
 
     preview_controls = []
+
     if len(image_paths) == 0:
         preview_controls.append(
             ft.Text(
                 "画像がありません",
-                color=ft.Colors.RED
+                color=ft.Colors.RED,
             )
         )
     else:
         for path in image_paths:
             if not os.path.exists(path):
                 continue
+
             preview_controls.append(
                 ft.Container(
                     content=ft.Image(
@@ -311,12 +314,17 @@ def face_register_register(page: ft.Page) -> ft.View:
                     padding=5,
                 )
             )
-        preview_area = ft.Row(
-            controls=preview_controls,
-            wrap=True,
-            spacing=10,
-            scroll=ft.ScrollMode.AUTO,
-        )
+
+    # 高さを固定し、画像が増えた場合はこの中をスクロールする
+    preview_area = ft.GridView(
+        controls=preview_controls,
+        max_extent=150,
+        spacing=10,
+        run_spacing=10,
+        child_aspect_ratio=1.4,
+        width=420,
+        height=230,
+    )
     hint = ft.Text(f"直近の撮影: {image_paths}", size=12, color=ft.Colors.BLUE_GREY_600)
 
     preview = ft.Text("画像がありません", size=16, color=ft.Colors.RED)
@@ -345,38 +353,97 @@ def face_register_register(page: ft.Page) -> ft.View:
         on_submit=lambda e: open_add_confirm_dialog(e),
     )
     # --- 登録処理 ---
-    def execute_register(e):
+    async def execute_register(e):
+        # 二重クリックを防ぐ
+        if e.control.disabled:
+            return
 
-        #region 保存処理
+        e.control.disabled = True
+        page.update()
 
-        # TODO: ここで正式保存（DB 登録 / 画像の本保存先へ移動 など）
+        saved_files = []
 
-        # イメージセーブ
-        saved_files = SaveFaceDatas(
-            image_paths,
-            user_name_romaji.value
-        )
+        try:
+            saved_files = SaveFaceDatas(
+                image_paths,
+                user_name_romaji.value,
+            )
 
-        # DB登録
-        repo.insert_facedata(user_name.value, user_name_romaji.value)
-        for path in image_paths:
-            if os.path.exists(path):
-                os.remove(path)    #一時画像ファイルの削除
-        CaptureBuffer.files.clear() #一時画像の消去
-        print(
-            f"[本人登録] "
-            f"{user_name.value} "
-            f"保存枚数={len(saved_files)}"
-        )
+            if len(saved_files) != len(image_paths):
+                raise OSError("撮影画像をすべて保存できませんでした")
 
-        # 完了ダイアログ
-        page.close(add_confirm_dialog)
-        add_confirm_dialog.title = ft.Text("登録完了")
-        add_confirm_dialog.content = ft.Text("本人登録が完了しました。")
-        add_confirm_dialog.actions = [
-            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/face_register")),
-        ]
-        page.open(add_confirm_dialog)
+            # 現在のrepositoryにはinsert_facedataが存在しないため、
+            # 古いDB関数が存在する構成の場合だけ呼び出す
+            insert_facedata = getattr(repo, "insert_facedata", None)
+
+            if callable(insert_facedata):
+                insert_facedata(
+                    user_name.value,
+                    user_name_romaji.value,
+                )
+
+            for path in image_paths:
+                if os.path.exists(path):
+                    os.remove(path)
+
+            CaptureBuffer.files.clear()
+
+            print(
+                f"[本人登録] "
+                f"{user_name.value} "
+                f"保存枚数={len(saved_files)}"
+            )
+
+            # 先にダイアログを完全に閉じてから画面遷移する
+            page.close(add_confirm_dialog)
+            await asyncio.sleep(0.1)
+
+            page.go("/face_register")
+            await asyncio.sleep(0.1)
+
+            page.open(
+                ft.SnackBar(
+                    content=ft.Text("本人登録が完了しました。"),
+                    duration=3000,
+                )
+            )
+
+            # ダイアログを閉じ直さず、そのまま完了表示へ変える
+            add_confirm_dialog.title = ft.Text("登録完了")
+            add_confirm_dialog.content = ft.Text(
+                "本人登録が完了しました。"
+            )
+            add_confirm_dialog.actions = [
+                ft.TextButton(
+                    "OK",
+                    autofocus=True,
+                    on_click=finish_register,
+                )
+            ]
+            page.update()
+
+        except Exception as ex:
+            # 今回の操作で保存した画像だけ戻す
+            for path in saved_files:
+                if os.path.exists(path):
+                    os.remove(path)
+
+            print(f"[ERROR] 本人登録に失敗しました: {ex}")
+
+            add_confirm_dialog.title = ft.Text("登録エラー")
+            add_confirm_dialog.content = ft.Text(
+                f"本人登録に失敗しました。\n{ex}"
+            )
+            add_confirm_dialog.actions = [
+                ft.TextButton(
+                    "閉じる",
+                    autofocus=True,
+                    on_click=lambda event: page.close(
+                        add_confirm_dialog
+                    ),
+                )
+            ]
+            page.update()
 
 
 
@@ -527,6 +594,7 @@ def face_register_register(page: ft.Page) -> ft.View:
                 alignment=ft.MainAxisAlignment.CENTER,
                 expand=True,
             )
-        ]
+        ],
+        scroll=ft.ScrollMode.AUTO,
     )
     #endregion

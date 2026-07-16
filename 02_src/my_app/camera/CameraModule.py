@@ -7,12 +7,9 @@ import cv2
 import tempfile
 import time
 
-import my_app.db.repository as repo
-import my_app.service.utils.sesame as sesame
-import my_app.camera.face_util as face_util
-
-from my_app.camera.BlinkDetector import BlinkDetector
-from camera.face_authenticator import FaceAuthenticator
+# import service.db_manager as repo
+# import service.utils.sesame as sesame
+from my_app.camera.face_authenticator import FaceAuthenticator
 
 import my_app.logs.log_config_service
 import logging
@@ -21,7 +18,7 @@ import logging
 from my_app.service.card_sys import request_unlock
 
 # 通过与多张注册图像的距离及其平均值进行人脸识别
-from my_app.camera.face_util.face_stable import recognize_image_average
+# from my_app.camera.face_util.face_stable import recognize_image_average
 
 # 用于写入日志
 logger = logging.getLogger(__name__)
@@ -51,20 +48,31 @@ FACE_AUTH_CONFIG_PATH = (
 with FACE_AUTH_CONFIG_PATH.open("r", encoding = "utf-8") as file:
     face_auth_config = json.load(file)
 
-RGB_CAMERA_INDEX = int(face_auth_config["rgb_camera_index"])
-IR_CAMERA_INDEX = int(face_auth_config["ir_camera_index"])
+RGB_CAMERA_INDEX = int(
+    face_auth_config["rgb_camera_index"]
+)
 
-if RGB_CAMERA_INDEX == IR_CAMERA_INDEX:
-    raise ValueError("RGBカメラとIRカメラは別のindex！！！！！！１")
+IR_DEVICE_ID_CONTAINS = str(
+    face_auth_config["ir_device_id_contains"]
+)
+
+IR_STARTUP_TIMEOUT_SEC = float(
+    face_auth_config.get("ir_startup_timeout_sec", 5.0)
+)
+
+# 用于在cap_dict中识别IR摄像头的键
+IR_CAMERA_KEY = "ir"
+
+from my_app.camera.media_foundation_ir import MediaFoundationIRCamera
 
 #endregion
 
 
 class CaptureBuffer:
-    '''
+    """
     用于临时保存捕获图像（帧）的缓冲区类
     该类会创建一个临时目录, 并在其中保存和获取最新的捕获图像
-    '''
+    """
     # 一時ディレクトリを作成（prefix="facecap_"）
     tempdir = tempfile.TemporaryDirectory(prefix="facecap_")
     # 保存されたファイルパスを記録するリスト
@@ -72,14 +80,14 @@ class CaptureBuffer:
 
     @classmethod
     def save_frame(cls, frame, filename="shot.jpg"):
-        '''
+        """
         将帧保存到临时目录中
         先清除已有的临时文件信息, 然后创建新的文件
 
         Args:
             frame: 使用 OpenCV 获取的图像数据（NumPy 数组）
             filename: 保存文件名（默认值为 "shot.jpg"）
-        '''
+        """
         # 创建保存路径
         path = os.path.join(cls.tempdir.name, filename)
         # 写入图像
@@ -94,12 +102,12 @@ class CaptureBuffer:
 
     @classmethod
     def get_newest_shot(cls):
-        '''
+        """
         返回临时目录中最新捕获图像文件的路径
 
         返回值:
             最新文件的路径。若不存在, 则返回None
-        '''
+        """
         if len(cls.files) > 0:
             return CaptureBuffer.files[-1]
         else:
@@ -107,7 +115,9 @@ class CaptureBuffer:
 
 
 class CameraWorker:
-    """后台线程：启动摄像头 → 显示预览 → CAPTURE / STOP"""
+    """
+    后台线程：启动摄像头 → 显示预览 → CAPTURE / STOP
+    """
     isRegistering: bool = False
 
     FACE_UNLOCK_COOLDOWN_SEC = 6    # 防止同一人连续解锁的等待时间
@@ -151,18 +161,8 @@ class CameraWorker:
         self.isRegistering = False
 
         # 打开用于人脸识别的摄像头
-        for index in (RGB_CAMERA_INDEX, IR_CAMERA_INDEX):
-            cap = cv2.VideoCapture(index, cv2.CAP_DSHOW)
-
-            if not cap.isOpened():
-                print(f"カメラひらけん {index}")
-                cap.release()
-                cap = None
-
-            # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-            # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-
-            self.cap_dict[index] = cap
+        if not self.open_all_cameras():
+            logger.error("カメラひらけん")
 
         if self.__SOCKET_THREAD is None:
             self.__SOCKET_THREAD = threading.Thread(target=self.socket_receiver, daemon=True)
@@ -227,7 +227,7 @@ class CameraWorker:
 
                 # 通常フロー（認証）
                 rgb_cap = self.cap_dict.get(RGB_CAMERA_INDEX)
-                ir_cap = self.cap_dict.get(IR_CAMERA_INDEX)
+                ir_cap = self.cap_dict.get(IR_CAMERA_KEY)
 
                 if (
                     rgb_cap is None
@@ -309,40 +309,90 @@ class CameraWorker:
 
     def release_all_cameras(self):
         if self.cap_dict:
-            for i, cap in self.cap_dict.items():
+            for camera_key, cap in self.cap_dict.items():
                 if cap is not None:
                     cap.release()
-                    print(f"[INFO] カメラ {i} のリソースを解放しました。")
+                    print(
+                        f"[INFO] カメラ {camera_key} "
+                        "のリソースを解ほうう！！！"
+                    )
+
+        self.cap_dict = {}
 
     def open_all_cameras(self):
         self.release_all_cameras()
 
-        opened_cameras = {}
+        # 使用OpenCV打开RGB摄像头
+        rgb_cap = cv2.VideoCapture(
+            RGB_CAMERA_INDEX,
+            cv2.CAP_DSHOW,
+        )
 
-        for i in (RGB_CAMERA_INDEX, IR_CAMERA_INDEX):
-            cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
+        if not rgb_cap.isOpened():
+            rgb_cap.release()
+            rgb_cap = cv2.VideoCapture(
+                RGB_CAMERA_INDEX,
+                cv2.CAP_MSMF,
+            )
 
-            if not cap.isOpened():
-                cap.release()
-                cap = cv2.VideoCapture(i, cv2.CAP_MSMF)
+        if not rgb_cap.isOpened():
+            rgb_cap.release()
+            self.cap_dict = {
+                RGB_CAMERA_INDEX: None,
+                IR_CAMERA_KEY: None,
+            }
+            logger.error(
+                "RGBカメラを開けません: index=%s",
+                RGB_CAMERA_INDEX,
+            )
+            return False
 
-            if not cap.isOpened():
-                cap.release()
+        rgb_cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
-                for opened_cap in opened_cameras.values():
-                    opened_cap.release()
+        # 使用Media Foundation直接打开IR摄像头
+        ir_cap = MediaFoundationIRCamera(
+            device_id_contains=IR_DEVICE_ID_CONTAINS,
+            startup_timeout=IR_STARTUP_TIMEOUT_SEC,
+            max_age_ms=float(
+                face_auth_config.get(
+                    "max_frame_gap_ms",
+                    150,
+                )
+            ),
+        )
 
-                self.cap_dict = {
-                    RGB_CAMERA_INDEX: None,
-                    IR_CAMERA_INDEX: None,
-                }
-                return False
+        if not ir_cap.isOpened():
+            error = ir_cap.last_error
+            ir_cap.release()
+            rgb_cap.release()
 
-            cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-            opened_cameras[i] = cap
-            print(f"[INFO] カメラ {i} を開きました。")
+            self.cap_dict = {
+                RGB_CAMERA_INDEX: None,
+                IR_CAMERA_KEY: None,
+            }
 
-        self.cap_dict = opened_cameras
+            logger.error(
+                "IRカメラを開けません: %s",
+                error,
+            )
+            return False
+
+        self.cap_dict = {
+            RGB_CAMERA_INDEX: rgb_cap,
+            IR_CAMERA_KEY: ir_cap,
+        }
+
+        print(
+            f"[INFO] RGBカメラ {RGB_CAMERA_INDEX} "
+            "を開きました。"
+        )
+        print(
+            "[INFO] IRカメラをMedia Foundationで開きました。"
+        )
+        print(
+            f"[INFO] IRグループ: {ir_cap.group_name}"
+        )
+
         return True
 
     def __Authentication(self):

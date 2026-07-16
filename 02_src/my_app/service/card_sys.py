@@ -1,6 +1,5 @@
 from .utils.sesame_bluetooth import open_sesame_bt
 from .nfcutils.card_scan import scan_card
-import db.repository as repo
 import sys
 import os
 import time
@@ -127,7 +126,7 @@ def receive_card(card_number: str, reader_serial: int):
 
             user_id = repo.find_user_id_by_card_id(card_id)
 
-            request_unlock(card_id)
+            request_unlock(user_id)
 
             event_type = resolve_event_type(reader_serial)
 
@@ -144,21 +143,20 @@ def receive_card(card_number: str, reader_serial: int):
 
             logger.info(f"カード認証成功: {card_id} (リーダーID: {reader_serial})")
 
-def request_unlock(user_id: int):
+def request_unlock(user_id: int) -> bool:
     success = False
     # 接続方式で開錠   開錠成功＝successとして開錠された時のみunlockを要求
     if connect_config == "wifi":
-        success = unlock(user_id)
-        logger.info("wifiでの解錠完了")
+        return unlock(user_id), logger.info("wifiでの解錠完了")
     elif connect_config == "bluetooth":
-        success = unlock_bt(user_id)
-        logger.info("bluetoothでの解錠完了")
+        return unlock_bt(user_id), logger.info("bluetoothでの解錠完了")
+    return False
 
-def request_lock():
+def request_lock(user_id: int):
     # wifiの時SESAME APIであける
     try:
         if connect_config == "wifi":
-            lock()
+            lock(user_id)
         elif connect_config == "bluetooth":
             logger.warning("Bluetooth lock is not implemented")
             #Bluetoothでは未実装
@@ -166,17 +164,17 @@ def request_lock():
         #例外の詳細を変数eに格納
         logger.exception(f"Auto lock failed:{e}")
 
-def unlock():
+def unlock(user_id):
     # Wi-Fiで開錠する
-    return open_sesame()
+    return open_sesame(user_id)
 
-def lock():
+def lock(user_id):
     # Wi-Fiで施錠する
-    lock_sesame()
+    lock_sesame(user_id)
 
-def unlock_bt():
+def unlock_bt(user_id):
     """
     Bluetoothを使用して解錠操作を実行します。
     """
-    asyncio.run(open_sesame_bt())
+    return asyncio.run(open_sesame_bt(user_id))
 
