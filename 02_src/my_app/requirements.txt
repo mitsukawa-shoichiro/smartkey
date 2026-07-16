@@ -18,3 +18,4 @@ cmake==4.3.4
 setuptools==81.0.0
 insightface==1.0.1
 onnxruntime==1.22.0
+mediapipe==0.10.35
