@@ -6,7 +6,7 @@ GUI層(view)側で必ずtry/exceptで受け止め、ユーザーに分かる形�
 この受け止め方(エラーダイアログの出し方)を1箇所にまとめ、各画面から使い回す。
 """
 import flet as ft
-from app.utils import japanese_text as jt
+from my_app.app.utils import japanese_text as jt
 
 # =====================================================================
 # デザイン定義
@@ -37,8 +37,8 @@ def card_shadow():
     """カードに乗せる用の影"""
     return ft.BoxShadow(
         spread_radius=0,
-        blur_radius=0,
-        color="#1F000000",# 駄目だったらcolor="#1F000000"に
+        blur_radius=18,
+        color="#1F000000",
         offset=ft.Offset(0, 6),
     )
 
@@ -112,7 +112,8 @@ def primary_button(text: str, on_click, icon=None):
         text=text,
         icon=icon,
         on_click=on_click,
-        bgcolor="#FFFFFF",
+        bgcolor=Theme.PRIMARY,
+        color="#FFFFFF",
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=Theme.RADIUS_SM),
             padding=ft.padding.symmetric(horizontal=20, vertical=16),
@@ -205,12 +206,36 @@ def back_button(page, route: str = "/index"):
         on_click=lambda e: page.go(route),
         style=ft.ButtonStyle(
             color=Theme.TEXT,
+            bgcolor=Theme.SURFACE,
             shape=ft.RoundedRectangleBorder(radius=Theme.RADIUS_SM),
             side=ft.BorderSide(1, Theme.BORDER),
             padding=ft.padding.symmetric(horizontal=20, vertical=14),
         ),
     )
 
+def app_view(route: str, page, controls, back_route: str = "/index"):
+    return ft.View(
+        route,
+        controls=[
+            ft.Stack(
+                controls=[
+                    ft.Column(
+                        controls=controls + [ft.Container(height=80)],
+                        scroll=ft.ScrollMode.AUTO,
+                        expand=True,
+                    ),
+                    ft.Container(
+                        content=back_button(page, back_route),
+                        bottom=0,
+                        left=0,
+                    ),
+                ],
+                expand=True,
+            )
+        ],
+        bgcolor=Theme.BG,
+        padding=ft.Padding(left=40, top=24, right=40, bottom=24),
+    )
 
 
 def empty_state(message: str, icon=ft.Icons.INBOX_OUTLINED):
@@ -401,17 +426,3 @@ def build_user_autocomplete(users, on_selected):
         )
     )
 
-def build_card(content, col=None):
-    return ft.Container(
-        content=content,
-        padding=20,
-        margin=ft.margin.only(bottom=16),
-        bgcolor=ft.colors.WHITE,
-        border_radius=16,
-        shadow=ft.BoxShadow(
-            blur_radius=15,
-            color=ft.Colors.with_opacity(0.15, ft.Colors.BLACK),
-            offset=ft.offset(0, 4),
-        ),
-        col=col,
-    )

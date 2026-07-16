@@ -1,308 +1,358 @@
 """
-カードまたは顔写真を登録したユーザーの名前を一覧表示
-ホーム画面に戻る機能の実装
+ユーザー管理画面(GUI)
+
+ユーザーの一覧表示・氏名/カナ氏名での部分一致検索・
+セル上での直接編集(フォーカスが外れた時点で保存)・複数選択削除を行う画面。
 """
-import flet as ft
 import logging
 import asyncio
 import sqlite3
-import db.repository as repo
-from my_app.app.views.common import show_error_dialog
 
+import flet as ft
+
+import my_app.db.repository as repo
+from my_app.app.views.common import (
+    show_error_dialog,
+    Theme, card, section_title,
+    centered_cell, app_view, pager,
+    secondary_button, danger_button,
+    show_confirm_dialog, show_info_dialog,
+)
 
 logger = logging.getLogger(__name__)
 
-        #UIコントロールの定義
-def userView(page: ft.page):
+
+def user_view(page: ft.Page):
     # ===================================================
     # 状態変数
     # ===================================================
     offset = 0                     # 現在のページ番号(0始まり)
     all_page = 1                   # 全ページ数
+    search_text = ""               # 検索窓に確定した検索語(空なら全件表示)
+    selected_ids = []              # チェックボックスで選択されたuser_idのリスト
+    checkbox_refs = {}             # {user_id: Checkboxコントロール} の対応表
 
-    selected_user_id = None
-    search_text = ""
+    page.title = "ユーザー管理画面"
+    page.bgcolor = Theme.BG
 
+    # ===================================================
+    # 検索
+    # ===================================================
 
-    page.title = "ユーザ管理画面"
-    #=====================================================
-    #ユーザー検索
-    #=====================================================
-    def search():
+    def search(e=None):
+        """検索ボタン/Enter: 検索語を確定して1ページ目から表示する"""
         nonlocal search_text, offset
-
         search_text = search_box.value.strip()
         offset = 0
-
         load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
-    #検索窓
-    search_box = ft.Textfield(
-        label = "名前・カナ氏名",
-        hint_text = "部分一致検索",
-        width = 300,
-        on_submit = lambda e: search(),
-    )
-    #検索ボタン
-    search_button = ft.ElevatedButton(
-        "検索",
-        on_click=lambda e: search(),
+    search_box = ft.TextField(
+        label="氏名・カナ氏名",
+        hint_text="部分一致検索",
+        width=300,
+        on_submit=search,
     )
 
-    #======================================================
-    #UIコントロールの定義
-    #======================================================
+    search_button = secondary_button("検索", search, ft.Icons.SEARCH)
 
-    #ダイアログの定義
-    dialog = ft.AlertDialog(modal = True)
+    # ===================================================
+    # UIコントロールの定義
+    # ===================================================
 
-    #カラム定義
-    column = ft.Column(controls = [], spacing = 16, expand = True)
-
-    #ラジオボタングループの定義
-    radio_group = ft.RadioGroup(
-        content = column,
-        on_change = lambda e:print(f"選ばれたID:{radio_group.value}")
-    )
-
-
-    #リセットボタン定義
+    # リセットボタン定義
     reset_btn = ft.ElevatedButton(
-        content = ft.Text(value = "リセット", size = 14, color = ft.Colors.RED),
-        on_click = lambda e: page.run_task(refresh, e),
-        bgcolor = ft.Colors.RED_50,
-        width = 60,
-        height = 30,
-        style = ft.ButtonStyle(
-            shape = ft.RoundedRectangleBorder(radius = 0),
-            padding = ft.padding.all(0)
+        content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
+        on_click=lambda e: page.run_task(refresh, e),
+        bgcolor=ft.Colors.RED_50,
+        width=60,
+        height=30,
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=0),
+            padding=ft.padding.all(0)
         ),
     )
 
-    #検索欄定義
+    # 検索欄定義
     search_zone = ft.Row(
-        controls = [search_box,search_button],
-        alignment = ft.MainAxisAlignment.CENTER,
-        spacing = 0
+        controls=[search_box, search_button],
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=16,
     )
 
-    #リセットボタン含め検索欄を再定義
+    # リセットボタン含め検索欄を再定義
     search_zone_row = ft.Row(
-        controls = [search_zone, reset_btn],
-        alignment = ft.MainAxisAlignment.START,
-        spacing = 50
+        controls=[search_zone, reset_btn],
+        alignment=ft.MainAxisAlignment.START,
+        spacing=50,
     )
 
-    #前ページ遷移ボタン定義
-    prev_btn = ft.ElevatedButton(
-        "← 前へ", on_click = lambda e:prev_page(e),
-        style = ft.ButtonStyle(shape = ft.RoundedRectangleBorder(radius = 6))
-    )
+    # 前ページ遷移ボタン定義
+    prev_btn = secondary_button("⬅ 前へ", lambda e: prev_page(e))
 
-    #現在ページ定義
-    page_label = ft.Text("")    #load_table内で更新
+    # 現在ページ定義
+    page_label = ft.Text("")  # load_table内で更新
 
-    #次ページ遷移ボタン定義
-    next_btn = ft.ElevatedButton(
-        "次へ →", on_click = lambda e: next_page(e),
-        style = ft.ButtonStyle(shape = ft.RoundedRectangleBorder(radius = 6))
-    )
+    # 次ページ遷移ボタン定義
+    next_btn = secondary_button("次へ ➡", lambda e: next_page(e))
 
-    #ボタン群を再定義
-    btn_zone = ft.Row([prev_btn, page_label, next_btn], alignment = ft.MainAxisAlignment.CENTER)
+    # ボタン群をまとめて再定義
+    btn_zone = pager(prev_btn, page_label, next_btn)
 
-    #テーブル本体の定義
+    # テーブル本体, カラムヘッダーの定義
     table = ft.DataTable(
         columns=[
-            ft.DataColumn(ft.Text("ID"), on_sort = lambda e: page.run_task(sort_table, e)),
-            ft.DataColumn(ft.Text("名前")),
-            ft.DataColumn(ft.Text("カナ氏名")),
+            ft.DataColumn(  # セル中央揃えもcommon.centered_cellに外注
+                centered_cell(ft.Text("ID", weight=ft.FontWeight.BOLD), 100),
+                on_sort=lambda e: page.run_task(sort_table, e),
+            ),
+            ft.DataColumn(centered_cell(
+                ft.Text("氏名", weight=ft.FontWeight.BOLD), 200)),
+            ft.DataColumn(centered_cell(
+                ft.Text("カナ氏名", weight=ft.FontWeight.BOLD), 200)),
+            ft.DataColumn(centered_cell(
+                danger_button("行を削除", lambda e: open_confirm_dialog(e),
+                            ft.Icons.DELETE_OUTLINE),
+                140
+            )),
         ],
-        rows = [],
-        sort_column_index = 0,
-        sort_ascending = True,
+        rows=[],
+        # sort_column_index=0,  ソート用矢印を最初だけ消すためにコメントアウト
+        sort_ascending=True,
+        heading_row_color=Theme.HEADING_BG,
+        heading_row_height=48,
+        data_row_min_height=52,
+        data_row_max_height=52,
+        divider_thickness=1,
+        horizontal_lines=ft.BorderSide(1, Theme.BORDER),
+        column_spacing=20,
     )
 
-    
-    # =================================================
-    # 更新、ソート関数
-    # =================================================
-    
+    # ===================================================
+    # リセット、ソート関数
+    # ===================================================
 
-    #リセットボタン（検索条件、並び順、ページを初期状態に戻す）
     async def refresh(e):
-        nonlocal selected_user_id, offset, reset_btn
+        """リセットボタン: 検索条件・並び順・ページを全部初期状態に戻す"""
+        nonlocal search_text, offset
         reset_btn.disabled = True
         page.update()
 
-        selected_user_id = None
         table.sort_ascending = True
-        nonlocal search_text
-        search_box.value = ""  #検索窓をクリア
+        search_box.value = ""   # 検索窓をクリア
         search_text = ""
         offset = 0
         load_table()
-        scroll_table.scroll_to(offset = 0, duration = 0)
+        scroll_table.scroll_to(offset=0, duration=0)
 
         await asyncio.sleep(0.2)
         reset_btn.disabled = False
         page.update()
 
-    #IDカラムのヘッダークリック:昇順/降順を切り替えて再度読み込み
     async def sort_table(e):
+        """IDカラムのヘッダークリック: 昇順/降順を切り替えて再読込"""
         nonlocal offset
+        table.sort_column_index = 0   # 初回クリックでソート矢印を表示する
         table.sort_ascending = not table.sort_ascending
         offset = 0
-        scroll_table.visible = False
-        scroll_table.update()
-        await asyncio.sleep(0.01)
-        scroll_table.visible = True
-        scroll_table.update()
         load_table()
 
-    
-    # ======================================
+    # ===================================================
     # ページ遷移関数
-    # ======================================
-    
+    # ===================================================
+
     def prev_page(e):
-        #前ページへ遷移
+        """前ページへ遷移"""
         nonlocal offset
         if offset != 0:
             offset -= 1
         load_table()
-        scroll_table.scroll_to(offset = 0, duration = 0)
+        scroll_table.scroll_to(offset=0, duration=0)
 
     def next_page(e):
-        #次ページへ遷移
+        """次ページへ遷移"""
         nonlocal offset
         if (offset + 1) != all_page:
             offset += 1
         load_table()
-        scroll_table.scroll_to(offset = 0, duration = 0)
+        scroll_table.scroll_to(offset=0, duration=0)
 
-        
-        # =============================================
-        # テーブル読み込み関数
-        # =============================================
-        
+    # ===================================================
+    # テーブル読み込み関数
+    # ===================================================
 
     def load_table():
         """
-        選択中のuser_id(なければ全件検索)でカード情報を取得
-        テーブル・チェックボックス・ラジオボタンを再構成
+        検索語(無ければ全件)に基づいてユーザーを取得し、テーブルを再構築する。
+        氏名・カナ氏名のセルは編集可能なTextFieldで、フォーカスが外れた時点で
+        save_user が呼ばれてDBに保存される。
         """
-        nonlocal selected_user_id, offset, all_page
+        nonlocal offset, all_page
 
         try:
-            #全検索の場合
-            if search_text == "":
-                users = repo.find_all_users(table.sort_ascending, offset * 100)
-                total = repo.count_all_user()
-            #条件検索の場合
-            else:
-                users = repo.find_user_name_and_user_id_by_user_kana(
-                    search_text, table.sort_ascending, offset * 100
-                )
+            users, total = repo.find_users_with_total(search_text, table.sort_ascending, 100, offset * 100)
         except sqlite3.Error:
             logger.exception("ユーザー情報の読み込みに失敗しました")
             show_error_dialog(page, "ユーザー情報の取得に失敗しました。しばらくしてから再度お試しください。")
             return
 
-        #諸パラメーター更新
-        all_page = int(((total - 1)/100)+1)
+        # 諸パラメータ更新
+        all_page = max(1, int(((total - 1) / 100) + 1))
 
-        # checkbox_refs.clear()
+        # 初期化
+        checkbox_refs.clear()
         table.rows.clear()
-        column.controls.clear()
-        column.controls.append(ft.Container(height = -2))
 
-        #該当ユーザー情報分繰り返し
+        # 該当ユーザー情報分繰り返し
         for user in users:
-            #チェックボックスにユーザーIDを埋め込み
+            # チェックボックスにユーザーIDを紐づけ
             cb = ft.Checkbox()
-            column.controls.append(ft.Radio(value = str(user.user_id)))
-            # checkbox_refs[user.id] = cb
+            checkbox_refs[user.id] = cb
 
-            #テーブルに情報を埋め込み
-            row = ft.DataRow(
-                    cells=[
-                        ft.DataCell(ft.Text(str(user.user_id))),
+            # 氏名・カナ氏名は編集可能なTextFieldにする
+            name_field = ft.TextField(
+                value=user.user_name,
+                border=ft.InputBorder.NONE,
+                text_align=ft.TextAlign.CENTER,
+            )
+            kana_field = ft.TextField(
+                value=user.user_kana,
+                border=ft.InputBorder.NONE,
+                text_align=ft.TextAlign.CENTER,
+            )
 
-                        ft.DataCell(
-                            ft.TextField(
-                                value=user.user_name_jpn,
-                                border=ft.InputBorder.NONE,
-                            )
-                        ),
-
-                        ft.DataCell(
-                            ft.TextField(
-                                value=user.user_kana,
-                                border=ft.InputBorder.NONE,
-                            )
-                        ),
-                    ]
+            # フォーカスが外れた時点で保存する。
+            # 氏名・カナ氏名どちらの欄から外れても、行(row)の両方の値をまとめて保存する。
+            for field in (name_field, kana_field):
+                field.on_blur = (
+                    lambda e, uid=user.id, n=name_field, k=kana_field:
+                    save_user(uid, n, k)
                 )
-            row.cells[1].content.on_blur = \
-                lambda e, r=row, uid=user.user_id: save_user(uid, r)
 
-            row.cells[2].content.on_blur = \
-                lambda e, r=row, uid=user.user_id: save_user(uid, r)
+            table.rows.append(
+                ft.DataRow(cells=[
+                    ft.DataCell(centered_cell(
+                        ft.Text(f"{user.id:05d}", color=Theme.TEXT_MUTED), 100)),
+                    ft.DataCell(centered_cell(name_field, 200)),
+                    ft.DataCell(centered_cell(kana_field, 200)),
+                    ft.DataCell(centered_cell(cb, 140)),
+                ])
+            )
 
-            table.rows.append(row)
-
-        radio_group.value = str(users[0].id) if users else None
-        page_label.value = f"{offset + 1}/{all_page} ページ"
+        # その他項目の設定
+        page_label.value = f"{offset + 1} / {all_page} ページ"
         prev_btn.disabled = offset == 0
         next_btn.disabled = (offset + 1) == all_page
         page.update()
 
-    #ユーザー情報が変更された時保存する
-    def save_user(user_id, row):
-        repo.update_user(
-            user_id,    #user_idはセル番号0扱い
-            row.cells[1].content.value,
-            row.cells[2].content.value
+    def save_user(user_id, name_field, kana_field):
+        """
+        セルの編集内容をDBに保存する(フォーカスが外れた時点で呼ばれる)。
+        """
+        try:
+            repo.update_user(user_id, name_field.value, kana_field.value)
+            logger.info(f"user_id={user_id}を更新しました")
+        except sqlite3.Error:
+            logger.exception("ユーザー情報の更新に失敗しました: user_id=%s", user_id)
+            show_error_dialog(page, "変更の保存に失敗しました。しばらくしてから再度お試しください。")
+            load_table()   # 保存できていないので、DBの内容に戻す
+
+    # ===================================================
+    # 削除
+    # ===================================================
+
+    def open_confirm_dialog(e):
+        """「行を削除」クリック: チェック済みの行を確認してから削除ダイアログを開く"""
+        nonlocal selected_ids
+        selected_ids = [uid for uid, cb in checkbox_refs.items() if cb.value]
+
+        if not selected_ids:
+            show_info_dialog(page, "削除する行が選択されていません。", title="削除の確認")
+            return
+
+        show_confirm_dialog(
+            page,
+            f"{len(selected_ids)} 件を削除しますか?\n"
+            f"(このユーザーのカード・顔情報も一緒に削除されます)",
+            on_confirm=confirm_delete,
+            title="削除の確認",
         )
 
-        
-        # ==============================================
-        # レイアウト定義と配置
-        # ==============================================
-        
-    #ラジオボックスをテーブルの隣に
-    table_radio_box = ft.Row(
-        [table, ft.Container(width = 0), radio_group],
-        vertical_alignment = ft.CrossAxisAlignment.START
+    def confirm_delete():
+        """
+        削除確定: 選択されたuser_idを1件ずつ repo.delete_user に渡す。
+        card / face は外部キーのCASCADEで一緒に削除される。
+        """
+        try:
+            for user_id in selected_ids:
+                repo.delete_user(user_id)
+                logger.info(f"user_id={user_id}が削除されました")
+        except sqlite3.Error:
+            logger.exception("ユーザー情報の削除に失敗しました")
+            show_error_dialog(page, "削除に失敗しました。しばらくしてから再度お試しください。")
+            load_table()   # 途中まで消えている可能性があるので一覧を最新化しておく
+            return
+
+        load_table()
+        show_info_dialog(page, f"{len(selected_ids)} 件を削除しました。", title="削除完了")
+
+    # ===================================================
+    # レイアウト定義、実際に配置
+    # ===================================================
+
+    # データテーブルはそのままだと中央揃えできないためRow化
+    table_row = ft.Row(
+        [table],
+        alignment=ft.MainAxisAlignment.CENTER,
     )
 
-    #スクロール化
+    # スクロール可能の定義
     scroll_table = ft.Column(
-        controls = [table_radio_box],
-        scroll = ft.ScrollMode.ALWAYS,
-        expand = True,
+        controls=[table_row],
+        scroll=ft.ScrollMode.ALWAYS,
+        expand=True,
     )
 
-    #テーブル読み込み
+    # テーブル読み込み
     load_table()
 
-    #実際のページにする
-    return ft.View(
-        "/user",
-        controls = [
-            search_zone_row,
-            ft.Text("利用者一覧", size = 30, weight = ft.FrontWeight.BOLD),
-            ft.Container(height = 10),
-            scroll_table,
-            btn_zone,
-            ft.Container(height = 10),
-            ft.ElevatedButton(
-                "戻る",
-                icon = ft.Icons.ARROW_BACK,
-                style = ft.ButtonStyle(shape = ft.RoundedRectangleBorder(radius = 6)),
-                on_click = lambda e: page.go("/index"),
-            )
-        ],
-        padding = ft.Padding(left = 120, top = 20, right = 0, bottom = 50)
+    # ===================================================
+    # commonスタイル適用
+    # ===================================================
+
+    # 検索欄用カード(土台のパネル)
+    search_card = card(
+        ft.Column(
+            controls=[
+                section_title("ユーザー検索"),
+                ft.Container(height=4),
+                search_zone_row,
+            ],
+            spacing=8,
+        )
     )
+
+    # テーブル用カード(土台のパネル)
+    table_card = card(
+        ft.Column(
+            controls=[
+                section_title("ユーザー一覧"),
+                ft.Container(height=8),
+                scroll_table,
+                ft.Container(height=8),
+                btn_zone,
+            ],
+            spacing=8,
+            expand=True,
+        )
+    )
+
+    # ===================================================
+    # 実際にページに
+    # ===================================================
+
+    return app_view("/user", page, [
+        search_card,
+        ft.Container(height=16),
+        table_card,
+    ])

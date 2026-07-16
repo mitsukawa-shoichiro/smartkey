@@ -116,7 +116,7 @@ def index_view(page: ft.Page, error_message: str = ""):
         height=176,
         on_hover=on_hover,
         bgcolor=ft.Colors.LIGHT_BLUE_100,
-        on_click=lambda e: page.go("/camera_register"),
+        on_click=lambda e: page.go("/user"),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=20)
         )
