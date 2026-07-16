@@ -16,7 +16,7 @@ import sqlite3
 from my_app.app.views.common import (
     show_error_dialog, build_user_autocomplete,
     Theme, card, section_title, empty_state,
-    centered_cell, back_button, pager,
+    centered_cell, app_view, pager,
     secondary_button, danger_button,
     show_confirm_dialog, show_info_dialog,
 )
@@ -373,17 +373,8 @@ def faceView(page: ft.Page):
 
 
     #ここでページ統合して表示
-    return ft.View(
-        "/face",
-        controls=[# 上から順に
-            search_card,# 検索欄
-            ft.Container(height=16),# 余白
-            table_card,# テーブル
-            ft.Container(height=10),# 余白
-            back_button(page),
-            ft.Container(height=40), # 余白(ここゼロにすると外側の余白に内側が侵食されて見切れちゃうので注意)
-        ],
-        bgcolor=Theme.BG,
-        padding=ft.Padding(left=40, top=24, right=40, bottom=40),# 外側の余白
-        scroll=ft.ScrollMode.AUTO,
-    )
+    return app_view("/face", page, [
+        search_card,
+        ft.Container(height=16),
+        table_card,
+    ])
