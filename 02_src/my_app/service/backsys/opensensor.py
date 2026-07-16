@@ -41,37 +41,37 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
     battery_config = config_list["battery_observation"]
     battery_mail_config = config_list["battery_mail"]
-    open_censor_mail_config = config_list["open_censor_mail"]
+    open_sensor_mail_config = config_list["open_sensor_mail"]
     # card_reader_mail_config = config_list["card_reader_mail"]
     system_mail_config = config_list["system_mail"]
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
-    __file__), '..', '..', 'config', 'backend', 'open_censor_config.json'))
+    __file__), '..', '..', 'config', 'backend', 'open_sensor_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
-    open_censor_config = config_list["device"]
+    open_sensor_config = config_list["device"]
 
 
-open_censor_id = open_censor_config["open_censor_id"]
-x_api_key = open_censor_config["x_api_key"]
+open_sensor_id = open_sensor_config["open_sensor_id"]
+x_api_key = open_sensor_config["x_api_key"]
 
 sleep_time = int(battery_config["sleep_time"])
 battery_Limit = int(battery_config["battery_limit"])  # バッテリー残量の閾値
 
 logger = logging.getLogger(__name__)  # logに書き込む用
 
-def check_open_censor_battery():
+def check_open_sensor_battery():
     '''
-    # open_censorのバッテリー残量を確認し、50%以下ならメールを送信する
+    # open_sensorのバッテリー残量を確認し、50%以下ならメールを送信する
 
     '''
     battery_state = True
-    open_censor_state = True
+    open_sensor_state = True
     while (1):
         try:
-            open_censor_url = f"https://app.candyhouse.co/api/open_censor/{open_censor_id}"
+            open_sensor_url = f"https://app.candyhouse.co/api/open_sensor/{open_sensor_id}"
             headers = {"x-api-key": x_api_key}
-            response = requests.get(open_censor_url, headers=headers)
+            response = requests.get(open_sensor_url, headers=headers)
             logger.debug(f"Response: {response.text}")
 
             try:
@@ -101,15 +101,15 @@ def check_open_censor_battery():
                 if not data.get('wm2State', '取得失敗'):
                     logger.error("セサミと接続できません")
 
-                    if open_censor_state:
+                    if open_sensor_state:
                         mailText = battery_mail_config["TEXT"] + response.text
                         send_mail(
-                            open_censor_mail_config["TITLE"], open_censor_mail_config["TEXT"])
-                        open_censor_state = False
+                            open_sensor_mail_config["TITLE"], open_sensor_mail_config["TEXT"])
+                        open_sensor_state = False
 
-                elif not open_censor_state:
+                elif not open_sensor_state:
                     logger.info("セサミとの接続が回復しました")
-                    open_censor_state = True
+                    open_sensor_state = True
 
             except Exception as e:
                 logger.error("メール送信エラー")
@@ -171,8 +171,8 @@ def check_open_censor_battery():
 
 
 def main():
-    logger.info("⏱️ open_censorのバッテリーとサーバー状態を確認中...")
-    threading.Thread(target=check_open_censor_battery).start()
+    logger.info("⏱️ open_sensorのバッテリーとサーバー状態を確認中...")
+    threading.Thread(target=check_open_sensor_battery).start()
     # threading.Thread(target=check_alive).start()
 
 
