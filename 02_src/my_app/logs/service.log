@@ -27,3 +27,35 @@
 =======
 2026-07-14 16:07:47 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
 >>>>>>> bc887c4e4c086684549ded1b60794e384ce63bd0
+2026-07-16 13:26:10 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 13:26:12 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\opencensor.py", line 23, in <module>
+    from .sendmail import send_mail
+ImportError: attempted relative import with no known parent package
+2026-07-16 13:42:46 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 13:42:47 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\opencensor.py", line 23, in <module>
+    from .sendmail import send_mail
+ImportError: attempted relative import with no known parent package
+2026-07-16 13:58:13 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 13:58:14 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 13:58:14 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\opencensor.py", line 44, in <module>
+    open_censor_mail_config = config_list["open_censor_mail"]
+                              ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'open_censor_mail'
+2026-07-16 16:19:03 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 16:19:04 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 16:19:04 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\opensensor_back_system.py", line 50, in <module>
+    with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\SmartKey\\smartkey\\02_src\\my_app\\config\\backend\\open_sensor_config.json'

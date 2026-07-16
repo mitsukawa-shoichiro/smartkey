@@ -18,3 +18,18 @@ class AccessLog:
     user_name: Optional[str] = None  # repositoryが埋める前提でNoneがデフォルト
     card_id: Optional[int] = None
     face_id: Optional[int] = None
+
+@dataclass
+class AccessLogWithCard:
+    """
+    access_logs に card をLEFT JOINして取得した、画面表示用のログ。
+    """
+    id: Optional[int]
+    timestamp: Optional[datetime]
+    method: str
+    event_type: EventType
+    user_id: Optional[int]
+    user_name: Optional[str] = None
+    card_id: Optional[int] = None
+    face_id: Optional[int] = None
+    card_type: Optional[str] = None

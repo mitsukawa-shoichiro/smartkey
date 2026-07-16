@@ -105,7 +105,7 @@ def insert_access_logs(users, cards_by_user, faces_by_user):
         face_id = faces_by_user[user.id]
         repo.insert_access_log(AccessLog(
             id=None, timestamp=None,
-            method="顔", event_type=EventType.EXIT,
+            method="顔認証", event_type=EventType.EXIT,
             user_id=user.id, card_id=None, face_id=face_id,
         ))
         count += 1

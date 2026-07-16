@@ -8,7 +8,6 @@
 ユーザー名(user_name)をスナップショットとして持たせている。
 """
 from datetime import datetime, date, time, timedelta
-import asyncio
 import logging
 import sqlite3
 
@@ -19,7 +18,7 @@ from my_app.models.ENUMS import EventType
 from my_app.app.views.common import (
     show_error_dialog, build_user_autocomplete,
     Theme, card, section_title,
-    centered_cell, back_button, pager,
+    centered_cell, app_view, pager,
     secondary_button, badge,
     BADGE_BLUE, BADGE_GREEN, BADGE_ORANGE, BADGE_GRAY,
 )
@@ -31,9 +30,88 @@ logger = logging.getLogger(__name__)
 # 認証方式ごとのバッジ色(未知の方式はグレーにフォールバック)
 _METHOD_COLORS = {
     "カード": BADGE_BLUE,
-    "顔": BADGE_GREEN,
-    "Web": BADGE_GRAY,
+    "顔認証": BADGE_GRAY,
 }
+
+# 列幅定義、ヘッダーと行はここを参照する
+_W = {
+    "label": 260,
+    "method": 120,
+    "timestamp": 180,
+    "event": 100,
+}
+
+def _build_log_row(log) -> ft.DataRow:
+    """ログ1件をテーブルの1行として組み立てる"""
+    is_entry = log.event_type == EventType.ENTRY
+    event_str = "入室" if is_entry else "退室"
+    event_colors = BADGE_GREEN if is_entry else BADGE_ORANGE
+
+    user_label = log.user_name or "(削除済みユーザー)"
+    label = f"{user_label} / {log.card_type}" if log.card_type else user_label
+
+    method_colors = _METHOD_COLORS.get(log.method, BADGE_GRAY)
+
+    return ft.DataRow(cells=[
+        ft.DataCell(centered_cell(ft.Text(label), _W["label"])),
+        ft.DataCell(centered_cell(badge(log.method, method_colors), _W["method"])),
+        ft.DataCell(centered_cell(
+            ft.Text(str(log.timestamp), color=Theme.TEXT_MUTED), _W["timestamp"])),
+        ft.DataCell(centered_cell(badge(event_str, event_colors), _W["event"])),
+    ])
+
+
+def _validate_search_period(start_str, end_str, first_date, last_date):
+    """
+    受け取った文字列にチェックをかける関数
+    成功時は先頭二つに開始・終了日時が入り、エラー時は最後尾にエラーメッセージが入る
+
+    Args:
+        start_text (str): 絞り込み開始日時文字列
+        end_text (str): 絞り込み終了日時文字列
+        first_date (date): 検索の下限(一年前)
+        last_date (date): 検索の上限(今日)
+
+    Returns:
+        date, date, str:開始日時、終了日時、エラーメッセージ
+    """
+    start_dt = None
+    end_dt = None
+    try:
+        # 開始日時が入力された場合はフォーマットに直す(秒数は00秒)
+        if start_str:
+            start_dt = datetime.strptime(start_str, "%Y-%m-%d %H:%M")
+            start_dt = start_dt.replace(second=0)
+
+        # 終了日時が入力された場合はフォーマットに直す(秒数は59秒)
+        if end_str:
+            end_dt = datetime.strptime(end_str, "%Y-%m-%d %H:%M")
+            end_dt = end_dt.replace(second=59)
+
+        # 終了日時が開始日時より前
+        if start_dt and end_dt and end_dt < start_dt:
+            return None, None, "終了日時が開始日時以降にされていません。"
+
+
+        # 開始日時が範囲外
+        if start_dt and (start_dt.date() < first_date or start_dt.date() > last_date):
+            return None, None, (
+                f"開始日時が範囲外です。\n検索範囲は {first_date.strftime('%Y-%m-%d 00:00')} から"
+                f"{last_date.strftime('%Y-%m-%d 23:59')} までです。"
+            )
+
+
+        # 終了日時が範囲外
+        if end_dt and (end_dt.date() > last_date or end_dt.date() < first_date):
+            return None, None, (
+                f"終了日時が範囲外です。\n検索範囲は {first_date.strftime('%Y-%m-%d 00:00')} から"
+                f"{last_date.strftime('%Y-%m-%d 23:59')} までです。"
+            )
+
+        return start_dt, end_dt, None
+
+    except ValueError:
+        return None, None, "日時のフォーマットが正しくありません。"
 
 
 def accesslogs(page: ft.Page):
@@ -46,7 +124,6 @@ def accesslogs(page: ft.Page):
         # ===================================================
         current_page = 0           # 現在のページ(0から)
         total_pages = 1            # 総ページ数(動的に計算)
-        search_mode = False        # False: 全件モード / True: 検索モード
         selected_user_id = None    # プルダウンで選択中のユーザーID(未選択ならNone=全ユーザー対象)
         search_params = {          # 検索条件を保持(検索ボタン押下時にまとめて確定させる)
             "user_id": None,
@@ -147,14 +224,14 @@ def accesslogs(page: ft.Page):
         method_dropdown = ft.DropdownM2(label="認証方式", value=None, width=120, height=48)
         method_dropdown.options = [
             ft.DropdownOption("カード", "カード"),
-            ft.DropdownOption("Web", "Web"),
+            ft.DropdownOption("顔認証", "顔認証"),
         ]
 
         # 入退室区分
         search_eventtype = ft.DropdownM2(label="入室/退室", value=None, width=120, height=48)
         search_eventtype.options = [
-            ft.DropdownOption("0", "入室"),
-            ft.DropdownOption("1", "退室"),
+            ft.DropdownOption("1", "入室"),
+            ft.DropdownOption("0", "退室"),
         ]
 
         today = date.today()
@@ -188,52 +265,17 @@ def accesslogs(page: ft.Page):
             検索ボタン: 各検索欄(ユーザー・認証方式・入退室区分・日時)の値を
             まとめてsearch_paramsに確定させ、1ページ目から検索結果を表示する。
             """
-            nonlocal current_page, search_mode, search_params
+            nonlocal current_page, search_params
 
             search_method = method_dropdown.value.strip() if method_dropdown.value else None
             search_event_type = int(search_eventtype.value.strip()) if search_eventtype.value else None
 
-            start_dt = None
-            end_dt = None
             first_date = today - timedelta(days=365)
             last_date = today
 
-            try:
-                # 開始日時が入力された場合はフォーマットに直す(秒数は00秒)
-                if start_text.value:
-                    start_dt = datetime.strptime(start_text.value, "%Y-%m-%d %H:%M")
-                    start_dt = start_dt.replace(second=0)
-
-                # 終了日時が入力された場合はフォーマットに直す(秒数は59秒)
-                if end_text.value:
-                    end_dt = datetime.strptime(end_text.value, "%Y-%m-%d %H:%M")
-                    end_dt = end_dt.replace(second=59)
-
-                # 終了日時が開始日時より前
-                if start_dt and end_dt and end_dt < start_dt:
-                    show_error_dialog(page, "終了日時が開始日時以降にされていません。")
-                    return
-
-                # 開始日時が範囲外
-                if start_dt and (start_dt.date() < first_date or start_dt.date() > last_date):
-                    show_error_dialog(
-                        page,
-                        f"開始日時が範囲外です。\n検索範囲は {first_date.strftime('%Y-%m-%d 00:00')} から"
-                        f"{last_date.strftime('%Y-%m-%d 23:59')} までです。"
-                    )
-                    return
-
-                # 終了日時が範囲外
-                if end_dt and (end_dt.date() > last_date or end_dt.date() < first_date):
-                    show_error_dialog(
-                        page,
-                        f"終了日時が範囲外です。\n検索範囲は {first_date.strftime('%Y-%m-%d 00:00')} から"
-                        f"{last_date.strftime('%Y-%m-%d 23:59')} までです。"
-                    )
-                    return
-
-            except ValueError:
-                show_error_dialog(page, "日時のフォーマットが正しくありません。")
+            start_dt, end_dt, error_message = _validate_search_period(start_text.value, end_text.value, first_date, last_date)
+            if error_message:
+                show_error_dialog(page, error_message)
                 return
 
             search_params = {
@@ -243,22 +285,9 @@ def accesslogs(page: ft.Page):
                 "start_dt": start_dt,
                 "end_dt": end_dt,
             }
-            search_mode = True
             current_page = 0
 
-            try:
-                cnt = repo.count_filtered_logs(
-                    search_params["method"], search_params["event_type"],
-                    search_params["start_dt"], search_params["end_dt"],
-                    search_params["user_id"]
-                )
-            except sqlite3.Error:
-                logger.exception("ログ件数の取得に失敗しました")
-                show_error_dialog(page, "ログの検索に失敗しました。しばらくしてから再度お試しください。")
-                return
-
-            calc_total_pages(cnt)
-            load_table(current_page)
+            load_table()
             scroll_table.scroll_to(offset=0, duration=0)
 
         # ===================================================
@@ -271,7 +300,7 @@ def accesslogs(page: ft.Page):
             table.sort_column_index = 2   # 初回クリックでソート矢印を表示する
             table.sort_ascending = not table.sort_ascending
             current_page = 0
-            load_table(current_page)
+            load_table()
 
         # ===================================================
         # 全件表示・リセット
@@ -279,21 +308,14 @@ def accesslogs(page: ft.Page):
 
         def show_all_logs(e):
             """全件検索してテーブルに表示(検索条件を全てクリアする)"""
-            nonlocal current_page, search_params, search_mode
+            nonlocal current_page, search_params
             current_page = 0
-            search_mode = False
             search_params = {
                 "user_id": None, "method": None, "event_type": None,
                 "start_dt": None, "end_dt": None,
             }
             reset(e)
-            try:
-                calc_total_pages(repo.count_filtered_logs())
-            except sqlite3.Error:
-                logger.exception("ログ件数の取得に失敗しました")
-                show_error_dialog(page, "ログの取得に失敗しました。しばらくしてから再度お試しください。")
-                return
-            load_table(current_page)
+            load_table()
 
         def reset(e):
             """検索欄のリセット(ユーザー選択も含む)"""
@@ -350,15 +372,15 @@ def accesslogs(page: ft.Page):
         table = ft.DataTable(
             columns=[
                 ft.DataColumn(centered_cell(
-                    ft.Text("ユーザー名 / カード種別", weight=ft.FontWeight.BOLD), 260)),
+                    ft.Text("ユーザー名 / カード種別", weight=ft.FontWeight.BOLD), _W["label"])),
                 ft.DataColumn(centered_cell(
-                    ft.Text("認証方式", weight=ft.FontWeight.BOLD), 120)),
+                    ft.Text("認証方式", weight=ft.FontWeight.BOLD), _W["method"])),
                 ft.DataColumn(
-                    centered_cell(ft.Text("入退室の日時", weight=ft.FontWeight.BOLD), 180),
+                    centered_cell(ft.Text("入退室の日時", weight=ft.FontWeight.BOLD), _W["timestamp"]),
                     on_sort=lambda e: page.run_task(on_sort, e),
                 ),
                 ft.DataColumn(centered_cell(
-                    ft.Text("区分", weight=ft.FontWeight.BOLD), 100)),
+                    ft.Text("区分", weight=ft.FontWeight.BOLD), _W["event"])),
             ],
             rows=[],
             # sort_column_index=2,  ソート矢印を最初だけ消すためコメントアウト(初回クリックで設定)
@@ -372,47 +394,32 @@ def accesslogs(page: ft.Page):
             column_spacing=20,
         )
 
-        def load_table(page_num: int):
+        def load_table():
             """
             search_params(検索条件)に基づいてログを取得し、テーブルへ反映する。
-            search_modeがFalse(全件モード)の場合はsearch_paramsは全てNoneのまま。
             """
-            table.rows.clear()
-            offset = page_num * ITEMS_PER_PAGE
+            nonlocal total_pages
+
+            offset = current_page * ITEMS_PER_PAGE
 
             try:
-                logs = repo.find_log(
+                logs, total = repo.find_access_log(
                     search_params["method"], search_params["event_type"],
                     search_params["start_dt"], search_params["end_dt"],
-                    ITEMS_PER_PAGE, offset, table.sort_ascending,
-                    search_params["user_id"]
+                    ITEMS_PER_PAGE, offset, search_params["user_id"],
+                    table.sort_ascending,
                 )
             except sqlite3.Error:
                 logger.exception("ログの読み込みに失敗しました")
                 show_error_dialog(page, "ログの取得に失敗しました。しばらくしてから再度お試しください。")
                 return
 
+            calc_total_pages(total)
+
+            table.rows.clear()
+
             for log in logs:
-                is_entry = log.event_type == EventType.ENTRY
-                event_str = "入室" if is_entry else "退室"
-                event_colors = BADGE_GREEN if is_entry else BADGE_ORANGE
-
-                # card_idが無い(顔認証等)場合はカード種別欄を空にする
-                card_type = repo.find_card_type_by_id(log.card_id) if log.card_id else ""
-                user_label = log.user_name or "(削除済みユーザー)"
-                label = f"{user_label} / {card_type}" if card_type else user_label
-
-                method_colors = _METHOD_COLORS.get(log.method, BADGE_GRAY)
-
-                table.rows.append(
-                    ft.DataRow(cells=[
-                        ft.DataCell(centered_cell(ft.Text(label), 260)),
-                        ft.DataCell(centered_cell(badge(log.method, method_colors), 120)),
-                        ft.DataCell(centered_cell(
-                            ft.Text(str(log.timestamp), color=Theme.TEXT_MUTED), 180)),
-                        ft.DataCell(centered_cell(badge(event_str, event_colors), 100)),
-                    ])
-                )
+                table.rows.append(_build_log_row(log))
 
             page_label.value = f"{current_page + 1} / {total_pages} ページ"
             prev_btn.disabled = current_page == 0
@@ -427,14 +434,14 @@ def accesslogs(page: ft.Page):
             nonlocal current_page
             if (current_page + 1) < total_pages:
                 current_page += 1
-                load_table(current_page)
+                load_table()
                 scroll_table.scroll_to(offset=0, duration=0)
 
         def prev_page(e):
             nonlocal current_page
             if current_page > 0:
                 current_page -= 1
-                load_table(current_page)
+                load_table()
                 scroll_table.scroll_to(offset=0, duration=0)
 
         # ===================================================
@@ -507,32 +514,17 @@ def accesslogs(page: ft.Page):
         )
 
         # 初回の読み込み(全件モード)
-        if not search_mode:
-            try:
-                calc_total_pages(repo.count_filtered_logs())
-            except sqlite3.Error:
-                logger.exception("ログ件数の取得に失敗しました")
-                show_error_dialog(page, "ログの取得に失敗しました。しばらくしてから再度お試しください。")
-        load_table(current_page)
+        load_table()
 
         # ===================================================
         # 実際にページに
         # ===================================================
 
-        return ft.View(
-            "/accesslogs",
-            controls=[
-                search_card,
-                ft.Container(height=16),
-                table_card,
-                ft.Container(height=10),
-                back_button(page),
-                ft.Container(height=40),  # 影が見切れないための余白
-            ],
-            bgcolor=Theme.BG,
-            padding=ft.Padding(left=40, top=24, right=40, bottom=40),
-            scroll=ft.ScrollMode.AUTO,
-        )
+        return app_view("/accesslogs", page, [
+            search_card,
+            ft.Container(height=16),
+            table_card,
+        ])
 
     except Exception:
         logger.exception("ログ閲覧画面の表示中にエラーが発生しました")

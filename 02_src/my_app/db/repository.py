@@ -11,11 +11,9 @@ import logging  # ログ用
 import sqlite3  # 本来知らなくて良いが、ログのExceptionの為導入
 from .db_manager import get_connection  # データベース接続用
 from my_app.models.ENUMS import EventType, CardType  # Enum
-from my_app.models.entity.access_log import AccessLog  # データクラス
-from my_app.models.entity.face import Face  # データクラス
+from my_app.models.entity.access_log import AccessLog, AccessLogWithCard  # データクラス
 from my_app.models.entity.face_with_user import FaceWithUser  # データクラス
 from my_app.models.entity.user import User  # データクラス
-from my_app.models.entity.card import Card
 from my_app.models.entity.card_with_user import CardWithUser
 from datetime import datetime, timedelta  # 入退室ログの時間用に
 
@@ -130,6 +128,52 @@ def get_all_users():
     except sqlite3.Error:
         logger.exception("ユーザー全件取得エラー")
         raise
+
+_USER_COLUMNS = "id, user_name, user_kana"
+
+def find_users_with_total(search_text, asc: bool, limit, offset):
+    """
+    検索したユーザー件数(条件がNoneなら全検索)、件数を返す関数
+
+    args:
+        search_text: 検索用キーワード
+        limit: 取得件数
+        offset: ページ分けの為の区分
+        asc: 昇順 -> true 降順 -> false
+    """
+    order = "ASC" if asc else "DESC"
+    where = ""
+    params =[]
+    if search_text is not None:
+        where = " AND (user_name LIKE ? OR user_kana LIKE ?)"
+        like = f"%{search_text}%"
+        params += [like, like]
+
+    sql = f"""
+        SELECT COUNT(*) OVER () AS total, {_USER_COLUMNS}
+        FROM user
+        WHERE 1=1{where}
+        ORDER BY id {order}
+        LIMIT ? OFFSET ?
+    """
+
+    params += [limit, offset]
+
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute(sql, params)
+            rows = c.fetchall()
+
+            total = rows[0][0] if rows else 0
+            return [
+                User(id=row[1], user_name=row[2], user_kana=row[3])
+                for row in rows
+            ], total
+    except sqlite3.Error:
+        logger.exception("ユーザー検索エラー: search_text=%s", search_text)
+        raise
+
 
 
 # ===================================================
@@ -308,32 +352,7 @@ def count_cards_by_user_id(user_id: int):
         logger.exception("カード件数取得エラー: user_id=%s", user_id)
         raise
 
-def find_user_name_and_user_id_by_user_kana(user_kana, asc: bool, offset):
-    """
-    カナ氏名からユーザーIDと名前を検索する関数
 
-    Args:
-        user_name (str): 名前
-        user_id (int): ユーザーID
-        asc (bool): 昇順 -> true, 降順 -> false
-        offset (int): GUIで表示するためのページ区分
-
-    Returns:
-        list: ユーザーID,名前（存在する場合）またはNone（存在しない場合）
-    """
-    order = "ASC" if asc else "DESC"
-    try:
-        with get_connection() as conn:
-            c = conn.cursor()
-            c.execute(
-                f"SELECT * FROM user WHERE user_kana LIKE ? ORDER BY id {order} LIMIT 100 OFFSET ?",
-                (f"%{user_kana}%", offset)
-            )
-            rows = c.fetchall() #全件検索のためfetchoneではなくfetchallに
-            return rows
-    except sqlite3.Error():
-        logger.exception("IDと名前の取得エラー: user_kana = %s", user_kana)
-        raise
 
 
 
@@ -359,6 +378,7 @@ def find_user_id_by_card_id(card_id):
     except sqlite3.Error:
         logger.exception("カードIDからユーザーID検索でエラー: card_id=%s", card_id)
         raise
+
 
 
 # ===================================================
@@ -457,66 +477,90 @@ def update_access_log(log: AccessLog):
         raise
 
 
-def find_log(method, event_type, start_datetime, end_datetime, limit, offset, asc: bool = True):
+"""
+動的検索の為のパラメータ設定変数、関数
+今回cardと表結合する為テーブルを明記
+"""
+
+
+# access_logカラム一覧
+_LOG_COLUMNS = (
+    "access_logs.id, access_logs.timestamp, access_logs.method, "
+    "access_logs.event_type, access_logs.user_id, access_logs.user_name, "
+    "access_logs.card_id, access_logs.face_id, card.card_type"
+)
+
+# 条件名 → SQL部品 の対応表
+_LOG_FILTERS = {
+    "method": "access_logs.method = ?",
+    "event_type": "access_logs.event_type = ?",
+    "user_id": "access_logs.user_id = ?",
+    "start_dt": "access_logs.timestamp >= ?",
+    "end_dt": "access_logs.timestamp <= ?",
+}
+
+def _build_log_filter(**conditions):
+    """Noneでない条件をWHEREに詰めるビルダー"""
+    clauses = []
+    params = []
+    for name, value in conditions.items():
+        if value is not None:
+            clauses.append(_LOG_FILTERS[name])
+            params.append(value)
+    return ("".join(f" AND {c}" for c in clauses), params)
+
+
+def find_access_log(method, event_type, start_dt, end_dt, limit, offset,
+                    user_id, asc: bool = True):
     """
-    入退室ログを条件検索する関数
-    めんどいので表結合してないです
+    入退室ログを条件検索、一覧と総件数を返す関数
+
+    cardと表結合しcard_typeまで持ってくる想定
 
     args:
         method: 認証方法
         event_type: 入退室区分
-        start_datetime: 日時指定(開始)
-        end_datetime: 日時指定(終了)
+        start_dt: 日時指定(開始)
+        end_dt: 日時指定(終了)
         limit: 取得件数
         offset: ページ分けの為の区分
         asc: 昇順 -> true 降順 -> false
 
-    return list[AccessLog]: 入退室ログリスト。書き戻し(update_access_log)に
-        そのまま渡せるよう AccessLog のリストで返す。
+    return tuple[list[AccessLogWithCard], int]: 入退室ログリストと件数。AccessLogWithCard のリストで返す。
     """
     order = "ASC" if asc else "DESC"
+    where, params = _build_log_filter(
+        method=method, event_type=event_type, user_id=user_id,
+        start_dt=start_dt, end_dt=end_dt,
+    )
+    sql = f"""
+        SELECT COUNT(*) OVER () AS total, {_LOG_COLUMNS} FROM access_logs
+        LEFT JOIN card ON access_logs.card_id = card.id
+        WHERE 1=1{where} ORDER BY access_logs.timestamp {order} LIMIT ? OFFSET ?
+    """
+    params += [limit, offset]
     try:
         with get_connection() as conn:
             c = conn.cursor()
 
-            now = datetime.now()
+            c.execute(sql, params)
 
-            method = f"%{method}%" if method else "%"
-
-            start_datetime = start_datetime or (now - timedelta(days=365))
-            end_datetime = end_datetime or now
-
-            start_datetime_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
-            end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
-
-            # methodは部分一致検索、event_typeは完全一致検索
-            # event_typeがNoneの場合は全てのevent_typeが対象
-            c.execute(
-                f"""
-                SELECT id, timestamp, method, event_type, user_id, user_name, card_id, face_id
-                FROM access_logs
-                WHERE method LIKE ?
-                AND (? IS NULL OR event_type = ?)
-                AND timestamp BETWEEN ? AND ?
-                ORDER BY timestamp {order} LIMIT ? OFFSET ?
-                """,
-                (method, event_type, event_type,
-                start_datetime_str, end_datetime_str, limit, offset)
-            )
             rows = c.fetchall()
+            total = rows[0][0] if rows else 0
             return [
-                AccessLog(
-                    id=row[0],
-                    timestamp=row[1],
-                    method=row[2],
-                    event_type=row[3],
-                    user_id=row[4],
-                    user_name=row[5],
-                    card_id=row[6],
-                    face_id=row[7],
+                AccessLogWithCard(
+                    id=row[1],
+                    timestamp=row[2],
+                    method=row[3],
+                    event_type=EventType(row[4]),
+                    user_id=row[5],
+                    user_name=row[6],
+                    card_id=row[7],
+                    face_id=row[8],
+                    card_type=row[9],
                 )
                 for row in rows
-            ]
+            ], total
     except sqlite3.Error:
         logger.exception(
             "アクセスログ検索エラー: method=%s, event_type=%s",
@@ -524,50 +568,6 @@ def find_log(method, event_type, start_datetime, end_datetime, limit, offset, as
         )
         raise
 
-
-def count_filtered_logs(method=None, event_type=None, start_datetime=None, end_datetime=None):
-    """
-    GUIでログ表示する際の件数を検索する関数
-
-    args:
-        method: 認証方法
-        event_type: 入退室区分
-        start_datetime: 日時指定(開始)
-        end_datetime: 日時指定(終了)
-
-    return: 件数
-    """
-    try:
-        with get_connection() as conn:
-            c = conn.cursor()
-
-            now = datetime.now()
-            method = f"%{method}%" if method else "%"
-            start_datetime = start_datetime or (now - timedelta(days=365))
-            end_datetime = end_datetime or now
-
-            start_datetime_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
-            end_datetime_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
-
-            query = """
-                SELECT COUNT(*)
-                FROM access_logs
-                WHERE method LIKE ?
-                AND (? IS NULL OR event_type = ?)
-                AND timestamp BETWEEN ? AND ?
-            """
-
-            c.execute(query, (
-                method, event_type, event_type,
-                start_datetime_str, end_datetime_str
-            ))
-            return c.fetchone()[0]
-    except sqlite3.Error:
-        logger.exception(
-            "アクセスログ件数取得エラー: method=%s, event_type=%s",
-            method, event_type
-        )
-        raise
 
 
 # ===================================================

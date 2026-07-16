@@ -126,7 +126,8 @@ def receive_card(card_number: str, reader_serial: int):
 
             user_id = repo.find_user_id_by_card_id(card_id)
 
-            request_unlock(user_id)
+            if not request_unlock(user_id):
+                return
 
             event_type = resolve_event_type(reader_serial)
 
@@ -144,13 +145,20 @@ def receive_card(card_number: str, reader_serial: int):
             logger.info(f"カード認証成功: {card_id} (リーダーID: {reader_serial})")
 
 def request_unlock(user_id: int) -> bool:
-    success = False
     # 接続方式で開錠   開錠成功＝successとして開錠された時のみunlockを要求
     if connect_config == "wifi":
-        return unlock(user_id), logger.info("wifiでの解錠完了")
+        success = unlock(user_id)
     elif connect_config == "bluetooth":
-        return unlock_bt(user_id), logger.info("bluetoothでの解錠完了")
-    return False
+        success = unlock_bt(user_id)
+    else:
+        logger.error(f"不明な接続方式です: {connect_config}")
+        return False
+
+    if success:
+        logger.info(f"{connect_config}での解錠完了")
+    else:
+        logger.error(f"{connect_config}での解錠失敗")
+    return success
 
 def request_lock(user_id: int):
     # wifiの時SESAME APIであける
@@ -170,7 +178,7 @@ def unlock(user_id):
 
 def lock(user_id):
     # Wi-Fiで施錠する
-    lock_sesame(user_id)
+    return lock_sesame(user_id)
 
 def unlock_bt(user_id):
     """

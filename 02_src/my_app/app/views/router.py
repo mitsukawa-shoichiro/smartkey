@@ -4,7 +4,7 @@ import my_app.app.views.index as index
 import my_app.app.views.card as card
 import my_app.app.views.accesslogs as accesslogs
 import my_app.app.views.register as register
-
+import my_app.app.views.user as user
 
 import my_app.app.views.face_register as face_register
 import my_app.app.views.face as face
@@ -56,8 +56,8 @@ def route(page: ft.Page):
             page.views.append(face.faceView(page))
 
 
-        elif e.route == "/camera_register":
-            page.views.append(camera_register.camera_register_view(page))
+        elif e.route == "/user":
+            page.views.append(user.user_view(page))
 
 
 

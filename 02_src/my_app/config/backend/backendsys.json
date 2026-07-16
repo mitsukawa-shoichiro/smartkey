@@ -6,7 +6,11 @@
   },
   "sesame_mail": {
     "TITLE": "SESAME接続エラー",
-    "TEXT": "システムからSESAMEの接続が確認できなくなりました。SESMEやwifiモジュールを確認してください。"
+    "TEXT": "システムからSESAMEの接続が確認できなくなりました。SESAMEやwifiモジュールを確認してください。"
+  },
+  "open_sensor_mail":{
+    "TITLE": "OPEN SENSOR接続エラー",
+    "TEXT": "システムからOPEN SENSORの接続が確認できなくなりました。OPEN SENSORやモジュールを確認してください。"
   },
   "cardreader_mail": {
     "TITLE": "カードリーダー接続エラー",

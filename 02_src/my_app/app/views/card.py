@@ -14,13 +14,39 @@ from my_app.models.ENUMS import CardType
 from my_app.app.views.common import (
     show_error_dialog, build_user_autocomplete,
     Theme, card, section_title, card_type_badge,
-    centered_cell, back_button, empty_state, pager,
+    centered_cell, app_view, empty_state, pager,
     secondary_button, danger_button,
     show_confirm_dialog, show_info_dialog,
 )
 
 logger = logging.getLogger(__name__)
 
+# 列幅定義、ヘッダーと行はここを参照する
+_W = {
+    "id": 100,
+    "type": 140,
+    "date": 140,
+    "user": 140,
+    "delete": 140,
+}
+
+def _build_card_row(card, checkbox) -> ft.DataRow:
+    """
+    一件のカード情報からテーブル一行を組み立てるビルダー
+    Args:
+        card (_type_): カード情報(データクラス)
+        checkbox (_type_): チェックボックス
+
+    Returns:
+        ft.DataRow: _description_
+    """
+    return ft.DataRow(cells=[
+        ft.DataCell(centered_cell(ft.Text(f"{card.id:05d}", color=Theme.TEXT_MUTED), _W["id"])),
+        ft.DataCell(centered_cell(card_type_badge(card.card_type.value), _W["type"])),
+        ft.DataCell(centered_cell(ft.Text(str(card.register_date), color=Theme.TEXT_MUTED), _W["date"])),
+        ft.DataCell(centered_cell(ft.Text(card.user_name or "(未設定)"), _W["user"])),
+        ft.DataCell(centered_cell(checkbox, _W["delete"])),
+    ])
 
 def cardView(page: ft.Page):
     # ===================================================
@@ -110,31 +136,27 @@ def cardView(page: ft.Page):
     table = ft.DataTable(
         columns=[
             ft.DataColumn( # セル中央揃えもcommon.centered_cellに外注
-                centered_cell(ft.Text("ID", weight=ft.FontWeight.BOLD), 100),
+                centered_cell(ft.Text("ID", weight=ft.FontWeight.BOLD), _W["id"]),
                 on_sort=lambda e: page.run_task(sort_table, e),
             ),
             ft.DataColumn(
                 centered_cell(
-                    ft.Text("カードの種類", weight=ft.FontWeight.BOLD),
-                    140
+                    ft.Text("カードの種類", weight=ft.FontWeight.BOLD), _W["type"]
                 )
             ),
             ft.DataColumn(
                 centered_cell(
-                    ft.Text("登録日", weight=ft.FontWeight.BOLD),
-                    140
+                    ft.Text("登録日", weight=ft.FontWeight.BOLD), _W["date"]
                 )
             ),
             ft.DataColumn(
                 centered_cell(
-                    ft.Text("ユーザー名", weight=ft.FontWeight.BOLD),
-                    140
+                    ft.Text("ユーザー名", weight=ft.FontWeight.BOLD), _W["user"]
                 )
             ),
             ft.DataColumn(
                 centered_cell(
-                    danger_button("行を削除", lambda e: open_confirm_dialog(e), ft.Icons.DELETE_OUTLINE),
-                    140
+                    danger_button("行を削除", lambda e: open_confirm_dialog(e), ft.Icons.DELETE_OUTLINE), _W["delete"]
                 )
             ),
         ],
@@ -242,8 +264,6 @@ def cardView(page: ft.Page):
             show_error_dialog(page, "カード情報の取得に失敗しました。しばらくしてから再度お試しください。")
             return
 
-
-
         #諸パラメータ更新
         all_page = int(((total - 1) / 100) + 1)
 
@@ -259,15 +279,7 @@ def cardView(page: ft.Page):
             column.controls.append(ft.Radio(value=str(card.id)))
             checkbox_refs[card.id] = cb
 
-            table.rows.append(
-                ft.DataRow(cells=[ # セル中央揃え、セル内色塗りバッジを外注
-                    ft.DataCell(centered_cell(ft.Text(f"{card.id:05d}", color=Theme.TEXT_MUTED), 100)),
-                    ft.DataCell(centered_cell(card_type_badge(card.card_type.value), 140)),
-                    ft.DataCell(centered_cell(ft.Text(str(card.register_date), color=Theme.TEXT_MUTED), 140)),
-                    ft.DataCell(centered_cell(ft.Text(card.user_name or "(未設定)"), 140)),
-                    ft.DataCell(centered_cell(cb, 140)),
-                ])
-            )
+            table.rows.append(_build_card_row(card, cb))
 
         page_label.value = f"{offset + 1} / {all_page} ページ"
         prev_btn.disabled = offset == 0
@@ -364,17 +376,8 @@ def cardView(page: ft.Page):
     # 実際にページに
     # ===================================================
     # ここまでdef cardViewの関数
-    return ft.View(
-        "/card",
-        controls=[# 上から順に
-            search_card,# 検索欄
-            ft.Container(height=16),# 余白
-            table_card,# テーブル
-            ft.Container(height=10),# 余白
-            back_button(page),
-            ft.Container(height=40), # 余白(ここゼロにすると外側の余白に内側が侵食されて見切れちゃうので注意)
-        ],
-        bgcolor=Theme.BG,
-        padding=ft.Padding(left=40, top=24, right=40, bottom=40),# 外側の余白
-        scroll=ft.ScrollMode.AUTO,
-    )
+    return app_view("/card", page, [
+        search_card,
+        ft.Container(height=16),
+        table_card,
+    ])

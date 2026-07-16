@@ -50,15 +50,18 @@ def send_sesame_command(cmd, user_id):
         }
 
         res = requests.post(url, json=body, headers=headers, timeout=10)
-        print(res.status_code, res.text)
+        res.raise_for_status()
+        return True
+        #print(res.status_code, res.text)
 
     except Exception as e:
-        logger.error("エラー:" + str(e))
+        logger.exception("SESAMEコマンド送信失敗: cmd=%s, user_id=%s", cmd, user_id)
+        return False
 
 def open_sesame(user_id):
     # 83 であける
-    send_sesame_command(83, user_id)
+    return send_sesame_command(83, user_id)
 
 def lock_sesame(user_id):
     # 82 で閉める
-    send_sesame_command(82, user_id)
+    return send_sesame_command(82, user_id)
