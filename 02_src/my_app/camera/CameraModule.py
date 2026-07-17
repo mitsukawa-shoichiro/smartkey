@@ -132,9 +132,9 @@ class CameraWorker:
 
     cap_dict: dict[int, cv2.VideoCapture] = {}
 
-    instance:"CameraWorker"=None
+    instance:"CameraWorker" = None
 
-    systemstop:bool=False
+    systemstop:bool = False
 
     def __new__(cls, *args, **kwargs):
         if cls.instance is None:
@@ -149,10 +149,7 @@ class CameraWorker:
         CameraWorker.instance = self
         # self.blink_detector = BlinkDetector()
 
-        self.face_authenticator = FaceAuthenticator(
-            face_dir = DB_DIR,
-            config = face_auth_config,
-        )
+        self.face_authenticator = FaceAuthenticator(face_dir = DB_DIR, config = face_auth_config)
 
         self.latest_rgb_frame = None
         self.latest_ir_frame = None
@@ -170,15 +167,6 @@ class CameraWorker:
         if self.__SOCKET_THREAD is None:
             self.__SOCKET_THREAD = threading.Thread(target=self.socket_receiver, daemon=True)
             self.__SOCKET_THREAD.start()
-
-        # cap_indoor=cv2.VideoCapture(indoor_index, cv2.CAP_DSHOW)
-        # self.cap_dict[indoor_index]=(cap_indoor)
-
-        # print("入口を追加")
-        # if outdoor_index!=indoor_index:
-        #     print("出口を追加")
-        #     cap_outdoor=cv2.VideoCapture(outdoor_index, cv2.CAP_DSHOW)
-        #     self.cap_dict[outdoor_index]=(cap_outdoor)
 
         self._initialized = True
 
@@ -295,10 +283,7 @@ class CameraWorker:
                 if frame_gap_ms > float(
                     face_auth_config["max_frame_gap_ms"]
                 ):
-                    logger.debug(
-                        "RGB・IRフレーム差が大きいため破棄: %.1fms",
-                        frame_gap_ms,
-                    )
+                    logger.debug("RGB・IRフレーム差が大きいため破棄 %.1fms", frame_gap_ms)
                     time.sleep(0.01)
                     continue
 
@@ -354,10 +339,7 @@ class CameraWorker:
             for camera_key, cap in self.cap_dict.items():
                 if cap is not None:
                     cap.release()
-                    print(
-                        f"[INFO] カメラ {camera_key} "
-                        "のリソースを解ほうう！！！"
-                    )
+                    print(f"[INFO] カメラ {camera_key} のリソースを解ほうう！！！")
 
         self.cap_dict = {}
 
@@ -379,14 +361,8 @@ class CameraWorker:
 
         if not rgb_cap.isOpened():
             rgb_cap.release()
-            self.cap_dict = {
-                RGB_CAMERA_INDEX: None,
-                IR_CAMERA_KEY: None,
-            }
-            logger.error(
-                "RGBカメラを開けません: index=%s",
-                RGB_CAMERA_INDEX,
-            )
+            self.cap_dict = {RGB_CAMERA_INDEX: None, IR_CAMERA_KEY: None}
+            logger.error("RGBカメラひらけん index=%s", RGB_CAMERA_INDEX)
             return False
 
         rgb_cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
@@ -396,10 +372,7 @@ class CameraWorker:
             device_id_contains=IR_DEVICE_ID_CONTAINS,
             startup_timeout=IR_STARTUP_TIMEOUT_SEC,
             max_age_ms=float(
-                face_auth_config.get(
-                    "max_frame_gap_ms",
-                    150,
-                )
+                face_auth_config.get("max_frame_gap_ms", 150)
             ),
         )
 
@@ -414,9 +387,7 @@ class CameraWorker:
             }
 
             logger.error(
-                "IRカメラを開けません: %s",
-                error,
-            )
+                "IRカメラをひらけん %s", error)
             return False
 
         self.cap_dict = {
@@ -424,16 +395,9 @@ class CameraWorker:
             IR_CAMERA_KEY: ir_cap,
         }
 
-        print(
-            f"[INFO] RGBカメラ {RGB_CAMERA_INDEX} "
-            "を開きました。"
-        )
-        print(
-            "[INFO] IRカメラをMedia Foundationで開きました。"
-        )
-        print(
-            f"[INFO] IRグループ: {ir_cap.group_name}"
-        )
+        print(f"[INFO] RGBカメラ {RGB_CAMERA_INDEX} ぱかっ")
+        print("[INFO] IRカメラをMedia Foundationでひらく")
+        print(f"[INFO] IRグループ {ir_cap.group_name}")
 
         return True
 

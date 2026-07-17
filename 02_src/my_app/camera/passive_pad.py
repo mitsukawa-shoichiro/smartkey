@@ -95,7 +95,7 @@ class PassivePad:
                 raise ValueError(f"PAD出力サイズがおかしい {model['path'].name}, {model_prediction.shape}")
 
             if not np.isfinite(model_prediction).all():
-                raise ValueError(f"PAD出力に異常値: {model['path'].name}")
+                raise ValueError(f"PAD出力に異常値 {model['path'].name}")
 
             prediction += model_prediction
 
