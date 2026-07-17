@@ -30,6 +30,11 @@ heart_beat_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 REGISTER_NOTIFY_HOST = '127.0.0.1'
 REGISTER_NOTIFY_PORT = 10001
 
+#localhost指定
+DAEMON_HOST = '127.0.0.1'
+#受信ポート番号
+DAEMON_PORT = 10000
+
 state = "authenticating"
 
 REGISTERING_TIMEOUT_S = 45
@@ -57,6 +62,9 @@ REGISTER_READER_SERIAL = register_device["serial"]
 # 登録モードでIDmを受け付けるのは「出口」リーダーのみ(GUI案内文と一致させる)。
 # get_readers()が返す reader_serial は config["devices"]["出口"]["serial"] と同じ値になる。
 
+stop_event = threading.Event()
+
+_threads = []
 
 # region logs
 # logs ディレクトリのパスを sys.path に追加
@@ -81,9 +89,12 @@ def sender():
     キューで受け取った値を実際に認証する関数に渡す関数
     非同期送信スレッド、ポーリングをブロックしない
     """
-    while True:
+    while not stop_event.is_set():
         #ここでキューから受け取り
-        idm, reader_serial = event_q.get()
+        try:
+            idm, reader_serial = event_q.get(timeout=1)
+        except queue.Empty:
+            continue
         try:
             #ここで認証
             card_sys.receive_card(idm, reader_serial)
@@ -101,21 +112,21 @@ def get_reader():
     カードリーダーを確認してJSONファイルで設定した数より少ない場合に停止状態にする関数です。
     reader_loopの最初で呼ばれています。
     """
-    reader_list = get_readers()  # [(reader, serial), ...]
-    state = True
-    logger.info(f"カードリーダーの数: {len(reader_list)}")
-    while True:
+    logged = False
+    while not stop_event.is_set():
+        reader_list = get_readers()  # [(reader, serial), ...]
         if len(reader_list) >= COUNT_READER:
             logger.info("カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。")
             return reader_list
 
-        if COUNT_READER > len(reader_list) and state:
+        if  not logged:
             logger.error(
                 f"カードリーダーの数が不足しているためカードの読み込みがスタートしていません: {len(reader_list)} / {COUNT_READER}")
-            state = False
+            logged = True
         msg = "DEAD"
         send_message(msg)
-        time.sleep(1)
+        stop_event.wait(1)
+    return []
 
 
 def receiver():
@@ -124,22 +135,26 @@ def receiver():
 
     """
     try:
-        #localhost指定
-        HEARTBEAT_HOST = '127.0.0.1'
-        #受信ポート番号
-        CardCheck_PORT = 10000
         sock_check = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock_check.bind((HEARTBEAT_HOST, CardCheck_PORT))
-        while (1):
-            #ここで受け取り
-            data, addr = sock_check.recvfrom(100)
+        sock_check.bind((DAEMON_HOST, DAEMON_PORT))
+        sock_check.settimeout(1)
+        while not stop_event.is_set():
+            try:
+                #ここで受け取り
+                data, addr = sock_check.recvfrom(100)
+            except socket.timeout:
+                continue
             message = data.decode('utf-8')
+            if not message:
+                continue
             logger.info(f"状態:{message},{addr}")
             #実際に変更
             changeState(message)
 
     except Exception as e:
         logger.error(f"card_checkがメッセージ受信失敗: {e}")
+    finally:
+        sock_check.close()
 
 
 def send_message(message, host=HEARTBEAT_HOST, port=HEARTBEAT_PORT):
@@ -149,9 +164,7 @@ def send_message(message, host=HEARTBEAT_HOST, port=HEARTBEAT_PORT):
     登録モードの通知(GUI宛て)など、別ポートへ送りたい場合はhost/portを指定する。
     """
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(message.encode('utf-8'), (host, port))
-        sock.close()
+        heart_beat_socket.sendto(message.encode('utf-8'), (host, port))
     except Exception as e:
         logger.error(f"メッセージ送信失敗: {e} (宛先: {host}:{port}, 内容: {message})")
 
@@ -181,7 +194,7 @@ def reader_loop():
         pythoncom.CoInitialize()
         logger.info(f"設定台数: {COUNT_READER}")
         get_reader()
-        while True:
+        while not stop_event.is_set():
             reader_list = get_readers()
             # 全てのカードリーダーをチェック
             for reader, reader_serial in reader_list:
@@ -227,7 +240,7 @@ def reader_loop():
                 logger.error("card_check.pyのポーリングが遅延しています" + str(gap) + "秒")
 
             # GUI側のAUTHENTICATING変更が何かしらで中断されたとき用
-            if state == "registering" and state_changed_at > REGISTERING_TIMEOUT_S:
+            if state == "registering" and time.time() - state_changed_at > REGISTERING_TIMEOUT_S:
                 logger.warning(
                     f"登録状態が{REGISTERING_TIMEOUT_S}を超えたため、"
                     f"authenticatingへ強制変更します。"
@@ -242,12 +255,12 @@ def reader_loop():
                 msg = "ALIVE"
                 send_message(msg)
 
-            time.sleep(1)  # CPU負荷軽減
+            stop_event.wait(1)  # CPU負荷軽減
             # break
     except Exception as e:
         logger.error(f"カードリーダーループでエラーが発生しました: {e}")
         send_message("DEAD")
-        time.sleep(1)  # CPU負荷軽減
+        stop_event.wait(1)  # CPU負荷軽減
 
 
 # REGISTERING = "registering"      # カード登録状態
@@ -255,15 +268,47 @@ def reader_loop():
 
 
 def changeState(newState):
-    global state
+    global state, state_changed_at
     state = newState
+    state_changed_at = time.time()
     logger.info(f"状態が変更されました: {state}")
 
 
 def main():
-    threading.Thread(target=sender, daemon=True).start()
-    threading.Thread(target=receiver, daemon=True).start()
-    threading.Thread(target=reader_loop, daemon=True).start()
+    global _threads
+    stop_event.clear()
+    _threads = [
+    threading.Thread(target=sender, daemon=True, name="sender"),
+    threading.Thread(target=receiver, daemon=True, name="receiver"),
+    threading.Thread(target=reader_loop, daemon=True, name="reader_loop"),
+    ]
+    for t in _threads:
+        t.start()
+
+def stop(timeout: float = 5.0):
+    """
+    停止シグナルを立て、各スレッドの終了を待つ。
+
+    timeout秒待っても終わらないスレッドは諦める(daemon=Trueなので、
+    プロセス終了時に強制的に終わる)。SESAMEへのリクエスト中などは
+    どうしても待たされるため、無限には待たない。
+    """
+    logger.info("reader_daemonの停止を開始します")
+    stop_event.set()
+
+    # receiverはrecvfromでブロックしている可能性があるため、
+    # 自分自身にダミーを送って起こす(settimeoutでも起きるが、こちらの方が速い)
+    try:
+        heart_beat_socket.sendto(b"", (DAEMON_HOST, DAEMON_PORT))
+    except OSError:
+        pass
+
+    for t in _threads:
+        t.join(timeout=timeout)
+        if t.is_alive():
+            logger.warning("%sが%s秒以内に終了しませんでした", t.name, timeout)
+
+    logger.info("reader_daemonを停止しました")
 
 
 if __name__ == "__main__":

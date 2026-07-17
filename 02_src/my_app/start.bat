@@ -2,6 +2,6 @@
 
 pushd "%~dp0"
 
-py service/windowsservice.py start
+py service\windowsservice.py start
 
 pause

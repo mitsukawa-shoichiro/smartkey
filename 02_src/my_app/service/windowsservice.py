@@ -16,6 +16,12 @@ import datetime
 BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if BASE_PATH not in sys.path:
     sys.path.insert(0, BASE_PATH)
+
+# pywin32のサービスは pythonservice.exe というホストで動くため、
+# .venv の site-packages が sys.path に入らない(venvの有効化を知らない)。
+# my_app.* は上のBASE_PATHで辿れるが、cv2/flet等の外部パッケージは
+# ここで明示的にパスを通さないとimportできない。
+
 import my_app.logs.log_config_service
 logger = logging.getLogger(__name__)  # logに書き込む用
 # endregion
@@ -64,7 +70,7 @@ def run_back():
     back_system.main()
 
 def run_card():
-    logger.info("CardCheck thread started")
+    logger.info("reader_daemon thread started")
     reader_daemon.main()
 
 from my_app.camera.CameraModule import CameraWorker
@@ -115,8 +121,7 @@ class SmartKeyService(win32serviceutil.ServiceFramework):
 
         # ここに来たら停止シグナル受信
         servicemanager.LogInfoMsg("Stopping worker threads…")
-        # （back_system / card_check 側で while ループを回している場合は、
-        #   threading.Event などを使って終了フラグを渡す実装にする）
+        reader_daemon.stop()
 
 
         servicemanager.LogInfoMsg("SmartKeyService stopped")
