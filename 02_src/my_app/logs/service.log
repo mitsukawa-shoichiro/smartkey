@@ -88,3 +88,8 @@ AttributeError: 'NoneType' object has no attribute 'is_alive'
 2026-07-17 11:29:50 [ERROR] my_app.service.backsys.opensensor_back_system:108 - セサミと接続できません
 2026-07-17 11:29:51 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
 2026-07-17 11:29:51 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
+2026-07-17 13:01:15 [INFO] my_app.service.backsys.opensensor_back_system:75 - open_sensor_id: 11200509-0108-0802-3900-8700FFFFFFFF
+2026-07-17 13:01:17 [INFO] my_app.service.backsys.opensensor_back_system:76 - x_api_key: 5grAqwI60y0c6IXi22xIoa2DLOHdqvu5dUAnti2J
+2026-07-17 13:01:18 [INFO] my_app.service.backsys.opensensor_back_system:80 - Response: {"isRechargeBattery":0,"batteryPercentage":100,"batteryVoltage":6.306,"wm2State":false}
+2026-07-17 13:01:18 [INFO] my_app.service.backsys.opensensor_back_system:90 - バッテリー残量: 100
+2026-07-17 13:01:18 [ERROR] my_app.service.backsys.opensensor_back_system:108 - セサミと接続できません
