@@ -27,12 +27,17 @@ logger = logging.getLogger(__name__)
 sys.path.append(os.path.dirname(__file__))
 
 from backsys import back_system
+from backsys import opensensor_back_system
 from daemon import reader_daemon
 
 
 def run_back():
     logger.info("back_system thread started")
     back_system.main()
+
+def sensor_back():
+    logger.info("open_sensor_back_system thread started")
+    opensensor_back_system.main()
 
 def run_card():
     logger.info("reader_daemon thread started")
@@ -49,6 +54,7 @@ def main():
         logger.info("Database file exists.")
 
     run_back()
+    sensor_back()
     run_card()
 
 if __name__ == "__main__":
