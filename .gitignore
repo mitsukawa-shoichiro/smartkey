@@ -1,11 +1,12 @@
-# .gitignore
+.gitignore
 __pycache__/
 *.pyc
 *.log
 .venv/
 *.dot
-settings.json
+*settings.json
 .gitignore
 *.png
 *.db
 !storage/faces/.gitkeep
+usb_settings.json
