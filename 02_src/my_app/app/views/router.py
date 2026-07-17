@@ -40,17 +40,14 @@ def route(page: ft.Page):
 
     def _start_registering(page: ft.Page):
         """
-        カード登録の待機画面を出し、IDm受信のポーリングを別スレッドで開始する。
-        スレッドの実体は thread_state に持たせて、他の場所からも参照できるようにする。
+        カード登録の待機画面を出し、IDm受信のポーリングを開始する。
+        delayed_transitionはFletのイベントループ上で回す(page.run_task)。
+        生スレッド+asyncio.runで回すと、その中からのpage.go/page.updateが
+        UIに届かず画面が真っ白になる。
         """
         thread_state.stop_event.clear()
         view = register.registering(page)
-
-        thread_state.thread_handle = threading.Thread(
-            target=lambda: register.run_async_delayed_transition(page),
-            daemon=True,
-        )
-        thread_state.thread_handle.start()
+        page.run_task(register.delayed_transition, page)
         return view
 
     # ルート -> Viewを組み立てる関数 の対応表
