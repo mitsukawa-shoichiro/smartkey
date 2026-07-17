@@ -13,3 +13,13 @@ class Card:
     card_number: str
     register_date: Optional[str]
     user_id: int
+
+
+@dataclass
+class CardWithUser:
+    id: Optional[int]
+    card_type: str
+    card_number: str
+    register_date: Optional[str]
+    user_id: int
+    user_name: str

@@ -17,14 +17,10 @@ PAD_MODEL_DIRECTORY = (
 class PassivePad:
     def __init__(self, threshold=0.80):
         if not PAD_REPOSITORY.is_dir():
-            raise FileNotFoundError(
-                f"PADリポジトリないよ～ {PAD_REPOSITORY}"
-            )
+            raise FileNotFoundError(f"PADリポジトリないよ～ {PAD_REPOSITORY}")
 
         if not PAD_MODEL_DIRECTORY.is_dir():
-            raise FileNotFoundError(
-                f"PADモデルないよ～ {PAD_MODEL_DIRECTORY}"
-            )
+            raise FileNotFoundError(f"PADモデルないよ～ {PAD_MODEL_DIRECTORY}")
 
         repository_path = str(PAD_REPOSITORY)
 
@@ -38,29 +34,20 @@ class PassivePad:
         self.parse_model_name = parse_model_name
         self.threshold = float(threshold)
 
-        self.model_paths = sorted(
-            PAD_MODEL_DIRECTORY.glob("*.onnx")
-        )
+        self.model_paths = sorted(PAD_MODEL_DIRECTORY.glob("*.onnx"))
 
         if not self.model_paths:
-            raise FileNotFoundError(
-                f"PADモデルないよ～ {PAD_MODEL_DIRECTORY}"
-            )
+            raise FileNotFoundError(f"PADモデルないよ～ {PAD_MODEL_DIRECTORY}")
 
-        # ONNXモデルは起動時に一度だけ読み込む
+        # ONNX模型仅在启动时加载一次
         self.models = []
 
         for model_path in self.model_paths:
-            # 元の関数はpthファイル名を想定しているため拡張子だけ戻す
+            # 由于原函数预期使用的是.pth文件名, 因此只将扩展名改回.pth
             pth_name = model_path.with_suffix(".pth").name
-            input_height, input_width, _, scale = (
-                self.parse_model_name(pth_name)
-            )
+            input_height, input_width, _, scale = (self.parse_model_name(pth_name))
 
-            session = ort.InferenceSession(
-                str(model_path),
-                providers=["CPUExecutionProvider"],
-            )
+            session = ort.InferenceSession(str(model_path), providers=["CPUExecutionProvider"])
 
             input_info = session.get_inputs()[0]
             output_info = session.get_outputs()[0]
@@ -79,18 +66,13 @@ class PassivePad:
         if bgr_frame is None:
             raise ValueError("RGBふれーむなしなし")
 
-        x1, y1, x2, y2 = [
-            int(value) for value in bbox
-        ]
+        x1, y1, x2, y2 = [int(value) for value in bbox]
 
         width = max(1, x2 - x1)
         height = max(1, y2 - y1)
         face_bbox = [x1, y1, width, height]
 
-        prediction = np.zeros(
-            (1, 3),
-            dtype=np.float32,
-        )
+        prediction = np.zeros((1, 3), dtype=np.float32)
 
         for model in self.models:
             crop_parameters = {
@@ -102,48 +84,27 @@ class PassivePad:
                 "crop": model["scale"] is not None,
             }
 
-            face_crop = self.cropper.crop(
-                **crop_parameters
-            )
+            face_crop = self.cropper.crop(**crop_parameters)
 
-            # 元のToTensorと同じくBGRのまま、0～255のfloat32へ変換
-            input_tensor = np.ascontiguousarray(
-                face_crop.transpose(2, 0, 1)[None, ...],
-                dtype=np.float32,
-            )
+            # 与原始ToTensor相同, 保持BGR格式并转换为float32
+            input_tensor = np.ascontiguousarray(face_crop.transpose(2, 0, 1)[None, ...], dtype = np.float32)
 
-            model_prediction = model["session"].run(
-                [model["output_name"]],
-                {
-                    model["input_name"]: input_tensor
-                },
-            )[0]
+            model_prediction = model["session"].run([model["output_name"]],{model["input_name"]: input_tensor},)[0]
 
             if model_prediction.shape != (1, 3):
-                raise ValueError(
-                    f"PAD出力サイズがおかしい: "
-                    f"{model['path'].name} "
-                    f"{model_prediction.shape}"
-                )
+                raise ValueError(f"PAD出力サイズがおかしい {model['path'].name}, {model_prediction.shape}")
 
             if not np.isfinite(model_prediction).all():
-                raise ValueError(
-                    f"PAD出力に異常値: {model['path'].name}"
-                )
+                raise ValueError(f"PAD出力に異常値 {model['path'].name}")
 
             prediction += model_prediction
 
         prediction /= len(self.models)
 
-        predicted_label = int(
-            np.argmax(prediction, axis=1)[0]
-        )
+        predicted_label = int(np.argmax(prediction, axis=1)[0])
         live_score = float(prediction[0][1])
 
-        is_live = (
-            predicted_label == 1
-            and live_score >= self.threshold
-        )
+        is_live = (predicted_label == 1 and live_score >= self.threshold)
 
         return is_live, {
             "label": predicted_label,

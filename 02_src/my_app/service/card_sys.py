@@ -107,6 +107,9 @@ def resolve_event_type(reader_serial: int) -> int:
 def receive_card(card_number: str, reader_serial: int):
     """
     カードIDの認証判断、解錠リクエスト、入退室ログ書き込み処理をする関数です。
+    解錠を失敗した場合はログに残さないようにしています。
+    また、SESAME_APIを叩くときに入退室したユーザーがわかるよう、
+    request_unlockにuser_idを渡しています
 
     args:
         card_number : カードIDM(製造ID)
@@ -145,7 +148,15 @@ def receive_card(card_number: str, reader_serial: int):
             logger.info(f"カード認証成功: {card_id} (リーダーID: {reader_serial})")
 
 def request_unlock(user_id: int) -> bool:
-    # 接続方式で開錠   開錠成功＝successとして開錠された時のみunlockを要求
+    """
+    解錠方式を判別、ユーザーIDと成功判定を橋渡しする関数
+
+    Args:
+        user_id (int): ユーザーID(ログに残す用)
+
+    Returns:
+        bool: 成功 -> True 失敗 -> False
+    """
     if connect_config == "wifi":
         success = unlock(user_id)
     elif connect_config == "bluetooth":
@@ -161,6 +172,12 @@ def request_unlock(user_id: int) -> bool:
     return success
 
 def request_lock(user_id: int):
+    """
+    施錠方式を判別、ユーザーIDを橋渡しする関数
+
+    Args:
+        user_id (int): ユーザーID
+    """
     # wifiの時SESAME APIであける
     try:
         if connect_config == "wifi":
@@ -173,11 +190,11 @@ def request_lock(user_id: int):
         logger.exception(f"Auto lock failed:{e}")
 
 def unlock(user_id):
-    # Wi-Fiで開錠する
+    """wi-fiで解錠する"""
     return open_sesame(user_id)
 
 def lock(user_id):
-    # Wi-Fiで施錠する
+    """Wi-Fiで施錠する"""
     return lock_sesame(user_id)
 
 def unlock_bt(user_id):
