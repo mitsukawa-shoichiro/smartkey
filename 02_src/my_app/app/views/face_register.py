@@ -3,13 +3,18 @@ import flet as ft
 import os
 import threading
 import queue
+import numpy as np
 from datetime import datetime
 import tempfile, cv2, os
-import db.repository as repo
+import my_app.db.repository as repo
 import random
 import asyncio
 
-from my_app.app.utils.front_camera_moduel import CameraWorker_Front, CaptureBuffer
+from my_app.app.utils.front_camera_moduel import CameraWorker_Front, CaptureBuffer, send_message
+
+from my_app.app.views.common import build_user_autocomplete
+from my_app.camera.face_util.insightface_engine import InsightFaceEngine
+from my_app.service import face_service
 
 #region util
 import shutil
@@ -21,6 +26,19 @@ import shutil
 import os
 
 savedir = "./db/FaceLib"
+
+
+import json
+from my_app.camera.passive_pad import PassivePad
+
+FACE_AUTH_CONFIG_PATH = (
+    Path(__file__).resolve().parents[2]
+    / "config"
+    / "face_auth.json"
+)
+
+with FACE_AUTH_CONFIG_PATH.open("r", encoding="utf-8") as file:
+    face_auth_config = json.load(file)
 
 
 def next_index(target_dir: str, user_name: str, ext=".jpg"):
@@ -85,9 +103,7 @@ def SaveFaceData(src_path: str,
 # 現在の最大番号＋１枚の形で画像を管理
 #endregion
 #画像を複数枚保存する場合
-def SaveFaceDatas(src_paths,
-                new_name,
-                target_dir=savedir):
+def SaveFaceDatas(src_paths, new_name, target_dir=savedir):
     """
     複数画像をまとめて保存する
 
@@ -115,10 +131,7 @@ def SaveFaceDatas(src_paths,
         if ext == "":
             ext = ".jpg"
 
-        dst_path = os.path.join(
-            target_dir,
-            f"{new_name}_{index:03d}{ext}"
-        )
+        dst_path = os.path.join(target_dir, f"{new_name}_{index:03d}{ext}")
 
         shutil.copy2(src_path, dst_path)
 
@@ -143,9 +156,13 @@ def face_register_view(page: ft.Page) -> ft.View:
 
     status = ft.Text("カメラ未起動", size=16)
 
-    def open_cam(_):
+    async def open_cam(_):
         CaptureBuffer.files.clear()
         #前回のバッファをクリアする
+
+        send_message("startRegistering")
+        await asyncio.sleep(0.5)
+
         CameraWorker_Front.instance.close_camera = False
         CameraWorker_Front.instance.front_end_system(camera_index_input_area.value)
 
@@ -169,26 +186,54 @@ def face_register_view(page: ft.Page) -> ft.View:
         CameraWorker_Front.instance.close_camera = True
         CaptureBuffer.files.clear()
 
-#撮影後にさらに撮影するかどうかを誘導
-    def capture_one(_):
-        CameraWorker_Front.instance.front_capture_photo()
+# 拍摄后引导用户选择是否继续拍摄
+    async def capture_one(e):
+        maximum_images = int(
+            face_auth_config["registration_max_images"])
 
-        count = len(CaptureBuffer.files)
+        if len(CaptureBuffer.files) >= maximum_images:
+            status.value = (f"撮影できる画像は {maximum_images}枚まで！")
+            page.update()
+            return
 
-        capture_count.value = f"撮影枚数：{count}枚"
-
-        if count > 0:
-            status.value = "撮影しました。さらに撮影するか、『登録へ進む』を押してください。"
-        else:
-            status.value = "撮影に失敗しました。"
-
+        # 为防止连续点击, 在开始拍摄的同时立即禁用按钮
+        e.control.disabled = True
+        status.value = "撮影中..."
         page.update()
-#登録画面に遷移するボタンの追加
+
+        before_count = len(CaptureBuffer.files)
+
+        try:
+            await asyncio.to_thread(CameraWorker_Front.instance.front_capture_photo)
+
+            count = len(CaptureBuffer.files)
+            capture_count.value = f"撮影枚数: {count}枚"
+
+            if count > before_count:
+                status.value = "1秒まって～"
+            else:
+                status.value = "しっぱい；；"
+
+            page.update()
+
+            # 1秒間のクールタイム
+            await asyncio.sleep(1.0)
+
+        finally:
+            e.control.disabled = False
+            status.value = "撮影可能"
+            page.update()
+
+    capture_button = ft.ElevatedButton("撮影", icon = ft.Icons.CAMERA, on_click = capture_one)
+
+
+# 登録画面に遷移するボタンの追加
     def go_register(_):
 
-        if len(CaptureBuffer.files) == 0:
+        minimum_images = int(face_auth_config["registration_min_images"])
 
-            status.value = "写真を1枚以上撮影してください。"
+        if len(CaptureBuffer.files) < minimum_images:
+            status.value = f"写真を{minimum_images}枚以上撮影してください。"
             status.update()
             return
 
@@ -220,7 +265,7 @@ def face_register_view(page: ft.Page) -> ft.View:
                         ft.Row(
                             [
                                 ft.ElevatedButton("カメラを起動", icon=ft.Icons.VIDEOCAM, on_click=open_cam),
-                                ft.ElevatedButton("撮影", icon=ft.Icons.CAMERA, on_click=capture_one),
+                                capture_button,
                                 ft.ElevatedButton("カメラを終了", icon=ft.Icons.VIDEOCAM_OFF, on_click=close_cam),
                             ], ft.MainAxisAlignment.CENTER
                         ),
@@ -334,7 +379,66 @@ def face_register_register(page: ft.Page) -> ft.View:
         color=ft.Colors.BLUE_GREY_600,
     )
 
+    def prepare_face_samples():
+        engine = InsightFaceEngine()
+        pad = PassivePad(threshold=face_auth_config["pad_threshold"])
+
+        minimum_images = int(face_auth_config["registration_min_images"])
+        maximum_images = int(face_auth_config["registration_max_images"])
+
+        if len(image_paths) < minimum_images:
+            raise ValueError(f"登録画像を{minimum_images}枚以上撮影して😡")
+
+        if len(image_paths) > maximum_images:
+            raise ValueError(f"登録画像は{maximum_images}枚以下にして😡")
+
+        samples = []
+        accepted_embeddings = []
+
+        for image_number, path in enumerate(image_paths, start=1):
+            image = cv2.imread(path)
+
+            if image is None:
+                raise ValueError(f"{image_number}枚目を読み込めない😡 {path}")
+
+            faces = engine.extract_many(image)
+
+            if len(faces) != 1:
+                raise ValueError(f"{image_number}枚目には1人だけ写って😡 検出人数={len(faces)}")
+
+            face_info = faces[0]
+            embedding = face_info["embedding"]
+
+            quality_ok, quality = (engine.check_registration_quality(image, face_info, face_auth_config))
+
+            if not quality_ok:
+                raise ValueError(f"{image_number}枚目の品質がたりない😡 {quality['reason']}")
+
+            is_live, pad_information = pad.check(image, face_info["bbox"])
+
+            if not is_live:
+                raise ValueError(f"{image_number}枚目が写真かも❓🤔 PAD={pad_information['live_score']:.4f}")
+
+            for old_embedding in accepted_embeddings:
+                similarity = float(np.dot(embedding, old_embedding))
+
+                if similarity >= float(face_auth_config["registration_duplicate_threshold"]):
+                    raise ValueError(f"{image_number}枚目が以前の画像とかわらぬ😡 顔の向きや表情を少し変えてね😡")
+
+            accepted_embeddings.append(embedding)
+
+            encode_ok, encoded = cv2.imencode(".png", image)
+
+            if not encode_ok:
+                raise ValueError(f"{image_number}枚目をPNGへ変換できない😡")
+
+            samples.append((encoded.tobytes(), embedding))
+
+        return samples
+
     # --- 入力 ---
+    registration_finished = False
+
     user_name = ft.TextField(
         label="ユーザー名",
         autofocus=True,
@@ -343,72 +447,69 @@ def face_register_register(page: ft.Page) -> ft.View:
         max_length=50,
         on_submit=lambda e: user_name_romaji.focus(),
     )
-    # --- 入力 ---
+
     user_name_romaji = ft.TextField(
         label="ユーザー名（ローマ字）",
-        autofocus=True,
         width=320,
         border_radius=8,
         max_length=50,
-        on_submit=lambda e: open_add_confirm_dialog(e),
+        on_submit=lambda e: open_add_confirm_dialog(e)
     )
+
+    def finish_backend_registration(_=None):
+        nonlocal registration_finished
+
+        if registration_finished:
+            return
+
+        send_message("finishRegistering")
+        registration_finished = True
+
+    def remove_captured_files():
+        for path in image_paths:
+            try:
+                if os.path.exists(path):
+                    os.remove(path)
+            except OSError as e:
+                print(f"[WARN] 一時画像を削除できません {path} : {e}")
+
+        CaptureBuffer.files.clear()
+
+    async def finish_register(_):
+        page.close(add_confirm_dialog)
+        await asyncio.sleep(0.1)
+        page.go("/face_register")
+
     # --- 登録処理 ---
     async def execute_register(e):
-        # 二重クリックを防ぐ
         if e.control.disabled:
             return
 
         e.control.disabled = True
         page.update()
 
-        saved_files = []
-
         try:
-            saved_files = SaveFaceDatas(
-                image_paths,
-                user_name_romaji.value,
+            samples = await asyncio.to_thread(
+                prepare_face_samples
             )
 
-            if len(saved_files) != len(image_paths):
-                raise OSError("撮影画像をすべて保存できませんでした")
+            user_id, face_ids = await asyncio.to_thread(
+                face_service.register_new_user_with_faces,
+                user_name.value,
+                user_name_romaji.value,
+                samples,
+            )
 
-            # 現在のrepositoryにはinsert_facedataが存在しないため、
-            # 古いDB関数が存在する構成の場合だけ呼び出す
-            insert_facedata = getattr(repo, "insert_facedata", None)
-
-            if callable(insert_facedata):
-                insert_facedata(
-                    user_name.value,
-                    user_name_romaji.value,
-                )
-
-            for path in image_paths:
-                if os.path.exists(path):
-                    os.remove(path)
-
-            CaptureBuffer.files.clear()
+            remove_captured_files()
+            finish_backend_registration()
 
             print(
                 f"[本人登録] "
+                f"user_id={user_id} "
                 f"{user_name.value} "
-                f"保存枚数={len(saved_files)}"
+                f"保存枚数={len(face_ids)}"
             )
 
-            # 先にダイアログを完全に閉じてから画面遷移する
-            page.close(add_confirm_dialog)
-            await asyncio.sleep(0.1)
-
-            page.go("/face_register")
-            await asyncio.sleep(0.1)
-
-            page.open(
-                ft.SnackBar(
-                    content=ft.Text("本人登録が完了しました。"),
-                    duration=3000,
-                )
-            )
-
-            # ダイアログを閉じ直さず、そのまま完了表示へ変える
             add_confirm_dialog.title = ft.Text("登録完了")
             add_confirm_dialog.content = ft.Text(
                 "本人登録が完了しました。"
@@ -423,12 +524,11 @@ def face_register_register(page: ft.Page) -> ft.View:
             page.update()
 
         except Exception as ex:
-            # 今回の操作で保存した画像だけ戻す
-            for path in saved_files:
-                if os.path.exists(path):
-                    os.remove(path)
+            e.control.disabled = False
 
-            print(f"[ERROR] 本人登録に失敗しました: {ex}")
+            print(
+                f"[ERROR] 本人登録に失敗しました: {ex}"
+            )
 
             add_confirm_dialog.title = ft.Text("登録エラー")
             add_confirm_dialog.content = ft.Text(
@@ -445,156 +545,140 @@ def face_register_register(page: ft.Page) -> ft.View:
             ]
             page.update()
 
-
-
     # --- 確認ダイアログを開く ---
-    def open_add_confirm_dialog(e):
-        # region 入力チェック
-        if not user_name.value:
-            add_confirm_dialog.title = ft.Text("エラー")
-            add_confirm_dialog.content = ft.Text("ユーザー名を入力してください")
-            add_confirm_dialog.actions = [
-                ft.TextButton("OK", on_click=lambda e: page.close(add_confirm_dialog))
-            ]
-            page.open(add_confirm_dialog)
-            return
-
-        # region 入力チェック
-        if not user_name_romaji.value:
-            add_confirm_dialog.title = ft.Text("エラー")
-            add_confirm_dialog.content = ft.Text("ローマ字を入力してください")
-            add_confirm_dialog.actions = [
-                ft.TextButton("OK", on_click=lambda e: page.close(add_confirm_dialog))
-            ]
-            page.open(add_confirm_dialog)
-            return
+    def open_add_confirm_dialog(_):
         import re
-        def is_romaji(s):
-            return bool(re.fullmatch(r"[A-Za-z_]+", s))
 
-        if not is_romaji(user_name_romaji.value):
+        name = (user_name.value or "").strip()
+        romaji = (user_name_romaji.value or "").strip()
+
+        if not name:
+            error_message = "ユーザー名を入力してください"
+
+        elif not romaji:
+            error_message = "ローマ字名を入力してください"
+
+        elif not re.fullmatch(
+            r"[A-Za-z][A-Za-z _'-]*",
+            romaji,
+        ):
+            error_message = (
+                "ローマ字名は半角英字で入力してください"
+            )
+
+        elif len(image_paths) == 0:
+            error_message = "画像はありません"
+
+        else:
+            error_message = None
+
+        if error_message is not None:
             add_confirm_dialog.title = ft.Text("エラー")
             add_confirm_dialog.content = ft.Text(
-                "ローマ字のみで入力してください（A–Z / a–z、_可）"
+                error_message
             )
             add_confirm_dialog.actions = [
-                ft.TextButton("OK", on_click=lambda e: page.close(add_confirm_dialog))
+                ft.TextButton(
+                    "OK",
+                    on_click=lambda e: page.close(
+                        add_confirm_dialog
+                    ),
+                )
             ]
             page.open(add_confirm_dialog)
             return
 
-
-        # 画像がない場合の警告（任意）
-        if len(image_paths) == 0:
-            add_confirm_dialog.title = ft.Text("エラー")
-            add_confirm_dialog.content = ft.Text("画像はありません")
-            add_confirm_dialog.actions = [
-                ft.TextButton("OK", on_click=lambda e: page.close(add_confirm_dialog))
-            ]
-            page.open(add_confirm_dialog)
-            return
-        # endregion
-
-
-        add_confirm_dialog.title = ft.Text("本人登録の確認")
+        add_confirm_dialog.title = ft.Text(
+            "本人登録の確認"
+        )
         add_confirm_dialog.content = ft.Text(
-            f"ユーザー名: {user_name.value}\ローマ字: {user_name_romaji.value}\nで登録しますか？"
+            f"ユーザー名: {name}\n"
+            f"ローマ字名: {romaji}\n"
+            "で登録しますか？"
         )
         add_confirm_dialog.actions = [
-            ft.TextButton("はい", on_click=execute_register),
-            ft.TextButton("いいえ", on_click=lambda e: page.close(add_confirm_dialog)),
+            ft.TextButton(
+                "はい",
+                on_click=execute_register,
+            ),
+            ft.TextButton(
+                "いいえ",
+                on_click=lambda e: page.close(
+                    add_confirm_dialog
+                ),
+            ),
         ]
         page.open(add_confirm_dialog)
 
-        #endregion
-    def cancel_register(e):
-        CaptureBuffer.files.clear()
+    async def cancel_register(_):
+        remove_captured_files()
+        finish_backend_registration()
         page.close(add_confirm_dialog)
+        await asyncio.sleep(0.1)
         page.go("/face_register")
 
     # --- キャンセル ---
-    def open_cancel_confirm_dialog(e):
+    def open_cancel_confirm_dialog(_):
         add_confirm_dialog.title = ft.Text("キャンセル確認")
         add_confirm_dialog.content = ft.Text("登録をキャンセルしますか？（一時画像は削除されます）")
         add_confirm_dialog.actions = [
             ft.TextButton("はい", on_click=cancel_register),
-            ft.TextButton("いいえ", on_click=lambda e: page.close(add_confirm_dialog)),
+            ft.TextButton(
+                "いいえ",
+                on_click=lambda e: page.close(
+                    add_confirm_dialog
+                ),
+            ),
         ]
         page.open(add_confirm_dialog)
 
-
-    title_and_preview_area = ft.Column(
-        controls=[
-            ft.Text("本人登録", size=28, weight=ft.FontWeight.BOLD),
-            # 外部で定義された preview と hint を使用
-            preview_area,          # ← 画像を表示するft.Imageコントロール
-            hint,             # ← 画像に関するヒントテキスト
-            user_name,        # ← ユーザー名入力欄（ft.TextFieldなどを想定）
-            user_name_romaji, # ← ユーザー名（ローマ字）入力欄
-            ft.Container(height=20),
-        ],
-        spacing=16,
-        alignment=ft.MainAxisAlignment.START,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-    )
-
     #region UIElements
-
-
-
-    # 2. ボタンエリアのコンポーネント
-    button_area = ft.Column(
+    main_content = ft.Column(
         controls=[
+            ft.Text(
+                "本人登録",
+                size=28,
+                weight=ft.FontWeight.BOLD,
+            ),
+            preview_area,
+            hint,
+            user_name,
+            user_name_romaji,
             ft.ElevatedButton(
                 "登録",
                 icon=ft.Icons.CHECK,
                 width=200,
-                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
-                on_click=open_add_confirm_dialog, # 外部で定義された関数
+                on_click=open_add_confirm_dialog,
             ),
             ft.ElevatedButton(
                 "キャンセル",
                 icon=ft.Icons.ARROW_BACK,
                 width=200,
                 color=ft.Colors.RED,
-                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
-                on_click=open_cancel_confirm_dialog, # 外部で定義された関数
+                on_click=open_cancel_confirm_dialog,
             ),
         ],
-        spacing=20,
-        alignment=ft.MainAxisAlignment.START,
+        spacing=16,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        scroll=ft.ScrollMode.AUTO,
+        expand=True,
     )
 
-    # 3. メインコンテンツ（中央揃えのコンテナ）
-    main_content = ft.Container(
-        content=ft.Column(
-            controls=[
-                title_and_preview_area,  # 1. タイトル＆プレビュー
-
-                button_area,             # 2. ボタンエリア
-            ],
-            spacing=0, # title_and_preview_area と button_area の間のスペースは既に内部で調整済み
-            alignment=ft.MainAxisAlignment.START,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        ),
-        margin=ft.margin.only(top=80),
-        width=420,
-    )
-
-    # --- 画面 (ft.View) への統合 ---
-    # ft.Viewのcontrolsは、画面全体の中央揃えを実現するためにft.Rowで囲みます
-    return ft.View(
+    view = ft.View(
         "/face_register/input",
         controls=[
-            ft.Row(
-                controls=[
-                    main_content, # 3. メインコンテンツ
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
+            ft.Container(
+                content=main_content,
+                width=440,
                 expand=True,
+                alignment=ft.alignment.top_center,
+                padding=ft.padding.only(top=30, bottom=30),
             )
         ],
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         scroll=ft.ScrollMode.AUTO,
     )
+
+    view.on_dispose = finish_backend_registration
+    return view
     #endregion

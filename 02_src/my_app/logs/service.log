@@ -49,3 +49,13 @@ Traceback (most recent call last):
     open_censor_mail_config = config_list["open_censor_mail"]
                               ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
 KeyError: 'open_censor_mail'
+2026-07-16 16:19:03 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 16:19:04 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 16:19:04 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\opensensor_back_system.py", line 50, in <module>
+    with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\SmartKey\\smartkey\\02_src\\my_app\\config\\backend\\open_sensor_config.json'
