@@ -3,23 +3,13 @@
 
 DBで保存するのは少し困難としたため、画像ファイルで直に保存させていただきます。
 
-のぞき見防止の為、暗号化いたします。
-暗号化関連はface_key_managerに任せます。
-
 """
 
 import os
 import logging
-#from cryptgraphy.fernet import Fernet
-#from my_app.service import face_key_manager
-
-
 
 logger = logging.getLogger(__name__)
 
-# _fernet = Fernet(face_key_manager.load_key())
-
-#
 FACES_DIR = os.path.abspath(
     os.path.join(os.path.dirname(__name__), "..", "..", "storage", "faces")
 )
@@ -62,7 +52,6 @@ def save_face_image(face_id: int, image_bytes: bytes):
     _ensure_faces_dir()
     path = get_face_image_path(face_id)
     try:
-        #encrypted = _fernet.encrypt(image_bytes)
         with open(path, "wb") as f:
             f.write(image_bytes)
         return path

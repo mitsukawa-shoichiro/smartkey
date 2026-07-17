@@ -76,13 +76,8 @@ async def wait_for_new_card(timeout_total_s: int = 30) -> CardWaitResult:
     このループの間、thread_state.stop_event が立てられたら
     STATUS_CANCELLED として即座に抜ける(キャンセルボタン対応)。
 
-    register_listener.wait_for_card_number は threading.Event.wait を使う
-    「頑固なブロッキング」関数なので、asyncio.to_thread で別スレッドに逃がして
-    呼び出す。そのままawait無しで直接呼ぶと、この関数のイベントループ全体が
-    ブロックされ、他の非同期処理(画面描画やキャンセル操作)を止めてしまう。
-
     Returns:
-        CardWaitResult: status と、検知できた場合はidmを含む
+        CardWaitResult(データクラス): status , 検知できた場合はidm
     """
     for _ in range(timeout_total_s):
         if thread_state.stop_event.is_set():

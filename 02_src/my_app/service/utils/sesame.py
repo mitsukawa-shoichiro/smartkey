@@ -24,6 +24,16 @@ secret_key = sesame_config["secret_key"]
 
 
 def send_sesame_command(cmd, user_id):
+    """
+    SESAMEにコマンドを送信します。
+
+    Args:
+        cmd (int): 83 -> 開錠 , 82 -> 施錠
+        user_id (int): ユーザーID
+
+    Returns:
+        bool: 成功 -> True , 失敗 -> False
+    """
     try:
         # SESAMEの履歴用文字列つくる
         history = str(user_id)

@@ -114,7 +114,7 @@ def _validate_search_period(start_str, end_str, first_date, last_date):
         return None, None, "日時のフォーマットが正しくありません。"
 
 
-def accesslogs(page: ft.Page):
+def access_logs(page: ft.Page):
     try:
         page.title = "ログ閲覧画面"
         page.bgcolor = Theme.BG
@@ -156,7 +156,7 @@ def accesslogs(page: ft.Page):
         except sqlite3.Error:
             logger.exception("ユーザー情報取得エラー")
             show_error_dialog(page, "必要情報の取得に失敗しました", go_home=True)
-            return ft.View("/accesslogs", controls=[])
+            return ft.View("/access_logs", controls=[])
 
         def on_user_selected(user_id: int):
             """
@@ -520,7 +520,7 @@ def accesslogs(page: ft.Page):
         # 実際にページに
         # ===================================================
 
-        return app_view("/accesslogs", page, [
+        return app_view("/access_logs", page, [
             search_card,
             ft.Container(height=16),
             table_card,
@@ -530,4 +530,4 @@ def accesslogs(page: ft.Page):
         logger.exception("ログ閲覧画面の表示中にエラーが発生しました")
         show_error_dialog(page, "ログ閲覧画面の表示中にエラーが発生しました", go_home=True)
         # View関数は必ずViewを返す(返さないと画面が描画されず、ダイアログも出ない)
-        return ft.View("/accesslogs", controls=[], bgcolor=Theme.BG)
+        return ft.View("/access_logs", controls=[], bgcolor=Theme.BG)

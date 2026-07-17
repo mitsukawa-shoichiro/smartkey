@@ -97,6 +97,10 @@ def sender():
 
 
 def get_reader():
+    """
+    カードリーダーを確認してJSONファイルで設定した数より少ない場合に停止状態にする関数です。
+    reader_loopの最初で呼ばれています。
+    """
     reader_list = get_readers()  # [(reader, serial), ...]
     state = True
     logger.info(f"カードリーダーの数: {len(reader_list)}")
@@ -116,7 +120,7 @@ def get_reader():
 
 def receiver():
     """
-    GUI側からくる認証/登録切り替えを受け取る関数
+    GUI側(card_register)からくる認証/登録切り替えを受け取る関数
 
     """
     try:
@@ -162,6 +166,17 @@ def notify_registered_card(idm: str):
 
 
 def reader_loop():
+    """
+    バックシステムの本体、この関数がスレッドで回り続けて
+    各関数の呼び出し等の音頭を取っています。
+
+    主要関数一覧
+        get_reader(): カードリーダー状態確認
+        get_readers(): カードリーダー情報読み取り
+        notify_registered_card(idm): 登録用スレッドへIDm(カード番号)を送信
+        eventq.put((idm, reader_serial)): 認証用スレッドへIDm(カード番号)を送信
+        changeState(newState): 登録/認証状態の変更
+    """
     try:
         pythoncom.CoInitialize()
         logger.info(f"設定台数: {COUNT_READER}")
