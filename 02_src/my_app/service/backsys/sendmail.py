@@ -21,6 +21,10 @@ port = mail_config['port']
 
 logger = logging.getLogger(__name__)  # logに書き込む用
 
+# mail.json の絶対パスを指定
+MAIL_CONFIG_PATH = r"C:\SmartKey\smartkey\02_src\my_app\config\backend\mail.json"
+
+
 def send_mail(TITLE, TEXT):
     '''
     メールを送信するメソッド \n
@@ -28,6 +32,15 @@ def send_mail(TITLE, TEXT):
     TITLE (str): メールの件名,
     TEXT (str): メール本文 \n
     '''
+    # mail.json を読み込む
+    with open(MAIL_CONFIG_PATH, "r", encoding="utf-8") as f:
+        mail_config = json.load(f)
+
+    mymail = mail_config["mailadress"]
+    mypass = mail_config["password"]
+    to_mail = mail_config["to_mail"]
+    smtp_server = mail_config["smtp_server"]
+    port = mail_config["port"]
     # メール内容の設定
     msg = MIMEText(TEXT, 'plain', 'utf-8')
     msg['Subject'] = TITLE  # 件名
