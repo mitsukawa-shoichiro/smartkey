@@ -13,6 +13,7 @@ import flet as ft
 import my_app.db.repository as repo
 import my_app.service.face_service as face_service
 import sqlite3
+from my_app.app.utils.pagination import Pagination
 from my_app.app.views.common import (
     show_error_dialog, build_user_autocomplete,
     Theme, card, section_title, empty_state,
@@ -23,13 +24,29 @@ from my_app.app.views.common import (
 
 logger = logging.getLogger(__name__)
 
+def build_face_row(face, check_box) -> ft.DataRow:
+    """
+
+    Args:
+        face (Face): 顔情報が入ったデータクラス
+        check_box (ft.CheckBox): IDと紐づくチェックボックスオブジェクト
+
+    Returns:
+        ft.DataRow: _description_
+    """
+    return ft.DataRow(cells=[
+        ft.DataCell(centered_cell(ft.Text(f"{face.id:05d}", color=Theme.TEXT_MUTED), 100)),
+        ft.DataCell(centered_cell(ft.Text(str(face.register_date), color=Theme.TEXT_MUTED), 140)),
+        ft.DataCell(centered_cell(ft.Text(face.user_name or "(未設定)"), 140)),
+        ft.DataCell(centered_cell(check_box, 140)),
+        ])
+
 
 def faceView(page: ft.Page):
     # ===================================================
     # 状態変数(宣言と初期値バインド)
     # ===================================================
-    offset = 0                     # 現在のページ番号(0から)
-    all_page = 1                   # 全ページ数
+    pg = Pagination(100)           # ページ状態管理クラス
     selected_user_id = None        # Autocompleteで選択中のユーザーID(未選択ならNone=全件表示)
     selected_ids = []              # チェックボックスで選択されたface_idのリスト
     checkbox_refs = {}             # {face_id: Checkboxコントロール} の対応表
@@ -40,20 +57,15 @@ def faceView(page: ft.Page):
     # ===================================================
     # ユーザー検索用プルダウンボックスの候補リスト
     # ===================================================
-    # 画面表示のたびに最新のユーザー一覧を取得
 
-    try:
-        users = repo.get_all_users()
-    except sqlite3.Error :
-        logger.error("ユーザー情報取得エラー")
-        show_error_dialog(page, "必要情報の取得に失敗しました", go_home=True)
-        return ft.View("/user", controls=[])
+    # 画面表示のたびに最新のユーザー一覧を取得
+    users = repo.get_all_users()
 
     def on_user_selected(user_id: int):
         """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
-        nonlocal selected_user_id, offset
+        nonlocal selected_user_id
         selected_user_id = user_id
-        offset = 0
+        pg.reset()
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
@@ -151,13 +163,13 @@ def faceView(page: ft.Page):
     async def refresh(e):
         """リセットボタン: 検索条件・並び順・ページを全部初期状態に戻す"""
         #スコープ外のグローバル変数を扱う
-        nonlocal selected_user_id, offset, reset_btn
+        nonlocal selected_user_id, user_search
         reset_btn.disabled = True
         page.update()
 
         selected_user_id = None
         table.sort_ascending = True
-        offset = 0
+        pg.reset()
 
         # プルダウンはvalueだけリセットしても表示が変わらないので都度作り直し
         user_search = build_user_autocomplete(users, on_user_selected)
@@ -174,9 +186,9 @@ def faceView(page: ft.Page):
     async def sort_table(e):
         """IDカラムのヘッダークリック: 昇順/降順を切り替えて再読込"""
         #スコープ外のグローバル変数を扱う
-        nonlocal offset
+        table.sort_column_index = 0
         table.sort_ascending = not table.sort_ascending
-        offset = 0
+        pg.reset()
         # ここは処理が重いのか何なのかついていたもの、ちかちかするのでコメントアウト
         # scroll_table.visible = False
         # scroll_table.update()
@@ -191,19 +203,15 @@ def faceView(page: ft.Page):
 
     def prev_page(e):
         """前ページへ遷移"""
-        nonlocal offset
-        if offset != 0:
-            offset -= 1
-        load_table()
-        scroll_table.scroll_to(offset=0, duration=0)
+        if pg.prev():
+            load_table()
+            scroll_table.scroll_to(offset=0, duration=0)
 
     def next_page(e):
         """次ページへ遷移"""
-        nonlocal offset
-        if (offset + 1) != all_page:
-            offset += 1
-        load_table()
-        scroll_table.scroll_to(offset=0, duration=0)
+        if pg.next():
+            load_table()
+            scroll_table.scroll_to(offset=0, duration=0)
 
     # ===================================================
     # テーブル読み込み関数
@@ -214,33 +222,18 @@ def faceView(page: ft.Page):
         選択中のuser_id(無ければ全件)に基づいて顔情報を取得し、
         テーブル・チェックボックスを再構築する。
         """
-        #スコープ外のグローバル変数を扱う
-        nonlocal selected_user_id, offset, all_page
-
         try:
-            #絞り込み条件なし
-            if selected_user_id is None:
-                faces = repo.find_all_faces(table.sort_ascending, offset * 100)
-                total = repo.count_all_face()
-            #絞り込み条件あり
-            else:
-                faces = repo.find_faces_by_user_id(
-                    selected_user_id, table.sort_ascending, offset * 100)
-                total = repo.count_faces_by_user_id(selected_user_id)
-
+            faces , total = repo.find_faces_with_total(selected_user_id, table.sort_ascending, pg.per_page, pg.offset)
         except sqlite3.Error:
             logger.exception("顔情報の読み込みに失敗しました")
             show_error_dialog(page, "顔情報の取得に失敗しました。しばらくしてから再度お試しください。")
             return
 
-
-
-        all_page = int(((total - 1) / 100) + 1)
+        pg.update_total(total)
 
         #初期化
         checkbox_refs.clear()
         table.rows.clear()
-
 
         #テーブル表示関数をヒットした件数分回す
         for face in faces:
@@ -259,9 +252,9 @@ def faceView(page: ft.Page):
             )
 
         #その他項目の設定
-        page_label.value = f"{offset + 1} / {all_page} ページ"
-        prev_btn.disabled = offset == 0
-        next_btn.disabled = (offset + 1) == all_page
+        page_label.value = pg.label
+        prev_btn.disabled = pg.is_first
+        next_btn.disabled = pg.is_last
 
         #実際のページに
         page.update()
@@ -306,7 +299,6 @@ def faceView(page: ft.Page):
             show_error_dialog(page, "画像の削除に失敗しました。しばらくしてから再度お試しください")
             load_table()
             return
-
 
         # 削除後読み込み
         load_table()
