@@ -240,7 +240,7 @@ class CameraWorker:
             self._camera_reload_done.set()
 
     def back_end_system(self):
-        print("カメラ起動！")
+        logger.info("カメラ起動！")
         was_registering = None  # 记录上一次的状态（None/True/False）
         capture_failure_count = 0
 
@@ -271,7 +271,7 @@ class CameraWorker:
                         self.latest_rgb_timestamp = None
                         self.latest_ir_timestamp = None
                         self.face_authenticator._reset()
-                        print("[INFO] 登録モードのためカメラを一時解放しました")
+                        logger.info("登録モードのためカメラを一時解放しました")
 
                     was_registering = True
                     print("⏸️ 登録中のため認証処理を一時停止")
@@ -285,8 +285,8 @@ class CameraWorker:
                             continue
 
                         self.face_authenticator.reload_database_embeddings()
-                        
-                        print("[INFO] 登録完了。カメラを再オープンしました")
+
+                        logger.info("登録完了。カメラを再オープンしました")
 
                     was_registering = False
 
@@ -475,7 +475,7 @@ class CameraWorker:
 
     def __Authentication(self):
         """
-        使用RGB和IR进行人脸识别
+        RGBとIRを用いた顔認識
         """
         rgb_frame = self.latest_rgb_frame
         ir_frame = self.latest_ir_frame
@@ -588,7 +588,7 @@ class CameraWorker:
             self.__open_sesame()
             return True
 
-        # 如果所有摄像头图像都未匹配成功, 则重置连续成功计数
+        # どのカメラ画像でも照合に成功しなかった場合、連続成功回数はリセットされます。
         self.current_match_name = None
         self.current_match_count = 0
         return False
@@ -596,7 +596,8 @@ class CameraWorker:
 
 
     def __open_sesame(self):
-        # 解锁后, 预约在指定时间后自动上锁！！！！！！
+        # 解錠後、設定時間が経過すると自動的に再施錠されます！
+        # TODO: request_unlockの引数にゆーざーIDを使用
         request_unlock()
         print("認証成功")
 

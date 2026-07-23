@@ -242,39 +242,70 @@ def delete_card(card_id):
         logger.exception("カード削除エラー: id=%s", card_id)
         raise
 
+# cardカラム一覧(userとJOINするため、id/user_idが曖昧にならないよう修飾する)
+_CARD_COLUMNS = (
+    "card.id, card.card_type, card.card_number, card.register_date, "
+    "card.user_id, user.user_name"
+)
 
-def find_all_cards(asc: bool, offset: int):
+
+def find_cards_with_total(user_id, asc: bool, limit: int, offset: int):
     """
-    カード情報を全件、ページングして取得する関数(ユーザー未選択時のGUI表示用)
+    カードを検索し、(一覧, 総件数) を返す。
+
+    user_id が None なら全件、値があればそのユーザーのカードだけに絞る。
+    userをLEFT JOINして所有者名も一緒に取得する。
+    総件数は COUNT(*) OVER () で、LIMITで絞る前の件数が各行に付いてくるため、
+    件数用のクエリを別に投げる必要がない。
 
     Args:
-        asc (bool): 昇順 -> true, 降順 -> false
-        offset (int): GUIで表示するためのページ区分
+        user_id (int | None): 絞り込むユーザーID。Noneなら全件。
+        asc (bool): 昇順 -> True / 降順 -> False
+        limit (int): 取得件数
+        offset (int): ページ送り用のオフセット
 
     Returns:
-        list[Card]: カード情報のリスト
+        tuple[list[CardWithUser], int]: (カード一覧, 条件に合う総件数)
     """
     order = "ASC" if asc else "DESC"
+
+    where = ""
+    params = []
+    if user_id is not None:
+        where = " AND card.user_id = ?"
+        params.append(user_id)
+
+    sql = f"""
+        SELECT COUNT(*) OVER () AS total, {_CARD_COLUMNS}
+        FROM card
+        LEFT JOIN user ON card.user_id = user.id
+        WHERE 1 = 1{where}
+        ORDER BY card.id {order}
+        LIMIT ? OFFSET ?
+    """
+    params += [limit, offset]
+
     try:
         with get_connection() as conn:
             c = conn.cursor()
-            c.execute(
-                f"""
-                SELECT card.id, card_type, card_number, register_date, user_id, user.user_name
-                FROM card
-                LEFT JOIN user ON card.user_id = user.id
-                ORDER BY card.id {order} LIMIT 100 OFFSET ?
-                """,
-                (offset,)
-            )
+            c.execute(sql, params)
             rows = c.fetchall()
+
+            # COUNT(*) OVER () が row[0] を占めるので、以降のindexが1つずれる
+            total = rows[0][0] if rows else 0
             return [
-                CardWithUser(id=row[0], card_type=CardType(row[1]), card_number=row[2],
-                    register_date=row[3], user_id=row[4], user_name=row[5])
+                CardWithUser(
+                    id=row[1],
+                    card_type=CardType(row[2]),
+                    card_number=row[3],
+                    register_date=row[4],
+                    user_id=row[5],
+                    user_name=row[6],
+                )
                 for row in rows
-            ]
+            ], total
     except sqlite3.Error:
-        logger.exception("カード全件取得エラー")
+        logger.exception("カード検索エラー: user_id=%s", user_id)
         raise
 
 
@@ -840,111 +871,55 @@ def get_today_entry_ranking(limit: int = 10):
 # 顔テーブル
 # ===================================================
 
-def find_all_faces(asc: bool, offset: int):
+
+# 顔ユーザー結合カラム一覧、明示しないとインデックスがわかりずらいので示しておく。
+_FACE_COLUMNS = "face.id, face.register_date, face.user_id, user.user_name"
+
+def find_faces_with_totals(user_id, asc: bool, limit: int, offset: int):
     """
-    顔情報を全件、ページ毎に取得する関数(プルダウン未選択時のGUI表示用)
-
-    Args:
-        asc (bool): 昇順 -> true, 降順 -> false
-        offset (int): GUIで表示するためのページ区分
-
-    Returns:
-        list[Face]: 顔情報のリスト
-    """
-    order = "ASC" if asc else "DESC"
-    try:
-        with get_connection() as conn:
-            c = conn.cursor()
-            c.execute(
-                f"""
-                SELECT face.id, register_date, user_id, user.user_name
-                FROM face
-                LEFT JOIN user ON user_id = user.id
-                ORDER BY face.id {order} LIMIT 100 OFFSET ?
-                """,
-                (offset,)
-            )
-            rows = c.fetchall()
-            return [
-                FaceWithUser(id=row[0], register_date=row[1], user_id=row[2], user_name=row[3])
-                for row in rows
-            ]
-    except sqlite3.Error:
-        logger.exception("顔情報全件取得エラー")
-        raise
-
-
-def count_all_face():
-    """
-    find_all_faces()をGUIで表示する際の全体件数を取得する関数
-
-    Returns:
-        int: 件数
-    """
-    try:
-        with get_connection() as conn:
-            c = conn.cursor()
-            c.execute("SELECT COUNT(*) FROM face")
-            return c.fetchone()[0]
-    except sqlite3.Error:
-        logger.exception("顔情報件数取得エラー")
-        raise
-
-
-def find_faces_by_user_id(user_id: int, asc: bool, offset: int):
-    """
-    指定されたユーザーIDに関連する顔情報を、ページ毎に取得する関数
-    (プルダウンでユーザーが選択された時のGUI表示用)
-
-    Args:
-        user_id (int): 取得する顔情報に関連するユーザーのID
-        asc (bool): 昇順 -> true, 降順 -> false
-        offset (int): GUIで表示するためのページ区分
-
-    Returns:
-        list[Face]: 顔情報のリスト
-    """
-    order = "ASC" if asc else "DESC"
-    try:
-        with get_connection() as conn:
-            c = conn.cursor()
-            c.execute(
-                f"""
-                SELECT face.id, register_date, user_id, user.user_name
-                FROM face
-                LEFT JOIN user ON face.user_id = user.id
-                WHERE user_id = ?
-                ORDER BY face.id {order} LIMIT 100 OFFSET ?
-                """,
-                (user_id, offset)
-            )
-            rows = c.fetchall()
-            return [
-                FaceWithUser(id=row[0], register_date=row[1], user_id=row[2], user_name=row[3])
-                for row in rows
-            ]
-    except sqlite3.Error:
-        logger.exception("顔情報取得エラー: user_id=%s", user_id)
-        raise
-
-
-def count_faces_by_user_id(user_id: int):
-    """
-    find_faces_by_user_id()をGUIで表示する際の件数を取得する関数
-
+    顔 + ユーザー情報のリストと、総件数を返す関数、
+    user_idがNoneの場合は全検索する
     Args:
         user_id (int): ユーザーID
 
     Returns:
-        int: 件数
+        tuple[list[FaceWithUser], int]: 顔 + ユーザー情報のリストと、総件数
     """
+    order = "ASC" if asc else "DESC"
+
+    where = ""
+    params = ""
+    if user_id is not None:
+        where = "AND face.user_id = ?"
+        params.append(user_id)
+    sql = f"""
+        SELECT COUNT(*) OVer () AS total, {_FACE_COLUMNS}
+        FROM face
+        LEFT JOIN user ON face.face_id = user.id
+        WHERE 1 = 1 {where}
+        ORDER BY face.id {order}
+        LIMIT ? OFFSET ?
+    """
+    params += [limit, offset]
+
     try:
         with get_connection() as conn:
             c = conn.cursor()
-            c.execute("SELECT COUNT(*) FROM face WHERE user_id = ?", (user_id,))
-            return c.fetchone()[0]
+            c.execute(sql, params)
+            rows = c.fetchall()
+
+            total = rows[0][0] if rows else 0
+            return [
+                FaceWithUser(
+                    id=row[1],
+                    register_date=row[2],
+                    user_id=row[3],
+                    user_name=row[4],
+                )
+                for row in rows
+            ], total
     except sqlite3.Error:
-        logger.exception("顔情報件数取得エラー: user_id=%s", user_id)
+        logger.exception("顔情報検索エラー: user_id=%s", user_id)
         raise
 
 

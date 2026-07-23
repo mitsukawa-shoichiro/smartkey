@@ -20,9 +20,9 @@ class InsightFaceEngine:
     def detect_faces(self, bgr_frame):
         if bgr_frame is None:
             return []
-        
+
         return self.app.get(bgr_frame)
-    
+
     @staticmethod
     def _normalize_embedding(embedding):
         vector = np.asarray(embedding, dtype = np.float32).reshape(-1)
@@ -31,9 +31,9 @@ class InsightFaceEngine:
 
         if norm <= 0:
             raise ValueError("顔特徴量のノルム0000")
-        
+
         return (vector / norm).astype(np.float32)
-    
+
     def _convert_face(self, face):
         return {
             "embedding": self._normalize_embedding(face.normed_embedding),
@@ -47,22 +47,22 @@ class InsightFaceEngine:
         """
         仅检测到一人时返回人脸信息🐸
         """
-    
+
         faces = self.detect_faces(bgr_frame)
 
         if len(faces) != 1:
             return None, {"reason": f"face_count={len(faces)}"}
-        
+
         face = faces[0]
         return face["embedding"], {
             key: value
             for key, value in face.items()
             if key != "embedding"
         }
-    
+
     def extract_many(self, bgr_frame):
         """
-        返回图像中的所有人脸及其特征向量
+        画像からすべての顔とその特徴ベクトルを返します。
         """
         results = [
             self._convert_face(face)

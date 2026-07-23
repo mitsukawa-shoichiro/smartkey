@@ -51,7 +51,7 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
     open_sensor_config = config_list["device"]
 
-
+print(open_sensor_config)
 open_sensor_id = open_sensor_config["open_sensor_id"]
 x_api_key = open_sensor_config["x_api_key"]
 
@@ -60,6 +60,8 @@ battery_Limit = int(battery_config["battery_limit"])  # バッテリー残量の
 
 logger = logging.getLogger(__name__)  # logに書き込む用
 
+stop_event = threading.Event()
+
 def check_open_sensor_battery():
     '''
     # open_sensorのバッテリー残量を確認し、50%以下ならメールを送信する
@@ -67,58 +69,71 @@ def check_open_sensor_battery():
     '''
     battery_state = True
     open_sensor_state = True
-    while (1):
-        try:
-            open_sensor_url = f"https://app.candyhouse.co/api/open_sensor/{open_sensor_id}"
-            headers = {"x-api-key": x_api_key}
-            response = requests.get(open_sensor_url, headers=headers)
-            logger.debug(f"Response: {response.text}")
-
+    try:
+        while  not stop_event.is_set():
             try:
-                data = response.json()
-                battery = data.get('batteryPercentage', '取得失敗')
+                logger.info(f"open_sensor_id: {open_sensor_id}")
+                logger.info(f"x_api_key: {x_api_key}")
+                
+                #open_sensorでもurl自体はsesameと同様
+
+                open_sensor_url = f"https://app.candyhouse.co/api/sesame2/{open_sensor_id}"
+                headers = {"x-api-key": x_api_key}
+                response = requests.get(open_sensor_url, headers=headers)
+                logger.info(f"Response: {response.text}")
+
+                try:
+                    data = response.json()
+                    print(data)
+                    battery = data.get('batteryPercentage', '取得失敗')
+
+                except Exception as e:
+                    battery = f"JSON解析失敗: {e}"
+                logger.debug(f"バッテリー残量: {battery}")
+                logger.info(f"バッテリー残量: {battery}")
+                logger.debug(f"wm2State: {data.get('wm2State', '取得失敗')}")
+
+                try:
+                    #バッテリーが既定値以下になった時のメッセージ
+                    if float(battery) <= battery_Limit:
+                        logger.error(f"バッテリーが{battery_Limit}%以下になりました。")
+
+                        if battery_state:
+                            mailText = battery_mail_config["TEXT"] + response.text
+                            send_mail(battery_mail_config["TITLE"], mailText)
+                            battery_state = False
+
+                    elif not battery_state:
+                        logger.info(f"バッテリーが{battery_Limit}%以上に戻りました。")
+                        battery_state = True
+                    #セサミのデータを取得失敗したとき
+                    if not data.get('wm2State', '取得失敗'):
+                        logger.error("セサミと接続できません")
+
+                        if open_sensor_state:
+                            mailText = battery_mail_config["TEXT"] + response.text
+                            send_mail(
+                                open_sensor_mail_config["TITLE"], open_sensor_mail_config["TEXT"])
+                            open_sensor_state = False
+
+                    elif not open_sensor_state:
+                        logger.info("セサミとの接続が回復しました")
+                        open_sensor_state = True
+
+                except Exception as e:
+                    logger.error("メール送信エラー")
+                    logger.debug(f"メール送信エラー: {e}")
 
             except Exception as e:
-                battery = f"JSON解析失敗: {e}"
-            logger.debug(f"バッテリー残量: {battery}")
-            logger.info(f"バッテリー残量: {battery}")
-            logger.debug(f"wm2State: {data.get('wm2State', '取得失敗')}")
+                logger.error("不明エラー")
+                print("不明エラー", e)
+            time.sleep(sleep_time)
 
-            try:
-                #バッテリーが既定値以下になった時のメッセージ
-                if float(battery) <= battery_Limit:
-                    logger.error(f"バッテリーが{battery_Limit}%以下になりました。")
-
-                    if battery_state:
-                        mailText = battery_mail_config["TEXT"] + response.text
-                        send_mail(battery_mail_config["TITLE"], mailText)
-                        battery_state = False
-
-                elif not battery_state:
-                    logger.info(f"バッテリーが{battery_Limit}%以上に戻りました。")
-                    battery_state = True
-                #セサミのデータを取得失敗したとき
-                if not data.get('wm2State', '取得失敗'):
-                    logger.error("セサミと接続できません")
-
-                    if open_sensor_state:
-                        mailText = battery_mail_config["TEXT"] + response.text
-                        send_mail(
-                            open_sensor_mail_config["TITLE"], open_sensor_mail_config["TEXT"])
-                        open_sensor_state = False
-
-                elif not open_sensor_state:
-                    logger.info("セサミとの接続が回復しました")
-                    open_sensor_state = True
-
-            except Exception as e:
-                logger.error("メール送信エラー")
-                logger.debug(f"メール送信エラー: {e}")
-
-        except Exception as e:
-            logger.error("不明エラー")
-            print("不明エラー", e)
-        time.sleep(sleep_time)
+    #例外処理を確実にログに残すための文
+    except Exception as e:
+        logger.exception("🔥 Thread 内で例外発生")
+    finally:
+        logger.info("🛑 worker stopped")
 
 
 # def check_alive():
@@ -172,8 +187,20 @@ def check_open_sensor_battery():
 
 def main():
     logger.info("⏱️ open_sensorのバッテリーとサーバー状態を確認中...")
-    threading.Thread(target=check_open_sensor_battery).start()
+    t = threading.Thread(target=check_open_sensor_battery, daemon=False)
+    t.start()
     # threading.Thread(target=check_alive).start()
+
+    try:
+        # メインスレッドを待機させる
+        while t.is_alive():
+            time.sleep(0.5)
+
+    except KeyboardInterrupt:
+        logger.info("🛑 Ctrl+C を検知 → スレッド停止中...")
+        stop_event.set()
+        t.join()
+        logger.info("🛑 全処理終了")
 
 
 if __name__ == "__main__":

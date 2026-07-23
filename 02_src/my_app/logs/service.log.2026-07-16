@@ -1,0 +1,61 @@
+<<<<<<< HEAD
+2026-07-15 08:03:21 [ERROR] backsys.back_system:132 - 解錠システム異常
+2026-07-15 08:03:21 [ERROR] backsys.sendmail:43 - メール送信失敗: [Errno 11001] getaddrinfo failed
+2026-07-15 08:03:21 [INFO] backsys.sendmail:44 - メール送信完了
+2026-07-15 08:03:21 [INFO] backsys.back_system:135 - システム異常
+2026-07-15 08:03:21 [INFO] backsys.back_system:141 - システム正常に戻りました
+2026-07-15 08:03:51 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 50313)
+2026-07-15 08:03:51 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 08:07:28 [INFO] backsys.back_system:61 - バッテリー残量: 100
+2026-07-15 08:07:28 [ERROR] backsys.back_system:76 - セサミと接続できません
+2026-07-15 08:54:52 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 61567)
+2026-07-15 08:54:52 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:07:28 [INFO] backsys.back_system:61 - バッテリー残量: 100
+2026-07-15 09:07:28 [ERROR] backsys.back_system:76 - セサミと接続できません
+2026-07-15 09:30:40 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 60213)
+2026-07-15 09:30:40 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:35:57 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 63200)
+2026-07-15 09:35:57 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:37:34 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 65303)
+2026-07-15 09:37:34 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:39:22 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 51798)
+2026-07-15 09:39:22 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:41:39 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 55893)
+2026-07-15 09:41:39 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+2026-07-15 09:42:06 [INFO] nfcutils.card_check:99 - 状態:authenticating,('127.0.0.1', 54840)
+2026-07-15 09:42:06 [INFO] nfcutils.card_check:182 - 状態が変更されました: authenticating
+=======
+2026-07-14 16:07:47 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+>>>>>>> bc887c4e4c086684549ded1b60794e384ce63bd0
+2026-07-16 13:26:10 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 13:26:12 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\opencensor.py", line 23, in <module>
+    from .sendmail import send_mail
+ImportError: attempted relative import with no known parent package
+2026-07-16 13:42:46 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 13:42:47 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\opencensor.py", line 23, in <module>
+    from .sendmail import send_mail
+ImportError: attempted relative import with no known parent package
+2026-07-16 13:58:13 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 13:58:14 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 13:58:14 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\opencensor.py", line 44, in <module>
+    open_censor_mail_config = config_list["open_censor_mail"]
+                              ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'open_censor_mail'
+2026-07-16 16:19:03 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 16:19:04 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-16 16:19:04 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\opensensor_back_system.py", line 50, in <module>
+    with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\SmartKey\\smartkey\\02_src\\my_app\\config\\backend\\open_sensor_config.json'
