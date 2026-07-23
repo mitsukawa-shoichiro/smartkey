@@ -18,9 +18,11 @@ from my_app.app.views.common import (
     centered_cell, app_view, pager,
     secondary_button, danger_button,
     show_confirm_dialog, show_info_dialog,
+    management_tabs,
 )
 
 logger = logging.getLogger(__name__)
+ITEMS_PER_PAGE = 10
 
 
 def user_view(page: ft.Page):
@@ -50,7 +52,14 @@ def user_view(page: ft.Page):
     search_box = ft.TextField(
         label="氏名・カナ氏名",
         hint_text="部分一致検索",
-        width=300,
+        width=320,
+        height=52,
+        filled=True,
+        fill_color=Theme.SURFACE,
+        border_color=Theme.BORDER,
+        focused_border_color=Theme.MAUVE,
+        border_radius=8,
+        prefix_icon=ft.Icons.SEARCH,
         on_submit=search,
     )
 
@@ -61,16 +70,10 @@ def user_view(page: ft.Page):
     # ===================================================
 
     # リセットボタン定義
-    reset_btn = ft.ElevatedButton(
-        content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
-        on_click=lambda e: page.run_task(refresh, e),
-        bgcolor=ft.Colors.RED_50,
-        width=60,
-        height=30,
-        style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(radius=0),
-            padding=ft.padding.all(0)
-        ),
+    reset_btn = secondary_button(
+        "リセット",
+        lambda e: page.run_task(refresh, e),
+        ft.Icons.REFRESH,
     )
 
     # 検索欄定義
@@ -87,14 +90,20 @@ def user_view(page: ft.Page):
         spacing=50,
     )
 
-    # 前ページ遷移ボタン定義
-    prev_btn = secondary_button("⬅ 前へ", lambda e: prev_page(e))
+    # ページ遷移ボタン定義
+    prev_btn = secondary_button(
+        "前へ",
+        lambda e: prev_page(e),
+        ft.Icons.CHEVRON_LEFT,
+    )
 
-    # 現在ページ定義
-    page_label = ft.Text("")  # load_table内で更新
+    page_label = ft.Text("")
 
-    # 次ページ遷移ボタン定義
-    next_btn = secondary_button("次へ ➡", lambda e: next_page(e))
+    next_btn = secondary_button(
+        "次へ",
+        lambda e: next_page(e),
+        ft.Icons.CHEVRON_RIGHT,
+    )
 
     # ボタン群をまとめて再定義
     btn_zone = pager(prev_btn, page_label, next_btn)
@@ -184,14 +193,14 @@ def user_view(page: ft.Page):
         """
 
         try:
-            users, total = repo.find_users_with_total(
-                search_text, table.sort_ascending, pg.per_page, pg.offset)
+            users, total = repo.find_users_with_total(search_text, table.sort_ascending, 100, offset * 100)
         except sqlite3.Error:
             logger.exception("ユーザー情報の読み込みに失敗しました")
             show_error_dialog(page, "ユーザー情報の取得に失敗しました。しばらくしてから再度お試しください。")
             return
 
-        pg.update_total(total)
+        # 諸パラメータ更新
+        all_page = max(1, int(((total - 1) / 100) + 1))
 
         # 初期化
         checkbox_refs.clear()
@@ -234,9 +243,9 @@ def user_view(page: ft.Page):
             )
 
         # その他項目の設定
-        page_label.value = pg.label
-        prev_btn.disabled = pg.is_first
-        next_btn.disabled = pg.is_last
+        page_label.value = f"{offset + 1} / {all_page} ページ"
+        prev_btn.disabled = offset == 0
+        next_btn.disabled = (offset + 1) == all_page
         page.update()
 
     def save_user(user_id, name_field, kana_field):
@@ -303,7 +312,7 @@ def user_view(page: ft.Page):
     # スクロール可能の定義
     scroll_table = ft.Column(
         controls=[table_row],
-        scroll=ft.ScrollMode.ALWAYS,
+        scroll=ft.ScrollMode.HIDDEN,
         expand=True,
     )
 
@@ -318,35 +327,49 @@ def user_view(page: ft.Page):
     search_card = card(
         ft.Column(
             controls=[
-                section_title("ユーザー検索"),
-                ft.Container(height=4),
+                section_title(
+                    "ユーザー検索",
+                    accent=Theme.MAUVE,
+                ),
+                ft.Container(height=6),
                 search_zone_row,
             ],
-            spacing=8,
-        )
+            spacing=10,
+        ),
+        accent=Theme.MAUVE,
     )
 
     # テーブル用カード(土台のパネル)
     table_card = card(
         ft.Column(
             controls=[
-                section_title("ユーザー一覧"),
-                ft.Container(height=8),
+                section_title(
+                    "ユーザー一覧",
+                    accent=Theme.MAUVE,
+                ),
+                ft.Container(height=10),
                 scroll_table,
-                ft.Container(height=8),
+                ft.Container(height=10),
                 btn_zone,
             ],
-            spacing=8,
+            spacing=10,
             expand=True,
-        )
+        ),
+        accent=Theme.MAUVE,
     )
 
     # ===================================================
     # 実際にページに
     # ===================================================
 
-    return app_view("/user", page, [
-        search_card,
-        ft.Container(height=16),
-        table_card,
-    ])
+    return app_view(
+        "/user",
+        page,
+        [
+            management_tabs(page, "/user"),
+            search_card,
+            ft.Container(height=16),
+            table_card,
+        ],
+        back_route="/index",
+    )

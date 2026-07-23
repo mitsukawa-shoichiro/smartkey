@@ -309,6 +309,136 @@ def find_cards_with_total(user_id, asc: bool, limit: int, offset: int):
         raise
 
 
+def count_all_card():
+    """
+    find_all_cards()をGUIで表示する際の全体件数を取得する関数
+
+    Returns:
+        int: 件数
+    """
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute("SELECT COUNT(*) FROM card")
+            return c.fetchone()[0]
+    except sqlite3.Error:
+        logger.exception("カード件数取得エラー")
+        raise
+
+
+def find_cards_by_user_id(user_id: int, asc: bool, offset: int):
+    """
+    指定されたユーザーIDに関連するカード情報を、ページングして取得する関数
+    (Autocompleteでユーザーが選択された時のGUI表示用)
+
+    Args:
+        user_id (int): 取得するカード情報に関連するユーザーのID
+        asc (bool): 昇順 -> true, 降順 -> false
+        offset (int): GUIで表示するためのページ区分
+
+    Returns:
+        list[Card]: カード情報のリスト
+    """
+    order = "ASC" if asc else "DESC"
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute(
+                f"""
+                SELECT card.id, card_type, card_number, register_date, user_id, user.user_name
+                FROM card
+                LEFT JOIN user ON user_id = user.id
+                WHERE user_id = ?
+                ORDER BY card.id {order} LIMIT 100 OFFSET ?
+                """,
+                (user_id, offset)
+            )
+            rows = c.fetchall()
+            return [
+                CardWithUser(id=row[0], card_type=CardType(row[1]), card_number=row[2],
+                    register_date=row[3], user_id=row[4], user_name=row[5])
+                for row in rows
+            ]
+    except sqlite3.Error:
+        logger.exception("カード取得エラー: user_id=%s", user_id)
+        raise
+
+
+def count_cards_by_user_id(user_id: int):
+    """
+    find_cards_by_user_id()をGUIで表示する際の件数を取得する関数
+
+    Args:
+        user_id (int): ユーザーID
+
+    Returns:
+        int: 件数
+    """
+    try:
+        with get_connection() as conn:
+            c = conn.cursor()
+            c.execute("SELECT COUNT(*) FROM card WHERE user_id = ?", (user_id,))
+            return c.fetchone()[0]
+    except sqlite3.Error:
+        logger.exception("カード件数取得エラー: user_id=%s", user_id)
+        raise
+
+
+def find_cards_with_total(search_text, asc: bool, limit: int, offset: int):
+    """氏名・カナ氏名の部分一致でカードと総件数を取得する"""
+    order = "ASC" if asc else "DESC"
+    where = ""
+    params = []
+
+    if search_text:
+        where = " AND (user.user_name LIKE ? OR user.user_kana LIKE ?)"
+        like = f"%{search_text}%"
+        params.extend([like, like])
+
+    sql = f"""
+        SELECT
+            COUNT(*) OVER () AS total,
+            card.id,
+            card.card_type,
+            card.card_number,
+            card.register_date,
+            card.user_id,
+            user.user_name
+        FROM card
+        LEFT JOIN user ON card.user_id = user.id
+        WHERE 1=1{where}
+        ORDER BY card.id {order}
+        LIMIT ? OFFSET ?
+    """
+    params.extend([limit, offset])
+
+    try:
+        with get_connection() as conn:
+            rows = conn.execute(sql, params).fetchall()
+
+        total = rows[0][0] if rows else 0
+        cards = [
+            CardWithUser(
+                id=row[1],
+                card_type=CardType(row[2]),
+                card_number=row[3],
+                register_date=row[4],
+                user_id=row[5],
+                user_name=row[6],
+            )
+            for row in rows
+        ]
+        return cards, total
+
+    except sqlite3.Error:
+        logger.exception(
+            "カード検索エラー: search_text=%s",
+            search_text,
+        )
+        raise
+
+
+
 
 def find_user_id_by_card_id(card_id):
     """
@@ -439,8 +569,10 @@ def update_access_log(log: AccessLog):
 
 # access_logカラム一覧
 _LOG_COLUMNS = (
-    "access_logs.id, access_logs.timestamp, access_logs.method, "
-    "access_logs.event_type, access_logs.user_id, access_logs.user_name, "
+    "access_logs.id, "
+    "datetime(access_logs.timestamp, 'localtime'), "
+    "access_logs.method, access_logs.event_type, "
+    "access_logs.user_id, access_logs.user_name, "
     "access_logs.card_id, access_logs.face_id, card.card_type"
 )
 
@@ -449,8 +581,8 @@ _LOG_FILTERS = {
     "method": "access_logs.method = ?",
     "event_type": "access_logs.event_type = ?",
     "user_id": "access_logs.user_id = ?",
-    "start_dt": "access_logs.timestamp >= ?",
-    "end_dt": "access_logs.timestamp <= ?",
+    "start_dt": "datetime(access_logs.timestamp, 'localtime') >= ?",
+    "end_dt": "datetime(access_logs.timestamp, 'localtime') <= ?",
 }
 
 def _build_log_filter(**conditions):
@@ -464,8 +596,17 @@ def _build_log_filter(**conditions):
     return ("".join(f" AND {c}" for c in clauses), params)
 
 
-def find_access_logs_with_total(method, event_type, start_dt, end_dt, limit, offset,
-                    user_id, asc: bool = True):
+def find_access_log(
+    method,
+    event_type,
+    start_dt,
+    end_dt,
+    limit,
+    offset,
+    user_id=None,
+    asc: bool = True,
+    search_text=None,
+):
     """
     入退室ログを条件検索、一覧と総件数を返す関数
 
@@ -483,45 +624,247 @@ def find_access_logs_with_total(method, event_type, start_dt, end_dt, limit, off
     return tuple[list[AccessLogWithCard], int]: 入退室ログリストと件数。AccessLogWithCard のリストで返す。
     """
     order = "ASC" if asc else "DESC"
+
+    method_aliases = None
+
+    if method in ("顔", "顔認証", "face"):
+        method_aliases = ("顔", "顔認証", "face")
+    elif method in ("カード", "card"):
+        method_aliases = ("カード", "card")
+
     where, params = _build_log_filter(
-        method=method, event_type=event_type, user_id=user_id,
-        start_dt=start_dt, end_dt=end_dt,
+        method=None if method_aliases else method,
+        event_type=event_type,
+        user_id=user_id,
+        start_dt=start_dt,
+        end_dt=end_dt,
     )
+
+    if method_aliases:
+        placeholders = ", ".join("?" for _ in method_aliases)
+        where += f" AND access_logs.method IN ({placeholders})"
+        params.extend(method_aliases)
+
+    if search_text:
+        name_filter = (
+            " AND ("
+            "access_logs.user_name LIKE ? "
+            "OR current_user.user_name LIKE ? "
+            "OR current_user.user_kana LIKE ?"
+            ")"
+        )
+        like = f"%{search_text}%"
+        where += name_filter
+        params.extend([like, like, like])
+
     sql = f"""
-        SELECT COUNT(*) OVER () AS total, {_LOG_COLUMNS} FROM access_logs
-        LEFT JOIN card ON access_logs.card_id = card.id
-        WHERE 1=1{where} ORDER BY access_logs.timestamp {order} LIMIT ? OFFSET ?
+        SELECT
+            COUNT(*) OVER () AS total,
+            {_LOG_COLUMNS}
+        FROM access_logs
+        LEFT JOIN card
+            ON access_logs.card_id = card.id
+        LEFT JOIN user AS current_user
+            ON access_logs.user_id = current_user.id
+        WHERE 1=1{where}
+        ORDER BY access_logs.timestamp {order}
+        LIMIT ? OFFSET ?
     """
-    params += [limit, offset]
+
+    params.extend([limit, offset])
+
     try:
         with get_connection() as conn:
-            c = conn.cursor()
+            rows = conn.execute(sql, params).fetchall()
 
-            c.execute(sql, params)
+        total = rows[0][0] if rows else 0
 
-            rows = c.fetchall()
-            total = rows[0][0] if rows else 0
-            return [
-                AccessLogWithCard(
-                    id=row[1],
-                    timestamp=row[2],
-                    method=row[3],
-                    event_type=EventType(row[4]),
-                    user_id=row[5],
-                    user_name=row[6],
-                    card_id=row[7],
-                    face_id=row[8],
-                    card_type=row[9],
-                )
-                for row in rows
-            ], total
+        logs = [
+            AccessLogWithCard(
+                id=row[1],
+                timestamp=row[2],
+                method=row[3],
+                event_type=EventType(row[4]),
+                user_id=row[5],
+                user_name=row[6],
+                card_id=row[7],
+                face_id=row[8],
+                card_type=row[9],
+            )
+            for row in rows
+        ]
+
+        return logs, total
+
     except sqlite3.Error:
         logger.exception(
-            "アクセスログ検索エラー: method=%s, event_type=%s",
-            method, event_type
+            "アクセスログ検索エラー: search_text=%s method=%s event_type=%s",
+            search_text,
+            method,
+            event_type,
         )
         raise
 
+
+def get_main_menu_access_summary():
+    """本日の入退室件数と、直近の入退室ログを取得する"""
+    try:
+        with get_connection() as conn:
+            counts = conn.execute(
+                """
+                SELECT
+                    COALESCE(
+                        SUM(CASE WHEN event_type = ? THEN 1 ELSE 0 END),
+                        0
+                    ),
+                    COALESCE(
+                        SUM(CASE WHEN event_type = ? THEN 1 ELSE 0 END),
+                        0
+                    )
+                FROM access_logs
+                WHERE timestamp >= datetime(
+                    'now', 'localtime', 'start of day', 'utc'
+                )
+                AND timestamp < datetime(
+                    'now', 'localtime', 'start of day', '+1 day', 'utc'
+                )
+                """,
+                (
+                    EventType.ENTRY.value,
+                    EventType.EXIT.value,
+                ),
+            ).fetchone()
+
+            latest = conn.execute(
+                """
+                SELECT
+                    datetime(timestamp, 'localtime'),
+                    event_type,
+                    user_name
+                FROM access_logs
+                WHERE event_type IN (?, ?)
+                ORDER BY timestamp DESC, id DESC
+                LIMIT 1
+                """,
+                (
+                    EventType.ENTRY.value,
+                    EventType.EXIT.value,
+                ),
+            ).fetchone()
+
+        latest_log = None
+
+        if latest is not None:
+            try:
+                local_timestamp = datetime.fromisoformat(
+                    latest[0]
+                )
+            except (TypeError, ValueError):
+                local_timestamp = None
+
+            latest_log = {
+                "timestamp": local_timestamp,
+                "event_type": EventType(latest[1]),
+                "user_name": (
+                    latest[2]
+                    or "不明なユーザー"
+                ),
+            }
+
+        return {
+            "entry_count": int(counts[0]),
+            "exit_count": int(counts[1]),
+            "latest": latest_log,
+        }
+
+    except sqlite3.Error:
+        logger.exception(
+            "メインメニュー用入退室状況取得エラー"
+        )
+        raise
+
+def get_today_entry_ranking(limit: int = 10):
+    """本日の入室回数ランキングを取得する"""
+    safe_limit = max(1, min(int(limit), 100))
+
+    try:
+        with get_connection() as conn:
+            rows = conn.execute(
+                """
+                SELECT
+                    COALESCE(
+                        user.user_name,
+                        access_logs.user_name,
+                        '不明なユーザー'
+                    ) AS display_name,
+                    COUNT(*) AS entry_count,
+                    datetime(
+                        MAX(access_logs.timestamp),
+                        'localtime'
+                    ) AS last_entry
+                FROM access_logs
+                LEFT JOIN user
+                    ON user.id = access_logs.user_id
+                WHERE access_logs.event_type = ?
+                AND access_logs.timestamp >= datetime(
+                    'now', 'localtime', 'start of day', 'utc'
+                )
+                AND access_logs.timestamp < datetime(
+                    'now', 'localtime', 'start of day',
+                    '+1 day', 'utc'
+                )
+                GROUP BY
+                    CASE
+                        WHEN access_logs.user_id IS NOT NULL
+                        THEN 'id:' || CAST(access_logs.user_id AS TEXT)
+                        ELSE 'name:' || COALESCE(
+                            access_logs.user_name,
+                            ''
+                        )
+                    END
+                ORDER BY
+                    entry_count DESC,
+                    MAX(access_logs.timestamp) DESC,
+                    display_name COLLATE NOCASE ASC
+                LIMIT ?
+                """,
+                (
+                    EventType.ENTRY.value,
+                    safe_limit,
+                ),
+            ).fetchall()
+
+        ranking = []
+        previous_count = None
+        current_rank = 0
+
+        for position, row in enumerate(rows, start=1):
+            entry_count = int(row[1])
+
+            # 同じ入室回数なら同順位
+            if entry_count != previous_count:
+                current_rank = position
+                previous_count = entry_count
+
+            try:
+                last_entry = datetime.fromisoformat(row[2])
+            except (TypeError, ValueError):
+                last_entry = None
+
+            ranking.append(
+                {
+                    "rank": current_rank,
+                    "user_name": row[0],
+                    "entry_count": entry_count,
+                    "last_entry": last_entry,
+                }
+            )
+
+        return ranking
+
+    except sqlite3.Error:
+        logger.exception("本日の入室ランキング取得エラー")
+        raise
 
 
 # ===================================================
@@ -578,6 +921,57 @@ def find_faces_with_totals(user_id, asc: bool, limit: int, offset: int):
     except sqlite3.Error:
         logger.exception("顔情報検索エラー: user_id=%s", user_id)
         raise
+
+
+def find_faces_with_total(search_text, asc: bool, limit: int, offset: int):
+    """氏名・カナ氏名の部分一致で顔情報と総件数を取得する"""
+    order = "ASC" if asc else "DESC"
+    where = ""
+    params = []
+
+    if search_text:
+        where = " AND (user.user_name LIKE ? OR user.user_kana LIKE ?)"
+        like = f"%{search_text}%"
+        params.extend([like, like])
+
+    sql = f"""
+        SELECT
+            COUNT(*) OVER () AS total,
+            face.id,
+            face.register_date,
+            face.user_id,
+            user.user_name
+        FROM face
+        LEFT JOIN user ON face.user_id = user.id
+        WHERE 1=1{where}
+        ORDER BY face.id {order}
+        LIMIT ? OFFSET ?
+    """
+    params.extend([limit, offset])
+
+    try:
+        with get_connection() as conn:
+            rows = conn.execute(sql, params).fetchall()
+
+        total = rows[0][0] if rows else 0
+        faces = [
+            FaceWithUser(
+                id=row[1],
+                register_date=row[2],
+                user_id=row[3],
+                user_name=row[4],
+            )
+            for row in rows
+        ]
+        return faces, total
+
+    except sqlite3.Error:
+        logger.exception(
+            "顔情報検索エラー: search_text=%s",
+            search_text,
+        )
+        raise
+
 
 
 def get_face_ids_by_user_id(user_id: int):
@@ -708,3 +1102,32 @@ def get_all_face_ids():
     except sqlite3.Error:
         logger.exception("顔ID一覧取得エラー")
         raise
+
+def get_management_registration_counts():
+    """
+    管理画面に表示する登録件数を取得する
+    """
+    try:
+        with get_connection() as conn:
+            row = conn.execute(
+                """
+                SELECT
+                    (SELECT COUNT(DISTINCT user_id)
+                    FROM card WHERE user_id IS NOT NULL),
+                    (SELECT COUNT(*) FROM card),
+                    (SELECT COUNT(DISTINCT user_id)
+                    FROM face WHERE user_id IS NOT NULL),
+                    (SELECT COUNT(*) FROM face),
+                    (SELECT COUNT(*) FROM user)
+                """
+            ).fetchone()
+
+        return {
+            "card_users": int(row[0]),
+            "cards": int(row[1]),
+            "face_users": int(row[2]),
+            "faces": int(row[3]),
+            "users": int(row[4]),
+        }
+    except sqlite3.Error:
+        logger.e

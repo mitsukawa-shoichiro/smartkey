@@ -10,7 +10,12 @@ import my_app.db.repository as repo
 import random
 import asyncio
 
-from my_app.app.utils.front_camera_moduel import CameraWorker_Front, CaptureBuffer, send_message
+from my_app.app.utils.front_camera_moduel import (
+    CameraWorker_Front,
+    CaptureBuffer,
+    request_camera_release,
+    send_message,
+)
 from my_app.camera.camera_config import load_rgb_camera_index
 
 from my_app.app.views.common import (
@@ -308,9 +313,21 @@ def face_register_view(page: ft.Page) -> ft.View:
             ft.Icons.SYNC,
         )
 
-        send_message("startRegistering")
+        released, message = await asyncio.to_thread(
+            request_camera_release,
+            5.0,
+        )
+
+        if not released:
+            set_status(
+                message,
+                Theme.DANGER,
+                "#FCECEF",
+                ft.Icons.ERROR_OUTLINE,
+            )
+            return
+
         backend_session_active = True
-        await asyncio.sleep(0.4)
 
         worker.front_end_system(
             camera_index,

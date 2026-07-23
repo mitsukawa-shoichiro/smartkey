@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class FaceAuthenticator:
     """
-    複数顔、IR、PAD、連続判定をまとめて処理する
+    统一处理多张人脸、IR、PAD 和连续判定
     """
 
     def __init__(self, face_dir, config):
@@ -77,7 +77,7 @@ class FaceAuthenticator:
             try:
                 embedding = self._normalize_embedding(template["embedding"])
             except ValueError:
-                logger.warning("無効な顔特徴量です face_id=%s", template.get("face_id"))
+                logger.warning("無効な顔特徴量 face_id=%s", template.get("face_id"))
                 continue
 
             records.append({

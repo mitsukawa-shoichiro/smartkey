@@ -25,13 +25,7 @@ logger = logging.getLogger(__name__)
 
 #region ReadConfig
 import json
-CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
-    __file__), '..',  'config', 'camera_settings.json'))
-print(CONFIG_PATH)
-with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
-    config_list = json.load(f)
-    indoor_index=int(config_list["devices"]["入口"]["index"])
-    outdoor_index=int(config_list["devices"]["出口"]["index"])
+from my_app.camera.camera_config import load_rgb_camera_index
 
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent   # service/face_recognition
@@ -47,10 +41,6 @@ FACE_AUTH_CONFIG_PATH = (
 
 with FACE_AUTH_CONFIG_PATH.open("r", encoding = "utf-8") as file:
     face_auth_config = json.load(file)
-
-RGB_CAMERA_INDEX = int(
-    face_auth_config["rgb_camera_index"]
-)
 
 IR_DEVICE_ID_CONTAINS = str(
     face_auth_config["ir_device_id_contains"]
@@ -159,6 +149,12 @@ class CameraWorker:
         self.cap_dict = {}
         self.systemstop = False
         self.isRegistering = False
+        self.rgb_camera_index = (load_rgb_camera_index())
+
+        self._camera_reload_requested = (threading.Event())
+        self._camera_reload_done = (threading.Event())
+        self._camera_reload_lock = (threading.Lock())
+        self._camera_reload_result = (False, "まだ実行されていません")
 
         # 打开用于人脸识别的摄像头
         if not self.open_all_cameras():
@@ -172,6 +168,76 @@ class CameraWorker:
 
     def stop(self):
         self.systemstop=True
+
+    def request_camera_config_reload(
+        self,
+        timeout=8.0,
+    ):
+        """バックエンド処理へ設定再読み込みを依頼する"""
+        with self._camera_reload_lock:
+            if self._camera_reload_requested.is_set():
+                return False, "再読み込み処理中です"
+
+            self._camera_reload_done.clear()
+            self._camera_reload_requested.set()
+
+        completed = self._camera_reload_done.wait(
+            timeout
+        )
+
+        if not completed:
+            return False, (
+                "カメラ設定の反映がタイムアウトしました"
+            )
+
+        with self._camera_reload_lock:
+            return self._camera_reload_result
+
+
+    def _apply_camera_config_reload(self):
+        """認証スレッド上で設定を読み直してカメラを開き直す"""
+        old_index = self.rgb_camera_index
+
+        try:
+            new_index = load_rgb_camera_index()
+
+            self.rgb_camera_index = new_index
+
+            self.latest_rgb_frame = None
+            self.latest_ir_frame = None
+            self.latest_rgb_timestamp = None
+            self.latest_ir_timestamp = None
+            self.last_auth_reason = "no_frame"
+
+            self.face_authenticator._reset()
+
+            if not self.open_all_cameras():
+                self.rgb_camera_index = old_index
+
+                self.open_all_cameras()
+
+                raise RuntimeError(
+                    f"カメラindex {new_index}を"
+                    "開けませんでした"
+                )
+
+            result = (
+                True,
+                f"カメラindex {new_index}を反映しました",
+            )
+
+            logger.info(result[1])
+
+        except Exception as ex:
+            logger.exception(
+                "カメラ設定の即時反映に失敗しました"
+            )
+            result = (False, str(ex))
+
+        with self._camera_reload_lock:
+            self._camera_reload_result = result
+            self._camera_reload_requested.clear()
+            self._camera_reload_done.set()
 
     def back_end_system(self):
         logger.info("カメラ起動！")
@@ -187,9 +253,13 @@ class CameraWorker:
                 self.open_all_cameras()
 
             while not self.systemstop:  # 常に動作
-
                 try:
-
+                    if (
+                        self._camera_reload_requested.is_set()
+                        and not self.isRegistering
+                    ):
+                        self._apply_camera_config_reload()
+                        was_registering = False
                     # 状態遷移を検出
                     cycle_started = time.monotonic()
                     timg=time.time()
@@ -223,7 +293,7 @@ class CameraWorker:
                         was_registering = False
 
                     # 通常フロー（認証）
-                    rgb_cap = self.cap_dict.get(RGB_CAMERA_INDEX)
+                    rgb_cap = self.cap_dict.get(self.rgb_camera_index)
                     ir_cap = self.cap_dict.get(IR_CAMERA_KEY)
 
                     if (
@@ -327,9 +397,6 @@ class CameraWorker:
                     logger.debug("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
 
                 except Exception:
-                    loop_error_count += 1
-
-                except Exception:
                     # 1サイクル内のあらゆる例外をここで受け止め、ループは絶対に殺さない。
                     loop_error_count += 1
                     logger.exception(
@@ -361,6 +428,8 @@ class CameraWorker:
 
         except KeyboardInterrupt:
             print("\n[INFO] ユーザー中断、プログラムを終了します。")
+        except Exception:
+            logger.exception("back_end_systemが予期していない例外で終了します")
         finally:
             self.latest_rgb_frame = None
             self.latest_ir_frame = None
@@ -385,21 +454,21 @@ class CameraWorker:
 
         # 使用OpenCV打开RGB摄像头
         rgb_cap = cv2.VideoCapture(
-            RGB_CAMERA_INDEX,
+            self.rgb_camera_index,
             cv2.CAP_DSHOW,
         )
 
         if not rgb_cap.isOpened():
             rgb_cap.release()
             rgb_cap = cv2.VideoCapture(
-                RGB_CAMERA_INDEX,
+                self.rgb_camera_index,
                 cv2.CAP_MSMF,
             )
 
         if not rgb_cap.isOpened():
             rgb_cap.release()
-            self.cap_dict = {RGB_CAMERA_INDEX: None, IR_CAMERA_KEY: None}
-            logger.error("RGBカメラひらけん index=%s", RGB_CAMERA_INDEX)
+            self.cap_dict = {self.rgb_camera_index: None, IR_CAMERA_KEY: None}
+            logger.error("RGBカメラひらけん index=%s", self.rgb_camera_index)
             return False
 
         rgb_cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
@@ -419,7 +488,7 @@ class CameraWorker:
             rgb_cap.release()
 
             self.cap_dict = {
-                RGB_CAMERA_INDEX: None,
+                self.rgb_camera_index: None,
                 IR_CAMERA_KEY: None,
             }
 
@@ -428,11 +497,11 @@ class CameraWorker:
             return False
 
         self.cap_dict = {
-            RGB_CAMERA_INDEX: rgb_cap,
+            self.rgb_camera_index: rgb_cap,
             IR_CAMERA_KEY: ir_cap,
         }
 
-        print(f"[INFO] RGBカメラ {RGB_CAMERA_INDEX} ぱかっ")
+        print(f"[INFO] RGBカメラ {self.rgb_camera_index} ぱかっ")
         print("[INFO] IRカメラをMedia Foundationでひらく")
         print(f"[INFO] IRグループ {ir_cap.group_name}")
 
@@ -597,12 +666,77 @@ class CameraWorker:
 
                     if recv_msg == "startRegistering":
                         self.isRegistering = True
-                        print("✅ 現在の状態：登録中")
+
+                    elif recv_msg == "startRegisteringAndWait":
+                        self.isRegistering = True
+
+                        deadline = time.monotonic() + 5.0
+
+                        while time.monotonic() < deadline:
+                            cameras_open = any(
+                                cap is not None
+                                and cap.isOpened()
+                                for cap in self.cap_dict.values()
+                            )
+
+                            if not cameras_open:
+                                break
+
+                            time.sleep(0.05)
+
+                        cameras_open = any(
+                            cap is not None
+                            and cap.isOpened()
+                            for cap in self.cap_dict.values()
+                        )
+
+                        if cameras_open:
+                            self.isRegistering = False
+                            status = "error"
+                            message = "カメラを解放できませんでした"
+                        else:
+                            status = "ok"
+                            message = "カメラを解放しました"
+
+                        sock.sendto(
+                            (
+                                f"cameraRelease:"
+                                f"{status}:"
+                                f"{message}"
+                            ).encode("utf-8"),
+                            addr,
+                        )
+
                     elif recv_msg == "finishRegistering":
                         self.isRegistering = False
-                        print("❎ 現在の状態：未登録")
+
+                    elif recv_msg == "reloadCameraConfig":
+                        # UDPの到着順に関係なく登録モードを解除する
+                        self.isRegistering = False
+
+                        success, message = (
+                            self.request_camera_config_reload()
+                        )
+
+                        status = (
+                            "ok"
+                            if success
+                            else "error"
+                        )
+
+                        sock.sendto(
+                            (
+                                f"reloadCameraConfig:"
+                                f"{status}:"
+                                f"{message}"
+                            ).encode("utf-8"),
+                            addr,
+                        )
+
                     else:
-                        print(f"⚠️ 不明なメッセージ：{recv_msg}")
+                        print(
+                            f"不明なメッセージ: {recv_msg}"
+                        )
                 except socket.timeout:
                     continue
                 except Exception as e:

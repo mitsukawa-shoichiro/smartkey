@@ -16,20 +16,21 @@ import flet as ft
 
 import my_app.app.views.login as login
 import my_app.app.views.index as index
-import my_app.app.views.card as card
 import my_app.app.views.access_logs as access_logs
 import my_app.app.views.register as register
-import my_app.app.views.user as user
 import my_app.app.views.face_register as face_register
-import my_app.app.views.face as face
-import my_app.app.views.camera_register as camera_register
+import my_app.app.views.settings as settings
+import my_app.app.views.management as management
+
+from my_app.app.views.common import (
+    Theme,
+    show_error_dialog,
+)
 
 # モジュール経由で参照する。
 # from ... import thread_handle だと値のコピーになり、
 # global thread_handle で書き換えてもthread_state側には反映されない。
 import my_app.service.daemon_bridge.thread_state as thread_state
-
-from my_app.app.views.common import Theme, show_error_dialog
 
 logger = logging.getLogger(__name__)
 
@@ -55,47 +56,61 @@ def route(page: ft.Page):
     _ROUTES = {
         "/": lambda p: login.login(p),
         "/index": lambda p: index.index_view(p),
-        "/card": lambda p: card.cardView(p),
+
+        "/management": lambda p: management.management_view(p),
+        "/user": lambda p: management.management_view(
+            p, initial_route="/user", view_route="/user"
+        ),
+        "/card": lambda p: management.management_view(
+            p, initial_route="/card", view_route="/card"
+        ),
+        "/face": lambda p: management.management_view(
+            p, initial_route="/face", view_route="/face"
+        ),
+
         "/access_logs": lambda p: access_logs.access_logs(p),
         "/register": _start_registering,
         "/register/input": lambda p: register.register_input(p),
-        "/face": lambda p: face.faceView(p),
         "/face_register": lambda p: face_register.face_register_view(p),
         "/face_register/input": lambda p: face_register.face_register_register(p),
-        "/user": lambda p: user.user_view(p),
-        "/camera_register": lambda p: camera_register.camera_register_view(p),
+        "/settings": lambda p: settings.settings_view(p),
     }
 
     def page_route_change(e):
-        # クエリ文字列(?error=...)は使わない方針。ルート部分だけで判定する。
         route_path = e.route.split("?")[0]
 
         page.title = "ドア開閉システム"
-        page.views.clear()
         logger.info("%sに遷移しました", route_path)
 
         builder = _ROUTES.get(route_path)
+        error_message = None
+
         if builder is None:
             logger.warning("未定義のルートです: %s", e.route)
-            page.views.append(_fallback_view(route_path))
-            show_error_dialog(page, "指定された画面が見つかりませんでした",
-                                go_home=route_path != HOME_ROUTE)
-            page.update()
-            return
+            next_view = _fallback_view(route_path)
+            error_message = "指定された画面が見つかりませんでした"
+        else:
+            try:
+                # 次画面を完成させてから現在の画面と交換する
+                next_view = builder(page)
+            except Exception:
+                logger.exception(
+                    "画面の表示中にエラーが発生しました: %s",
+                    route_path,
+                )
+                next_view = _fallback_view(route_path)
+                error_message = "画面の表示中にエラーが発生しました"
 
-        try:
-            page.views.append(builder(page))
-        except Exception:
-            # 画面が組み立てられなかった場合、必ずViewを積む。
-            # (Viewを積まないと画面が描画されず、エラーダイアログも表示されない)
-            logger.exception("画面の表示中にエラーが発生しました: %s", route_path)
-            page.views.append(_fallback_view(route_path))
-            # ホーム自体が失敗している場合にgo_homeすると遷移が堂々巡りになるため、
-            # その時だけは留まらせる
-            show_error_dialog(page, "画面の表示中にエラーが発生しました",
-                                go_home=route_path != HOME_ROUTE)
-
+        page.views.clear()
+        page.views.append(next_view)
         page.update()
+
+        if error_message is not None:
+            show_error_dialog(
+                page,
+                error_message,
+                go_home=route_path != HOME_ROUTE,
+            )
 
     page.on_route_change = page_route_change
 

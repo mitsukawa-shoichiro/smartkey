@@ -5,9 +5,14 @@ repository/service層は例外をraiseで投げっぱなしにする設計(層�
 GUI層(view)側で必ずtry/exceptで受け止め、ユーザーに分かる形で表示する必要がある。
 この受け止め方(エラーダイアログの出し方)を1箇所にまとめ、各画面から使い回す。
 """
+from my_app.ui import theme as ui_theme
 import flet as ft
-from app.utils import japanese_text as jt
+from my_app.app.utils import japanese_text as jt
 
+import logging
+import my_app.db.repository as repo
+
+logger = logging.getLogger(__name__)
 
 # ===================================================
 # デザイントークン(色・角丸・余白の共通定義)
@@ -16,301 +21,846 @@ from app.utils import japanese_text as jt
 # 入退室管理という業務ツールらしい、落ち着いた信頼感のあるライトテーマ。
 
 class Theme:
-    # 背景・面
-    BG = "#F4F6FA"            # 画面全体の背景(ほんのり青みのグレー)
-    SURFACE = "#FFFFFF"       # カードの面
-    # アクセント(主役の色。ボタンや強調に使う)
-    PRIMARY = "#3B5BDB"       # 落ち着いた青
-    PRIMARY_DARK = "#2F49AE"
-    # テキスト
-    TEXT = "#1F2933"          # 主要テキスト(真っ黒より少し柔らかい)
-    TEXT_MUTED = "#7B8794"    # 補足テキスト(薄いグレー)
-    # 状態色
-    DANGER = "#E03131"        # 削除など危険操作
-    # テーブル
-    HEADING_BG = "#EEF2F8"    # テーブルヘッダー行の背景(薄い青みグレー)
-    ROW_HOVER = "#F7F9FC"     # 行にマウスを乗せた時の色
-    BORDER = "#E5E9F0"        # 区切り線の色
-    # 形状
-    RADIUS = 16               # カードの角丸(大きめで今風)
-    RADIUS_SM = 8             # ボタンなど小さめの角丸
+    BG = ui_theme.BG
+    SURFACE = ui_theme.SURFACE
+    PRIMARY = ui_theme.PRIMARY
+    PRIMARY_DARK = ui_theme.PRIMARY_DARK
+
+    PINK = ui_theme.PINK
+    PINK_SOFT = ui_theme.PINK_SOFT
+    SKY = ui_theme.SKY
+    SKY_SOFT = ui_theme.SKY_SOFT
+    MINT = ui_theme.MINT
+    MINT_SOFT = ui_theme.MINT_SOFT
+    LAVENDER = ui_theme.LAVENDER
+    LAVENDER_SOFT = ui_theme.LAVENDER_SOFT
+
+    MAUVE = "#A17C9F"
+    MAUVE_SOFT = "#F4EBF2"
+
+    LOG_BLUE = "#4F8FAF"
+    LOG_BLUE_SOFT = "#E4F1F7"
+
+    EQUIPMENT_GREEN = "#4F9475"
+    EQUIPMENT_GREEN_SOFT = "#E4F2EA"
+
+    SUN = "#D89A3D"
+    SUN_SOFT = "#FFF6E7"
+
+    TEXT = ui_theme.TEXT
+    TEXT_MUTED = ui_theme.TEXT_MUTED
+    DANGER = ui_theme.DANGER
+
+    HEADING_BG = ui_theme.HEADING_BG
+    ROW_HOVER = ui_theme.ROW_HOVER
+    BORDER = ui_theme.BORDER
+
+    RADIUS = 8
+    RADIUS_SM = 8
 
 
-def card_shadow():
-    """カードに乗せる、ふんわり浮いて見える共通の影"""
-    # 色は8桁16進数 "#AARRGGBB"。先頭2桁(1F)が不透明度=約12%。
-    # ft.Colors.with_opacity より、この書き方の方がバージョン差の影響を受けにくい。
+_ROUTE_META = {
+    "/management": (
+        "管理",
+        Theme.MINT,
+        Theme.MINT_SOFT,
+        ft.Icons.GRID_VIEW,
+    ),
+    "/card": (
+        "カード管理",
+        Theme.MINT,
+        Theme.MINT_SOFT,
+        ft.Icons.CREDIT_CARD,
+    ),
+    "/face": (
+        "顔管理",
+        Theme.LAVENDER,
+        Theme.LAVENDER_SOFT,
+        ft.Icons.PERSON_SEARCH,
+    ),
+    "/user": (
+        "ユーザー管理",
+        "#A17C9F",
+        "#F4EBF2",
+        ft.Icons.PEOPLE,
+    ),
+    "/access_logs": (
+        "入退室ログ",
+        "#4F8FAF",
+        "#E4F1F7",
+        ft.Icons.SENSOR_DOOR,
+    ),
+    "/face_register": (
+        "顔登録",
+        Theme.LAVENDER,
+        Theme.LAVENDER_SOFT,
+        ft.Icons.ADD_A_PHOTO,
+    ),
+    "/face_register/input": (
+        "本人情報",
+        Theme.LAVENDER,
+        Theme.LAVENDER_SOFT,
+        ft.Icons.PERSON_ADD,
+    ),
+    "/register": (
+        "カード登録",
+        Theme.SKY,
+        Theme.SKY_SOFT,
+        ft.Icons.ADD_CARD,
+    ),
+    "/register/input": (
+        "カード情報",
+        Theme.SKY,
+        Theme.SKY_SOFT,
+        ft.Icons.BADGE,
+    ),
+    "/settings": (
+        "設定",
+        Theme.EQUIPMENT_GREEN,
+        Theme.EQUIPMENT_GREEN_SOFT,
+        ft.Icons.SETTINGS,
+    ),
+}
+
+
+def tinted_shadow(color: str, alpha: int):
+    return f"#{alpha:02X}{color.lstrip('#')}"
+
+
+def card_shadow(accent: str = Theme.SKY, hovering=False):
     return ft.BoxShadow(
+        blur_radius=22 if hovering else 17,
         spread_radius=0,
-        blur_radius=18,
-        color="#1F000000",
-        offset=ft.Offset(0, 6),
+        color=tinted_shadow(
+            accent,
+            0x16 if hovering else 0x0D,
+        ),
+        offset=ft.Offset(
+            0,
+            6 if hovering else 4,
+        ),
     )
 
 
-# ===================================================
-# レイアウト共通部品(Thymeleafのフラグメント的に呼ぶ)
-# ===================================================
-
-def card(content, col=None, padding: int = 24):
-    """
-    中身を「かっこいいカード」で包む共通部品。
-    白い面・大きめ角丸・ふんわり影で、エリアを視覚的に区切る。
-
-    Args:
-        content: カードに乗せる中身(Text, Column, Rowなど何でも)
-        col: ResponsiveRowで使う場合の列指定(例: {"sm": 12, "md": 6})。
-             Noneなら通常の幅いっぱい。
-        padding: カード内側の余白
-
-    Returns:
-        ft.Container
-    """
-    return ft.Container(
+def card(
+    content,
+    col=None,
+    padding: int = 24,
+    accent: str = Theme.SKY,
+):
+    panel = ft.Container(
         content=content,
         padding=padding,
         bgcolor=Theme.SURFACE,
+        border=ft.border.all(
+            1,
+            tinted_shadow(accent, 0x28),
+        ),
         border_radius=Theme.RADIUS,
-        shadow=card_shadow(),
+        shadow=card_shadow(accent),
         col=col,
+        scale=1.0,
+        offset=ft.Offset(0, 0),
+        animate_scale=ft.Animation(
+            140,
+            ft.AnimationCurve.EASE_OUT,
+        ),
+        animate_offset=ft.Animation(
+            140,
+            ft.AnimationCurve.EASE_OUT,
+        ),
+        animate=ft.Animation(
+            140,
+            ft.AnimationCurve.EASE_OUT,
+        ),
     )
 
+    def on_hover(e):
+        hovering = e.data == "true"
 
-def section_title(text: str, subtitle: str = None):
-    """
-    カードやエリアの見出し。タイトル + 任意のサブ説明。
-    左端にアクセントカラーの縦バーを付けて、視線を引く。
-    """
+        panel.scale = 1.005 if hovering else 1.0
+        panel.offset = (
+            ft.Offset(0, -0.008)
+            if hovering
+            else ft.Offset(0, 0)
+        )
+        panel.shadow = card_shadow(
+            accent,
+            hovering,
+        )
+        panel.border = ft.border.all(
+            1,
+            tinted_shadow(
+                accent,
+                0x42 if hovering else 0x28,
+            ),
+        )
+        panel.update()
+
+    panel.on_hover = on_hover
+    return panel
+
+
+def section_title(
+    text: str,
+    subtitle: str = None,
+    accent: str = Theme.SKY,
+):
     title_row = ft.Row(
         controls=[
-            ft.Container(width=4, height=22, bgcolor=Theme.PRIMARY, border_radius=2),
-            ft.Text(text, size=20, weight=ft.FontWeight.BOLD, color=Theme.TEXT),
+            ft.Container(
+                width=5,
+                height=20,
+                bgcolor=accent,
+                border_radius=3,
+            ),
+            ft.Text(
+                text,
+                size=18,
+                weight=ui_theme.FONT_WEIGHT,
+                color=Theme.TEXT,
+                font_family=ui_theme.FONT_FAMILY,
+            ),
+            ft.Container(
+                expand=True,
+                height=1,
+                bgcolor=Theme.BORDER,
+            ),
         ],
         spacing=10,
         vertical_alignment=ft.CrossAxisAlignment.CENTER,
     )
+
     if not subtitle:
         return title_row
+
     return ft.Column(
         controls=[
             title_row,
-            ft.Text(subtitle, size=13, color=Theme.TEXT_MUTED),
+            ft.Text(
+                subtitle,
+                size=12,
+                color=Theme.TEXT_MUTED,
+                font_family=ui_theme.FONT_FAMILY,
+            ),
         ],
-        spacing=4,
+        spacing=6,
     )
 
 
 def responsive_cards(cards_with_cols):
-    """
-    複数のカードを、ウィンドウ幅に応じて自動で並べ替えるレスポンシブグリッド。
-    広い画面では横並び、狭い画面では縦積みになる。
-
-    Args:
-        cards_with_cols: [(content, col_dict), ...] のリスト。
-            例: [(text1, {"sm": 12, "md": 6}), (text2, {"sm": 12, "md": 6})]
-
-    Returns:
-        ft.ResponsiveRow
-    """
     return ft.ResponsiveRow(
-        controls=[card(content, col=col) for content, col in cards_with_cols],
-        run_spacing=16,   # 縦に折り返した時の行間
-        spacing=16,       # 横方向のカード間
+        controls=[
+            card(content, col=col)
+            for content, col in cards_with_cols
+        ],
+        run_spacing=18,
+        spacing=18,
     )
 
 
 def primary_button(text: str, on_click, icon=None):
-    """アクセントカラーの主要ボタン(登録・検索など前向きな操作用)"""
     return ft.ElevatedButton(
         text=text,
         icon=icon,
         on_click=on_click,
-        bgcolor=Theme.PRIMARY,
+        bgcolor=Theme.SKY,
         color="#FFFFFF",
+        height=44,
         style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(radius=Theme.RADIUS_SM),
-            padding=ft.padding.symmetric(horizontal=20, vertical=16),
+            shape=ft.RoundedRectangleBorder(
+                radius=Theme.RADIUS_SM,
+            ),
+            padding=ft.padding.symmetric(
+                horizontal=20,
+                vertical=12,
+            ),
         ),
     )
 
 
 def secondary_button(text: str, on_click, icon=None):
-    """控えめな補助ボタン(前へ/次へ、キャンセルなど)。白面+枠線。"""
     return ft.OutlinedButton(
         text=text,
         icon=icon,
         on_click=on_click,
+        height=42,
         style=ft.ButtonStyle(
             color=Theme.TEXT,
-            shape=ft.RoundedRectangleBorder(radius=Theme.RADIUS_SM),
-            side=ft.BorderSide(1, Theme.BORDER),
-            padding=ft.padding.symmetric(horizontal=16, vertical=12),
+            bgcolor=Theme.SURFACE,
+            icon_color=Theme.TEXT_MUTED,
+            overlay_color=Theme.SKY_SOFT,
+            shape=ft.RoundedRectangleBorder(
+                radius=Theme.RADIUS_SM,
+            ),
+            side=ft.BorderSide(
+                1,
+                Theme.BORDER,
+            ),
+            padding=ft.padding.symmetric(
+                horizontal=16,
+                vertical=11,
+            ),
         ),
     )
 
 
 def danger_button(text: str, on_click, icon=None):
-    """危険操作ボタン(削除など)。赤系。"""
     return ft.ElevatedButton(
         text=text,
         icon=icon,
         on_click=on_click,
-        bgcolor="#FDECEC",
+        height=42,
+        bgcolor=ui_theme.DANGER_BG,
         color=Theme.DANGER,
+        elevation=0,
         style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(radius=Theme.RADIUS_SM),
-            padding=ft.padding.symmetric(horizontal=16, vertical=12),
+            icon_color=Theme.DANGER,
+            overlay_color="#F8DDE2",
+            shape=ft.RoundedRectangleBorder(
+                radius=Theme.RADIUS_SM,
+            ),
+            padding=ft.padding.symmetric(
+                horizontal=16,
+                vertical=11,
+            ),
         ),
     )
 
 
-def back_button(page, route: str = "/index"):
-    """全画面共通の「戻る」ボタン。デフォルトはホーム(/index)へ戻る。"""
-    return ft.OutlinedButton(
-        "戻る",
+def back_button(
+    page,
+    route: str = "/index",
+    on_click=None,
+):
+    handler = (
+        on_click
+        if on_click is not None
+        else lambda e: page.go(route)
+    )
+
+    return ft.IconButton(
         icon=ft.Icons.ARROW_BACK,
-        on_click=lambda e: page.go(route),
+        tooltip="戻る",
+        width=ui_theme.NAV_BUTTON_SIZE,
+        height=ui_theme.NAV_BUTTON_SIZE,
+        icon_size=ui_theme.NAV_ICON_SIZE,
+        icon_color=Theme.TEXT,
+        bgcolor=Theme.SKY_SOFT,
+        hover_color=Theme.SKY_SOFT,
+        on_click=handler,
         style=ft.ButtonStyle(
-            color=Theme.TEXT,
-            bgcolor=Theme.SURFACE,
-            shape=ft.RoundedRectangleBorder(radius=Theme.RADIUS_SM),
-            side=ft.BorderSide(1, Theme.BORDER),
-            padding=ft.padding.symmetric(horizontal=20, vertical=14),
+            shape=ft.CircleBorder(),
+            side=ft.BorderSide(1, "#FFFFFF"),
         ),
     )
 
 
-def app_view(route: str, page, controls, back_route: str = "/index"):
-    """
-    全画面共通のViewを組み立てる。
 
-    中身(controls)はスクロールし、「戻る」ボタンは常に左下に固定される。
-    Stackで重ねているため、スクロールしても戻るボタンは動かない。
-    各画面は「中身のcontrolsを渡すだけ」でよく、余白・背景色・戻るボタンの
-    配置を個別に書かなくて済む。
+def _page_title(title, accent, soft_color, icon):
+    return ft.Column(
+        width=1040,
+        controls=[
+            ft.Row(
+                width=1040,
+                controls=[
+                    # タイトル左側のアイコン
+                    ft.Container(
+                        width=48,
+                        height=48,
+                        bgcolor=soft_color,
+                        border_radius=24,
+                        alignment=ft.alignment.center,
+                        content=ft.Icon(
+                            icon,
+                            size=25,
+                            color=accent,
+                        ),
+                    ),
 
-    Args:
-        route (str): このViewのルート(例: "/card")
-        page: ft.Page
-        controls (list): 画面の中身(カードなど)。上から順に縦に並ぶ。
-        back_route (str): 戻るボタンの遷移先
+                    # この文字の中心が画面中央になる
+                    ft.Text(
+                        title,
+                        size=27,
+                        color=Theme.TEXT,
+                        weight=ui_theme.FONT_WEIGHT,
+                        font_family=ui_theme.FONT_FAMILY,
+                        text_align=ft.TextAlign.CENTER,
+                        no_wrap=True,
+                    ),
 
-    Returns:
-        ft.View
-    """
-    return ft.View(
+                    # アイコンと同じ幅を右側に確保する
+                    ft.Container(
+                        width=48,
+                        height=48,
+                    ),
+                ],
+                spacing=14,
+                alignment=ft.MainAxisAlignment.CENTER,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+
+            # 棒線は画面中央に固定
+            ft.Row(
+                width=1040,
+                controls=[
+                    ft.Container(
+                        width=38,
+                        height=2,
+                        bgcolor=soft_color,
+                        border_radius=1,
+                    ),
+                    ft.Icon(
+                        ft.Icons.FAVORITE,
+                        size=9,
+                        color=Theme.PINK,
+                    ),
+                    ft.Container(
+                        width=38,
+                        height=2,
+                        bgcolor=soft_color,
+                        border_radius=1,
+                    ),
+                ],
+                spacing=6,
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
+        ],
+        spacing=8,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+    )
+
+def route_page_title(route):
+    title, accent, soft_color, icon = _ROUTE_META.get(
         route,
+        (
+            "SmartKey",
+            Theme.SKY,
+            Theme.SKY_SOFT,
+            ft.Icons.APPS,
+        ),
+    )
+
+    return _page_title(
+        title,
+        accent,
+        soft_color,
+        icon,
+    )
+
+
+def _background_decorations():
+    return [
+        ft.Container(
+            left=26,
+            top=110,
+            content=ft.Row(
+                controls=[
+                    ft.Container(
+                        width=42,
+                        height=4,
+                        bgcolor=Theme.PINK_SOFT,
+                        border_radius=2,
+                    ),
+                    ft.Container(
+                        width=27,
+                        height=4,
+                        bgcolor=Theme.SKY_SOFT,
+                        border_radius=2,
+                    ),
+                    ft.Container(
+                        width=15,
+                        height=4,
+                        bgcolor=Theme.LAVENDER_SOFT,
+                        border_radius=2,
+                    ),
+                ],
+                spacing=6,
+            ),
+        ),
+        ft.Container(
+            right=26,
+            top=110,
+            content=ft.Row(
+                controls=[
+                    ft.Container(
+                        width=15,
+                        height=4,
+                        bgcolor=Theme.LAVENDER_SOFT,
+                        border_radius=2,
+                    ),
+                    ft.Container(
+                        width=27,
+                        height=4,
+                        bgcolor=Theme.SKY_SOFT,
+                        border_radius=2,
+                    ),
+                    ft.Container(
+                        width=42,
+                        height=4,
+                        bgcolor=Theme.PINK_SOFT,
+                        border_radius=2,
+                    ),
+                ],
+                spacing=6,
+            ),
+        ),
+    ]
+
+
+_MANAGEMENT_TABS = (
+    ("/user", "ユーザー管理", ft.Icons.PEOPLE, Theme.MAUVE, Theme.MAUVE_SOFT),
+    ("/card", "カード管理", ft.Icons.CREDIT_CARD, Theme.MINT, Theme.MINT_SOFT),
+    ("/face", "顔管理", ft.Icons.PERSON_SEARCH, Theme.LAVENDER, Theme.LAVENDER_SOFT),
+)
+
+MANAGEMENT_ROUTES = frozenset(
+    item[0] for item in _MANAGEMENT_TABS
+)
+
+
+def management_tabs(page, active_route, on_change=None):
+    try:
+        counts = repo.get_management_registration_counts()
+    except Exception:
+        logger.exception("登録状況を取得できませんでした")
+        counts = {}
+
+    page.session.set("management_last_route", active_route)
+
+    def count(key, unit):
+        value = counts.get(key)
+        return "-" if value is None else f"{value}{unit}"
+
+    status_texts = {
+        "/user": f"登録者数 {count('users', '人')}",
+        "/card": (
+            f"登録者 {count('card_users', '人')}  /  "
+            f"登録枚数 {count('cards', '枚')}"
+        ),
+        "/face": (
+            f"登録者 {count('face_users', '人')}  /  "
+            f"登録顔数 {count('faces', '件')}"
+        ),
+    }
+
+    def build_tab(item, is_last):
+        route, label, icon, color, soft_color = item
+        active = route == active_route
+
+        def open_tab(_):
+            if active:
+                return
+
+            if on_change is None:
+                page.session.set(
+                    "management_last_route",
+                    route,
+                )
+                page.go(route)
+                return
+
+            on_change(route)
+
+        tab = ft.Container(
+            expand=True,
+            height=72,
+            bgcolor=soft_color if active else Theme.SURFACE,
+            animate=ft.Animation(
+                120,
+                ft.AnimationCurve.EASE_OUT,
+            ),
+            ink=True,
+            ink_color=soft_color,
+            border=ft.border.only(
+                bottom=ft.BorderSide(
+                    3 if active else 1,
+                    color if active else Theme.BORDER,
+                )
+            ),
+            on_click=open_tab,
+            content=ft.Column(
+                controls=[
+                    ft.Row(
+                        controls=[
+                            ft.Icon(
+                                icon,
+                                size=20,
+                                color=(
+                                    color
+                                    if active
+                                    else Theme.TEXT_MUTED
+                                ),
+                            ),
+                            ft.Text(
+                                label,
+                                size=15,
+                                weight=ft.FontWeight.W_700,
+                                color=(
+                                    Theme.TEXT
+                                    if active
+                                    else Theme.TEXT_MUTED
+                                ),
+                                font_family=ui_theme.FONT_FAMILY,
+                            ),
+                        ],
+                        spacing=9,
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    ),
+
+                    # ユーザー数・カード枚数・登録顔数を表示
+                    ft.Text(
+                        status_texts[route],
+                        size=11,
+                        color=(
+                            color
+                            if active
+                            else Theme.TEXT_MUTED
+                        ),
+                        font_family=ui_theme.FONT_FAMILY,
+                        text_align=ft.TextAlign.CENTER,
+                        no_wrap=True,
+                    ),
+                ],
+                spacing=3,
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+        )
+
+        def hover(e):
+            if active:
+                return
+
+            tab.bgcolor = (
+                soft_color
+                if e.data == "true"
+                else Theme.SURFACE
+            )
+            tab.update()
+
+        tab.on_hover = hover
+        return tab
+
+    return ft.Container(
+        width=1040,
+        height=72,
+        bgcolor=Theme.SURFACE,
+        border=ft.border.all(1, Theme.BORDER),
+        border_radius=8,
+        clip_behavior=ft.ClipBehavior.HARD_EDGE,
+        content=ft.Row(
+            controls=[
+                build_tab(
+                    item,
+                    index == len(_MANAGEMENT_TABS) - 1,
+                )
+                for index, item
+                in enumerate(_MANAGEMENT_TABS)
+            ],
+            spacing=0,
+        ),
+    )
+
+def app_view(
+    route: str,
+    page,
+    controls,
+    back_route: str = "/index",
+    on_back=None,
+    page_title_control=None,
+):
+    title, accent, soft_color, icon = _ROUTE_META.get(
+        route,
+        (
+            "SmartKey",
+            Theme.SKY,
+            Theme.SKY_SOFT,
+            ft.Icons.APPS,
+        ),
+    )
+
+    page.bgcolor = Theme.BG
+
+    # 管理画面内ではヘッダーとタブを重複させず、本文だけ返す
+    if (
+        route in MANAGEMENT_ROUTES
+        and getattr(page, "_management_embed_mode", False)
+    ):
+        return ft.Column(
+            controls=list(controls[1:]),
+            spacing=20,
+        )
+
+    header = ft.Row(
+        controls=[
+            ft.Text(
+                "SmartKey",
+                size=20,
+                color=Theme.TEXT,
+                weight=ui_theme.FONT_WEIGHT,
+                font_family=ui_theme.FONT_FAMILY,
+            ),
+        ],
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+    )
+
+    if page_title_control is None:
+        page_title_control = _page_title(
+            title,
+            accent,
+            soft_color,
+            icon,
+        )
+
+    page_controls = [
+        header,
+        page_title_control,
+        *controls,
+        ft.Container(height=90),
+    ]
+
+    content = ft.Container(
+        width=1040,
+        expand=True,
+        content=ft.Column(
+            controls=page_controls,
+            spacing=20,
+            scroll=ft.ScrollMode.HIDDEN,
+            expand=True,
+        ),
+    )
+
+    fixed_back_button = ft.Container(
+        left=34,
+        bottom=24,
+        content=back_button(
+            page,
+            back_route,
+            on_click=on_back,
+        ),
+    )
+
+    return ft.View(
+        route=route,
+        padding=0,
+        bgcolor=Theme.BG,
         controls=[
             ft.Stack(
                 controls=[
-                    # 中身(スクロールする側)。戻るボタンと重ならないよう下に余白を確保
-                    ft.Column(
-                        controls=controls + [ft.Container(height=80)],
-                        scroll=ft.ScrollMode.AUTO,
-                        expand=True,
-                    ),
-                    # 戻るボタン(左下に固定)
+                    *_background_decorations(),
                     ft.Container(
-                        content=back_button(page, back_route),
-                        bottom=0,
                         left=0,
+                        right=0,
+                        top=0,
+                        bottom=0,
+                        padding=ft.padding.only(
+                            left=34,
+                            top=26,
+                            right=34,
+                            bottom=16,
+                        ),
+                        alignment=ft.alignment.top_center,
+                        content=content,
                     ),
+                    fixed_back_button,
                 ],
                 expand=True,
             )
         ],
-        bgcolor=Theme.BG,
-        padding=ft.Padding(left=40, top=24, right=40, bottom=24),
     )
 
 
-def empty_state(message: str, icon=ft.Icons.INBOX_OUTLINED):
-    """
-    データが0件の時に表示する、優しい空状態メッセージ。
-    テーブルが空っぽになるより、案内があった方が親切。
-
-    Args:
-        message (str): 表示する案内文(例: "まだカードが登録されていません")
-        icon: 上に表示するアイコン
-
-    Returns:
-        ft.Container
-    """
+def empty_state(
+    message: str,
+    icon=ft.Icons.INBOX_OUTLINED,
+):
     return ft.Container(
+        padding=ft.padding.symmetric(vertical=44),
+        alignment=ft.alignment.center,
         content=ft.Column(
             controls=[
-                ft.Icon(icon, size=48, color=Theme.TEXT_MUTED),
-                ft.Text(message, size=14, color=Theme.TEXT_MUTED),
+                ft.Container(
+                    width=64,
+                    height=64,
+                    bgcolor=Theme.SKY_SOFT,
+                    border_radius=32,
+                    alignment=ft.alignment.center,
+                    content=ft.Icon(
+                        icon,
+                        size=30,
+                        color=Theme.SKY,
+                    ),
+                ),
+                ft.Text(
+                    message,
+                    size=13,
+                    color=Theme.TEXT_MUTED,
+                    font_family=ui_theme.FONT_FAMILY,
+                ),
             ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=12,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         ),
-        alignment=ft.alignment.center,
-        padding=ft.padding.symmetric(vertical=48),
     )
 
 
 def pager(prev_btn, page_label, next_btn):
-    """
-    ページ送り(前へ / N / M ページ / 次へ)を中央に並べる共通レイアウト。
-    ボタンの実体は呼び出し側で作って渡す(disabled制御などを画面側で持つため)。
-    """
     return ft.Row(
-        controls=[prev_btn, page_label, next_btn],
+        controls=[
+            prev_btn,
+            ft.Container(
+                padding=ft.padding.symmetric(
+                    horizontal=14,
+                    vertical=9,
+                ),
+                bgcolor=Theme.SKY_SOFT,
+                border_radius=8,
+                content=page_label,
+            ),
+            next_btn,
+        ],
         alignment=ft.MainAxisAlignment.CENTER,
-        spacing=16,
+        spacing=14,
     )
 
 
 def nav_card(page, icon, label: str, route: str, col=None):
-    """
-    ホーム画面のナビゲーション用カード(アイコン + ラベルの大きなボタン)。
-
-    マウスを乗せると枠がアクセントカラーになり、少しだけ浮き上がる。
-    ResponsiveRowに入れる想定なので、col で画面幅ごとの列数を指定できる。
-
-    Args:
-        page: ft.Page
-        icon: ft.Icons.XXX
-        label (str): カードに表示する機能名(例: "カード管理")
-        route (str): クリック時の遷移先(例: "/card")
-        col: ResponsiveRowの列指定(例: {"sm": 6, "md": 4})
-
-    Returns:
-        ft.Container
-    """
-    container = ft.Container(
+    panel = card(
         content=ft.Column(
             controls=[
-                ft.Icon(icon, size=40, color=Theme.PRIMARY),
-                ft.Text(label, size=16, weight=ft.FontWeight.BOLD, color=Theme.TEXT),
+                ft.Container(
+                    width=60,
+                    height=60,
+                    bgcolor=Theme.SKY_SOFT,
+                    border_radius=30,
+                    alignment=ft.alignment.center,
+                    content=ft.Icon(
+                        icon,
+                        size=30,
+                        color=Theme.SKY,
+                    ),
+                ),
+                ft.Text(
+                    label,
+                    size=16,
+                    color=Theme.TEXT,
+                    weight=ui_theme.FONT_WEIGHT,
+                    font_family=ui_theme.FONT_FAMILY,
+                ),
             ],
+            spacing=12,
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=12,
         ),
-        height=140,
-        bgcolor=Theme.SURFACE,
-        border_radius=Theme.RADIUS,
-        border=ft.border.all(1, Theme.BORDER),
-        alignment=ft.alignment.center,
-        on_click=lambda e: page.go(route),
-        ink=True,                       # クリック時の波紋(押した感)
-        animate_scale=ft.Animation(120, ft.AnimationCurve.EASE_OUT),
         col=col,
+        padding=20,
     )
-
-    def on_hover(e):
-        hovering = e.data == "true"
-        container.border = ft.border.all(
-            2 if hovering else 1,
-            Theme.PRIMARY if hovering else Theme.BORDER,
-        )
-        container.scale = 1.03 if hovering else 1.0
-        container.update()
-
-    container.on_hover = on_hover
-    return container
+    panel.height = 145
+    panel.alignment = ft.alignment.center
+    panel.on_click = lambda _: page.go(route)
+    return panel
 
 
 # 汎用バッジ用のプリセット色(名前 -> (背景, 文字))

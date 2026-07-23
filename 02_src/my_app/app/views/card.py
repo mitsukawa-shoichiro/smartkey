@@ -13,14 +13,16 @@ import my_app.db.repository as repo
 from my_app.models.ENUMS import CardType
 from my_app.app.utils.pagination import Pagination
 from my_app.app.views.common import (
-    show_error_dialog, build_user_autocomplete,
+    show_error_dialog,
     Theme, card, section_title, card_type_badge,
-    centered_cell, app_view, pager,
+    centered_cell, app_view, empty_state, pager,
     secondary_button, danger_button,
     show_confirm_dialog, show_info_dialog,
+    management_tabs,
 )
 
 logger = logging.getLogger(__name__)
+ITEMS_PER_PAGE = 10
 
 # 列幅定義、ヘッダーと行はここを参照する
 _W = {
@@ -53,8 +55,10 @@ def cardView(page: ft.Page):
     # ===================================================
     # 状態変数
     # ===================================================
-    pg = Pagination(100)           # ページング状態管理クラス
+    offset = 0                     # 現在のページ番号(0始まり)
+    all_page = 1                   # 全ページ数
     selected_user_id = None        # プルダウンで選択中のユーザーID(未選択ならNone=全件表示)
+    selected_ids = []              # チェックボックスで選択されたcard_idのリスト
     checkbox_refs = {}             # {card_id: Checkboxコントロール} の対応表
 
     page.title = "カード管理画面"
@@ -64,61 +68,78 @@ def cardView(page: ft.Page):
     # ユーザー検索用プルダウンの候補データ
     # ===================================================
     # 画面表示のたびに最新のユーザー一覧を取得する
-
-    users = repo.get_all_users()
-
+    try:
+        users = repo.get_all_users()
+    except sqlite3.Error :
+        logger.error("ユーザー情報取得エラー")
+        show_error_dialog(page, "必要情報の取得に失敗しました", go_home=True)
+        return ft.View("/user", controls=[])
 
     def on_user_selected(user_id: int):
         """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
-        nonlocal selected_user_id
+        nonlocal selected_user_id, offset
         selected_user_id = user_id
-        pg.reset()
+        offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
-    # プルダウンはcommonに外注
-    user_search = build_user_autocomplete(users, on_user_selected)
+    search_box = ft.TextField(
+        label="氏名・カナ氏名",
+        hint_text="部分一致検索",
+        width=320,
+        height=52,
+        filled=True,
+        fill_color=Theme.SURFACE,
+        border_color=Theme.BORDER,
+        focused_border_color=Theme.MINT,
+        border_radius=8,
+        prefix_icon=ft.Icons.SEARCH,
+        on_submit=search,
+    )
+
+    search_button = secondary_button(
+        "検索",
+        search,
+        ft.Icons.SEARCH,
+    )
+
+    reset_btn = secondary_button(
+        "リセット",
+        lambda e: page.run_task(refresh, e),
+        ft.Icons.REFRESH,
+    )
+
+    search_zone_row = ft.Row(
+        controls=[
+            search_box,
+            search_button,
+            reset_btn,
+        ],
+        spacing=16,
+        wrap=True,
+        run_spacing=12,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+    )
 
 
     # ===================================================
     # UIコントロールの定義
     # ===================================================
 
-    # リセットボタン定義
-    reset_btn = ft.ElevatedButton(
-        content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
-        on_click=lambda e: page.run_task(refresh, e),
-        bgcolor=ft.Colors.RED_50,
-        width=60,
-        height=30,
-        style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(radius=0),
-            padding=ft.padding.all(0)
-        ),
+    # ページ遷移ボタン定義
+    prev_btn = secondary_button(
+        "前へ",
+        lambda e: prev_page(e),
+        ft.Icons.CHEVRON_LEFT
     )
 
-    # 検索欄定義
-    search_zone = ft.Row(
-        controls=[user_search],
-        alignment=ft.MainAxisAlignment.CENTER,
-        spacing=0
+    page_label = ft.Text("")
+
+    next_btn = secondary_button(
+        "次へ",
+        lambda e: next_page(e),
+        ft.Icons.CHEVRON_RIGHT
     )
-
-    # リセットボタン含め検索欄を再定義
-    search_zone_row = ft.Row(
-        controls=[search_zone, reset_btn],
-        alignment=ft.MainAxisAlignment.START,
-        spacing=50
-    )
-
-    # 前ページ遷移ボタン定義
-    prev_btn = secondary_button("⬅ 前へ", lambda e: prev_page(e))
-
-    # 現在ページ定義
-    page_label = ft.Text("")  # load_table内で更新
-
-    # 次ページ遷移ボタン定義
-    next_btn = secondary_button("次へ ➡", lambda e: next_page(e))
 
     # ボタン群をまとめて再定義
     btn_zone = pager(prev_btn, page_label, next_btn)
@@ -174,15 +195,16 @@ def cardView(page: ft.Page):
 
     async def refresh(e):
         """リセットボタン: 検索条件・並び順・ページを全部初期状態に戻す"""
-        nonlocal selected_user_id, user_search
+        nonlocal selected_user_id, offset, reset_btn, user_search
         reset_btn.disabled = True
         page.update()
 
-        selected_user_id = None
+        search_box.value = ""
+        search_text = ""
         table.sort_ascending = True
-        pg.reset()
+        offset = 0
 
-        # プルダウンは都度作り直ししないと壊れる
+        # プルダウンはvalueだけリセットしても表示が変わらないので都度作り直し
         user_search = build_user_autocomplete(users, on_user_selected)
         search_zone.controls = [user_search]
         search_zone.update()
@@ -231,19 +253,30 @@ def cardView(page: ft.Page):
         選択中のuser_id(無ければ全件)に基づいてカード情報を取得し、
         テーブル・チェックボックスを再構築します。
         """
+        nonlocal selected_user_id, offset, all_page
 
         try:
-            cards, total = repo.find_cards_with_total(selected_user_id, table.sort_ascending, pg.per_page, pg.offset)
+            #全検索の場合
+            if selected_user_id is None:
+                cards = repo.find_all_cards(table.sort_ascending, offset * 100)
+                total = repo.count_all_card()
+            # 条件検索の場合
+            else:
+                cards = repo.find_cards_by_user_id(
+                    selected_user_id, table.sort_ascending, offset * 100)
+                total = repo.count_cards_by_user_id(selected_user_id)
         except sqlite3.Error:
             logger.exception("カード情報の読み込みに失敗しました")
             show_error_dialog(page, "カード情報の取得に失敗しました。しばらくしてから再度お試しください。")
             return
 
         #諸パラメータ更新
-        pg.update_total(total)
+        all_page = int(((total - 1) / 100) + 1)
 
         checkbox_refs.clear()
         table.rows.clear()
+        column.controls.clear()
+        column.controls.append(ft.Container(height=-2))
 
         # 該当カード情報分繰り返し
         for card in cards:
@@ -253,9 +286,9 @@ def cardView(page: ft.Page):
 
             table.rows.append(_build_card_row(card, cb))
 
-        page_label.value = pg.label
-        prev_btn.disabled = pg.is_first
-        next_btn.disabled = pg.is_last
+        page_label.value = f"{offset + 1} / {all_page} ページ"
+        prev_btn.disabled = offset == 0
+        next_btn.disabled = (offset + 1) == all_page
         page.update()
 
     # ===================================================
@@ -263,34 +296,54 @@ def cardView(page: ft.Page):
     # ===================================================
 
     def open_confirm_dialog(e):
-        selected_ids = [cid for cid, cb in checkbox_refs.items() if cb.value]
+        nonlocal selected_ids
+
+        selected_ids = [
+            card_id
+            for card_id, checkbox in checkbox_refs.items()
+            if checkbox.value
+        ]
+
         if not selected_ids:
-            show_info_dialog(page, "削除する行が選択されていません。", title="削除の確認")
+            show_info_dialog(
+                page,
+                "削除する行が選択されていません。",
+                title="削除の確認",
+            )
             return
+
         show_confirm_dialog(
             page,
             f"{len(selected_ids)} 件を削除しますか?",
-            on_confirm=lambda: confirm_delete(selected_ids),
+            on_confirm=confirm_delete,
             title="削除の確認",
         )
 
-    def confirm_delete(selected_ids):
+    def confirm_delete(e):
         """
         削除確定: 選択されたcard_idを1件ずつ repo.delete_card に渡します。
         """
         try:
             for card_id in selected_ids:
                 repo.delete_card(card_id)
-                logger.info(f"card_id={card_id}が削除されました")
+                logger.info(
+                    "card_id=%sが削除されました",
+                    card_id,
+                )
         except sqlite3.Error:
             logger.exception("カード情報の削除に失敗しました")
+            page.close(dialog)
             show_error_dialog(page, "削除に失敗しました。しばらくしてから再度お試しください。")
             load_table()  # 途中まで消えている可能性があるので一覧を最新化しておく
             return
 
         load_table()
 
-        show_info_dialog(page, f"{len(selected_ids)} 件を削除しました。", title="削除完了")
+        show_info_dialog(
+            page,
+            f"{len(selected_ids)} 件を削除しました。",
+            title="削除完了",
+        )
 
     # ===================================================
     # レイアウト定義と配置
@@ -305,7 +358,7 @@ def cardView(page: ft.Page):
     # スクロール化
     scroll_table = ft.Column(
         controls=[table_row],
-        scroll=ft.ScrollMode.ALWAYS,
+        scroll=ft.ScrollMode.HIDDEN,
         expand=True,
     )
 
@@ -319,36 +372,63 @@ def cardView(page: ft.Page):
     # 検索欄用カード(土台のパネル)
     search_card = card(
         ft.Column(
-            controls=[ # サブタイトル入れたかったのに泣く泣く断念；；カンマ入れた後に文字列で小っちゃく薄く下に文字書けるます！
-                section_title("ユーザー名で検索",),
-                ft.Container(height=4),
+            controls=[
+                ft.Row(
+                    controls=[
+                        ft.Container(
+                            expand=True,
+                            content=section_title(
+                                "カード検索",
+                                accent=Theme.MINT,
+                            ),
+                        ),
+                        primary_button(
+                            "カードを登録",
+                            lambda e: page.go("/register"),
+                            ft.Icons.ADD_CARD,
+                        ),
+                    ],
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+                ft.Container(height=6),
                 search_zone_row,
             ],
-            spacing=8,
-        )
+            spacing=10,
+        ),
+        accent=Theme.MINT,
     )
 
     # テーブル用カード(土台のパネル)
     table_card = card(
         ft.Column(
-            controls=[# 上に同じ
-                section_title("カード一覧"),
-                ft.Container(height=8),
+            controls=[
+                section_title(
+                    "カード一覧",
+                    accent=Theme.MINT,
+                ),
+                ft.Container(height=10),
                 scroll_table,
-                ft.Container(height=8),
+                ft.Container(height=10),
                 btn_zone,
             ],
-            spacing=8,
+            spacing=10,
             expand=True,
-        )
+        ),
+        accent=Theme.MINT,
     )
 
     # ===================================================
     # 実際にページに
     # ===================================================
     # ここまでdef cardViewの関数
-    return app_view("/card", page, [
-        search_card,
-        ft.Container(height=16),
-        table_card,
-    ])
+    return app_view(
+        "/card",
+        page,
+        [
+            management_tabs(page, "/card"),
+            search_card,
+            ft.Container(height=16),
+            table_card,
+        ],
+        back_route="/index",
+    )
