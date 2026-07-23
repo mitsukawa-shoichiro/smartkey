@@ -2,6 +2,44 @@
 import sys
 import os
 
+# 絶対パスで PROJECT_ROOT を指定
+PROJECT_ROOT = r"C:\SmartKey\smartkey\02_src"
+MY_APP_PATH = os.path.join(PROJECT_ROOT, "my_app")
+if MY_APP_PATH not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+print("=== DEBUG INFO ===")
+print("PROJECT_ROOT:", PROJECT_ROOT)
+print("MY_APP_PATH:", MY_APP_PATH)
+print("sys.path:")
+for i, p in enumerate(sys.path):
+    print(f"  [{i}] {p}")
+
+# my_app ディレクトリの存在確認
+my_app_path = os.path.join(PROJECT_ROOT, "my_app")
+print("my_app exists:", os.path.exists(my_app_path))
+if os.path.exists(my_app_path):
+    print("my_app contents:", os.listdir(my_app_path))
+
+# logs ディレクトリの確認
+logs_path = os.path.join(my_app_path, "logs")
+print("logs exists:", os.path.exists(logs_path))
+if os.path.exists(logs_path):
+    print("logs contents:", os.listdir(logs_path))
+
+# log_config_service モジュールの確認
+log_config_path = os.path.join(logs_path, "log_config_service.py")
+print("log_config_service.py exists:", os.path.exists(log_config_path))
+
+# インポートを試みる
+try:
+    import my_app.logs.log_config_service
+    print("✅ my_app.logs.log_config_service imported successfully")
+except Exception as e:
+    print("❌ Import error:", e)
+    import traceback
+    traceback.print_exc()
+
 project_root = os.path.dirname(os.path.abspath(__file__))
 for _ in range(2):
     project_root = os.path.dirname(project_root)
