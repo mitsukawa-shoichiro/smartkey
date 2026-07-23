@@ -96,6 +96,12 @@ def create_database():
             )
         """)
 
+        c.execute("""
+            CREATE INDEX IF NOT EXISTS
+            idx_access_logs_timestamp_event
+            ON access_logs(timestamp, event_type)
+        """)
+
 
         # faceテーブルが存在するか確認
         c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='face';")

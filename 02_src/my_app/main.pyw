@@ -13,6 +13,10 @@ import my_app.logs.log_config_app
 from my_app.app.views.router import route
 from my_app.db.schema import create_database
 
+from my_app.app.utils.front_camera_moduel import (
+    send_message as send_camera_message,
+)
+
 HOST = '127.0.0.1'
 PORT = 10000
 
@@ -27,11 +31,7 @@ logger = logging.getLogger(__name__)
 
 from my_app.ui.theme import apply_page_theme
 def main(page: ft.Page):
-    page.window.width = 1024
-    page.window.height = 768
-    page.window.min_width = 1024
-    page.window.min_height = 768
-    page.window.resizable = True
+    apply_page_theme(page)
     page.title = "ドア開閉システム"
 
     route(page)
@@ -39,11 +39,20 @@ def main(page: ft.Page):
 
     create_database()
 
-    logger.info("GUIが起動されました")
+    logger.info("GUI起動")
+    def on_disconnect(_):
+        send_camera_message(
+            "finishRegistering"
+        )
+
+    page.on_disconnect = on_disconnect
 
 
 @atexit.register
 def _on_exit():
+    send_camera_message(
+        "finishRegistering"
+    )
     try:
         sock.connect((HOST, PORT))
         msg = "authenticating"
@@ -53,6 +62,7 @@ def _on_exit():
         logger.error(f"通信エラー: {e}")
     finally:
         logger.info("GUIを終了しました")
+
 
 
 if __name__ == "__main__":

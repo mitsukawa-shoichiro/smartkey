@@ -16,15 +16,15 @@ import flet as ft
 import my_app.db.repository as repo
 from my_app.models.ENUMS import EventType
 from my_app.app.views.common import (
-    show_error_dialog, build_user_autocomplete,
+    show_error_dialog,
     Theme, card, section_title,
     centered_cell, app_view, pager,
-    secondary_button, badge,
+    secondary_button, primary_button, badge,
     BADGE_BLUE, BADGE_GREEN, BADGE_ORANGE, BADGE_GRAY,
 )
 
 # テーブルの1ページが表示する件数
-ITEMS_PER_PAGE = 100
+ITEMS_PER_PAGE = 10
 logger = logging.getLogger(__name__)
 
 # 認証方式ごとのバッジ色(未知の方式はグレーにフォールバック)
@@ -50,7 +50,16 @@ def _build_log_row(log) -> ft.DataRow:
     user_label = log.user_name or "(削除済みユーザー)"
     label = f"{user_label} / {log.card_type}" if log.card_type else user_label
 
-    method_colors = _METHOD_COLORS.get(log.method, BADGE_GRAY)
+    method_label = {
+        "顔": "顔認証",
+        "face": "顔認証",
+        "card": "カード",
+    }.get(log.method, log.method or "不明")
+
+    method_colors = _METHOD_COLORS.get(
+        method_label,
+        BADGE_GRAY,
+    )
 
     return ft.DataRow(cells=[
         ft.DataCell(centered_cell(ft.Text(label), _W["label"])),
@@ -124,9 +133,10 @@ def access_logs(page: ft.Page):
         # ===================================================
         current_page = 0           # 現在のページ(0から)
         total_pages = 1            # 総ページ数(動的に計算)
-        selected_user_id = None    # プルダウンで選択中のユーザーID(未選択ならNone=全ユーザー対象)
+        # selected_user_id = None  # プルダウンで選択中のユーザーID(未選択ならNone=全ユーザー対象)
+        search_text = ""           # 初期検索
         search_params = {          # 検索条件を保持(検索ボタン押下時にまとめて確定させる)
-            "user_id": None,
+            "search_text": "",
             "method": None,
             "event_type": None,
             "start_dt": None,
@@ -146,32 +156,32 @@ def access_logs(page: ft.Page):
             nonlocal total_pages
             total_pages = max(1, (count + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE)
 
-        # ===================================================
-        # ユーザー検索用プルダウンの候補データ
-        # ===================================================
+        # # ===================================================
+        # # ユーザー検索用プルダウンの候補データ
+        # # ===================================================
 
-        # 画面表示のたびに最新のユーザー一覧を取得する
-        try:
-            users = repo.get_all_users()
-        except sqlite3.Error:
-            logger.exception("ユーザー情報取得エラー")
-            show_error_dialog(page, "必要情報の取得に失敗しました", go_home=True)
-            return ft.View("/access_logs", controls=[])
+        # # 画面表示のたびに最新のユーザー一覧を取得する
+        # try:
+        #     users = repo.get_all_users()
+        # except sqlite3.Error:
+        #     logger.exception("ユーザー情報取得エラー")
+        #     show_error_dialog(page, "必要情報の取得に失敗しました", go_home=True)
+        #     return ft.View("/access_logs", controls=[])
 
-        def on_user_selected(user_id: int):
-            """
-            プルダウンでユーザーが選択された時: user_idだけ保持しておく。
-            他の検索条件(認証方式・入退室区分・日時)と同様、実際の検索は
-            検索ボタン押下時(search_logs)にまとめて確定させる。
-            """
-            nonlocal selected_user_id
-            selected_user_id = user_id
+        # def on_user_selected(user_id: int):
+        #     """
+        #     プルダウンでユーザーが選択された時: user_idだけ保持しておく。
+        #     他の検索条件(認証方式・入退室区分・日時)と同様、実際の検索は
+        #     検索ボタン押下時(search_logs)にまとめて確定させる。
+        #     """
+        #     nonlocal selected_user_id
+        #     selected_user_id = user_id
 
-        search_user = build_user_autocomplete(users, on_user_selected)
+        # search_user = build_user_autocomplete(users, on_user_selected)
 
-        # プルダウンはvalueだけリセットしても表示が変わらないため、
-        # リセット時はこのRowの中身を作り直して差し替える
-        search_zone = ft.Row(controls=[search_user], spacing=0)
+        # # プルダウンはvalueだけリセットしても表示が変わらないため、
+        # # リセット時はこのRowの中身を作り直して差し替える
+        # search_zone = ft.Row(controls=[search_user], spacing=0)
 
         # ===================================================
         # 日付ピッカー関連
@@ -220,6 +230,20 @@ def access_logs(page: ft.Page):
         # 検索フィールドの定義
         # ===================================================
 
+        search_box = ft.TextField(
+            label="氏名・カナ氏名",
+            hint_text="部分一致検索",
+            width=300,
+            height=52,
+            filled=True,
+            fill_color=Theme.SURFACE,
+            border_color=Theme.BORDER,
+            focused_border_color=Theme.LOG_BLUE,
+            border_radius=8,
+            prefix_icon=ft.Icons.SEARCH,
+            on_submit=lambda e: search_logs(e),
+        )
+
         # 認証方式の選択
         method_dropdown = ft.DropdownM2(label="認証方式", value=None, width=120, height=48)
         method_dropdown.options = [
@@ -253,8 +277,21 @@ def access_logs(page: ft.Page):
             time_picker_entry_mode=ft.TimePickerEntryMode.INPUT
         )
 
-        start_text = ft.TextField(label="開始日時", width=200, height=48)
-        end_text = ft.TextField(label="終了日時", width=200, height=48)
+        start_text = ft.TextField(
+            label="開始日時",
+            width=200,
+            height=48,
+            read_only=True,
+            border_radius=8,
+        )
+
+        end_text = ft.TextField(
+            label="終了日時",
+            width=200,
+            height=48,
+            read_only=True,
+            border_radius=8,
+        )
 
         # ===================================================
         # 検索実行
@@ -265,30 +302,52 @@ def access_logs(page: ft.Page):
             検索ボタン: 各検索欄(ユーザー・認証方式・入退室区分・日時)の値を
             まとめてsearch_paramsに確定させ、1ページ目から検索結果を表示する。
             """
-            nonlocal current_page, search_params
+            nonlocal current_page, search_params, search_text
 
-            search_method = method_dropdown.value.strip() if method_dropdown.value else None
-            search_event_type = int(search_eventtype.value.strip()) if search_eventtype.value else None
+            search_text = (search_box.value or "").strip()
+
+            search_method = (
+                method_dropdown.value.strip()
+                if method_dropdown.value
+                else None
+            )
+
+            search_event_type = (
+                int(search_eventtype.value.strip())
+                if search_eventtype.value
+                else None
+            )
 
             first_date = today - timedelta(days=365)
             last_date = today
 
-            start_dt, end_dt, error_message = _validate_search_period(start_text.value, end_text.value, first_date, last_date)
+            start_dt, end_dt, error_message = (
+                _validate_search_period(
+                    start_text.value,
+                    end_text.value,
+                    first_date,
+                    last_date,
+                )
+            )
+
             if error_message:
                 show_error_dialog(page, error_message)
                 return
 
             search_params = {
-                "user_id": selected_user_id,
+                "search_text": search_text,
                 "method": search_method,
                 "event_type": search_event_type,
                 "start_dt": start_dt,
                 "end_dt": end_dt,
             }
-            current_page = 0
 
+            current_page = 0
             load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
+            scroll_table.scroll_to(
+                offset=0,
+                duration=0,
+            )
 
         # ===================================================
         # ソート
@@ -306,35 +365,55 @@ def access_logs(page: ft.Page):
         # 全件表示・リセット
         # ===================================================
 
-        def show_all_logs(e):
-            """全件検索してテーブルに表示(検索条件を全てクリアする)"""
-            nonlocal current_page, search_params
-            current_page = 0
-            search_params = {
-                "user_id": None, "method": None, "event_type": None,
-                "start_dt": None, "end_dt": None,
-            }
-            reset(e)
-            load_table()
+        # def show_all_logs(e):
+        #     """全件検索してテーブルに表示(検索条件を全てクリアする)"""
+        #     nonlocal current_page, search_params
+        #     current_page = 0
+        #     search_params = {
+        #         "user_id": None, "method": None, "event_type": None,
+        #         "start_dt": None, "end_dt": None,
+        #     }
+        #     reset(e)
+        #     load_table()
 
         def reset(e):
             """検索欄のリセット(ユーザー選択も含む)"""
-            nonlocal selected_user_id, search_user
-            selected_user_id = None
+            nonlocal current_page, search_text, search_params
 
             # プルダウンはvalueだけリセットしても表示が変わらないので都度作り直し
-            search_user = build_user_autocomplete(users, on_user_selected)
-            search_zone.controls = [search_user]
-            search_zone.update()
+            search_box.value = ""
+            search_text = ""
 
             method_dropdown.value = None
             search_eventtype.value = None
+
             start_text.value = ""
             end_text.value = ""
+
             start_date.value = None
             end_date.value = None
             start_time.value = time(0, 0)
             end_time.value = time(23, 59)
+
+            search_params = {
+                "search_text": "",
+                "method": None,
+                "event_type": None,
+                "start_dt": None,
+                "end_dt": None,
+            }
+
+            current_page = 0
+
+            date_search_area.visible = False
+            toggle_btn.text = "日時指定を開く"
+            toggle_btn.icon = ft.Icons.DATE_RANGE
+
+            load_table()
+            scroll_table.scroll_to(
+                offset=0,
+                duration=0,
+            )
             page.update()
 
         start_date.on_change = change_start_date
@@ -346,24 +425,45 @@ def access_logs(page: ft.Page):
 
         page_label = ft.Text("")  # load_table内で更新
 
-        prev_btn = secondary_button("⬅ 前へ", lambda e: prev_page(e))
-        next_btn = secondary_button("次へ ➡", lambda e: next_page(e))
-        pagination_controls = pager(prev_btn, page_label, next_btn)
-
-        search_btn = ft.ElevatedButton(
-            text="検索", icon=ft.Icons.SEARCH, on_click=search_logs,
-            bgcolor=Theme.PRIMARY, color="#FFFFFF", height=44,
-            style=ft.ButtonStyle(
-                shape=ft.RoundedRectangleBorder(radius=Theme.RADIUS_SM),
-                padding=ft.padding.symmetric(horizontal=20),
-            ),
+        prev_btn = secondary_button(
+            "前へ",
+            lambda e: prev_page(e),
+            ft.Icons.CHEVRON_LEFT,
         )
-        show_all_btn = secondary_button("全件表示", show_all_logs)
-        reset_btn = secondary_button("クリア", reset)
+        next_btn = secondary_button(
+            "次へ",
+            lambda e: next_page(e),
+            ft.Icons.CHEVRON_RIGHT,
+        )
+        pagination_controls = pager(
+            prev_btn,
+            page_label,
+            next_btn,
+        )
+
+        search_btn = primary_button(
+            "検索",
+            search_logs,
+            ft.Icons.SEARCH,
+        )
+
+        reset_btn = secondary_button(
+            "リセット",
+            reset,
+            ft.Icons.REFRESH,
+        )
+
         startdate_btn = secondary_button(
-            "開始日時を選択", lambda e: open_datepicker(start_date), ft.Icons.DATE_RANGE)
+            "開始日時",
+            lambda e: open_datepicker(start_date),
+            ft.Icons.DATE_RANGE,
+        )
+
         enddate_btn = secondary_button(
-            "終了日時を選択", lambda e: open_datepicker(end_date), ft.Icons.DATE_RANGE)
+            "終了日時",
+            lambda e: open_datepicker(end_date),
+            ft.Icons.DATE_RANGE,
+        )
 
         # ===================================================
         # テーブル定義
@@ -404,10 +504,15 @@ def access_logs(page: ft.Page):
 
             try:
                 logs, total = repo.find_access_log(
-                    search_params["method"], search_params["event_type"],
-                    search_params["start_dt"], search_params["end_dt"],
-                    ITEMS_PER_PAGE, offset, search_params["user_id"],
-                    table.sort_ascending,
+                    method=search_params["method"],
+                    event_type=search_params["event_type"],
+                    start_dt=search_params["start_dt"],
+                    end_dt=search_params["end_dt"],
+                    limit=ITEMS_PER_PAGE,
+                    offset=offset,
+                    user_id=None,
+                    asc=table.sort_ascending,
+                    search_text=search_params["search_text"],
                 )
             except sqlite3.Error:
                 logger.exception("ログの読み込みに失敗しました")
@@ -421,7 +526,10 @@ def access_logs(page: ft.Page):
             for log in logs:
                 table.rows.append(_build_log_row(log))
 
-            page_label.value = f"{current_page + 1} / {total_pages} ページ"
+            page_label.value = (
+            f"{current_page + 1} / {total_pages} ページ"
+            f"（全{total}件）"
+        )
             prev_btn.disabled = current_page == 0
             next_btn.disabled = (current_page + 1) >= total_pages
             page.update()
@@ -455,31 +563,59 @@ def access_logs(page: ft.Page):
 
         # データテーブルはそのままだと中央揃えできないためRow化
         table_row = ft.Row([table], alignment=ft.MainAxisAlignment.CENTER)
-        scroll_table = ft.Column(controls=[table_row], scroll=ft.ScrollMode.ALWAYS, expand=True)
+        scroll_table = ft.Column(controls=[table_row], scroll=ft.ScrollMode.HIDDEN, expand=True)
 
         # 検索条件エリア(トグルで開閉)
-        search_area = ft.Container(
-            content=ft.Column(
-                controls=[
-                    ft.Row([search_zone, method_dropdown, search_eventtype, reset_btn],
-                        spacing=16, vertical_alignment=ft.CrossAxisAlignment.CENTER),
-                    ft.Row([startdate_btn, start_text, enddate_btn, end_text],
-                        spacing=16, vertical_alignment=ft.CrossAxisAlignment.CENTER),
-                    ft.Row([search_btn, show_all_btn], spacing=16),
-                ],
-                spacing=16,
-                horizontal_alignment=ft.CrossAxisAlignment.START,
-            ),
-            padding=ft.padding.only(top=16),
+        basic_search_row = ft.Row(
+            controls=[
+                search_box,
+                method_dropdown,
+                search_eventtype,
+                search_btn,
+                reset_btn,
+            ],
+            spacing=14,
+            run_spacing=12,
+            wrap=True,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        )
+
+        date_search_area = ft.Container(
             visible=False,
+            padding=ft.padding.only(top=8),
+            content=ft.Row(
+                controls=[
+                    startdate_btn,
+                    start_text,
+                    enddate_btn,
+                    end_text,
+                ],
+                spacing=14,
+                run_spacing=12,
+                wrap=True,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
         )
 
         def toggle_search_area(e):
-            search_area.visible = not search_area.visible
-            toggle_btn.text = "検索オプションを閉じる" if search_area.visible else "検索オプションを開く"
+            date_search_area.visible = (
+                not date_search_area.visible
+            )
+
+            if date_search_area.visible:
+                toggle_btn.text = "日時指定を閉じる"
+                toggle_btn.icon = ft.Icons.EXPAND_LESS
+            else:
+                toggle_btn.text = "日時指定を開く"
+                toggle_btn.icon = ft.Icons.DATE_RANGE
+
             page.update()
 
-        toggle_btn = secondary_button("検索オプションを開く", toggle_search_area, ft.Icons.TUNE)
+        toggle_btn = secondary_button(
+            "日時指定を開く",
+            toggle_search_area,
+            ft.Icons.DATE_RANGE,
+        )
 
         # ===================================================
         # commonスタイル適用
@@ -489,28 +625,37 @@ def access_logs(page: ft.Page):
         search_card = card(
             ft.Column(
                 controls=[
-                    section_title("入退室ログ"),
-                    ft.Container(height=4),
+                    section_title(
+                        "ログ検索",
+                        accent=Theme.LOG_BLUE,
+                    ),
+                    ft.Container(height=6),
+                    basic_search_row,
                     toggle_btn,
-                    search_area,
+                    date_search_area,
                 ],
-                spacing=8,
-            )
+                spacing=10,
+            ),
+            accent=Theme.LOG_BLUE,
         )
 
         # テーブル用カード(土台のパネル)
         table_card = card(
             ft.Column(
                 controls=[
-                    section_title("ログ一覧"),
-                    ft.Container(height=8),
+                    section_title(
+                        "ログ一覧",
+                        accent=Theme.LOG_BLUE,
+                    ),
+                    ft.Container(height=10),
                     scroll_table,
-                    ft.Container(height=8),
+                    ft.Container(height=10),
                     pagination_controls,
                 ],
-                spacing=8,
+                spacing=10,
                 expand=True,
-            )
+            ),
+            accent=Theme.LOG_BLUE,
         )
 
         # 初回の読み込み(全件モード)

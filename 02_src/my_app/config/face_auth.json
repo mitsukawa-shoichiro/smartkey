@@ -1,5 +1,4 @@
 {
-    "rgb_camera_index": 0,
     "ir_device_id_contains": "VID_0C45&PID_6366",
     "ir_startup_timeout_sec": 5.0,
     "similarity_threshold": 0.42,
@@ -18,6 +17,7 @@
     "face_state_timeout_sec": 2.0,
 
     "registration_min_images": 3,
+    "registration_max_images": 10,
     "registration_min_det_score": 0.65,
     "registration_min_face_px": 100,
     "registration_min_blur": 60.0,

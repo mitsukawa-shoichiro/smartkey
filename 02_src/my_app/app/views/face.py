@@ -14,14 +14,16 @@ import my_app.db.repository as repo
 import my_app.service.face_service as face_service
 import sqlite3
 from my_app.app.views.common import (
-    show_error_dialog, build_user_autocomplete,
+    show_error_dialog,
     Theme, card, section_title, empty_state,
     centered_cell, app_view, pager,
-    secondary_button, danger_button,
+    secondary_button, primary_button, danger_button,
     show_confirm_dialog, show_info_dialog,
+    management_tabs,
 )
 
 logger = logging.getLogger(__name__)
+ITEMS_PER_PAGE = 10
 
 
 def faceView(page: ft.Page):
@@ -30,7 +32,8 @@ def faceView(page: ft.Page):
     # ===================================================
     offset = 0                     # 現在のページ番号(0から)
     all_page = 1                   # 全ページ数
-    selected_user_id = None        # Autocompleteで選択中のユーザーID(未選択ならNone=全件表示)
+    # selected_user_id = None      # Autocompleteで選択中のユーザーID(未選択ならNone=全件表示)
+    search_text = ""               # 初期検索
     selected_ids = []              # チェックボックスで選択されたface_idのリスト
     checkbox_refs = {}             # {face_id: Checkboxコントロール} の対応表
 
@@ -41,63 +44,69 @@ def faceView(page: ft.Page):
     # ユーザー検索用プルダウンボックスの候補リスト
     # ===================================================
     # 画面表示のたびに最新のユーザー一覧を取得
-
-    try:
-        users = repo.get_all_users()
-    except sqlite3.Error :
-        logger.error("ユーザー情報取得エラー")
-        show_error_dialog(page, "必要情報の取得に失敗しました", go_home=True)
-        return ft.View("/user", controls=[])
-
-    def on_user_selected(user_id: int):
-        """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
-        nonlocal selected_user_id, offset
-        selected_user_id = user_id
+    def search(e=None):
+        nonlocal search_text, offset
+        search_text = (search_box.value or "").strip()
         offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
-    user_search = build_user_autocomplete(users, on_user_selected)
+    search_box = ft.TextField(
+        label="氏名・カナ氏名",
+        hint_text="部分一致検索",
+        width=320,
+        height=52,
+        filled=True,
+        fill_color=Theme.SURFACE,
+        border_color=Theme.BORDER,
+        focused_border_color=Theme.LAVENDER,
+        border_radius=8,
+        prefix_icon=ft.Icons.SEARCH,
+        on_submit=search,
+    )
+
+    search_button = secondary_button(
+        "検索",
+        search,
+        ft.Icons.SEARCH,
+    )
+
+    reset_btn = secondary_button(
+        "リセット",
+        lambda e: page.run_task(refresh, e),
+        ft.Icons.REFRESH,
+    )
+
+    search_zone_row = ft.Row(
+        controls=[
+            search_box,
+            search_button,
+            reset_btn,
+        ],
+        spacing=16,
+        wrap=True,
+        run_spacing=12,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+    )
 
     # ===================================================
     # UIコントロールの定義
     # ===================================================
 
-    # リセットボタン定義
-    reset_btn = ft.ElevatedButton(
-        content=ft.Text(value="リセット", size=14, color=ft.Colors.RED),
-        on_click=lambda e: page.run_task(refresh, e),
-        bgcolor=ft.Colors.RED_50,
-        width=60,
-        height=30,
-        style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(radius=0),
-            padding=ft.padding.all(0)
-        ),
+    # ボタン定義
+    prev_btn = secondary_button(
+        "前へ",
+        lambda e: prev_page(e),
+        ft.Icons.CHEVRON_LEFT,
     )
 
-    # 検索窓定義
-    search_zone = ft.Row(
-        controls=[user_search],
-        alignment=ft.MainAxisAlignment.CENTER,
-        spacing=0
+    page_label = ft.Text("")
+
+    next_btn = secondary_button(
+        "次へ",
+        lambda e: next_page(e),
+        ft.Icons.CHEVRON_RIGHT,
     )
-
-    # リセットボタン含めグループ化
-    search_zone_row = ft.Row(
-        controls=[search_zone, reset_btn],
-        alignment=ft.MainAxisAlignment.START,
-        spacing=50
-    )
-
-    # 前ページ遷移ボタン定義
-    prev_btn = secondary_button("⬅ 前へ", lambda e: prev_page(e))
-
-    # 現在ページ定義
-    page_label = ft.Text("")  # load_table内で更新
-
-    # 次ページ遷移ボタン定義
-    next_btn = secondary_button("次へ ➡", lambda e: next_page(e))
 
     # ボタン群をまとめて再定義
     btn_zone = pager(prev_btn, page_label, next_btn)
@@ -151,18 +160,15 @@ def faceView(page: ft.Page):
     async def refresh(e):
         """リセットボタン: 検索条件・並び順・ページを全部初期状態に戻す"""
         #スコープ外のグローバル変数を扱う
-        nonlocal selected_user_id, offset, reset_btn
+        nonlocal search_text, offset
+
         reset_btn.disabled = True
         page.update()
 
-        selected_user_id = None
+        search_box.value = ""
+        search_text = ""
         table.sort_ascending = True
         offset = 0
-
-        # プルダウンはvalueだけリセットしても表示が変わらないので都度作り直し
-        user_search = build_user_autocomplete(users, on_user_selected)
-        search_zone.controls = [user_search]
-        search_zone.update()
 
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
@@ -214,28 +220,19 @@ def faceView(page: ft.Page):
         選択中のuser_id(無ければ全件)に基づいて顔情報を取得し、
         テーブル・チェックボックスを再構築する。
         """
-        #スコープ外のグローバル変数を扱う
-        nonlocal selected_user_id, offset, all_page
+        nonlocal search_text, offset, all_page
 
-        try:
-            #絞り込み条件なし
-            if selected_user_id is None:
-                faces = repo.find_all_faces(table.sort_ascending, offset * 100)
-                total = repo.count_all_face()
-            #絞り込み条件あり
-            else:
-                faces = repo.find_faces_by_user_id(
-                    selected_user_id, table.sort_ascending, offset * 100)
-                total = repo.count_faces_by_user_id(selected_user_id)
+        faces, total = repo.find_faces_with_total(
+            search_text,
+            table.sort_ascending,
+            ITEMS_PER_PAGE,
+            offset * ITEMS_PER_PAGE,
+        )
 
-        except sqlite3.Error:
-            logger.exception("顔情報の読み込みに失敗しました")
-            show_error_dialog(page, "顔情報の取得に失敗しました。しばらくしてから再度お試しください。")
-            return
-
-
-
-        all_page = int(((total - 1) / 100) + 1)
+        all_page = max(
+            1,
+            (total + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE,
+        )
 
         #初期化
         checkbox_refs.clear()
@@ -259,7 +256,10 @@ def faceView(page: ft.Page):
             )
 
         #その他項目の設定
-        page_label.value = f"{offset + 1} / {all_page} ページ"
+        page_label.value = (
+            f"{offset + 1} / {all_page} ページ"
+            f"（全{total}件）"
+        )
         prev_btn.disabled = offset == 0
         next_btn.disabled = (offset + 1) == all_page
 
@@ -327,7 +327,7 @@ def faceView(page: ft.Page):
     #スクロール可能の定義
     scroll_table = ft.Column(
         controls=[table_row],
-        scroll=ft.ScrollMode.ALWAYS,
+        scroll=ft.ScrollMode.HIDDEN,
         expand=True,
     )
 
@@ -341,28 +341,49 @@ def faceView(page: ft.Page):
     # 検索欄用カード(土台のパネル)
     search_card = card(
         ft.Column(
-            controls=[ # サブタイトル入れたかったのに泣く泣く断念；；カンマ入れた後に文字列で小っちゃく薄く下に文字書けるます！
-                section_title("ユーザー名で検索",),
-                ft.Container(height=4),
+            controls=[
+                ft.Row(
+                    controls=[
+                        ft.Container(
+                            expand=True,
+                            content=section_title(
+                                "顔情報検索",
+                                accent=Theme.LAVENDER,
+                            ),
+                        ),
+                        primary_button(
+                            "顔を登録",
+                            lambda e: page.go("/face_register"),
+                            ft.Icons.ADD_A_PHOTO,
+                        ),
+                    ],
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+                ft.Container(height=6),
                 search_zone_row,
             ],
-            spacing=8,
-        )
+            spacing=10,
+        ),
+        accent=Theme.LAVENDER,
     )
 
     # テーブル用カード(土台のパネル)
     table_card = card(
         ft.Column(
-            controls=[# 上に同じ
-                section_title("顔画像一覧"),
-                ft.Container(height=8),
+            controls=[
+                section_title(
+                    "顔画像一覧",
+                    accent=Theme.LAVENDER,
+                ),
+                ft.Container(height=10),
                 scroll_table,
-                ft.Container(height=8),
+                ft.Container(height=10),
                 btn_zone,
             ],
-            spacing=8,
+            spacing=10,
             expand=True,
-        )
+        ),
+        accent=Theme.LAVENDER,
     )
 
 
@@ -373,8 +394,14 @@ def faceView(page: ft.Page):
 
 
     #ここでページ統合して表示
-    return app_view("/face", page, [
-        search_card,
-        ft.Container(height=16),
-        table_card,
-    ])
+    return app_view(
+        "/face",
+        page,
+        [
+            management_tabs(page, "/face"),
+            search_card,
+            ft.Container(height=16),
+            table_card,
+        ],
+        back_route="/index",
+    )

@@ -20,7 +20,18 @@ import db.repository as repo
 from my_app.service.daemon_bridge import card_register_service as register_service
 from my_app.service.daemon_bridge import thread_state, register_listener
 from my_app.models.ENUMS import CardType
-from my_app.app.views.common import show_error_dialog, build_user_autocomplete
+from my_app.app.views.common import (
+    show_error_dialog,
+    build_user_autocomplete,
+    Theme,
+    app_view,
+    card,
+    section_title,
+    primary_button,
+    secondary_button,
+    danger_button,
+)
+from my_app.ui import theme as ui_theme
 
 logger = logging.getLogger(__name__)
 
@@ -28,80 +39,108 @@ logger = logging.getLogger(__name__)
 # カード登録待機画面
 # ===================================================
 def registering(page: ft.Page):
+    def stop_loop(_=None):
+        register_service.cancel_registration_session()
+        page.go("/card")
+
     try:
-
-        def stop_loop(e):                               #stop_buttonをクリックした際のみここに来る
-
-            register_service.cancel_registration_session()
-            page.go("/index")
-
         register_service.start_registration_session()
 
-        page.vertical_alignment = ft.MainAxisAlignment.CENTER       #上下方向(vertical)は中央寄せで表示
-        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER    #水平方向(horizontal)も中央寄せで表示
-        page.title = "ICカード情報読み込み中"
-
         loading_text = ft.Text(
-            "30秒以内に登録したいカードを\n出口のカードリーダーにかざしてください",
-            size=35,
-            text_align=ft.TextAlign.CENTER
+            "登録するカードをカードリーダーにかざしてください",
+            size=22,
+            color=Theme.TEXT,
+            weight=ui_theme.FONT_WEIGHT,
+            font_family=ui_theme.FONT_FAMILY,
+            text_align=ft.TextAlign.CENTER,
         )
 
         loading_spinner = ft.CupertinoActivityIndicator(
-            radius=50,
-            color=ft.Colors.LIGHT_BLUE_ACCENT,
+            radius=32,
+            color=Theme.SKY,
             animating=True,
         )
-        #ローディング画面でくるくる回る演出が入る
 
-        stop_btn = ft.Container(
-            content=ft.TextButton(
-                text="キャンセル",
-                icon=ft.Icons.STOP,
-                on_click=stop_loop,                 #クリックされた時のみstop_loopを呼ぶため()をつけない
-                style=ft.ButtonStyle(
-                    shape=ft.RoundedRectangleBorder(radius=10),
-                    color=ft.Colors.RED,
-                    overlay_color=ft.Colors.RED_100,
-                )
-            )
-        )
-        img = ft.Image(
-            src=f"img/card_reader.JPG",
-            height=100,
-            width=200,
+        reader_image = ft.Image(
+            src="img/card_reader.JPG",
+            width=220,
+            height=130,
             fit=ft.ImageFit.CONTAIN,
-            #画像ファイルの表示
-
+            border_radius=8,
         )
-        return ft.View(                                                     #登録画面(View)を返す
-            "/register",
-            controls=[
-                ft.Container(
-                    expand=True,
-                    alignment=ft.alignment.center,
-                    content=ft.Column(
-                        controls=[
-                            ft.Container(content=loading_text, padding=10),
-                            ft.Container(content=img),
-                            ft.Container(content=loading_spinner),
-                            ft.Container(height=40),
-                            stop_btn
 
-                        ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        tight=True,
+        cancel_button = danger_button(
+            "キャンセル",
+            stop_loop,
+            ft.Icons.CLOSE,
+        )
+        cancel_button.width = 200
+
+        waiting_card = card(
+            ft.Column(
+                controls=[
+                    loading_text,
+                    ft.Container(height=8),
+                    reader_image,
+                    loading_spinner,
+                    ft.Text(
+                        "残り時間: 30秒",
+                        size=13,
+                        color=Theme.TEXT_MUTED,
+                        font_family=ui_theme.FONT_FAMILY,
                     ),
-                )
-            ],
+                    ft.Container(height=8),
+                    cancel_button,
+                ],
+                spacing=16,
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            accent=Theme.SKY,
+            padding=32,
         )
-    except Exception as e:
-        logger.exception("カード登録画面の表示中にエラーが発生しました: %s", e)     #スタックトレースも含めて出力される
-        page.go("/index?error=カード登録画面の表示中にエラーが発生しました")
 
-    finally:                #例外の有無にかかわらず実行される
-        page.update()
+        return app_view(
+            "/register",
+            page,
+            [waiting_card],
+            back_route="/card",
+            on_back=stop_loop,
+        )
+
+    except Exception as ex:
+        logger.exception(
+            "カード登録画面の表示中にエラーが発生しました: %s",
+            ex,
+        )
+
+        error_card = card(
+            ft.Column(
+                controls=[
+                    ft.Icon(
+                        ft.Icons.ERROR_OUTLINE,
+                        size=42,
+                        color=Theme.DANGER,
+                    ),
+                    ft.Text(
+                        "カード登録を開始できませんでした",
+                        color=Theme.DANGER,
+                        weight=ui_theme.FONT_WEIGHT,
+                        font_family=ui_theme.FONT_FAMILY,
+                    ),
+                ],
+                spacing=14,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            accent=Theme.DANGER,
+        )
+
+        return app_view(
+            "/register",
+            page,
+            [error_card],
+            back_route="/card",
+        )
 
 
 # ===================================================
@@ -129,7 +168,7 @@ async def delayed_transition(page: ft.Page):
         dialog.title = ft.Text("エラー")
         dialog.content = ft.Text("このカードは既に登録されています")
         dialog.actions = [
-            ft.TextButton("戻る", autofocus=True, on_click=lambda e: page.go("/index"))
+            ft.TextButton("戻る", autofocus=True, on_click=lambda e: page.go("/card"))
         ]
         page.open(dialog)
         return
@@ -172,7 +211,7 @@ async def delayed_transition(page: ft.Page):
     # リトライ確認ダイアログ
     dialog.actions = [
         ft.TextButton("はい", autofocus=True, on_click=retry),
-        ft.TextButton("いいえ", on_click=lambda e: page.go("/index"))
+        ft.TextButton("いいえ", on_click=lambda e: page.go("/card"))
     ]
     # ダイアログ表示
     page.open(dialog)
@@ -200,20 +239,14 @@ def register_input(page: ft.Page):
     users = repo.get_all_users()
 
     # ユーザーID保存
-    def on_user_selected(e: ft.ControlEvent):
+    def on_user_selected(user_id: int):
         nonlocal selected_user_id
-        selected_user_id = int(e.selection.key)
-
-    # 検索内容反映関数
-    def on_user_search_change(e: ft.ControlEvent):
-        user_field.suggestions = filter_user_options(users, e.control.value)
-        user_field.update()
+        selected_user_id = user_id
 
     # プルダウン定義
-    user_field = ft.AutoComplete(
-        suggestions=filter_user_options(users, ""),
-        on_select=on_user_selected,
-        on_change=on_user_search_change,
+    user_field = build_user_autocomplete(
+        users,
+        on_user_selected,
     )
 
     # カード種類プルダウン定義
@@ -262,7 +295,7 @@ def register_input(page: ft.Page):
         dialog.title = ft.Text("キャンセル完了")
         dialog.content = ft.Text("カードの登録がキャンセルされました。")
         dialog.actions = [
-            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/index")),
+            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/card")),
         ]
         page.open(dialog)
 
@@ -275,7 +308,7 @@ def register_input(page: ft.Page):
             dialog.title = ft.Text("エラー")
             dialog.content = ft.Text("カード番号を取得できませんでした")
             dialog.actions = [
-                ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/index")),
+                ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/card")),
             ]
             page.open(dialog)
             return
@@ -296,54 +329,68 @@ def register_input(page: ft.Page):
         dialog.title = ft.Text("登録完了")
         dialog.content = ft.Text("カードの登録が完了しました。")
         dialog.actions = [
-            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/index")),
+            ft.TextButton("OK", autofocus=True, on_click=lambda e: page.go("/card")),
         ]
         page.open(dialog)
 
-    # ボタン群定義
-    button_column = ft.Column(
+    register_button = primary_button(
+        "登録",
+        open_add_confirm_dialog,
+        ft.Icons.CHECK,
+    )
+    register_button.width = 200
+
+    cancel_button = danger_button(
+        "キャンセル",
+        open_cancel_confirm_dialog,
+        ft.Icons.CLOSE,
+    )
+    cancel_button.width = 200
+
+    form_content = ft.Column(
         controls=[
-            ft.ElevatedButton(
-                "登録", icon=ft.Icons.CHECK, width=200,
-                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
-                on_click=open_add_confirm_dialog,
+            section_title(
+                "登録内容",
+                accent=Theme.SKY,
             ),
-            ft.ElevatedButton(
-                "キャンセル", icon=ft.Icons.ARROW_BACK, width=200, color=ft.Colors.RED,
-                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
-                on_click=open_cancel_confirm_dialog,
+            ft.Container(height=8),
+            ft.Text(
+                "ユーザー",
+                size=13,
+                color=Theme.TEXT_MUTED,
+                weight=ui_theme.FONT_WEIGHT,
+                font_family=ui_theme.FONT_FAMILY,
+            ),
+            ft.Container(
+                width=340,
+                content=user_field,
+            ),
+            card_type_dropdown,
+            ft.Container(height=12),
+            ft.Row(
+                controls=[
+                    register_button,
+                    cancel_button,
+                ],
+                spacing=14,
+                wrap=True,
+                alignment=ft.MainAxisAlignment.CENTER,
             ),
         ],
-        spacing=20,
-        alignment=ft.MainAxisAlignment.START,
+        spacing=14,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     )
 
-    # ページにする
-    return ft.View(
+    form_card = card(
+        form_content,
+        accent=Theme.SKY,
+        padding=30,
+    )
+
+    return app_view(
         "/register/input",
-        controls=[
-            ft.Row(
-                controls=[
-                    ft.Container(
-                        content=ft.Column(
-                            controls=[
-                                ft.Text("カード登録", size=28, weight=ft.FontWeight.BOLD),
-                                user_field,
-                                card_type_dropdown,
-                                ft.Container(height=20),
-                                button_column,
-                            ],
-                            spacing=40,
-                            alignment=ft.MainAxisAlignment.START,
-                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        ),
-                        margin=ft.margin.only(top=120),
-                        width=400,
-                    )
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-                expand=True,
-            )
-        ]
+        page,
+        [form_card],
+        back_route="/card",
+        on_back=open_cancel_confirm_dialog,
     )

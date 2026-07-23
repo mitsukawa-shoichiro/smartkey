@@ -15,6 +15,7 @@ APP_DIR = SRC_DIR / "my_app"
 
 sys.path.insert(0, str(SRC_DIR))
 
+from my_app.camera.camera_config import load_rgb_camera_index
 from my_app.camera.face_authenticator import FaceAuthenticator
 from my_app.camera.media_foundation_ir import MediaFoundationIRCamera
 
@@ -209,7 +210,7 @@ def main():
         )
 
         rgb_capture = open_rgb_camera(
-            int(config["rgb_camera_index"])
+            load_rgb_camera_index()
         )
 
         ir_capture = MediaFoundationIRCamera(
