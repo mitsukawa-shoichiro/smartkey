@@ -11,12 +11,11 @@ import sqlite3
 import flet as ft
 import my_app.db.repository as repo
 from my_app.models.ENUMS import CardType
-from my_app.app.utils.pagination import Pagination
 from my_app.app.views.common import (
     show_error_dialog,
     Theme, card, section_title, card_type_badge,
     centered_cell, app_view, empty_state, pager,
-    secondary_button, danger_button,
+    secondary_button, primary_button, danger_button,
     show_confirm_dialog, show_info_dialog,
     management_tabs,
 )
@@ -37,8 +36,8 @@ def _build_card_row(card, checkbox) -> ft.DataRow:
     """
     一件のカード情報からテーブル一行を組み立てるビルダー
     Args:
-        card (Card): カード情報(データクラス)
-        checkbox (ft.CheckBox): IDと紐づくチェックボックスオブジェクト
+        card (_type_): カード情報(データクラス)
+        checkbox (_type_): チェックボックス
 
     Returns:
         ft.DataRow: _description_
@@ -57,7 +56,8 @@ def cardView(page: ft.Page):
     # ===================================================
     offset = 0                     # 現在のページ番号(0始まり)
     all_page = 1                   # 全ページ数
-    selected_user_id = None        # プルダウンで選択中のユーザーID(未選択ならNone=全件表示)
+    # selected_user_id = None      # プルダウンで選択中のユーザーID(未選択ならNone=全件表示)
+    search_text = ""               # 初期検索
     selected_ids = []              # チェックボックスで選択されたcard_idのリスト
     checkbox_refs = {}             # {card_id: Checkboxコントロール} の対応表
 
@@ -67,18 +67,10 @@ def cardView(page: ft.Page):
     # ===================================================
     # ユーザー検索用プルダウンの候補データ
     # ===================================================
-    # 画面表示のたびに最新のユーザー一覧を取得する
-    try:
-        users = repo.get_all_users()
-    except sqlite3.Error :
-        logger.error("ユーザー情報取得エラー")
-        show_error_dialog(page, "必要情報の取得に失敗しました", go_home=True)
-        return ft.View("/user", controls=[])
 
-    def on_user_selected(user_id: int):
-        """Autocompleteでユーザーが選択された時: そのuser_idで絞り込み検索する"""
-        nonlocal selected_user_id, offset
-        selected_user_id = user_id
+    def search(e=None):
+        nonlocal search_text, offset
+        search_text = (search_box.value or "").strip()
         offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
@@ -125,6 +117,11 @@ def cardView(page: ft.Page):
     # ===================================================
     # UIコントロールの定義
     # ===================================================
+    # ダイアログの定義
+    dialog = ft.AlertDialog(modal=True)
+
+    # カラム定義
+    column = ft.Column(controls=[], spacing=16, expand=True)
 
     # ページ遷移ボタン定義
     prev_btn = secondary_button(
@@ -195,7 +192,8 @@ def cardView(page: ft.Page):
 
     async def refresh(e):
         """リセットボタン: 検索条件・並び順・ページを全部初期状態に戻す"""
-        nonlocal selected_user_id, offset, reset_btn, user_search
+        nonlocal search_text, offset
+
         reset_btn.disabled = True
         page.update()
 
@@ -204,12 +202,7 @@ def cardView(page: ft.Page):
         table.sort_ascending = True
         offset = 0
 
-        # プルダウンはvalueだけリセットしても表示が変わらないので都度作り直し
-        user_search = build_user_autocomplete(users, on_user_selected)
-        search_zone.controls = [user_search]
-        search_zone.update()
-
-        # リセットした状態でテーブルを読み直す
+        # テーブルをロードし直し
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
@@ -219,9 +212,10 @@ def cardView(page: ft.Page):
 
     async def sort_table(e):
         """IDカラムのヘッダークリック: 昇順/降順を切り替えて再読込"""
+        nonlocal offset
         table.sort_column_index = 0
         table.sort_ascending = not table.sort_ascending
-        pg.reset()
+        offset = 0
         # ここは処理が重いのか何なのかついていたもの、ちかちかするのでコメントアウト
         # scroll_table.visible = False
         # scroll_table.update()
@@ -235,14 +229,20 @@ def cardView(page: ft.Page):
     # ===================================================
 
     def prev_page(e):
-        if pg.prev():
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
+        """前ページへ遷移"""
+        nonlocal offset
+        if offset != 0:
+            offset -= 1
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
     def next_page(e):
-        if pg.next():
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
+        """次ページへ遷移"""
+        nonlocal offset
+        if (offset + 1) != all_page:
+            offset += 1
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
     # ===================================================
     # テーブル読み込み関数
@@ -251,42 +251,40 @@ def cardView(page: ft.Page):
     def load_table():
         """
         選択中のuser_id(無ければ全件)に基づいてカード情報を取得し、
-        テーブル・チェックボックスを再構築します。
+        テーブル・チェックボックス・ラジオボタンを再構築します。
         """
-        nonlocal selected_user_id, offset, all_page
+        nonlocal search_text, offset, all_page
 
-        try:
-            #全検索の場合
-            if selected_user_id is None:
-                cards = repo.find_all_cards(table.sort_ascending, offset * 100)
-                total = repo.count_all_card()
-            # 条件検索の場合
-            else:
-                cards = repo.find_cards_by_user_id(
-                    selected_user_id, table.sort_ascending, offset * 100)
-                total = repo.count_cards_by_user_id(selected_user_id)
-        except sqlite3.Error:
-            logger.exception("カード情報の読み込みに失敗しました")
-            show_error_dialog(page, "カード情報の取得に失敗しました。しばらくしてから再度お試しください。")
-            return
+        cards, total = repo.find_cards_with_total(
+            search_text,
+            table.sort_ascending,
+            ITEMS_PER_PAGE,
+            offset * ITEMS_PER_PAGE,
+        )
 
-        #諸パラメータ更新
-        all_page = int(((total - 1) / 100) + 1)
+        all_page = max(
+            1,
+            (total + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE,
+        )
 
+        # 前回表示した行を消してから検索結果を入れる
         checkbox_refs.clear()
         table.rows.clear()
         column.controls.clear()
-        column.controls.append(ft.Container(height=-2))
 
         # 該当カード情報分繰り返し
         for card in cards:
             # チェックボックスにID埋め込み
             cb = ft.Checkbox()
+            column.controls.append(ft.Radio(value=str(card.id)))
             checkbox_refs[card.id] = cb
 
             table.rows.append(_build_card_row(card, cb))
 
-        page_label.value = f"{offset + 1} / {all_page} ページ"
+        page_label.value = (
+            f"{offset + 1} / {all_page} ページ"
+            f"（全{total}件）"
+        )
         prev_btn.disabled = offset == 0
         next_btn.disabled = (offset + 1) == all_page
         page.update()
@@ -319,10 +317,7 @@ def cardView(page: ft.Page):
             title="削除の確認",
         )
 
-    def confirm_delete(e):
-        """
-        削除確定: 選択されたcard_idを1件ずつ repo.delete_card に渡します。
-        """
+    def confirm_delete():
         try:
             for card_id in selected_ids:
                 repo.delete_card(card_id)
@@ -331,10 +326,15 @@ def cardView(page: ft.Page):
                     card_id,
                 )
         except sqlite3.Error:
-            logger.exception("カード情報の削除に失敗しました")
-            page.close(dialog)
-            show_error_dialog(page, "削除に失敗しました。しばらくしてから再度お試しください。")
-            load_table()  # 途中まで消えている可能性があるので一覧を最新化しておく
+            logger.exception(
+                "カード情報の削除に失敗しました"
+            )
+            show_error_dialog(
+                page,
+                "削除に失敗しました。"
+                "しばらくしてから再度お試しください。",
+            )
+            load_table()
             return
 
         load_table()
