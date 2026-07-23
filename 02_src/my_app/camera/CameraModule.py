@@ -14,10 +14,10 @@ from my_app.camera.face_authenticator import FaceAuthenticator
 import my_app.logs.log_config_service
 import logging
 
-# 人脸识别和IC卡认证共用相同的解锁与自动上锁处理
-from my_app.service.card_sys import request_unlock
+# 顔認証とICカード認証は、解錠および自動施錠のプロセスを共有しています。
+from my_app.service.utils.lock_control import request_unlock
 
-# 通过与多张注册图像的距离及其平均值进行人脸识别
+# 複数の登録画像およびそれらの平均値までの距離に基づく顔認識。
 # from my_app.camera.face_util.face_stable import recognize_image_average
 
 # 用于写入日志
@@ -70,8 +70,8 @@ from my_app.camera.media_foundation_ir import MediaFoundationIRCamera
 
 class CaptureBuffer:
     """
-    用于临时保存捕获图像（帧）的缓冲区类
-    该类会创建一个临时目录, 并在其中保存和获取最新的捕获图像
+    キャプチャされた画像（フレーム）を一時的に格納するためのバッファクラスです。
+    このクラスは一時ディレクトリを作成し、その中に最新のキャプチャ画像を保存または取得します。
     """
     # 一時ディレクトリを作成（prefix="facecap_"）
     tempdir = tempfile.TemporaryDirectory(prefix="facecap_")
@@ -81,18 +81,18 @@ class CaptureBuffer:
     @classmethod
     def save_frame(cls, frame, filename="shot.jpg"):
         """
-        将帧保存到临时目录中
-        先清除已有的临时文件信息, 然后创建新的文件
+        フレームを一時ディレクトリに保存します。
+        まず、既存の一時ファイル情報を削除してから、新しいファイルを作成してください。
 
         Args:
-            frame: 使用 OpenCV 获取的图像数据（NumPy 数组）
-            filename: 保存文件名（默认值为 "shot.jpg"）
+            frame: 使用 OpenCV 取得した画像データ（NumPy配列）
+            filename: 保存するファイル名（デフォルト:shot.jpg）
         """
-        # 创建保存路径
+        # 保存パスを作成する
         path = os.path.join(cls.tempdir.name, filename)
-        # 写入图像
+        # 画像を書き込む
         cv2.imwrite(path, frame)
-        # 记录文件路径
+        # ログファイルのパス
         cls.files.append(path)
 
     @classmethod
@@ -145,7 +145,7 @@ class CameraWorker:
         if getattr(self, "_initialized", False):
             return
 
-        print("CameraWorker初期化")
+        logger.info("CameraWorker初期化")
         CameraWorker.instance = self
         # self.blink_detector = BlinkDetector()
 
@@ -175,8 +175,9 @@ class CameraWorker:
 
     def back_end_system(self):
         logger.info("カメラ起動！")
-        was_registering = None  # 记录上一次的状态（None/True/False）
+        was_registering = None  # 前回の状態を記録してください。（None/True/False）
         capture_failure_count = 0
+        loop_error_count = 0
 
         try:
             if not all(
@@ -186,141 +187,177 @@ class CameraWorker:
                 self.open_all_cameras()
 
             while not self.systemstop:  # 常に動作
-                # 状態遷移を検出
-                cycle_started = time.monotonic()
-                timg=time.time()
 
-                if self.isRegistering:
-                    if was_registering is not True:
-                        # False -> True に遷移した瞬間だけ一度だけ実行
-                        self.release_all_cameras()
-                        self.latest_rgb_frame = None
-                        self.latest_ir_frame = None
-                        self.latest_rgb_timestamp = None
-                        self.latest_ir_timestamp = None
+                try:
+
+                    # 状態遷移を検出
+                    cycle_started = time.monotonic()
+                    timg=time.time()
+
+                    if self.isRegistering:
+                        if was_registering is not True:
+                            # False -> True に遷移した瞬間だけ一度だけ実行
+                            self.release_all_cameras()
+                            self.latest_rgb_frame = None
+                            self.latest_ir_frame = None
+                            self.latest_rgb_timestamp = None
+                            self.latest_ir_timestamp = None
+                            self.face_authenticator._reset()
+                            logger.info("登録モードのためカメラを一時解放しました")
+
+                        was_registering = True
+                        logger.info("⏸️ 登録中のため認証処理を一時停止")
+                        time.sleep(0.5)  # ポーリング間隔（短め）
+                        continue
+                    else:
+                        if was_registering is True:
+                            # True -> False に遷移した瞬間だけ再オープン
+                            if not self.open_all_cameras():
+                                time.sleep(3.0)
+                                continue
+
+                            self.face_authenticator.reload_database_embeddings()
+
+                            logger.info("登録完了。カメラを再オープンしました")
+
+                        was_registering = False
+
+                    # 通常フロー（認証）
+                    rgb_cap = self.cap_dict.get(RGB_CAMERA_INDEX)
+                    ir_cap = self.cap_dict.get(IR_CAMERA_KEY)
+
+                    if (
+                        rgb_cap is None
+                        or ir_cap is None
+                        or not rgb_cap.isOpened()
+                        or not ir_cap.isOpened()
+                    ):
+                        capture_failure_count += 1
+
+                        if capture_failure_count >= 5:
+                            self.open_all_cameras()
+                            capture_failure_count = 0
+
+                        time.sleep(0.5)
+                        continue
+
+                    rgb_grabbed = rgb_cap.grab()
+                    rgb_timestamp = time.monotonic()
+
+                    ir_grabbed = ir_cap.grab()
+
+                    if not rgb_grabbed or not ir_grabbed:
+                        capture_failure_count += 1
+
+                        if capture_failure_count >= 5:
+                            self.open_all_cameras()
+                            capture_failure_count = 0
+
+                        time.sleep(0.5)
+                        continue
+
+                    rgb_ok, rgb_frame = rgb_cap.retrieve()
+
+                    (
+                        ir_ok,
+                        ir_frame,
+                        ir_timestamp,
+                    ) = ir_cap.retrieve_with_timestamp()
+
+                    if (
+                        not rgb_ok
+                        or not ir_ok
+                        or rgb_frame is None
+                        or ir_frame is None
+                        or ir_timestamp is None
+                    ):
+                        capture_failure_count += 1
+
+                        if capture_failure_count >= 5:
+                            self.open_all_cameras()
+                            capture_failure_count = 0
+
+                        time.sleep(0.5)
+                        continue
+
+                    frame_gap_ms = abs(
+                        rgb_timestamp - ir_timestamp
+                    ) * 1000.0
+
+                    if frame_gap_ms > float(
+                        face_auth_config["max_frame_gap_ms"]
+                    ):
+                        logger.debug("RGB・IRフレーム差が大きいため破棄 %.1fms", frame_gap_ms)
+                        time.sleep(0.01)
+                        continue
+
+                    capture_failure_count = 0
+
+                    self.latest_rgb_frame = rgb_frame
+                    self.latest_ir_frame = ir_frame
+                    self.latest_rgb_timestamp = rgb_timestamp
+                    self.latest_ir_timestamp = ir_timestamp
+
+                    # 認証
+                    self.__Authentication()
+
+                    # 成功でも失敗でもまつ
+                    idle_interval = float(
+                        face_auth_config.get("authentication_idle_interval_sec", 0.8))
+
+                    active_interval = float(
+                        face_auth_config.get("authentication_active_interval_sec", 0.35))
+
+                    if self.last_auth_reason in (
+                        "no_face",
+                        "cooldown",
+                        "authenticated",
+                        "no_frame"
+                    ):
+                        authentication_interval = idle_interval
+                    else:
+                        authentication_interval = active_interval
+
+                    elapsed = time.monotonic() - cycle_started
+                    remaining = authentication_interval - elapsed
+
+                    if remaining > 0:
+                        time.sleep(remaining)
+
+                    logger.debug("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
+
+                except Exception:
+                    loop_error_count += 1
+
+                except Exception:
+                    # 1サイクル内のあらゆる例外をここで受け止め、ループは絶対に殺さない。
+                    loop_error_count += 1
+                    logger.exception(
+                        "認証サイクルで例外が発生しました（%d回連続）。次フレームへ継続します",
+                        loop_error_count,
+                    )
+                    self.last_auth_reason = "loop_error"
+
+                    # 認証状態は壊れている可能性があるのでリセットしておく
+                    try:
                         self.face_authenticator._reset()
-                        logger.info("登録モードのためカメラを一時解放しました")
+                    except Exception:
+                        logger.exception("認証状態のリセットにも失敗しました")
 
-                    was_registering = True
-                    print("⏸️ 登録中のため認証処理を一時停止")
-                    time.sleep(0.5)  # ポーリング間隔（短め）
+                    # 例外が連発する＝カメラ等が壊れている可能性が高い。
+                    # 一定回数を超えたらカメラを作り直してから続行する。
+                    if loop_error_count >= 5:
+                        logger.error("認証サイクルの例外が連続しました。カメラを再構築します")
+                        try:
+                            self.open_all_cameras()
+                        except Exception:
+                            logger.exception("カメラ再構築にも失敗しました")
+                        loop_error_count = 0
+                        time.sleep(3.0)
+                    else:
+                        time.sleep(0.5)
+
                     continue
-                else:
-                    if was_registering is True:
-                        # True -> False に遷移した瞬間だけ再オープン
-                        if not self.open_all_cameras():
-                            time.sleep(3.0)
-                            continue
-
-                        self.face_authenticator.reload_database_embeddings()
-
-                        logger.info("登録完了。カメラを再オープンしました")
-
-                    was_registering = False
-
-                # 通常フロー（認証）
-                rgb_cap = self.cap_dict.get(RGB_CAMERA_INDEX)
-                ir_cap = self.cap_dict.get(IR_CAMERA_KEY)
-
-                if (
-                    rgb_cap is None
-                    or ir_cap is None
-                    or not rgb_cap.isOpened()
-                    or not ir_cap.isOpened()
-                ):
-                    capture_failure_count += 1
-
-                    if capture_failure_count >= 5:
-                        self.open_all_cameras()
-                        capture_failure_count = 0
-
-                    time.sleep(0.5)
-                    continue
-
-                rgb_grabbed = rgb_cap.grab()
-                rgb_timestamp = time.monotonic()
-
-                ir_grabbed = ir_cap.grab()
-
-                if not rgb_grabbed or not ir_grabbed:
-                    capture_failure_count += 1
-
-                    if capture_failure_count >= 5:
-                        self.open_all_cameras()
-                        capture_failure_count = 0
-
-                    time.sleep(0.5)
-                    continue
-
-                rgb_ok, rgb_frame = rgb_cap.retrieve()
-
-                (
-                    ir_ok,
-                    ir_frame,
-                    ir_timestamp,
-                ) = ir_cap.retrieve_with_timestamp()
-
-                if (
-                    not rgb_ok
-                    or not ir_ok
-                    or rgb_frame is None
-                    or ir_frame is None
-                    or ir_timestamp is None
-                ):
-                    capture_failure_count += 1
-
-                    if capture_failure_count >= 5:
-                        self.open_all_cameras()
-                        capture_failure_count = 0
-
-                    time.sleep(0.5)
-                    continue
-
-                frame_gap_ms = abs(
-                    rgb_timestamp - ir_timestamp
-                ) * 1000.0
-
-                if frame_gap_ms > float(
-                    face_auth_config["max_frame_gap_ms"]
-                ):
-                    logger.debug("RGB・IRフレーム差が大きいため破棄 %.1fms", frame_gap_ms)
-                    time.sleep(0.01)
-                    continue
-
-                capture_failure_count = 0
-
-                self.latest_rgb_frame = rgb_frame
-                self.latest_ir_frame = ir_frame
-                self.latest_rgb_timestamp = rgb_timestamp
-                self.latest_ir_timestamp = ir_timestamp
-
-                # 認証
-                self.__Authentication()
-
-                # 成功でも失敗でもまつ
-                idle_interval = float(
-                    face_auth_config.get("authentication_idle_interval_sec", 0.8))
-
-                active_interval = float(
-                    face_auth_config.get("authentication_active_interval_sec", 0.35))
-
-                if self.last_auth_reason in (
-                    "no_face",
-                    "cooldown",
-                    "authenticated",
-                    "no_frame"
-                ):
-                    authentication_interval = idle_interval
-                else:
-                    authentication_interval = active_interval
-
-                elapsed = time.monotonic() - cycle_started
-                remaining = authentication_interval - elapsed
-
-                if remaining > 0:
-                    time.sleep(remaining)
-
-                logger.info("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
 
         except KeyboardInterrupt:
             print("\n[INFO] ユーザー中断、プログラムを終了します。")
@@ -452,7 +489,7 @@ class CameraWorker:
             info.get("face_count", 0)
         )
 
-        self.__open_sesame()
+        self.__open_sesame(info.get("user_id"))
         return True
 
 
@@ -523,10 +560,10 @@ class CameraWorker:
 
 
 
-    def __open_sesame(self):
+    def __open_sesame(self, user_id):
         # 解錠後、設定時間が経過すると自動的に再施錠されます！
         # TODO: request_unlockの引数にゆーざーIDを使用
-        request_unlock()
+        request_unlock(user_id)
         print("認証成功")
 
 

@@ -4,7 +4,7 @@ import numpy as np
 
 class LivenessGate:
     """
-    确认是否为真实人脸
+    それが本物の人間の顔かどうかを確認してください。
     """
     def __init__(self, config):
         self.ir_min_mean = float(config["ir_min_mean"])

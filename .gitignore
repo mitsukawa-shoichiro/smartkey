@@ -10,3 +10,4 @@ __pycache__/
 *.db
 !storage/faces/.gitkeep
 usb_settings.json
+*.jpg

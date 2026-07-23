@@ -550,7 +550,7 @@ def find_faces_with_totals(user_id, asc: bool, limit: int, offset: int):
         where = "AND face.user_id = ?"
         params.append(user_id)
     sql = f"""
-        SELECT COUNT(*) OVer () AS total, {_FACE_COLUMNS}
+        SELECT COUNT(*) OVER () AS total, {_FACE_COLUMNS}
         FROM face
         LEFT JOIN user ON face.face_id = user.id
         WHERE 1 = 1 {where}

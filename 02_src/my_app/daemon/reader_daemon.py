@@ -25,7 +25,7 @@ HEARTBEAT_HOST = '127.0.0.1'
 HEARTBEAT_PORT = 54321
 heart_beat_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# 登録モード中、検知したIDmをGUI(card_check.py)へ送り返すための宛先。
+# 登録モード中、検知したIDmをGUI(register.py)へ送り返すための宛先。
 # GUI側はこのポートでUDP受信待ちをする(daemon -> GUIの一方向通知)。
 REGISTER_NOTIFY_HOST = '127.0.0.1'
 REGISTER_NOTIFY_PORT = 10001
@@ -98,13 +98,13 @@ def sender():
         try:
             #ここで認証
             card_sys.receive_card(idm, reader_serial)
-            logger.info(f"送信成功（リーダー{reader_serial+1}）")
+            logger.info(f"送信成功（リーダー{int(reader_serial)+1}）")
 
         except sqlite3.Error as e:
             logger.error(f"DBエラーにより送信失敗: {e}")
 
         except Exception as e:
-            logger.error(f"不明なエラーにより送信失敗: {e}")
+            logger.exception(f"不明なエラーにより送信失敗: {e}")
 
 
 def get_reader():
@@ -152,7 +152,7 @@ def receiver():
             changeState(message)
 
     except Exception as e:
-        logger.error(f"card_checkがメッセージ受信失敗: {e}")
+        logger.error(f"reader_daemonがメッセージ受信失敗: {e}")
     finally:
         sock_check.close()
 
@@ -160,7 +160,7 @@ def receiver():
 def send_message(message, host=HEARTBEAT_HOST, port=HEARTBEAT_PORT):
     """
     UDPで1回だけメッセージを送る汎用関数。
-    宛先を省略すると、従来通りcard_checkへのハートビート送信になる。
+    宛先を省略すると、check_aliveへのハートビート送信になる。
     登録モードの通知(GUI宛て)など、別ポートへ送りたい場合はhost/portを指定する。
     """
     try:
@@ -171,7 +171,7 @@ def send_message(message, host=HEARTBEAT_HOST, port=HEARTBEAT_PORT):
 
 def notify_registered_card(idm: str):
     """
-    登録モード中に出口リーダーで検知したIDmを、GUI(card_check.py)へ通知する。
+    登録モード中に出口リーダーで検知したIDmを、GUI(register.py)へ通知する。
     通常の認証フロー(event_q/card_sys.receive_card)は一切経由しない。
     """
     send_message(idm, host=REGISTER_NOTIFY_HOST, port=REGISTER_NOTIFY_PORT)
@@ -237,7 +237,7 @@ def reader_loop():
             now = time.time()
 
             if gap > HEARTBEAT_ERROR_GAP_S:
-                logger.error("card_check.pyのポーリングが遅延しています" + str(gap) + "秒")
+                logger.error("reader_daemon.pyのポーリングが遅延しています" + str(gap) + "秒")
 
             # GUI側のAUTHENTICATING変更が何かしらで中断されたとき用
             if state == "registering" and time.time() - state_changed_at > REGISTERING_TIMEOUT_S:

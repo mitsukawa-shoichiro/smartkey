@@ -11,10 +11,20 @@ import random
 import asyncio
 
 from my_app.app.utils.front_camera_moduel import CameraWorker_Front, CaptureBuffer, send_message
+from my_app.camera.camera_config import load_rgb_camera_index
 
-from my_app.app.views.common import build_user_autocomplete
+from my_app.app.views.common import (
+    Theme,
+    app_view,
+    card,
+    section_title,
+    primary_button,
+    secondary_button,
+    danger_button,
+)
 from my_app.camera.face_util.insightface_engine import InsightFaceEngine
 from my_app.service import face_service
+from my_app.ui import theme as ui_theme
 
 #region util
 import shutil
@@ -36,6 +46,8 @@ FACE_AUTH_CONFIG_PATH = (
     / "config"
     / "face_auth.json"
 )
+
+
 
 with FACE_AUTH_CONFIG_PATH.open("r", encoding="utf-8") as file:
     face_auth_config = json.load(file)
@@ -147,176 +159,427 @@ def SaveFaceDatas(src_paths, new_name, target_dir=savedir):
 
 def face_register_view(page: ft.Page) -> ft.View:
     page.title = "顔登録"
-    page.padding = 20
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-    CameraWorker_Front()
+    worker = CameraWorker_Front.get_instance()
 
+    preview_active = False
+    moving_to_input = False
+    backend_session_active = False
 
-    status = ft.Text("カメラ未起動", size=16)
-
-    async def open_cam(_):
-        CaptureBuffer.files.clear()
-        #前回のバッファをクリアする
-
-        send_message("startRegistering")
-        await asyncio.sleep(0.5)
-
-        CameraWorker_Front.instance.close_camera = False
-        CameraWorker_Front.instance.front_end_system(camera_index_input_area.value)
-
-        status.value = "カメラ起動中（別ウィンドウにプレビュー表示）"
-        status.update()
-
-    #撮影枚数を提示
-    capture_count = ft.Text(
-        "撮影枚数：0枚",
-        size=16,
-        color=ft.Colors.BLUE,
+    preview_image = ft.Image(
+        width=560,
+        height=350,
+        fit=ft.ImageFit.CONTAIN,
+        gapless_playback=True,
+        visible=False,
     )
 
-    def close_cam(_):
-        CameraWorker_Front.instance.close_camera = True
-        status.value = "カメラ停止コマンドを送信しました"
-        status.update()
+    placeholder = ft.Column(
+        controls=[
+            ft.Icon(
+                ft.Icons.VIDEOCAM_OUTLINED,
+                size=46,
+                color=Theme.TEXT_MUTED,
+            ),
+            ft.Text(
+                "カメラを準備しています",
+                color=Theme.TEXT_MUTED,
+            ),
+        ],
+        spacing=12,
+        alignment=ft.MainAxisAlignment.CENTER,
+        horizontal_alignment=(
+            ft.CrossAxisAlignment.CENTER
+        ),
+    )
 
-    def __cleanup(_=None):
+    status_icon = ft.Icon(
+        ft.Icons.HOURGLASS_TOP,
+        size=18,
+        color=Theme.LAVENDER,
+    )
 
-        CameraWorker_Front.instance.close_camera = True
-        CaptureBuffer.files.clear()
+    status_text = ft.Text(
+        "設定を確認しています",
+        color=Theme.TEXT,
+        size=13,
+    )
 
-# 拍摄后引导用户选择是否继续拍摄
-    async def capture_one(e):
-        maximum_images = int(
-            face_auth_config["registration_max_images"])
+    status_panel = ft.Container(
+        bgcolor=Theme.LAVENDER_SOFT,
+        border_radius=8,
+        padding=ft.padding.symmetric(
+            horizontal=14,
+            vertical=10,
+        ),
+        content=ft.Row(
+            controls=[
+                status_icon,
+                status_text,
+            ],
+            spacing=8,
+        ),
+    )
 
-        if len(CaptureBuffer.files) >= maximum_images:
-            status.value = (f"撮影できる画像は {maximum_images}枚まで！")
-            page.update()
-            return
+    capture_count = ft.Text(
+        "撮影枚数: 0枚",
+        size=16,
+        color=Theme.TEXT,
+        weight=ft.FontWeight.W_700,
+    )
 
-        # 为防止连续点击, 在开始拍摄的同时立即禁用按钮
-        e.control.disabled = True
-        status.value = "撮影中..."
+    camera_label = ft.Text(
+        "設定カメラを確認中",
+        size=12,
+        color=Theme.TEXT_MUTED,
+    )
+
+    def set_status(
+        message,
+        color,
+        soft_color,
+        icon,
+    ):
+        status_text.value = message
+        status_text.color = color
+        status_icon.name = icon
+        status_icon.color = color
+        status_panel.bgcolor = soft_color
         page.update()
 
-        before_count = len(CaptureBuffer.files)
+    def delete_captured_files():
+        for path in CaptureBuffer.files.copy():
+            try:
+                if os.path.exists(path):
+                    os.remove(path)
+            except OSError as ex:
+                print(
+                    "[WARN] 一時画像を"
+                    f"削除できません: {ex}"
+                )
+
+        CaptureBuffer.files.clear()
+
+    def finish_backend_session():
+        nonlocal backend_session_active
+
+        if backend_session_active:
+            send_message("finishRegistering")
+            backend_session_active = False
+
+    def stop_preview():
+        nonlocal preview_active
+        preview_active = False
+        worker.stop_camera()
+
+    def cancel_registration(_=None):
+        stop_preview()
+        delete_captured_files()
+        finish_backend_session()
+        page.go("/face")
+
+    async def start_camera():
+        nonlocal preview_active
+        nonlocal backend_session_active
+
+        await asyncio.sleep(0.15)
+        delete_captured_files()
 
         try:
-            await asyncio.to_thread(CameraWorker_Front.instance.front_capture_photo)
+            camera_index = load_rgb_camera_index()
+        except Exception as ex:
+            set_status(
+                str(ex),
+                Theme.DANGER,
+                "#FCECEF",
+                ft.Icons.ERROR_OUTLINE,
+            )
+            return
+
+        camera_label.value = (
+            f"使用カメラ: 入口 / "
+            f"index {camera_index}"
+        )
+
+        set_status(
+            "認証処理を一時停止しています",
+            Theme.LAVENDER,
+            Theme.LAVENDER_SOFT,
+            ft.Icons.SYNC,
+        )
+
+        send_message("startRegistering")
+        backend_session_active = True
+        await asyncio.sleep(0.4)
+
+        worker.front_end_system(
+            camera_index,
+            show_window=False,
+        )
+
+        ready = await asyncio.to_thread(
+            worker.wait_until_ready,
+            4.0,
+        )
+
+        if not ready:
+            message = (
+                worker.get_camera_error()
+                or "カメラを起動できませんでした"
+            )
+            set_status(
+                message,
+                Theme.DANGER,
+                "#FCECEF",
+                ft.Icons.ERROR_OUTLINE,
+            )
+            finish_backend_session()
+            return
+
+        preview_active = True
+        capture_button.disabled = False
+
+        set_status(
+            "撮影できます",
+            Theme.MINT,
+            Theme.MINT_SOFT,
+            ft.Icons.CHECK_CIRCLE_OUTLINE,
+        )
+
+        while preview_active:
+            image_data = (
+                worker.get_preview_base64()
+            )
+
+            if image_data:
+                preview_image.src_base64 = image_data
+                preview_image.visible = True
+                placeholder.visible = False
+
+                try:
+                    preview_image.update()
+                    placeholder.update()
+                except Exception:
+                    break
+
+            await asyncio.sleep(0.12)
+
+    async def capture_one(_):
+        maximum_images = int(
+            face_auth_config.get(
+                "registration_max_images",
+                5,
+            )
+        )
+
+        if len(CaptureBuffer.files) >= maximum_images:
+            set_status(
+                f"撮影できる画像は{maximum_images}枚までです",
+                Theme.DANGER,
+                "#FCECEF",
+                ft.Icons.INFO_OUTLINE,
+            )
+            return
+
+        capture_button.disabled = True
+        page.update()
+
+        try:
+            path = await asyncio.to_thread(
+                worker.front_capture_photo
+            )
+
+            if path is None:
+                set_status(
+                    "画像を取得できませんでした",
+                    Theme.DANGER,
+                    "#FCECEF",
+                    ft.Icons.ERROR_OUTLINE,
+                )
+                return
 
             count = len(CaptureBuffer.files)
             capture_count.value = f"撮影枚数: {count}枚"
 
-            if count > before_count:
-                status.value = "1秒まって～"
-            else:
-                status.value = "しっぱい；；"
+            minimum_images = int(
+                face_auth_config.get(
+                    "registration_min_images",
+                    3,
+                )
+            )
 
-            page.update()
+            next_button.disabled = (
+                count < minimum_images
+            )
 
-            # 1秒間のクールタイム
-            await asyncio.sleep(1.0)
+            set_status(
+                "撮影しました",
+                Theme.MINT,
+                Theme.MINT_SOFT,
+                ft.Icons.CHECK_CIRCLE_OUTLINE,
+            )
+
+        except Exception as ex:
+            print(
+                f"[ERROR] 顔画像の撮影に失敗しました: {ex}"
+            )
+
+            set_status(
+                f"撮影エラー: {ex}",
+                Theme.DANGER,
+                "#FCECEF",
+                ft.Icons.ERROR_OUTLINE,
+            )
 
         finally:
-            e.control.disabled = False
-            status.value = "撮影可能"
             page.update()
+            await asyncio.sleep(1.0)
 
-    capture_button = ft.ElevatedButton("撮影", icon = ft.Icons.CAMERA, on_click = capture_one)
+            if preview_active:
+                capture_button.disabled = False
+                page.update()
 
+    def clear_captures(_):
+        delete_captured_files()
+        capture_count.value = "撮影枚数: 0枚"
+        next_button.disabled = True
 
-# 登録画面に遷移するボタンの追加
+        set_status(
+            "撮影できます",
+            Theme.MINT,
+            Theme.MINT_SOFT,
+            ft.Icons.CHECK_CIRCLE_OUTLINE,
+        )
+
     def go_register(_):
+        nonlocal moving_to_input
 
-        minimum_images = int(face_auth_config["registration_min_images"])
+        minimum_images = int(
+            face_auth_config[
+                "registration_min_images"
+            ]
+        )
 
         if len(CaptureBuffer.files) < minimum_images:
-            status.value = f"写真を{minimum_images}枚以上撮影してください。"
-            status.update()
+            set_status(
+                f"写真を{minimum_images}枚以上"
+                "撮影してください",
+                Theme.DANGER,
+                "#FCECEF",
+                ft.Icons.INFO_OUTLINE,
+            )
             return
 
+        moving_to_input = True
+        stop_preview()
         page.go("/face_register/input")
 
-    #region face_register_view
-    camera_index_input_area = ft.TextField(
-        label="Camera Index",
-        hint_text="0、1、2 …",
-        value="",
-        width=220,
-        prefix_text="",
-        keyboard_type=ft.KeyboardType.NUMBER,
-        autofocus=True,
+    capture_button = primary_button(
+        "撮影",
+        capture_one,
+        ft.Icons.CAMERA_ALT,
+    )
+    capture_button.width = 220
+    capture_button.disabled = True
+
+    clear_button = secondary_button(
+        "撮り直す",
+        clear_captures,
+        ft.Icons.REFRESH,
+    )
+    clear_button.width = 220
+
+    next_button = primary_button(
+        "本人情報へ",
+        go_register,
+        ft.Icons.ARROW_FORWARD,
+    )
+    next_button.width = 220
+    next_button.disabled = True
+
+    preview_panel = ft.Container(
+        width=560,
+        height=350,
+        bgcolor="#F7FAFB",
+        border=ft.border.all(
+            1,
+            Theme.BORDER,
+        ),
+        border_radius=8,
+        clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+        alignment=ft.alignment.center,
+        content=ft.Stack(
+            controls=[
+                ft.Container(
+                    left=0,
+                    right=0,
+                    top=0,
+                    bottom=0,
+                    alignment=ft.alignment.center,
+                    content=preview_image,
+                ),
+                ft.Container(
+                    left=0,
+                    right=0,
+                    top=0,
+                    bottom=0,
+                    alignment=ft.alignment.center,
+                    content=placeholder,
+                ),
+            ],
+        ),
     )
 
+    controls_panel = ft.Container(
+        width=250,
+        content=ft.Column(
+            controls=[
+                status_panel,
+                camera_label,
+                ft.Container(height=6),
+                capture_count,
+                ft.Container(height=8),
+                capture_button,
+                clear_button,
+                next_button,
+            ],
+            spacing=12,
+            horizontal_alignment=(
+                ft.CrossAxisAlignment.STRETCH
+            ),
+        ),
+    )
 
-    v = ft.View(
+    capture_card = card(
+        ft.Row(
+            controls=[
+                preview_panel,
+                controls_panel,
+            ],
+            spacing=24,
+            run_spacing=20,
+            wrap=True,
+            alignment=ft.MainAxisAlignment.CENTER,
+            vertical_alignment=(
+                ft.CrossAxisAlignment.CENTER
+            ),
+        ),
+        accent=Theme.LAVENDER,
+        padding=24,
+    )
+
+    view = app_view(
         "/face_register",
-        controls=[
-            ft.Container(
-                expand=True,
-                content=ft.Column(
-                    [
-                        ft.Text("顔登録", size=24, weight=ft.FontWeight.BOLD),
-                        status,
-                        capture_count,
-                        camera_index_input_area,
-                        ft.Row(
-                            [
-                                ft.ElevatedButton("カメラを起動", icon=ft.Icons.VIDEOCAM, on_click=open_cam),
-                                capture_button,
-                                ft.ElevatedButton("カメラを終了", icon=ft.Icons.VIDEOCAM_OFF, on_click=close_cam),
-                            ], ft.MainAxisAlignment.CENTER
-                        ),
-                        ft.Text(
-                            "説明：『カメラを起動』で別ウィンドウにプレビュー、"
-                            "『撮影』で ./db/FaceLib に保存、"
-                            "『カメラを終了』で閉じます。",
-                            size=12,
-                            color=ft.Colors.BLUE_GREY_600,
-                            text_align=ft.TextAlign.CENTER,
-                        ),
-                        ft.Text(
-                            "写真は真正面一枚でお願いします。  ",
-                            size=12,
-                            color=ft.Colors.BLUE_GREY_600,
-                            text_align=ft.TextAlign.CENTER,
-                        ),
-                        ft.Text(
-                            "または、本人登録画面で『キャンセル』を押してやり直すこともできます。",
-                            size=12,
-                            color=ft.Colors.BLUE_GREY_600,
-                            text_align=ft.TextAlign.CENTER,
-                        ),
-                        ft.ElevatedButton(
-                            "登録へ",
-                            on_click=go_register
-                        )
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    spacing=12,
-                    expand=True,  # 占满垂直空间
-                ),
-            ),
-            # ✅ 左下角固定的戻る按钮
-            ft.Container(
-                alignment=ft.alignment.bottom_left,
-                padding=20,
-                content=ft.ElevatedButton(
-                    "戻る",
-                    icon=ft.Icons.ARROW_BACK,
-                    on_click=lambda e: (__cleanup(), page.go("/index")),
-                ),
-            ),
+        page,
+        [
+            capture_card,
         ],
+        back_route="/face",
+        on_back=cancel_registration,
     )
 
-
-    v.on_dispose = __cleanup
-    return v
-    #endregion
+    page.run_task(start_camera)
+    return view
 
 
 # views/face_register.py 内の face_register_register
@@ -478,7 +741,7 @@ def face_register_register(page: ft.Page) -> ft.View:
     async def finish_register(_):
         page.close(add_confirm_dialog)
         await asyncio.sleep(0.1)
-        page.go("/face_register")
+        page.go("/face")
 
     # --- 登録処理 ---
     async def execute_register(e):
@@ -615,7 +878,7 @@ def face_register_register(page: ft.Page) -> ft.View:
         finish_backend_registration()
         page.close(add_confirm_dialog)
         await asyncio.sleep(0.1)
-        page.go("/face_register")
+        page.go("/face")
 
     # --- キャンセル ---
     def open_cancel_confirm_dialog(_):
@@ -633,52 +896,76 @@ def face_register_register(page: ft.Page) -> ft.View:
         page.open(add_confirm_dialog)
 
     #region UIElements
-    main_content = ft.Column(
-        controls=[
-            ft.Text(
-                "本人登録",
-                size=28,
-                weight=ft.FontWeight.BOLD,
-            ),
-            preview_area,
-            hint,
-            user_name,
-            user_name_romaji,
-            ft.ElevatedButton(
-                "登録",
-                icon=ft.Icons.CHECK,
-                width=200,
-                on_click=open_add_confirm_dialog,
-            ),
-            ft.ElevatedButton(
-                "キャンセル",
-                icon=ft.Icons.ARROW_BACK,
-                width=200,
-                color=ft.Colors.RED,
-                on_click=open_cancel_confirm_dialog,
-            ),
-        ],
-        spacing=16,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        scroll=ft.ScrollMode.AUTO,
-        expand=True,
+    register_button = primary_button(
+        "登録",
+        open_add_confirm_dialog,
+        ft.Icons.CHECK,
+    )
+    register_button.width = 200
+
+    cancel_button = danger_button(
+        "キャンセル",
+        open_cancel_confirm_dialog,
+        ft.Icons.CLOSE,
+    )
+    cancel_button.width = 200
+
+    preview_panel = ft.Container(
+        width=440,
+        content=ft.Column(
+            controls=[
+                section_title(
+                    "撮影画像",
+                    accent=Theme.LAVENDER,
+                ),
+                ft.Container(height=8),
+                preview_area,
+                hint,
+            ],
+            spacing=10,
+        ),
     )
 
-    view = ft.View(
+    input_panel = ft.Container(
+        width=360,
+        content=ft.Column(
+            controls=[
+                section_title(
+                    "本人情報",
+                    accent=Theme.LAVENDER,
+                ),
+                ft.Container(height=8),
+                user_name,
+                user_name_romaji,
+                ft.Container(height=12),
+                register_button,
+                cancel_button,
+            ],
+            spacing=14,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+    )
+
+    registration_card = card(
+        ft.Row(
+            controls=[
+                preview_panel,
+                input_panel,
+            ],
+            spacing=28,
+            run_spacing=24,
+            wrap=True,
+            alignment=ft.MainAxisAlignment.CENTER,
+            vertical_alignment=ft.CrossAxisAlignment.START,
+        ),
+        accent=Theme.LAVENDER,
+        padding=28,
+    )
+
+    return app_view(
         "/face_register/input",
-        controls=[
-            ft.Container(
-                content=main_content,
-                width=440,
-                expand=True,
-                alignment=ft.alignment.top_center,
-                padding=ft.padding.only(top=30, bottom=30),
-            )
-        ],
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        scroll=ft.ScrollMode.AUTO,
+        page,
+        [registration_card],
+        back_route="/face_register",
+        on_back=open_cancel_confirm_dialog,
     )
-
-    view.on_dispose = finish_backend_registration
-    return view
-    #endregion

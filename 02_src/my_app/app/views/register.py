@@ -156,10 +156,6 @@ async def delayed_transition(page: ft.Page):
     )
 
 
-def run_async_delayed_transition(page):
-    """別スレッドから delayed_transition(async) を回すためのラッパー"""
-    asyncio.run(delayed_transition(page))
-
 
 # ===================================================
 # カード情報入力画面

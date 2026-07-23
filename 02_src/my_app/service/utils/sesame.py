@@ -1,3 +1,8 @@
+"""
+SESAMEとの通信を行うモジュール、
+責務はSESAMEとの通信、SESAME側configの情報読み取りまでとしています。
+
+"""
 import random
 import datetime
 import base64
@@ -8,6 +13,10 @@ from Crypto.Hash import CMAC
 from Crypto.Cipher import AES
 import os
 import logging
+import asyncio
+from my_app.service.utils.sesame_bluetooth import open_sesame_bt
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,6 +25,7 @@ CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
     sesame_config = config_list["device"]
+    connect_config = config_list["method"]
 
 sesame_id = sesame_config["sesame_id"]
 x_api_key = sesame_config["x_api_key"]
@@ -75,3 +85,41 @@ def open_sesame(user_id):
 def lock_sesame(user_id):
     # 82 で閉める
     return send_sesame_command(82, user_id)
+
+def get_sesame_status():
+    """
+    SESAME本体の状態を取得する。
+
+    Returns:
+        成功時 -> dict {
+        "status": "locked"/"unlocked",
+        "position": int,
+        "battery": int,
+        "raw": 元のJson
+        }
+        失敗時 -> None
+
+    """
+    try:
+        headers = {"x-api-key": x_api_key}
+        url = f"https://app.candyhouse.co/api/sesame2/{sesame_id}"
+        res = requests.get(url, headers=headers, timeout=10)
+        res.raise_for_status()
+        data = res.json()
+        return {
+            "status": data.get("CHSesame2Status"),
+            "position": data.get("position"),
+            "battery": data.get("batteryPercentage"),
+            "raw": data,
+        }
+
+    except Exception:
+        logger.exception("SESAME状態取得失敗")
+        return None
+
+def is_sesame_locked():
+    """施錠済み -> True / 未施錠 -> False / 取得失敗 -> None を返します。"""
+    status = get_sesame_status()
+    if status is None:
+        return None
+    return status["status"] == "locked"
