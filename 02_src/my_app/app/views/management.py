@@ -79,7 +79,6 @@ def management_view(
             width=1040,
             content=body,
         )
-        body_cache[route] = host
         return host
 
     tabs_host = ft.Container(width=1040)
@@ -104,13 +103,6 @@ def management_view(
 
         if route == active_route:
             return
-
-        # 180ms以内の連打だけを無視する
-        now = time.monotonic()
-        if now - last_switch_at < 0.18:
-            return
-
-        last_switch_at = now
 
         next_body = build_body(route)
         active_route = route

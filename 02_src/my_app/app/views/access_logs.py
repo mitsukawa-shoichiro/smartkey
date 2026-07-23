@@ -15,7 +15,6 @@ import flet as ft
 
 import my_app.db.repository as repo
 from my_app.models.ENUMS import EventType
-from my_app.app.utils.pagination import Pagination
 from my_app.app.views.common import (
     show_error_dialog,
     Theme, card, section_title,
@@ -125,8 +124,9 @@ def _validate_search_period(start_str, end_str, first_date, last_date):
 
 
 def access_logs(page: ft.Page):
-    page.title = "ログ閲覧画面"
-    page.bgcolor = Theme.BG
+    try:
+        page.title = "ログ閲覧画面"
+        page.bgcolor = Theme.BG
 
         # ===================================================
         # 状態変数
@@ -143,10 +143,10 @@ def access_logs(page: ft.Page):
             "end_dt": None,
         }
 
-    page.locale_configuration = ft.LocaleConfiguration(
-        supported_locales=[ft.Locale("ja", "JP"), ft.Locale("en", "US")],
-        current_locale=ft.Locale("ja", "JP")
-    )
+        page.locale_configuration = ft.LocaleConfiguration(
+            supported_locales=[ft.Locale("ja", "JP"), ft.Locale("en", "US")],
+            current_locale=ft.Locale("ja", "JP")
+        )
 
         # ===================================================
         # ページ数計算
@@ -183,48 +183,48 @@ def access_logs(page: ft.Page):
         # # リセット時はこのRowの中身を作り直して差し替える
         # search_zone = ft.Row(controls=[search_user], spacing=0)
 
-    # ===================================================
-    # 日付ピッカー関連
-    # ===================================================
+        # ===================================================
+        # 日付ピッカー関連
+        # ===================================================
 
-    def change_start_date(e):
-        if start_date.value:
-            start_time.open = True
-            open_timepicker(start_time)
+        def change_start_date(e):
+            if start_date.value:
+                start_time.open = True
+                open_timepicker(start_time)
+                page.update()
+
+        def change_end_date(e):
+            if end_date.value:
+                end_time.open = True
+                open_timepicker(end_time)
+                page.update()
+
+        def open_datepicker(picker: ft.DatePicker):
+            page.dialog = picker
+            picker.open = True
             page.update()
 
-    def change_end_date(e):
-        if end_date.value:
-            end_time.open = True
-            open_timepicker(end_time)
+        def open_timepicker(picker: ft.TimePicker):
+            page.dialog = picker
+            picker.open = True
             page.update()
 
-    def open_datepicker(picker: ft.DatePicker):
-        page.dialog = picker
-        picker.open = True
-        page.update()
+        def update_start_textbox():
+            """日時ピッカーの値をテキストボックスに反映(日付・時刻どちらも入力された場合のみ)"""
+            if start_date.value and start_time.value:
+                dt = datetime.combine(start_date.value, start_time.value)
+                start_text.value = dt.strftime("%Y-%m-%d %H:%M")
+            else:
+                start_text.value = ""
+            page.update()
 
-    def open_timepicker(picker: ft.TimePicker):
-        page.dialog = picker
-        picker.open = True
-        page.update()
-
-    def update_start_textbox():
-        """日時ピッカーの値をテキストボックスに反映(日付・時刻どちらも入力された場合のみ)"""
-        if start_date.value and start_time.value:
-            dt = datetime.combine(start_date.value, start_time.value)
-            start_text.value = dt.strftime("%Y-%m-%d %H:%M")
-        else:
-            start_text.value = ""
-        page.update()
-
-    def update_end_textbox():
-        if end_date.value and end_time.value:
-            dt = datetime.combine(end_date.value, end_time.value)
-            end_text.value = dt.strftime("%Y-%m-%d %H:%M")
-        else:
-            end_text.value = ""
-        page.update()
+        def update_end_textbox():
+            if end_date.value and end_time.value:
+                dt = datetime.combine(end_date.value, end_time.value)
+                end_text.value = dt.strftime("%Y-%m-%d %H:%M")
+            else:
+                end_text.value = ""
+            page.update()
 
         # ===================================================
         # 検索フィールドの定義
@@ -244,38 +244,38 @@ def access_logs(page: ft.Page):
             on_submit=lambda e: search_logs(e),
         )
 
-    # 認証方式の選択
-    method_dropdown = ft.DropdownM2(label="認証方式", value=None, width=120, height=48)
-    method_dropdown.options = [
-        ft.DropdownOption("カード", "カード"),
-        ft.DropdownOption("顔認証", "顔認証"),
-    ]
+        # 認証方式の選択
+        method_dropdown = ft.DropdownM2(label="認証方式", value=None, width=120, height=48)
+        method_dropdown.options = [
+            ft.DropdownOption("カード", "カード"),
+            ft.DropdownOption("顔認証", "顔認証"),
+        ]
 
-    # 入退室区分
-    search_eventtype = ft.DropdownM2(label="入室/退室", value=None, width=120, height=48)
-    search_eventtype.options = [
-        ft.DropdownOption("1", "入室"),
-        ft.DropdownOption("0", "退室"),
-    ]
+        # 入退室区分
+        search_eventtype = ft.DropdownM2(label="入室/退室", value=None, width=120, height=48)
+        search_eventtype.options = [
+            ft.DropdownOption("1", "入室"),
+            ft.DropdownOption("0", "退室"),
+        ]
 
-    today = date.today()
+        today = date.today()
 
-    start_date = ft.DatePicker(
-        on_change=change_start_date, date_picker_entry_mode=ft.DatePickerEntryMode.INPUT,
-        first_date=today - timedelta(days=365), last_date=today
-    )
-    end_date = ft.DatePicker(
-        on_change=change_end_date, date_picker_entry_mode=ft.DatePickerEntryMode.INPUT,
-        first_date=today - timedelta(days=365), last_date=today
-    )
-    start_time = ft.TimePicker(
-        value=time(0, 0), on_change=lambda e: update_start_textbox(),
-        time_picker_entry_mode=ft.TimePickerEntryMode.INPUT
-    )
-    end_time = ft.TimePicker(
-        value=time(23, 59), on_change=lambda e: update_end_textbox(),
-        time_picker_entry_mode=ft.TimePickerEntryMode.INPUT
-    )
+        start_date = ft.DatePicker(
+            on_change=change_start_date, date_picker_entry_mode=ft.DatePickerEntryMode.INPUT,
+            first_date=today - timedelta(days=365), last_date=today
+        )
+        end_date = ft.DatePicker(
+            on_change=change_end_date, date_picker_entry_mode=ft.DatePickerEntryMode.INPUT,
+            first_date=today - timedelta(days=365), last_date=today
+        )
+        start_time = ft.TimePicker(
+            value=time(0, 0), on_change=lambda e: update_start_textbox(),
+            time_picker_entry_mode=ft.TimePickerEntryMode.INPUT
+        )
+        end_time = ft.TimePicker(
+            value=time(23, 59), on_change=lambda e: update_end_textbox(),
+            time_picker_entry_mode=ft.TimePickerEntryMode.INPUT
+        )
 
         start_text = ft.TextField(
             label="開始日時",
@@ -293,9 +293,9 @@ def access_logs(page: ft.Page):
             border_radius=8,
         )
 
-    # ===================================================
-    # 検索実行
-    # ===================================================
+        # ===================================================
+        # 検索実行
+        # ===================================================
 
         def search_logs(e):
             """
@@ -318,8 +318,8 @@ def access_logs(page: ft.Page):
                 else None
             )
 
-        first_date = today - timedelta(days=365)
-        last_date = today
+            first_date = today - timedelta(days=365)
+            last_date = today
 
             start_dt, end_dt, error_message = (
                 _validate_search_period(
@@ -349,20 +349,21 @@ def access_logs(page: ft.Page):
                 duration=0,
             )
 
-    # ===================================================
-    # ソート
-    # ===================================================
+        # ===================================================
+        # ソート
+        # ===================================================
 
-    async def on_sort(e):
-        """日時カラムのヘッダークリック: 昇順/降順を切り替えて再読込"""
-        table.sort_column_index = 2   # 初回クリックでソート矢印を表示する
-        table.sort_ascending = not table.sort_ascending
-        pg.reset()
-        load_table()
+        async def on_sort(e):
+            """日時カラムのヘッダークリック: 昇順/降順を切り替えて再読込"""
+            nonlocal current_page
+            table.sort_column_index = 2   # 初回クリックでソート矢印を表示する
+            table.sort_ascending = not table.sort_ascending
+            current_page = 0
+            load_table()
 
-    # ===================================================
-    # 全件表示・リセット
-    # ===================================================
+        # ===================================================
+        # 全件表示・リセット
+        # ===================================================
 
         # def show_all_logs(e):
         #     """全件検索してテーブルに表示(検索条件を全てクリアする)"""
@@ -415,14 +416,14 @@ def access_logs(page: ft.Page):
             )
             page.update()
 
-    start_date.on_change = change_start_date
-    end_date.on_change = change_end_date
+        start_date.on_change = change_start_date
+        end_date.on_change = change_end_date
 
-    # ===================================================
-    # ボタン定義
-    # ===================================================
+        # ===================================================
+        # ボタン定義
+        # ===================================================
 
-    page_label = ft.Text("")  # load_table内で更新
+        page_label = ft.Text("")  # load_table内で更新
 
         prev_btn = secondary_button(
             "前へ",
@@ -464,38 +465,34 @@ def access_logs(page: ft.Page):
             ft.Icons.DATE_RANGE,
         )
 
-    # ===================================================
-    # テーブル定義
-    # ===================================================
+        # ===================================================
+        # テーブル定義
+        # ===================================================
 
-    table = ft.DataTable(
-        columns=[
-            ft.DataColumn(centered_cell(
-                ft.Text("ユーザー名 / カード種別", weight=ft.FontWeight.BOLD), _W["label"])),
-            ft.DataColumn(centered_cell(
-                ft.Text("認証方式", weight=ft.FontWeight.BOLD), _W["method"])),
-            ft.DataColumn(
-                centered_cell(ft.Text("入退室の日時", weight=ft.FontWeight.BOLD), _W["timestamp"]),
-                on_sort=lambda e: page.run_task(on_sort, e),
-            ),
-            ft.DataColumn(centered_cell(
-                ft.Text("区分", weight=ft.FontWeight.BOLD), _W["event"])),
-        ],
-        rows=[],
-        # sort_column_index=2,  ソート矢印を最初だけ消すためコメントアウト(初回クリックで設定)
-        sort_ascending=False,
-        heading_row_color=Theme.HEADING_BG,
-        heading_row_height=48,
-        data_row_min_height=52,
-        data_row_max_height=52,
-        divider_thickness=1,
-        horizontal_lines=ft.BorderSide(1, Theme.BORDER),
-        column_spacing=20,
-    )
-
-    # ==================================================
-    # テーブル読み込み関数
-    # ==================================================
+        table = ft.DataTable(
+            columns=[
+                ft.DataColumn(centered_cell(
+                    ft.Text("ユーザー名 / カード種別", weight=ft.FontWeight.BOLD), _W["label"])),
+                ft.DataColumn(centered_cell(
+                    ft.Text("認証方式", weight=ft.FontWeight.BOLD), _W["method"])),
+                ft.DataColumn(
+                    centered_cell(ft.Text("入退室の日時", weight=ft.FontWeight.BOLD), _W["timestamp"]),
+                    on_sort=lambda e: page.run_task(on_sort, e),
+                ),
+                ft.DataColumn(centered_cell(
+                    ft.Text("区分", weight=ft.FontWeight.BOLD), _W["event"])),
+            ],
+            rows=[],
+            # sort_column_index=2,  ソート矢印を最初だけ消すためコメントアウト(初回クリックで設定)
+            sort_ascending=False,
+            heading_row_color=Theme.HEADING_BG,
+            heading_row_height=48,
+            data_row_min_height=52,
+            data_row_max_height=52,
+            divider_thickness=1,
+            horizontal_lines=ft.BorderSide(1, Theme.BORDER),
+            column_spacing=20,
+        )
 
         def load_table():
             """
@@ -522,12 +519,12 @@ def access_logs(page: ft.Page):
                 show_error_dialog(page, "ログの取得に失敗しました。しばらくしてから再度お試しください。")
                 return
 
-        pg.update_total(total)
+            calc_total_pages(total)
 
-        table.rows.clear()
+            table.rows.clear()
 
-        for log in logs:
-            table.rows.append(_build_log_row(log))
+            for log in logs:
+                table.rows.append(_build_log_row(log))
 
             page_label.value = (
             f"{current_page + 1} / {total_pages} ページ"
@@ -537,28 +534,32 @@ def access_logs(page: ft.Page):
             next_btn.disabled = (current_page + 1) >= total_pages
             page.update()
 
-    # ===================================================
-    # ページ送り
-    # ===================================================
+        # ===================================================
+        # ページ送り
+        # ===================================================
 
-    def next_page(e):
-        if pg.next():
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
+        def next_page(e):
+            nonlocal current_page
+            if (current_page + 1) < total_pages:
+                current_page += 1
+                load_table()
+                scroll_table.scroll_to(offset=0, duration=0)
 
-    def prev_page(e):
-        if pg.prev():
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
+        def prev_page(e):
+            nonlocal current_page
+            if current_page > 0:
+                current_page -= 1
+                load_table()
+                scroll_table.scroll_to(offset=0, duration=0)
 
-    # ===================================================
-    # レイアウト
-    # ===================================================
+        # ===================================================
+        # レイアウト
+        # ===================================================
 
-    page.overlay.append(start_date)
-    page.overlay.append(end_date)
-    page.overlay.append(start_time)
-    page.overlay.append(end_time)
+        page.overlay.append(start_date)
+        page.overlay.append(end_date)
+        page.overlay.append(start_time)
+        page.overlay.append(end_time)
 
         # データテーブルはそのままだと中央揃えできないためRow化
         table_row = ft.Row([table], alignment=ft.MainAxisAlignment.CENTER)
@@ -616,9 +617,9 @@ def access_logs(page: ft.Page):
             ft.Icons.DATE_RANGE,
         )
 
-    # ===================================================
-    # commonスタイル適用
-    # ===================================================
+        # ===================================================
+        # commonスタイル適用
+        # ===================================================
 
         # 検索欄用カード(土台のパネル)
         search_card = card(
@@ -657,15 +658,21 @@ def access_logs(page: ft.Page):
             accent=Theme.LOG_BLUE,
         )
 
-    # 初回の読み込み(全件モード)
-    load_table()
+        # 初回の読み込み(全件モード)
+        load_table()
 
-    # ===================================================
-    # 実際にページに
-    # ===================================================
+        # ===================================================
+        # 実際にページに
+        # ===================================================
 
-    return app_view("/access_logs", page, [
-        search_card,
-        ft.Container(height=16),
-        table_card,
-    ])
+        return app_view("/access_logs", page, [
+            search_card,
+            ft.Container(height=16),
+            table_card,
+        ])
+
+    except Exception:
+        logger.exception("ログ閲覧画面の表示中にエラーが発生しました")
+        show_error_dialog(page, "ログ閲覧画面の表示中にエラーが発生しました", go_home=True)
+        # View関数は必ずViewを返す(返さないと画面が描画されず、ダイアログも出ない)
+        return ft.View("/access_logs", controls=[], bgcolor=Theme.BG)

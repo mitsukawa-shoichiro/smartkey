@@ -933,10 +933,9 @@ def show_info_dialog(page, message: str, title: str = "完了", on_close=None):
     dialog = ft.AlertDialog(modal=True)
 
     def close(e):
+        page.close(dialog)
         if on_close:
             on_close()
-        else:
-            page.close(dialog)
 
     dialog.title = ft.Text(title)
     dialog.content = ft.Text(message)
@@ -1005,10 +1004,9 @@ def show_error_dialog(page: ft.Page, message: str, go_home: bool = False):
                         Falseならダイアログを閉じるだけで、その画面に留まる(デフォルト)。
     """
     def on_close(e):
+        page.close(dialog)
         if go_home:
-            go_home()
-        else:
-            page.close(dialog)
+            page.go("/index")
 
     dialog = ft.AlertDialog(
         modal=True,
@@ -1050,7 +1048,7 @@ def extract_user_id_from_key(key: str) -> int:
     return int(key.rsplit("#", 1)[1])
 
 
-def build_user_autocomplete(users, on_selected, width: int = 300, height: int = 56):
+def build_user_autocomplete(users, on_selected):
     """
     ユーザー検索用のAutocompleteを組み立てて返す共通部品。
     各画面はこれを呼ぶだけで、同じ検索UIを使える(Thymeleafのフラグメント的な使い方)。
@@ -1069,11 +1067,7 @@ def build_user_autocomplete(users, on_selected, width: int = 300, height: int = 
     def handle_select(e: ft.ControlEvent):
         on_selected(extract_user_id_from_key(e.selection.key))
 
-    return ft.Container(
-        width=width,
-        height=height,
-        content=ft.AutoComplete(
-            suggestions=[build_user_option(u) for u in users],
-            on_select=handle_select,
-        )
+    return ft.AutoComplete(
+        suggestions=[build_user_option(u) for u in users],
+        on_select=handle_select,
     )

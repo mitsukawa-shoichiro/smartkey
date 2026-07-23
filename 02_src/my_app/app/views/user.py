@@ -11,7 +11,6 @@ import sqlite3
 import flet as ft
 
 import my_app.db.repository as repo
-from my_app.app.utils.pagination import Pagination
 from my_app.app.views.common import (
     show_error_dialog,
     Theme, card, section_title,
@@ -29,7 +28,8 @@ def user_view(page: ft.Page):
     # ===================================================
     # 状態変数
     # ===================================================
-    pg = Pagination(100)           # ページング状態管理クラス
+    offset = 0                     # 現在のページ番号(0始まり)
+    all_page = 1                   # 全ページ数
     search_text = ""               # 検索窓に確定した検索語(空なら全件表示)
     selected_ids = []              # チェックボックスで選択されたuser_idのリスト
     checkbox_refs = {}             # {user_id: Checkboxコントロール} の対応表
@@ -43,9 +43,9 @@ def user_view(page: ft.Page):
 
     def search(e=None):
         """検索ボタン/Enter: 検索語を確定して1ページ目から表示する"""
-        nonlocal search_text
+        nonlocal search_text, offset
         search_text = search_box.value.strip()
-        pg.reset
+        offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
@@ -143,14 +143,14 @@ def user_view(page: ft.Page):
 
     async def refresh(e):
         """リセットボタン: 検索条件・並び順・ページを全部初期状態に戻す"""
-        nonlocal search_text
+        nonlocal search_text, offset
         reset_btn.disabled = True
         page.update()
 
         table.sort_ascending = True
         search_box.value = ""   # 検索窓をクリア
         search_text = ""
-        pg.reset()
+        offset = 0
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
 
@@ -160,9 +160,10 @@ def user_view(page: ft.Page):
 
     async def sort_table(e):
         """IDカラムのヘッダークリック: 昇順/降順を切り替えて再読込"""
+        nonlocal offset
         table.sort_column_index = 0   # 初回クリックでソート矢印を表示する
         table.sort_ascending = not table.sort_ascending
-        pg.reset()
+        offset = 0
         load_table()
 
     # ===================================================
@@ -171,15 +172,19 @@ def user_view(page: ft.Page):
 
     def prev_page(e):
         """前ページへ遷移"""
-        if pg.prev():
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
+        nonlocal offset
+        if offset != 0:
+            offset -= 1
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
     def next_page(e):
         """次ページへ遷移"""
-        if pg.next:
-            load_table()
-            scroll_table.scroll_to(offset=0, duration=0)
+        nonlocal offset
+        if (offset + 1) != all_page:
+            offset += 1
+        load_table()
+        scroll_table.scroll_to(offset=0, duration=0)
 
     # ===================================================
     # テーブル読み込み関数
@@ -191,16 +196,19 @@ def user_view(page: ft.Page):
         氏名・カナ氏名のセルは編集可能なTextFieldで、フォーカスが外れた時点で
         save_user が呼ばれてDBに保存される。
         """
+        nonlocal offset, all_page
 
-        try:
-            users, total = repo.find_users_with_total(search_text, table.sort_ascending, 100, offset * 100)
-        except sqlite3.Error:
-            logger.exception("ユーザー情報の読み込みに失敗しました")
-            show_error_dialog(page, "ユーザー情報の取得に失敗しました。しばらくしてから再度お試しください。")
-            return
+        users, total = repo.find_users_with_total(
+            search_text,
+            table.sort_ascending,
+            ITEMS_PER_PAGE,
+            offset * ITEMS_PER_PAGE,
+        )
 
-        # 諸パラメータ更新
-        all_page = max(1, int(((total - 1) / 100) + 1))
+        all_page = max(
+            1,
+            (total + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE,
+        )
 
         # 初期化
         checkbox_refs.clear()
@@ -243,7 +251,10 @@ def user_view(page: ft.Page):
             )
 
         # その他項目の設定
-        page_label.value = f"{offset + 1} / {all_page} ページ"
+        page_label.value = (
+            f"{offset + 1} / {all_page} ページ"
+            f"（全{total}件）"
+        )
         prev_btn.disabled = offset == 0
         next_btn.disabled = (offset + 1) == all_page
         page.update()
