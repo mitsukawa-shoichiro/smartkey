@@ -296,3 +296,9 @@ FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
 2026-07-22 15:05:03 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
 2026-07-22 15:05:03 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
 2026-07-22 15:05:04 [INFO] __main__:259 - システム正常に戻りました
+2026-07-23 09:17:34 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-23 09:17:35 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
+Traceback (most recent call last):
+  File "c:\SmartKey\smartkey\02_src\my_app\service\backsys\opensensor_back_system.py", line 23, in <module>
+    from .sendmail import send_mail
+ImportError: attempted relative import with no known parent package
