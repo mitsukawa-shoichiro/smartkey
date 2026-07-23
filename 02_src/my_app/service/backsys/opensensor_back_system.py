@@ -3,14 +3,12 @@ import sys
 import os
 
 # 絶対パスで PROJECT_ROOT を指定
-PROJECT_ROOT = r"C:\SmartKey\smartkey\02_src"
-MY_APP_PATH = os.path.join(PROJECT_ROOT, "my_app")
-if MY_APP_PATH not in sys.path:
+PROJECT_ROOT = r"C:\smartkey\02_src"
+if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 print("=== DEBUG INFO ===")
 print("PROJECT_ROOT:", PROJECT_ROOT)
-print("MY_APP_PATH:", MY_APP_PATH)
 print("sys.path:")
 for i, p in enumerate(sys.path):
     print(f"  [{i}] {p}")
@@ -40,32 +38,19 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
-project_root = os.path.dirname(os.path.abspath(__file__))
-for _ in range(2):
-    project_root = os.path.dirname(project_root)
-
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-
-print("project_root:", project_root)
-print("sys.path after modification:")
-for p in sys.path:
-    print(" ", p)
-
-import logs.log_config_service
 
 import logging
-import logs.log_config_service
 import requests
 import time
-from .sendmail import send_mail
+import select
+import signal
 import socket
+from my_app.service.backsys.sendmail import send_mail
 import threading
-import os
-import sys
 import json
+
 LOGS_PATH = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..', '..'))
+    os.path.dirname(__file__), '..', '..','..','..'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
 
@@ -89,7 +74,6 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_list = json.load(f)
     open_sensor_config = config_list["device"]
 
-print(open_sensor_config)
 open_sensor_id = open_sensor_config["open_sensor_id"]
 x_api_key = open_sensor_config["x_api_key"]
 

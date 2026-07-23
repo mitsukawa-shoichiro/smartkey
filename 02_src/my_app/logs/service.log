@@ -302,3 +302,20 @@ Traceback (most recent call last):
   File "c:\SmartKey\smartkey\02_src\my_app\service\backsys\opensensor_back_system.py", line 23, in <module>
     from .sendmail import send_mail
 ImportError: attempted relative import with no known parent package
+2026-07-23 15:50:33 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-23 15:50:34 [INFO] __main__:268 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-23 15:50:34 [INFO] __main__:102 - check_sesame_battery 開始
+2026-07-23 15:50:34 [INFO] __main__:186 - check_alive 開始
+2026-07-23 15:50:34 [INFO] __main__:191 - 死活監視システム起動...
+2026-07-23 15:50:35 [INFO] __main__:125 - バッテリー残量: 取得失敗
+2026-07-23 15:50:35 [ERROR] __main__:159 - メール送信エラー
+2026-07-23 15:50:44 [ERROR] __main__:247 - 解錠システム異常
+2026-07-23 15:50:44 [INFO] __main__:251 - システム異常
+2026-07-23 15:50:45 [INFO] __main__:257 - システム正常に戻りました
+2026-07-23 15:50:46 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-23 15:50:46 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-23 15:50:54 [ERROR] __main__:247 - 解錠システム異常
+2026-07-23 15:50:54 [INFO] __main__:251 - システム異常
+2026-07-23 15:50:55 [INFO] __main__:257 - システム正常に戻りました
+2026-07-23 15:50:56 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-23 15:50:56 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了

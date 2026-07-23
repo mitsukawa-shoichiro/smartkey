@@ -2,14 +2,12 @@ import os
 import sys
 
 # 絶対パスで PROJECT_ROOT を指定
-PROJECT_ROOT = r"C:\SmartKey\smartkey\02_src"
-MY_APP_PATH = os.path.join(PROJECT_ROOT, "my_app")
-if MY_APP_PATH not in sys.path:
+PROJECT_ROOT = r"C:\smartkey\02_src"
+if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 print("=== DEBUG INFO ===")
 print("PROJECT_ROOT:", PROJECT_ROOT)
-print("MY_APP_PATH:", MY_APP_PATH)
 print("sys.path:")
 for i, p in enumerate(sys.path):
     print(f"  [{i}] {p}")
