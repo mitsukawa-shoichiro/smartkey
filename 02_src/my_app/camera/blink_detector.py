@@ -19,6 +19,7 @@ openのところにもともと登録してある顔の特徴量(エンコーデ
 瞬きの時間が長すぎると判断された場合はリセットがかかります
 """
 
+#耳の計測
 def calculate_ear(landmarks, eye_indices, img_w, img_h):
     points = [(int(landmarks[i].x * img_w), int(landmarks[i].y * img_h)) for i in eye_indices]
     v1 = np.linalg.norm(np.array(points[1]) - np.array(points[5]))
@@ -28,6 +29,7 @@ def calculate_ear(landmarks, eye_indices, img_w, img_h):
         return 0
     return (v1 + v2) / (2.0 * h)
 
+#まばたき検出
 class BlinkDetector:
     def __init__(self):
         self.blink_count = 0
