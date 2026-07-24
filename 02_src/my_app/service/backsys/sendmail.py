@@ -4,11 +4,13 @@ import os, sys
 import logging
 import json
 
+#2階層上の絶対パスを取得してモジュール検索パスの先頭に追加する
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
 import my_app.logs.log_config_service
 
+#設定パス（絶対パス）
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'backend', 'mail.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     mail_config = json.load(f)

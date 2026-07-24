@@ -48,6 +48,7 @@ from my_app.service.backsys.sendmail import send_mail
 import threading
 import json
 
+#4階層上の絶対パスを取得してモジュール検索パスの先頭に追加する
 LOGS_PATH = os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..', '..','..','..'))
 if LOGS_PATH not in sys.path:
@@ -64,6 +65,7 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     # card_reader_mail_config = config_list["card_reader_mail"]
     system_mail_config = config_list["system_mail"]
 
+#プロジェクト内の設定ファイルからデバイス部分を読込
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', '..', 'config', 'backend', 'open_sensor_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
@@ -80,6 +82,7 @@ logger = logging.getLogger(__name__)  # logに書き込む用
 
 stop_event = threading.Event()
 
+#利用可能なポート番号を探す
 def find_available_port(start_port=54321, max_tries=10):
     for port in range(start_port, start_port + max_tries):
         try:
@@ -175,7 +178,7 @@ def check_open_sensor_battery():
 
     logger.info("check_sesame_battery 終了")
 
-
+#利用可能なポート番号を探す
 def send_mail_async(title, body):
     def _send():
         try:
