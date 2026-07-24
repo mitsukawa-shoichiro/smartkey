@@ -2,14 +2,12 @@ import os
 import sys
 
 # 絶対パスで PROJECT_ROOT を指定
-PROJECT_ROOT = r"C:\SmartKey\smartkey\02_src"
-MY_APP_PATH = os.path.join(PROJECT_ROOT, "my_app")
-if MY_APP_PATH not in sys.path:
+PROJECT_ROOT = r"C:\smartkey\02_src"
+if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 print("=== DEBUG INFO ===")
 print("PROJECT_ROOT:", PROJECT_ROOT)
-print("MY_APP_PATH:", MY_APP_PATH)
 print("sys.path:")
 for i, p in enumerate(sys.path):
     print(f"  [{i}] {p}")
@@ -49,11 +47,13 @@ from my_app.service.backsys.sendmail import send_mail
 import socket
 import json
 
+#4階層上の絶対パスを取得してモジュール検索パスの先頭に追加する
 LOGS_PATH = os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..', '..', '..', '..'))
 if LOGS_PATH not in sys.path:
     sys.path.insert(0, LOGS_PATH)
 
+#設定パス（絶対パス）
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', '..', 'config', 'backend', 'backendsys.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
@@ -64,6 +64,7 @@ with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     card_reader_mail_config = config_list["cardreader_mail"]
     system_mail_config = config_list["system_mail"]
 
+#プロジェクト内の設定ファイルからデバイス部分を読込
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
     __file__), '..', '..', 'config', 'backend', 'sesame_config.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
@@ -80,7 +81,7 @@ logger = logging.getLogger(__name__)  # logに書き込む用
 
 stop_event = threading.Event()  # 停止フラグ
 
-
+#利用可能なポート番号を探す
 def find_available_port(start_port=54321, max_tries=10):
     for port in range(start_port, start_port + max_tries):
         try:
@@ -172,7 +173,7 @@ def check_sesame_battery():
 
     logger.info("check_sesame_battery 終了")
 
-
+#非同期処理
 def send_mail_async(title, body):
     def _send():
         try:

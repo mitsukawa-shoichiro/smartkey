@@ -14,13 +14,13 @@ from my_app.camera.face_authenticator import FaceAuthenticator
 import my_app.logs.log_config_service
 import logging
 
-# 人脸识别和IC卡认证共用相同的解锁与自动上锁处理
+# 顔認証とICカード認証は同じ解除と自動ロックの処理を共有する
 from my_app.service.card_sys import request_unlock
 
-# 通过与多张注册图像的距离及其平均值进行人脸识别
+# 複数の登録画像との距離とその平均を使って顔認識する
 # from my_app.camera.face_util.face_stable import recognize_image_average
 
-# 用于写入日志
+# ログの記入に使用
 logger = logging.getLogger(__name__)
 
 #region ReadConfig
@@ -50,7 +50,7 @@ IR_STARTUP_TIMEOUT_SEC = float(
     face_auth_config.get("ir_startup_timeout_sec", 5.0)
 )
 
-# 用于在cap_dict中识别IR摄像头的键
+# cap_dictでIRカメラを識別するためのキーに使う
 IR_CAMERA_KEY = "ir"
 
 from my_app.camera.media_foundation_ir import MediaFoundationIRCamera
@@ -60,43 +60,43 @@ from my_app.camera.media_foundation_ir import MediaFoundationIRCamera
 
 class CaptureBuffer:
     """
-    用于临时保存捕获图像（帧）的缓冲区类
-    该类会创建一个临时目录, 并在其中保存和获取最新的捕获图像
+    一時的にキャプチャした画像（フレーム）を保存するためのバッファクラス。
+    このクラスは一時ディレクトリを作成し、その中で最新のキャプチャ画像を保存・取得する
     """
-    # 一時ディレクトリを作成（prefix="facecap_"）
-    tempdir = tempfile.TemporaryDirectory(prefix="facecap_")
+    # 一時ディレクトリを作成（prefix="facecap"）
+    tempdir = tempfile.TemporaryDirectory(prefix="facecap")
     # 保存されたファイルパスを記録するリスト
     files = []
 
     @classmethod
     def save_frame(cls, frame, filename="shot.jpg"):
         """
-        将帧保存到临时目录中
-        先清除已有的临时文件信息, 然后创建新的文件
+        フレームを一時ディレクトリに保存する
+        まず既存の一時ファイル情報をクリアして、その後新しいファイルを作成する
 
         Args:
-            frame: 使用 OpenCV 获取的图像数据（NumPy 数组）
-            filename: 保存文件名（默认值为 "shot.jpg"）
+        frame: OpenCVで取得した画像データ（NumPy 配列）
+        filename: 保存するファイル名（デフォルトは "shot.jpg"）
         """
-        # 创建保存路径
+        # 保存先を作成する
         path = os.path.join(cls.tempdir.name, filename)
-        # 写入图像
+        # 画像を入力
         cv2.imwrite(path, frame)
-        # 记录文件路径
+        # ファイルパスを記録
         cls.files.append(path)
 
     @classmethod
     def clean_frame(cls):
-        # 清空已保存的文件列表
+        # 保存したファイルリストを空にする
         cls.files.clear()
 
     @classmethod
     def get_newest_shot(cls):
         """
-        返回临时目录中最新捕获图像文件的路径
+        一時的なディレクトリで最新のキャプチャ画像ファイルのパスを返す
 
-        返回值:
-            最新文件的路径。若不存在, 则返回None
+        Args:
+            最新ファイルのパス。存在しない場合はNoneを返す
         """
         if len(cls.files) > 0:
             return CaptureBuffer.files[-1]
@@ -106,16 +106,16 @@ class CaptureBuffer:
 
 class CameraWorker:
     """
-    后台线程：启动摄像头 → 显示预览 → CAPTURE / STOP
+    バックグラウンドスレッド：カメラを起動 → プレビューを表示 → CAPTURE / STOP
     """
     isRegistering: bool = False
 
-    FACE_UNLOCK_COOLDOWN_SEC = 6    # 防止同一人连续解锁的等待时间
-    REQUIRED_MATCH_COUNT = 3        # 连续认证成功多少帧后才允许通过
-    last_face_name = None           # 上一次成功解锁的人脸姓名
-    last_face_timestamp = 0         # 上一次成功解锁的时间
-    current_match_name = None       # 当前正在认证的人物姓名
-    current_match_count = 0         # 当前连续认证成功次数
+    FACE_UNLOCK_COOLDOWN_SEC = 6    # 同じ人が連続で解除するのを防ぐ待ち時間
+    REQUIRED_MATCH_COUNT = 3        # 連続で認証成功した何フレーム後に通過を許可するか
+    last_face_name = None           # 前回うまく解除した顔の名前
+    last_face_timestamp = 0         # 最後に成功して解除した時間
+    current_match_name = None       # 現在認証中の人物名
+    current_match_count = 0         # 現在の連続認証成功回数
 
     __BACK_END_CAMERA:threading.Thread = None
     __SOCKET_THREAD:threading.Thread = None
@@ -156,9 +156,9 @@ class CameraWorker:
         self._camera_reload_lock = (threading.Lock())
         self._camera_reload_result = (False, "まだ実行されていません")
 
-        # 打开用于人脸识别的摄像头
+        # 顔認識用のカメラをオンにする
         if not self.open_all_cameras():
-            logger.error("カメラひらけん")
+            logger.error("カメラを起動できません")
 
         if self.__SOCKET_THREAD is None:
             self.__SOCKET_THREAD = threading.Thread(target=self.socket_receiver, daemon=True)
@@ -241,7 +241,7 @@ class CameraWorker:
 
     def back_end_system(self):
         logger.info("カメラ起動！")
-        was_registering = None  # 记录上一次的状态（None/True/False）
+        was_registering = None  # 前回の状態を記録する（None/True/False）
         capture_failure_count = 0
 
         try:
@@ -418,7 +418,7 @@ class CameraWorker:
     def open_all_cameras(self):
         self.release_all_cameras()
 
-        # 使用OpenCV打开RGB摄像头
+        # OpenCVでRGBカメラを開く
         rgb_cap = cv2.VideoCapture(
             self.rgb_camera_index,
             cv2.CAP_DSHOW,
@@ -439,7 +439,7 @@ class CameraWorker:
 
         rgb_cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
-        # 使用Media Foundation直接打开IR摄像头
+        # Media Foundationを使ってIRカメラを直接開く
         ir_cap = MediaFoundationIRCamera(
             device_id_contains=IR_DEVICE_ID_CONTAINS,
             startup_timeout=IR_STARTUP_TIMEOUT_SEC,
@@ -533,21 +533,21 @@ class CameraWorker:
 
     def __Authentication_old(self):
         for file_path in CaptureBuffer.files:
-            # 不以单张图像是否匹配作为判断, 而是根据与多张注册图像的距离及其平均值进行认证
+            # 単一の画像が一致するかどうかで判断するのではなく、複数の登録画像との距離とその平均値に基づいて認証する
             name_roma, info = recognize_image_average(file_path, DB_DIR)
 
-            # 如果当前帧认证失败, 则处理下一帧图像
+            # もし現在のフレームの認証に失敗したら、次のフレームの画像を処理する
             if name_roma is None:
                 continue
 
-            # 确认是否为同一人连续认证成功
+            # 同じ人が連続で認証に成功したか確認する
             if self.current_match_name == name_roma:
                 self.current_match_count += 1
             else:
                 self.current_match_name = name_roma
                 self.current_match_count = 1
 
-            # 将判定状态输出到日志中, 以便查看
+            # 判定状態をログに出力して、確認できるようにする
             print(
                 f"認証候補: {name_roma} "
                 f"{self.current_match_count}/{self.REQUIRED_MATCH_COUNT} "
@@ -556,17 +556,17 @@ class CameraWorker:
                 f"hits={info['registered_match_count']}/{info['required_registered_matches']}"
             )
 
-            # 在连续成功达到规定次数之前不解锁
+            # 規定回数連続で成功するまで解除されない
             if self.current_match_count < self.REQUIRED_MATCH_COUNT:
                 return False
 
-            # 重置连续认证计数, 以便进行下一次判定
+            # 次の判定のために連続認証カウントをリセットする
             self.current_match_name = None
             self.current_match_count = 0
 
             now = time.time()
 
-            # 如果是同一张脸, 并且距离上次解锁未超过指定秒数, 则不执行解锁
+            # もし同じ顔で、前回の解除から指定秒数を超えていなければ、解除は行わない
             if (
                 self.last_face_name == name_roma
                 and now - self.last_face_timestamp < self.FACE_UNLOCK_COOLDOWN_SEC
@@ -574,17 +574,17 @@ class CameraWorker:
                 print(f"開錠スキップ: {name_roma}")
                 return True
 
-            # 记录成功解锁的人脸姓名和解锁时间
+            # 顔認証で成功した人の名前と解除時間を記録する
             self.last_face_name = name_roma
             self.last_face_timestamp = now
 
-            # 显示通过哪个摄像头完成了认证
+            # どのカメラで認証が完了したか表示する
             match = re.search(r"camera_(\d+)\.jpg", file_path)
             if match:
                 index = int(match.group(1))
                 print("撮影されたカメラのindexは" + str(index))
 
-            # 解锁
+            # 解錠
             self.__open_sesame()
             return True
 
