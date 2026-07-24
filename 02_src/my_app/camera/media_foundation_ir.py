@@ -22,7 +22,7 @@ from winrt.windows.storage.streams import Buffer
 
 class MediaFoundationIRCamera:
     """
-    通过Media Foundation获取IR图像
+    Media Foundationを使ってIR画像を取得する
     """
 
     def __init__(self, device_id_contains, startup_timeout = 5.0, max_age_ms = 150.0):
@@ -73,7 +73,7 @@ class MediaFoundationIRCamera:
 
     def grab(self):
         """
-        固定最新的IR帧及其获取时间
+        最新のIRフレームとその取得時間を固定する
         """
         with self._lock:
             if self._latest_frame is None:
@@ -95,7 +95,7 @@ class MediaFoundationIRCamera:
 
     def retrieve_with_timestamp(self):
         """
-        返回已固定的IR图像及其获取时间
+        固定されたIR画像とその取得時間を返す
         """
         with self._lock:
             if (self._grabbed_frame is None or self._grabbed_at is None):
