@@ -33,9 +33,9 @@ print("log_config_service.py exists:", os.path.exists(log_config_path))
 # インポートを試みる
 try:
     import my_app.logs.log_config_service
-    print("✅ my_app.logs.log_config_service imported successfully")
+    print("my_app.logs.log_config_service imported successfully")
 except Exception as e:
-    print("❌ Import error:", e)
+    print("Import error:", e)
     import traceback
     traceback.print_exc()
 
@@ -267,7 +267,7 @@ threads = []
 
 
 def main():
-    logger.info("⏱️ sesameのバッテリーとサーバー状態を確認中...")
+    logger.info("sesameのバッテリーとサーバー状態を確認中...")
     threads.append(threading.Thread(target=check_sesame_battery))
     threads.append(threading.Thread(target=check_alive))
     for t in threads:
@@ -285,7 +285,7 @@ def main():
 
 
 # Windows では、SIGINT をデフォルト動作（KeyboardInterrupt を投げる）に戻す
-signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 if __name__ == "__main__":
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
     main()

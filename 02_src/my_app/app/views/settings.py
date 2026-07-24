@@ -589,6 +589,12 @@ def settings_view(
     last_tested_index = None
     reader_probe_results = {}
 
+    def settings_is_active():
+        return (
+            page.route == "/settings"
+            and not getattr(page, "_app_closing", False)
+        )
+
     camera_status_icon = ft.Icon(
         ft.Icons.INFO_OUTLINE,
         size=18,
@@ -846,9 +852,10 @@ def settings_view(
 
         preview_active = False
 
-        await asyncio.to_thread(
-            worker.stop_camera
-        )
+        if getattr(page, "_app_closing", False):
+            worker.stop_camera()
+        else:
+            await asyncio.to_thread(worker.stop_camera)
 
         if backend_paused:
             send_message(
@@ -929,6 +936,10 @@ def settings_view(
 
         backend_paused = True
 
+        if not settings_is_active():
+            await stop_camera_test_session()
+            return
+
         worker.front_end_system(
             camera_index,
             show_window=False,
@@ -938,6 +949,10 @@ def settings_view(
             worker.wait_until_ready,
             4.0,
         )
+
+        if not settings_is_active():
+            await stop_camera_test_session()
+            return
 
         if not ready:
             error_message = (
@@ -978,7 +993,7 @@ def settings_view(
         )
 
         try:
-            while preview_active:
+            while preview_active and settings_is_active():
                 image_data = (
                     worker
                     .get_preview_base64()
@@ -997,7 +1012,7 @@ def settings_view(
                 await asyncio.sleep(0.12)
 
         finally:
-            if preview_active:
+            if preview_active or backend_paused:
                 await (
                     stop_camera_test_session()
                 )

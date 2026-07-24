@@ -151,6 +151,109 @@ class InsightFaceEngine:
             "roll_deg": roll_deg,
         }
 
+    def check_registration_frame(
+        self,
+        image,
+        config,
+    ):
+        """登録用画像の顔人数・品質・距離・位置をまとめて判定する"""
+        if image is None or image.size == 0:
+            return False, {
+                "reason": "カメラ画像を取得できません",
+                "face_count": 0,
+            }
+
+        faces = self.extract_many(image)
+        face_count = len(faces)
+
+        if face_count == 0:
+            return False, {
+                "reason": "顔をカメラに映してください",
+                "face_count": 0,
+            }
+
+        if face_count > 1:
+            return False, {
+                "reason": "カメラには1人だけ映ってください",
+                "face_count": face_count,
+            }
+
+        face_info = faces[0]
+        quality_ok, information = (
+            self.check_registration_quality(
+                image,
+                face_info,
+                config,
+            )
+        )
+
+        information = dict(information)
+        information["face_count"] = 1
+        information["face_info"] = face_info
+
+        if not quality_ok:
+            reason = str(
+                information.get(
+                    "reason",
+                    "顔画像の品質を確認できません",
+                )
+            )
+            information["reason"] = (
+                reason.replace("😡", "")
+                .replace("😱", "")
+                .strip()
+            )
+            return False, information
+
+        frame_height, frame_width = image.shape[:2]
+        x1, y1, x2, y2 = map(
+            float,
+            face_info["bbox"],
+        )
+
+        face_ratio = max(
+            (x2 - x1) / max(frame_width, 1),
+            (y2 - y1) / max(frame_height, 1),
+        )
+        center_offset_ratio = max(
+            abs(((x1 + x2) / 2) - frame_width / 2)
+            / max(frame_width / 2, 1),
+            abs(((y1 + y2) / 2) - frame_height / 2)
+            / max(frame_height / 2, 1),
+        )
+
+        information["face_ratio"] = face_ratio
+        information["center_offset_ratio"] = (
+            center_offset_ratio
+        )
+
+        if face_ratio < float(
+            config["registration_min_face_ratio"]
+        ):
+            information["reason"] = (
+                "顔をもう少しカメラへ近づけてください"
+            )
+            return False, information
+
+        if face_ratio > float(
+            config["registration_max_face_ratio"]
+        ):
+            information["reason"] = (
+                "顔をカメラから少し離してください"
+            )
+            return False, information
+
+        if center_offset_ratio > float(
+            config["registration_max_center_offset_ratio"]
+        ):
+            information["reason"] = (
+                "顔を画面の中央に合わせてください"
+            )
+            return False, information
+
+        information["reason"] = "撮影できます"
+        return True, information
+
     @staticmethod
     def cosine_similarity(a, b):
         return float(np.dot(a, b))

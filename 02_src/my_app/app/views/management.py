@@ -11,6 +11,7 @@ from my_app.app.views.common import (
     app_view,
     management_tabs,
     route_page_title,
+    invalidate_management_counts,
 )
 
 logger = logging.getLogger(__name__)
@@ -123,6 +124,21 @@ def management_view(
         body_switcher.content = next_body
         page.title = _MANAGEMENT_TITLES[active_route]
         page.update()
+
+    def refresh_management_tabs():
+        invalidate_management_counts(page)
+
+        tabs_host.content = management_tabs(
+            page,
+            active_route,
+            on_change=select_tab,
+            force_refresh=True,
+        )
+        page.update()
+
+    page._refresh_management_tabs = (
+        refresh_management_tabs
+    )
 
     tabs_host.content = management_tabs(
         page,

@@ -274,7 +274,7 @@ class CameraWorker:
                         logger.info("登録モードのためカメラを一時解放しました")
 
                     was_registering = True
-                    print("⏸️ 登録中のため認証処理を一時停止")
+                    print("登録中のため認証処理を一時停止")
                     time.sleep(0.5)  # ポーリング間隔（短め）
                     continue
                 else:
@@ -395,7 +395,7 @@ class CameraWorker:
                 logger.info("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
 
         except KeyboardInterrupt:
-            print("\n[INFO] ユーザー中断、プログラムを終了します。")
+            print("\n[INFO] ユーザー中断、プログラムを終了します")
         finally:
             self.latest_rgb_frame = None
             self.latest_ir_frame = None
@@ -613,9 +613,9 @@ class CameraWorker:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.settimeout(1.0)
             sock.bind((self.HOST, self.PORT))
-            print(f"🟢 UDPポート {self.PORT} を監視中...")
+            print(f"UDPポート {self.PORT} を監視中...")
         except OSError as e:
-            print(f"⚠️ ポートバインドエラー: {e}")
+            print(f"ポートバインドエラー: {e}")
             print(f"ポート {self.PORT} は既に使用されている可能性があります")
 
             if sock is not None:
@@ -628,7 +628,7 @@ class CameraWorker:
                 try:
                     data, addr = sock.recvfrom(1024)
                     recv_msg = data.decode('utf-8').strip()
-                    print(f"📩 {addr} からのメッセージを受信：{recv_msg}")
+                    print(f"{addr} からのメッセージを受信：{recv_msg}")
 
                     if recv_msg == "startRegistering":
                         self.isRegistering = True
@@ -706,7 +706,7 @@ class CameraWorker:
                 except socket.timeout:
                     continue
                 except Exception as e:
-                    print(f"❌ 受信エラー: {e}")
+                    print(f"受信エラー: {e}")
                     break
         finally:
             sock.close()

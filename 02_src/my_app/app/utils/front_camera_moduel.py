@@ -6,6 +6,9 @@ import tempfile
 import time
 import socket
 import base64
+import logging
+
+logger = logging.getLogger(__name__)
 
 HOST = '127.0.0.1'
 PORT = 44444
@@ -20,15 +23,11 @@ def send_message(msg: str):
                 (HOST, PORT),
             )
 
-        print(
-            f"[OK] メッセージ送信成功: {msg}"
-        )
+        logger.debug("メッセージ送信成功: %s", msg)
         return True
 
     except Exception as ex:
-        print(
-            f"[WARN] メッセージ送信失敗: {ex}"
-        )
+        logger.warning("メッセージ送信失敗: %s", ex, exc_info=True)
         return False
 
 def request_camera_config_reload(
@@ -256,10 +255,7 @@ class CameraWorker_Front:
             self.front_cap = None
             return
 
-        print(
-            f"[INFO] カメラ {camera_index} を"
-            f"{camera_backend}で開きました"
-        )
+        logger.info("カメラ%sを%sで開きました", camera_index, camera_backend)
 
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         cap.set(cv2.CAP_PROP_FPS, 15)
@@ -331,6 +327,25 @@ class CameraWorker_Front:
     def get_camera_error(self):
         return self._camera_error
 
+    def get_latest_frame(
+        self,
+        max_age_sec: float = 1.0,
+    ):
+        """スレッド共有中の最新フレームをコピーして返す"""
+        now = time.monotonic()
+
+        with self._frame_lock:
+            if self._latest_frame is None:
+                return None
+
+            if (
+                now - self._latest_frame_at
+                > max_age_sec
+            ):
+                return None
+
+            return self._latest_frame.copy()
+
     def get_preview_base64(
         self,
         max_width: int = 640,
@@ -373,17 +388,14 @@ class CameraWorker_Front:
 
     def front_capture_photo(self):
         if not self.is_camera_open():
-            print("フロントカメラが起動してない")
+            logger.warning("フロントカメラが起動していません")
             return None
 
         with self._capture_lock:
             now = time.monotonic()
 
             if now - self._last_capture_at < 1.0:
-                print(
-                    "[INFO] 次の撮影まで"
-                    "1秒待ってください"
-                )
+                logger.debug("次の撮影まで1秒待ってください")
                 return None
 
             with self._frame_lock:
@@ -391,10 +403,7 @@ class CameraWorker_Front:
                     return None
 
                 if now - self._latest_frame_at > 1.0:
-                    print(
-                        "[エラー] カメラ画像が"
-                        "古すぎます"
-                    )
+                    logger.warning("カメラ画像が古すぎます")
                     return None
 
                 frame = self._latest_frame.copy()
@@ -409,7 +418,7 @@ class CameraWorker_Front:
             )
 
             self._last_capture_at = now
-            print(f"[OK] 保存完了 {path}")
+            logger.info("撮影画像を保存しました: %s", path)
             return path
 
     def stop_camera(self):

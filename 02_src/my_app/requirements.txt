@@ -3,6 +3,7 @@ pyscard==2.3.0
 pycryptodome==3.23.0
 pywin32==311
 flet==0.28.3
+flet[desktop]==0.28.3
 bleak==1.1.0
 wmi==1.5.1
 opencv-python==4.12.0.88

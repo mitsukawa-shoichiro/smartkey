@@ -9,6 +9,7 @@ from my_app.ui import theme as ui_theme
 import flet as ft
 from my_app.app.utils import japanese_text as jt
 
+import time
 import logging
 import my_app.db.repository as repo
 
@@ -518,19 +519,62 @@ MANAGEMENT_ROUTES = frozenset(
     item[0] for item in _MANAGEMENT_TABS
 )
 
+_MANAGEMENT_COUNTS_CACHE_TTL_SEC = 2.0
 
-def management_tabs(page, active_route, on_change=None):
+
+def invalidate_management_counts(page):
+    """登録件数キャッシュを破棄する"""
+    page._management_counts_cache = None
+
+
+def _get_management_counts(
+    page,
+    force_refresh=False,
+):
+    now = time.monotonic()
+    cached = getattr(
+        page,
+        "_management_counts_cache",
+        None,
+    )
+
+    if (
+        not force_refresh
+        and isinstance(cached, tuple)
+        and len(cached) == 2
+    ):
+        cached_at, counts = cached
+
+        if (
+            now - cached_at
+            < _MANAGEMENT_COUNTS_CACHE_TTL_SEC
+        ):
+            return counts
+
     try:
-        counts = repo.get_management_registration_counts()
+        counts = (
+            repo.get_management_registration_counts()
+        )
     except Exception:
-        logger.exception("登録状況を取得できませんでした")
-        counts = {}
+        logger.exception(
+            "登録状況を取得できませんでした"
+        )
+        return {}
 
+    page._management_counts_cache = (
+        now,
+        counts,
+    )
+    return counts
+
+def management_tabs(page, active_route, on_change=None, force_refresh=False):
     page.session.set("management_last_route", active_route)
+
+    counts = _get_management_counts(page, force_refresh=force_refresh)
 
     def count(key, unit):
         value = counts.get(key)
-        return "-" if value is None else f"{value}{unit}"
+        return ("-" if value is None else f"{value}{unit}")
 
     status_texts = {
         "/user": f"登録者数 {count('users', '人')}",
