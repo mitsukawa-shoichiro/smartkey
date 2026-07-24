@@ -106,16 +106,16 @@ class CaptureBuffer:
 
 class CameraWorker:
     """
-    后台线程：启动摄像头 → 显示预览 → CAPTURE / STOP
+    バックグラウンドスレッド：カメラ起動 → プレビュー表示 → キャプチャ／停止
     """
-    isRegistering: bool = False
+    isRegistering: bool = False # 現在のカメラ状態 True -> 登録 / False -> 認証
 
-    FACE_UNLOCK_COOLDOWN_SEC = 6    # 防止同一人连续解锁的等待时间
-    REQUIRED_MATCH_COUNT = 3        # 连续认证成功多少帧后才允许通过
-    last_face_name = None           # 上一次成功解锁的人脸姓名
-    last_face_timestamp = 0         # 上一次成功解锁的时间
-    current_match_name = None       # 当前正在认证的人物姓名
-    current_match_count = 0         # 当前连续认证成功次数
+    FACE_UNLOCK_COOLDOWN_SEC = 6    # 同一人物の解錠リクエスト連打防止(秒)
+    REQUIRED_MATCH_COUNT = 3        # 解錠リクエストに必要な連続認証成功回数
+    last_face_name = None           # 最後に認証した人名を保持
+    last_face_timestamp = 0         # 最後に解錠リクエストをした時間
+    current_match_name = None       # 現在認証中の人名
+    current_match_count = 0         # 現在の連続認証成功回数
 
     __BACK_END_CAMERA:threading.Thread = None
     __SOCKET_THREAD:threading.Thread = None
@@ -240,8 +240,13 @@ class CameraWorker:
             self._camera_reload_done.set()
 
     def back_end_system(self):
+        """
+        顔認証スレッド本体
+
+
+        """
         logger.info("カメラ起動！")
-        was_registering = None  # 前回の状態を記録してください。（None/True/False）
+        released_for_register = False  # 認証 <=> 登録フラグ管理用、 登録の為のカメラ解放 -> True （None/True/False）
         capture_failure_count = 0
         loop_error_count = 0
 
@@ -259,13 +264,13 @@ class CameraWorker:
                         and not self.isRegistering
                     ):
                         self._apply_camera_config_reload()
-                        was_registering = False
+                        released_for_register = False
                     # 状態遷移を検出
                     cycle_started = time.monotonic()
                     timg=time.time()
 
                     if self.isRegistering:
-                        if was_registering is not True:
+                        if released_for_register is not True:
                             # False -> True に遷移した瞬間だけ一度だけ実行
                             self.release_all_cameras()
                             self.latest_rgb_frame = None
@@ -275,12 +280,12 @@ class CameraWorker:
                             self.face_authenticator._reset()
                             logger.info("登録モードのためカメラを一時解放しました")
 
-                        was_registering = True
+                        released_for_register = True
                         logger.info("⏸️ 登録中のため認証処理を一時停止")
                         time.sleep(0.5)  # ポーリング間隔（短め）
                         continue
                     else:
-                        if was_registering is True:
+                        if released_for_register is True:
                             # True -> False に遷移した瞬間だけ再オープン
                             if not self.open_all_cameras():
                                 time.sleep(3.0)
@@ -290,7 +295,7 @@ class CameraWorker:
 
                             logger.info("登録完了。カメラを再オープンしました")
 
-                        was_registering = False
+                        released_for_register = False
 
                     # 通常フロー（認証）
                     rgb_cap = self.cap_dict.get(self.rgb_camera_index)
@@ -371,21 +376,21 @@ class CameraWorker:
                     # 認証
                     self.__Authentication()
 
-                    # 成功でも失敗でもまつ
-                    idle_interval = float(
+                    # ループ間隔の読み込みと読み込み失敗時のフォールバック
+                    idle_interval = float( # 省エネ時間隔
                         face_auth_config.get("authentication_idle_interval_sec", 0.8))
 
-                    active_interval = float(
+                    active_interval = float( # 認証時間隔
                         face_auth_config.get("authentication_active_interval_sec", 0.35))
 
-                    if self.last_auth_reason in (
+                    if self.last_auth_reason in ( # 省エネにすべき状態 -> 省エネ間隔
                         "no_face",
                         "cooldown",
                         "authenticated",
                         "no_frame"
                     ):
                         authentication_interval = idle_interval
-                    else:
+                    else: # 顔を認識すべき状態 -> 認証間隔
                         authentication_interval = active_interval
 
                     elapsed = time.monotonic() - cycle_started
@@ -397,7 +402,7 @@ class CameraWorker:
                     logger.debug("１サイクル終了、所要時間："+str(time.time()-timg)+"秒")
 
                 except Exception:
-                    # 1サイクル内のあらゆる例外をここで受け止め、ループは絶対に殺さない。
+                    # ループ継続用
                     loop_error_count += 1
                     logger.exception(
                         "認証サイクルで例外が発生しました（%d回連続）。次フレームへ継続します",
@@ -560,72 +565,6 @@ class CameraWorker:
 
         self.__open_sesame(info.get("user_id"))
         return True
-
-
-
-
-
-    def __Authentication_old(self):
-        for file_path in CaptureBuffer.files:
-            # 不以单张图像是否匹配作为判断, 而是根据与多张注册图像的距离及其平均值进行认证
-            name_roma, info = recognize_image_average(file_path, DB_DIR)
-
-            # 如果当前帧认证失败, 则处理下一帧图像
-            if name_roma is None:
-                continue
-
-            # 确认是否为同一人连续认证成功
-            if self.current_match_name == name_roma:
-                self.current_match_count += 1
-            else:
-                self.current_match_name = name_roma
-                self.current_match_count = 1
-
-            # 将判定状态输出到日志中, 以便查看
-            print(
-                f"認証候補: {name_roma} "
-                f"{self.current_match_count}/{self.REQUIRED_MATCH_COUNT} "
-                f"best={info['best_distance']:.4f} "
-                f"avg={info['avg_nearest_distance']:.4f} "
-                f"hits={info['registered_match_count']}/{info['required_registered_matches']}"
-            )
-
-            # 在连续成功达到规定次数之前不解锁
-            if self.current_match_count < self.REQUIRED_MATCH_COUNT:
-                return False
-
-            # 重置连续认证计数, 以便进行下一次判定
-            self.current_match_name = None
-            self.current_match_count = 0
-
-            now = time.time()
-
-            # 如果是同一张脸, 并且距离上次解锁未超过指定秒数, 则不执行解锁
-            if (
-                self.last_face_name == name_roma
-                and now - self.last_face_timestamp < self.FACE_UNLOCK_COOLDOWN_SEC
-            ):
-                print(f"開錠スキップ: {name_roma}")
-                return True
-
-            # 记录成功解锁的人脸姓名和解锁时间
-            self.last_face_name = name_roma
-            self.last_face_timestamp = now
-
-            # 显示通过哪个摄像头完成了认证
-            match = re.search(r"camera_(\d+)\.jpg", file_path)
-            if match:
-                index = int(match.group(1))
-                print("撮影されたカメラのindexは" + str(index))
-
-            # 解锁
-            self.__open_sesame()
-            return True
-
-        # どのカメラ画像でも照合に成功しなかった場合、連続成功回数はリセットされます。
-        self.current_match_name = None
-        self.current_match_count = 0
-        return False
 
 
 

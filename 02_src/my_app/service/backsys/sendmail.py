@@ -22,7 +22,7 @@ port = mail_config['port']
 logger = logging.getLogger(__name__)  # logに書き込む用
 
 # mail.json の絶対パスを指定
-MAIL_CONFIG_PATH = r"C:\SmartKey\smartkey\02_src\my_app\config\backend\mail.json"
+MAIL_CONFIG_PATH = r"C:\smartkey\02_src\my_app\config\backend\mail.json"
 
 
 def send_mail(TITLE, TEXT):

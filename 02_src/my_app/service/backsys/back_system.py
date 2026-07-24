@@ -2,7 +2,7 @@ import os
 import sys
 
 # 絶対パスで PROJECT_ROOT を指定
-PROJECT_ROOT = r"C:\SmartKey\smartkey\02_src"
+PROJECT_ROOT = r"C:\smartkey\02_src"
 MY_APP_PATH = os.path.join(PROJECT_ROOT, "my_app")
 if MY_APP_PATH not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
@@ -285,7 +285,8 @@ def main():
 
 
 # Windows では、SIGINT をデフォルト動作（KeyboardInterrupt を投げる）に戻す
-signal.signal(signal.SIGINT, signal.SIG_DFL)
+if threading.current_thread() is threading.main_thread():
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 if __name__ == "__main__":
     main()

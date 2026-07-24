@@ -1,304 +1,107 @@
-2026-07-22 09:57:58 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 09:57:59 [INFO] __main__:271 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 09:57:59 [INFO] __main__:107 - check_sesame_battery 開始
-2026-07-22 09:57:59 [INFO] __main__:191 - check_alive 開始
-2026-07-22 09:57:59 [INFO] __main__:196 - 死活監視システム起動...
-2026-07-22 09:58:00 [INFO] __main__:129 - バッテリー残量: 100
-2026-07-22 09:58:09 [ERROR] __main__:252 - 解錠システム異常
-2026-07-22 09:58:09 [INFO] __main__:256 - システム異常
-2026-07-22 09:58:10 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 09:58:10 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 09:58:10 [INFO] __main__:262 - システム正常に戻りました
-2026-07-22 09:58:19 [ERROR] __main__:252 - 解錠システム異常
-2026-07-22 09:58:19 [INFO] __main__:256 - システム異常
-2026-07-22 09:58:20 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 09:58:20 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 09:58:20 [INFO] __main__:262 - システム正常に戻りました
-2026-07-22 09:58:29 [ERROR] __main__:252 - 解錠システム異常
-2026-07-22 09:58:29 [INFO] __main__:256 - システム異常
-2026-07-22 09:58:30 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 09:58:30 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 09:58:30 [INFO] __main__:262 - システム正常に戻りました
-2026-07-22 09:58:39 [ERROR] __main__:252 - 解錠システム異常
-2026-07-22 09:58:39 [INFO] __main__:256 - システム異常
-2026-07-22 09:58:40 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 09:58:40 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 09:58:40 [INFO] __main__:262 - システム正常に戻りました
-2026-07-22 09:58:49 [ERROR] __main__:252 - 解錠システム異常
-2026-07-22 09:58:49 [INFO] __main__:256 - システム異常
-2026-07-22 09:58:50 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 09:58:50 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 09:58:50 [INFO] __main__:262 - システム正常に戻りました
-2026-07-22 10:17:05 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 10:17:06 [INFO] __main__:271 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 10:17:06 [INFO] __main__:107 - check_sesame_battery 開始
-2026-07-22 10:17:06 [INFO] __main__:191 - check_alive 開始
-2026-07-22 10:17:06 [INFO] __main__:196 - 死活監視システム起動...
-2026-07-22 10:17:07 [INFO] __main__:129 - バッテリー残量: 100
-2026-07-22 10:17:16 [ERROR] __main__:252 - 解錠システム異常
-2026-07-22 10:17:16 [INFO] __main__:256 - システム異常
-2026-07-22 10:17:17 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 10:17:17 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 10:17:18 [INFO] __main__:262 - システム正常に戻りました
-2026-07-22 10:17:26 [ERROR] __main__:252 - 解錠システム異常
-2026-07-22 10:17:26 [INFO] __main__:256 - システム異常
-2026-07-22 10:17:27 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 10:17:27 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 10:17:28 [INFO] __main__:262 - システム正常に戻りました
-2026-07-22 10:28:07 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 10:28:08 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 10:28:08 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 10:28:08 [INFO] __main__:188 - check_alive 開始
-2026-07-22 10:28:08 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 10:28:09 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 10:28:18 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 10:28:18 [INFO] __main__:253 - システム異常
-2026-07-22 10:28:19 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 10:28:19 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 10:28:19 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 10:30:19 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 10:30:20 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 10:30:20 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 10:30:20 [INFO] __main__:188 - check_alive 開始
-2026-07-22 10:30:20 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 10:30:20 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 10:30:30 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 10:30:30 [INFO] __main__:253 - システム異常
-2026-07-22 10:30:31 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 10:30:31 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 10:30:31 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 10:30:40 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 10:30:40 [INFO] __main__:253 - システム異常
-2026-07-22 10:30:40 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 10:30:40 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 10:30:41 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 11:52:32 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 11:52:33 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 11:52:33 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 11:52:33 [INFO] __main__:188 - check_alive 開始
-2026-07-22 11:52:33 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 11:52:34 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 11:52:43 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 11:52:43 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body, to_addrs = to_addrs)
-TypeError: send_mail() got an unexpected keyword argument 'to_addrs'
-2026-07-22 11:52:43 [INFO] __main__:253 - システム異常
-2026-07-22 11:52:44 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 11:52:53 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 11:52:53 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body, to_addrs = to_addrs)
-TypeError: send_mail() got an unexpected keyword argument 'to_addrs'
-2026-07-22 11:52:53 [INFO] __main__:253 - システム異常
-2026-07-22 11:52:54 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 11:53:04 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 11:53:04 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body, to_addrs = to_addrs)
-TypeError: send_mail() got an unexpected keyword argument 'to_addrs'
-2026-07-22 11:53:04 [INFO] __main__:253 - システム異常
-2026-07-22 11:53:05 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:07:36 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 13:07:37 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 13:07:37 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 13:07:37 [INFO] __main__:188 - check_alive 開始
-2026-07-22 13:07:37 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 13:07:37 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 13:07:47 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:07:47 [INFO] __main__:253 - システム異常
-2026-07-22 13:07:47 [INFO] my_app.service.backsys.sendmail:41 - メール送信成功
-2026-07-22 13:07:47 [INFO] my_app.service.backsys.sendmail:44 - メール送信完了
-2026-07-22 13:07:48 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:19:55 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 13:19:56 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 13:19:56 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 13:19:56 [INFO] __main__:188 - check_alive 開始
-2026-07-22 13:19:56 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 13:19:56 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 13:20:06 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:20:06 [INFO] __main__:253 - システム異常
-2026-07-22 13:20:06 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:20:07 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:20:16 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:20:16 [INFO] __main__:253 - システム異常
-2026-07-22 13:20:16 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:20:17 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:20:26 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:20:26 [INFO] __main__:253 - システム異常
-2026-07-22 13:20:26 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:20:27 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:27:03 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 13:27:04 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 13:27:04 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 13:27:04 [INFO] __main__:188 - check_alive 開始
-2026-07-22 13:27:04 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 13:27:04 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 13:27:14 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:27:14 [INFO] __main__:253 - システム異常
-2026-07-22 13:27:14 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:27:15 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:27:24 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:27:24 [INFO] __main__:253 - システム異常
-2026-07-22 13:27:24 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:27:25 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:31:40 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 13:31:40 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 13:31:40 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 13:31:40 [INFO] __main__:188 - check_alive 開始
-2026-07-22 13:31:40 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 13:31:41 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 13:31:50 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:31:50 [INFO] __main__:253 - システム異常
-2026-07-22 13:31:50 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:31:52 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:32:00 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:32:00 [INFO] __main__:253 - システム異常
-2026-07-22 13:32:00 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:32:02 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:32:10 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:32:10 [INFO] __main__:253 - システム異常
-2026-07-22 13:32:10 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:32:12 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:32:33 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 13:32:34 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 13:32:34 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 13:32:34 [INFO] __main__:188 - check_alive 開始
-2026-07-22 13:32:34 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 13:32:35 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 13:32:44 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:32:44 [INFO] __main__:253 - システム異常
-2026-07-22 13:32:44 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:32:45 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:32:54 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:32:54 [INFO] __main__:253 - システム異常
-2026-07-22 13:32:54 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:32:55 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 13:33:04 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 13:33:04 [INFO] __main__:253 - システム異常
-2026-07-22 13:33:04 [ERROR] __main__:181 - メール送信エラー
-Traceback (most recent call last):
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\back_system.py", line 179, in _send
-    send_mail(title, body)
-  File "C:\SmartKey\smartkey\02_src\my_app\service\backsys\sendmail.py", line 34, in send_mail
-    with open("mail.json", "r") as f:
-         ^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'mail.json'
-2026-07-22 13:33:05 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 14:25:10 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 14:25:11 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 14:25:11 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 14:25:11 [INFO] __main__:188 - check_alive 開始
-2026-07-22 14:25:11 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 14:25:11 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 14:25:21 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 14:25:21 [INFO] __main__:253 - システム異常
-2026-07-22 14:25:22 [ERROR] my_app.service.backsys.sendmail:56 - メール送信失敗: (535, b'5.7.0 authentication failed')
-2026-07-22 14:25:22 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
-2026-07-22 14:25:22 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 14:55:49 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 14:55:50 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 14:55:50 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 14:55:50 [INFO] __main__:188 - check_alive 開始
-2026-07-22 14:55:50 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 14:55:50 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 14:56:00 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 14:56:00 [INFO] __main__:253 - システム異常
-2026-07-22 14:56:01 [ERROR] my_app.service.backsys.sendmail:56 - メール送信失敗: (535, b'5.7.0 authentication failed')
-2026-07-22 14:56:01 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
-2026-07-22 14:56:01 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 15:04:42 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-22 15:04:42 [INFO] __main__:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
-2026-07-22 15:04:42 [INFO] __main__:104 - check_sesame_battery 開始
-2026-07-22 15:04:42 [INFO] __main__:188 - check_alive 開始
-2026-07-22 15:04:42 [INFO] __main__:193 - 死活監視システム起動...
-2026-07-22 15:04:43 [INFO] __main__:127 - バッテリー残量: 100
-2026-07-22 15:04:52 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 15:04:52 [INFO] __main__:253 - システム異常
-2026-07-22 15:04:53 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
-2026-07-22 15:04:53 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
-2026-07-22 15:04:54 [INFO] __main__:259 - システム正常に戻りました
-2026-07-22 15:05:02 [ERROR] __main__:249 - 解錠システム異常
-2026-07-22 15:05:02 [INFO] __main__:253 - システム異常
-2026-07-22 15:05:03 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
-2026-07-22 15:05:03 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
-2026-07-22 15:05:04 [INFO] __main__:259 - システム正常に戻りました
-2026-07-23 09:17:34 [INFO] logs.log_config_service:38 - Log configuration loaded successfully
-2026-07-23 09:17:35 [CRITICAL] root:33 - UNCAUGHT EXCEPTION
-Traceback (most recent call last):
-  File "c:\SmartKey\smartkey\02_src\my_app\service\backsys\opensensor_back_system.py", line 23, in <module>
-    from .sendmail import send_mail
-ImportError: attempted relative import with no known parent package
+2026-07-24 08:19:56 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:43:50 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:43:51 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:43:52 [INFO] windowsservice:69 - back_system thread started
+2026-07-24 13:43:52 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-24 13:43:52 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-24 13:43:52 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-24 13:43:52 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-24 13:43:52 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-24 13:43:52 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-24 13:43:52 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-24 13:43:52 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-24 13:43:52 [ERROR] my_app.daemon.reader_daemon:123 - カードリーダーの数が不足しているためカードの読み込みがスタートしていません: 0 / 1
+2026-07-24 13:43:53 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 92
+2026-07-24 13:43:53 [ERROR] my_app.service.backsys.back_system:219 - カードリーダーが指定台数分接続されていません
+2026-07-24 13:43:53 [INFO] my_app.service.backsys.back_system:223 - カードリーダー異常
+2026-07-24 13:43:53 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-24 13:43:53 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-24 13:43:53 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-24 13:43:53 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-24 13:43:53 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-24 13:43:54 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-24 13:43:54 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-24 13:43:54 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-24 13:43:56 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5867 margin=0.5867 faces=1
+2026-07-24 13:43:57 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:43:57 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:01 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:04 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5805 margin=0.5805 faces=1
+2026-07-24 13:44:04 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:04 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:04 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-24 13:44:04 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-24 13:44:05 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-24 13:44:05 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-24 13:44:08 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:10 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4789 margin=0.4789 faces=1
+2026-07-24 13:44:11 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:11 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:15 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:18 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.7804 margin=0.7804 faces=1
+2026-07-24 13:44:18 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:18 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:22 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:25 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6967 margin=0.6967 faces=1
+2026-07-24 13:44:25 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:25 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:30 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:33 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6955 margin=0.6955 faces=1
+2026-07-24 13:44:33 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:33 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:37 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5996 margin=0.5996 faces=1
+2026-07-24 13:44:40 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:40 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:41 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:44:42 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-24 13:44:43 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました
+2026-07-24 13:50:12 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:50:13 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:50:13 [INFO] windowsservice:69 - back_system thread started
+2026-07-24 13:50:13 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-24 13:50:13 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-24 13:50:13 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-24 13:50:13 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-24 13:50:13 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-24 13:50:13 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-24 13:50:13 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-24 13:50:13 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-24 13:50:14 [ERROR] my_app.daemon.reader_daemon:123 - カードリーダーの数が不足しているためカードの読み込みがスタートしていません: 0 / 1
+2026-07-24 13:50:14 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 92
+2026-07-24 13:50:14 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-24 13:50:14 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-24 13:50:14 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-24 13:50:14 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-24 13:50:14 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-24 13:50:15 [ERROR] my_app.service.backsys.back_system:219 - カードリーダーが指定台数分接続されていません
+2026-07-24 13:50:15 [INFO] my_app.service.backsys.back_system:223 - カードリーダー異常
+2026-07-24 13:50:15 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-24 13:50:15 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-24 13:50:15 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-24 13:50:17 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.7145 margin=0.7145 faces=1
+2026-07-24 13:50:17 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:50:17 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:50:21 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:50:23 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6526 margin=0.6526 faces=1
+2026-07-24 13:50:23 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:50:23 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:50:26 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-24 13:50:26 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-24 13:50:26 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-24 13:50:26 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-24 13:50:28 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:50:30 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5184 margin=0.5184 faces=1
+2026-07-24 13:50:31 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:50:31 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:50:35 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:50:38 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6424 margin=0.6424 faces=1
+2026-07-24 13:50:38 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:50:38 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:50:43 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:50:45 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6308 margin=0.6308 faces=1
+2026-07-24 13:50:46 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:50:46 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:50:46 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:50:47 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-24 13:50:47 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました

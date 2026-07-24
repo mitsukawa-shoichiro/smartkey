@@ -6,19 +6,15 @@
 """
 import asyncio
 import logging
-import os
 import json
+from pathlib import Path
 
 from my_app.service.utils.sesame import open_sesame, lock_sesame
 from my_app.service.utils.sesame_bluetooth import open_sesame_bt
 
 logger = logging.getLogger(__name__)
 
-import json
-import logging
-from pathlib import Path
 
-logger = logging.getLogger(__name__)
 
 
 CONFIG_PATH = Path(__file__).resolve().parent.parent.parent / "config" / "backend" / "sesame_config.json"
@@ -28,7 +24,7 @@ def _load_connect_config() -> str:
     try:
         with CONFIG_PATH.open("r", encoding="utf-8") as f:
             data = json.load(f)
-        method = data.get("method")
+        method = data.get("method", {}).get("sesame_connect")
         if method not in ("wifi", "bluetooth"):
             logger.warning("不明な接続方式 '%s'。wifiにフォールバック", method)
             return "wifi"

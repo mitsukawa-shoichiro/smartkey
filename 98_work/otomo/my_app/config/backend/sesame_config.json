@@ -1,8 +1,8 @@
 {
   "device": {
     "sesame_id": "11200413-0002-0611-3F00-9200FFFFFFFF",
-    "x_api_key": "O3R8DiaBCR2CD8mi10ibR9yT5OMqZHByaDmSCmnT",
-    "secret_key": "6ec38d24f0c9b88467116ae69b3c6104",
+    "x_api_key": "xf3DovIKzyvnaKvaSkz0whVVUUfnebxOGlkVLF7j",
+    "secret_key": "b3a8cb132c3e977fb6ff0bc8266b27c0",
     "mac_addr": "DF:FD:0D:D3:43:8D",
     "max_retry_count": 5,
     "notify_interval": 1.0

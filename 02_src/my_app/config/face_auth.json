@@ -1,4 +1,5 @@
 {
+    "rgb_camera_index": 1,
     "ir_device_id_contains": "VID_0C45&PID_6366",
     "ir_startup_timeout_sec": 5.0,
     "similarity_threshold": 0.42,
@@ -11,11 +12,9 @@
     "pad_threshold": 0.8,
     "pad_window_size": 4,
     "pad_required_passes": 3,
-
     "max_faces": 4,
     "match_top_k": 2,
     "face_state_timeout_sec": 2.0,
-
     "registration_min_images": 3,
     "registration_max_images": 10,
     "registration_min_det_score": 0.65,
@@ -24,21 +23,33 @@
     "registration_min_brightness": 40.0,
     "registration_max_brightness": 220.0,
     "registration_duplicate_threshold": 0.995,
-
     "ir_min_face_std": 5.0,
     "ir_min_abs_contrast": 2.0,
     "rgb_to_ir_homography_normalized": [
-        [1.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0],
-        [0.0, 0.0, 1.0]
+        [
+            1.0,
+            0.0,
+            0.0
+        ],
+        [
+            0.0,
+            1.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            1.0
+        ]
     ],
-
     "audit_enabled": true,
     "audit_label": "unlabeled",
     "audit_csv": "logs/face_auth_audit.csv",
-
     "authentication_idle_interval_sec": 0.8,
     "authentication_active_interval_sec": 0.35,
     "authentication_interval_sec": 0.7,
-    "insightface_det_size": [256, 256]
+    "insightface_det_size": [
+        256,
+        256
+    ]
 }

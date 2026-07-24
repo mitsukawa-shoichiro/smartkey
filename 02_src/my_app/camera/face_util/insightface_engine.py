@@ -1,8 +1,10 @@
 import math
 import numpy as np
 import cv2
+from pathlib import Path
 from insightface.app import FaceAnalysis
 
+MODEL_ROOT = Path(__file__).resolve().parent.parent.parent / "vendor" / "insightface_models"
 
 class InsightFaceEngine:
     """
@@ -10,6 +12,7 @@ class InsightFaceEngine:
     """
     def __init__(self, model_name = "buffalo_l", det_size = (320, 320)):
         self.app = FaceAnalysis(
+            root=str(MODEL_ROOT),
             name = model_name,
             providers = ["CPUExecutionProvider"],
             allowed_modules = ["detection", "recognition"]
