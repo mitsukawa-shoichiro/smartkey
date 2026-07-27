@@ -1315,7 +1315,13 @@ def index_view(page: ft.Page):
         alignment=ft.alignment.center,
         content=ft.Column(
             controls=[
-                menu_grid,
+                ft.Container(
+                    content=menu_grid,
+                    offset=ft.Offset(
+                        0,
+                        -0.35,
+                    ),
+                ),
                 today_summary,
             ],
             spacing=34,
@@ -1396,10 +1402,11 @@ def index_view(page: ft.Page):
         while True:
             await asyncio.sleep(1)
 
+
             if (
-                page.route != "/index"
-                or page._index_summary_generation
-                != refresh_generation
+                getattr(page, "_app_closing", False)
+                or page.route != "/index"
+                or page._index_summary_generation != refresh_generation
             ):
                 return
 
@@ -1444,7 +1451,13 @@ def index_view(page: ft.Page):
                     error_logged = True
 
 
-    page.run_task(refresh_today_summary)
+    previous_task = getattr(page, "_index_summary_task", None)
+    if previous_task is not None and not previous_task.done():
+        previous_task.cancel()
+
+    page._index_summary_task = page.run_task(
+        refresh_today_summary
+    )
 
     return ft.View(
         route="/index",

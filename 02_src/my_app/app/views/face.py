@@ -206,7 +206,7 @@ def faceView(page: ft.Page):
     def next_page(e):
         """次ページへ遷移"""
         nonlocal offset
-        if (offset + 1) != all_page:
+        if (offset + 1) < all_page:
             offset += 1
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
@@ -228,6 +228,13 @@ def faceView(page: ft.Page):
             ITEMS_PER_PAGE,
             offset * ITEMS_PER_PAGE,
         )
+
+        while not faces and offset > 0:
+            offset -= 1
+            faces, total = repo.find_faces_with_total(
+                search_text, table.sort_ascending,
+                ITEMS_PER_PAGE, offset * ITEMS_PER_PAGE,
+            )
 
         all_page = max(
             1,
@@ -261,7 +268,7 @@ def faceView(page: ft.Page):
             f"（全{total}件）"
         )
         prev_btn.disabled = offset == 0
-        next_btn.disabled = (offset + 1) == all_page
+        next_btn.disabled = (offset + 1) >= all_page
 
         #実際のページに
         page.update()
@@ -310,6 +317,15 @@ def faceView(page: ft.Page):
 
         # 削除後読み込み
         load_table()
+
+        refresh_tabs = getattr(
+            page,
+            "_refresh_management_tabs",
+            None,
+        )
+
+        if callable(refresh_tabs):
+            refresh_tabs()
 
         show_info_dialog(page, f"{len(selected_ids)} 件を削除しました。", title="削除完了")
 

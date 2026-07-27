@@ -124,6 +124,6 @@ def apply_page_theme(page: ft.Page):
 
     page.window.width = 1180
     page.window.height = 820
-    page.window.min_width = 960
-    page.window.min_height = 680
+    page.window.min_width = 1000
+    page.window.min_height = 720
     page.window.resizable = True

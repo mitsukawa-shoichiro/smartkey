@@ -14,13 +14,13 @@ from my_app.camera.face_authenticator import FaceAuthenticator
 import my_app.logs.log_config_service
 import logging
 
-# 顔認証とICカード認証は、解錠および自動施錠のプロセスを共有しています。
-from my_app.service.utils.lock_control import request_unlock
+# 顔認証とICカード認証は同じ解除と自動ロックの処理を共有する
+from my_app.service.card_sys import request_unlock
 
-# 複数の登録画像およびそれらの平均値までの距離に基づく顔認識。
+# 複数の登録画像との距離とその平均を使って顔認識する
 # from my_app.camera.face_util.face_stable import recognize_image_average
 
-# 用于写入日志
+# ログの記入に使用
 logger = logging.getLogger(__name__)
 
 #region ReadConfig
@@ -50,7 +50,7 @@ IR_STARTUP_TIMEOUT_SEC = float(
     face_auth_config.get("ir_startup_timeout_sec", 5.0)
 )
 
-# 用于在cap_dict中识别IR摄像头的键
+# cap_dictでIRカメラを識別するためのキーに使う
 IR_CAMERA_KEY = "ir"
 
 from my_app.camera.media_foundation_ir import MediaFoundationIRCamera
@@ -60,43 +60,43 @@ from my_app.camera.media_foundation_ir import MediaFoundationIRCamera
 
 class CaptureBuffer:
     """
-    キャプチャされた画像（フレーム）を一時的に格納するためのバッファクラスです。
-    このクラスは一時ディレクトリを作成し、その中に最新のキャプチャ画像を保存または取得します。
+    一時的にキャプチャした画像（フレーム）を保存するためのバッファクラス。
+    このクラスは一時ディレクトリを作成し、その中で最新のキャプチャ画像を保存・取得する
     """
-    # 一時ディレクトリを作成（prefix="facecap_"）
-    tempdir = tempfile.TemporaryDirectory(prefix="facecap_")
+    # 一時ディレクトリを作成（prefix="facecap"）
+    tempdir = tempfile.TemporaryDirectory(prefix="facecap")
     # 保存されたファイルパスを記録するリスト
     files = []
 
     @classmethod
     def save_frame(cls, frame, filename="shot.jpg"):
         """
-        フレームを一時ディレクトリに保存します。
-        まず、既存の一時ファイル情報を削除してから、新しいファイルを作成してください。
+        フレームを一時ディレクトリに保存する
+        まず既存の一時ファイル情報をクリアして、その後新しいファイルを作成する
 
         Args:
-            frame: 使用 OpenCV 取得した画像データ（NumPy配列）
-            filename: 保存するファイル名（デフォルト:shot.jpg）
+        frame: OpenCVで取得した画像データ（NumPy 配列）
+        filename: 保存するファイル名（デフォルトは "shot.jpg"）
         """
-        # 保存パスを作成する
+        # 保存先を作成する
         path = os.path.join(cls.tempdir.name, filename)
-        # 画像を書き込む
+        # 画像を入力
         cv2.imwrite(path, frame)
-        # ログファイルのパス
+        # ファイルパスを記録
         cls.files.append(path)
 
     @classmethod
     def clean_frame(cls):
-        # 清空已保存的文件列表
+        # 保存したファイルリストを空にする
         cls.files.clear()
 
     @classmethod
     def get_newest_shot(cls):
         """
-        返回临时目录中最新捕获图像文件的路径
+        一時的なディレクトリで最新のキャプチャ画像ファイルのパスを返す
 
-        返回值:
-            最新文件的路径。若不存在, 则返回None
+        Args:
+            最新ファイルのパス。存在しない場合はNoneを返す
         """
         if len(cls.files) > 0:
             return CaptureBuffer.files[-1]
@@ -106,15 +106,15 @@ class CaptureBuffer:
 
 class CameraWorker:
     """
-    バックグラウンドスレッド：カメラ起動 → プレビュー表示 → キャプチャ／停止
+    バックグラウンドスレッド：カメラを起動 → プレビューを表示 → CAPTURE / STOP
     """
     isRegistering: bool = False # 現在のカメラ状態 True -> 登録 / False -> 認証
 
-    FACE_UNLOCK_COOLDOWN_SEC = 6    # 同一人物の解錠リクエスト連打防止(秒)
-    REQUIRED_MATCH_COUNT = 3        # 解錠リクエストに必要な連続認証成功回数
-    last_face_name = None           # 最後に認証した人名を保持
-    last_face_timestamp = 0         # 最後に解錠リクエストをした時間
-    current_match_name = None       # 現在認証中の人名
+    FACE_UNLOCK_COOLDOWN_SEC = 6    # 同じ人が連続で解除するのを防ぐ待ち時間
+    REQUIRED_MATCH_COUNT = 3        # 連続で認証成功した何フレーム後に通過を許可するか
+    last_face_name = None           # 前回うまく解除した顔の名前
+    last_face_timestamp = 0         # 最後に成功して解除した時間
+    current_match_name = None       # 現在認証中の人物名
     current_match_count = 0         # 現在の連続認証成功回数
 
     __BACK_END_CAMERA:threading.Thread = None
@@ -156,9 +156,9 @@ class CameraWorker:
         self._camera_reload_lock = (threading.Lock())
         self._camera_reload_result = (False, "まだ実行されていません")
 
-        # 打开用于人脸识别的摄像头
+        # 顔認識用のカメラをオンにする
         if not self.open_all_cameras():
-            logger.error("カメラひらけん")
+            logger.error("カメラを起動できません")
 
         if self.__SOCKET_THREAD is None:
             self.__SOCKET_THREAD = threading.Thread(target=self.socket_receiver, daemon=True)
@@ -457,7 +457,7 @@ class CameraWorker:
     def open_all_cameras(self):
         self.release_all_cameras()
 
-        # 使用OpenCV打开RGB摄像头
+        # OpenCVでRGBカメラを開く
         rgb_cap = cv2.VideoCapture(
             self.rgb_camera_index,
             cv2.CAP_DSHOW,
@@ -478,7 +478,7 @@ class CameraWorker:
 
         rgb_cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
-        # 使用Media Foundation直接打开IR摄像头
+        # Media Foundationを使ってIRカメラを直接開く
         ir_cap = MediaFoundationIRCamera(
             device_id_contains=IR_DEVICE_ID_CONTAINS,
             startup_timeout=IR_STARTUP_TIMEOUT_SEC,
@@ -586,9 +586,9 @@ class CameraWorker:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.settimeout(1.0)
             sock.bind((self.HOST, self.PORT))
-            print(f"🟢 UDPポート {self.PORT} を監視中...")
+            print(f"UDPポート {self.PORT} を監視中...")
         except OSError as e:
-            print(f"⚠️ ポートバインドエラー: {e}")
+            print(f"ポートバインドエラー: {e}")
             print(f"ポート {self.PORT} は既に使用されている可能性があります")
 
             if sock is not None:
@@ -601,7 +601,7 @@ class CameraWorker:
                 try:
                     data, addr = sock.recvfrom(1024)
                     recv_msg = data.decode('utf-8').strip()
-                    print(f"📩 {addr} からのメッセージを受信：{recv_msg}")
+                    print(f"{addr} からのメッセージを受信：{recv_msg}")
 
                     if recv_msg == "startRegistering":
                         self.isRegistering = True
@@ -679,7 +679,7 @@ class CameraWorker:
                 except socket.timeout:
                     continue
                 except Exception as e:
-                    print(f"❌ 受信エラー: {e}")
+                    print(f"受信エラー: {e}")
                     break
         finally:
             sock.close()

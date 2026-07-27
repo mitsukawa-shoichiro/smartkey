@@ -12,7 +12,7 @@
     C:\\smartkey\\.venv\\Scripts\\python.exe -m my_app.test.test_insert_all
 
 注意: DBのテーブルが未作成の場合は、先に create_database() を通しておくこと
-      (main.pyw を一度起動する、または schema を実行する)。
+    (main.pyw を一度起動する、または schema を実行する)。
 """
 import my_app.db.repository as repo
 from my_app.models.ENUMS import CardType, EventType
@@ -58,7 +58,7 @@ def insert_cards(users):
             card_id = repo.insert_card(idm, card_type, user.id)
             cards_by_user[user.id].append(card_id)
             print(f"  card: id={card_id}, {card_type.value}, "
-                  f"{user.user_name}")
+                f"{user.user_name}")
             counter += 1
 
     print(f"→ card を {counter - 1} 件挿入\n")

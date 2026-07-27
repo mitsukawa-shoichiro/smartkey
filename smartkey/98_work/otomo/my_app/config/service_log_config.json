@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+
+  "formatters": {
+    "stdFormatter": {
+      "format": "%(asctime)s [%(levelname)s] %(filename)s:%(lineno)d - %(message)s",
+      "datefmt": "%Y-%m-%d %H:%M:%S"
+    }
+  },
+
+  "handlers": {
+    "consoleHandler": {
+      "class": "logging.StreamHandler",
+      "level": "INFO",
+      "formatter": "stdFormatter",
+      "stream": "ext://sys.stdout"
+    },
+    "fileHandler": {
+      "class": "logging.handlers.TimedRotatingFileHandler",
+      "level": "INFO",
+      "formatter": "stdFormatter",
+      "filename": "service.log",
+      "when": "midnight",
+      "backupCount": 10,
+      "encoding": "utf-8"
+    }
+  },
+
+  "root": {
+    "level": "INFO",
+    "handlers": ["consoleHandler", "fileHandler"]
+  }
+}

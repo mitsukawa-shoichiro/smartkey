@@ -77,11 +77,18 @@ def route(page: ft.Page):
     }
 
     def page_route_change(e):
+        """
+        page.go()によるURL変更を受け取り、表示するViewを切り替える
+
+        クエリ文字列は画面内の状態受け渡しに使われる
+        ルート検索時だけ取り除いて基本URLで_ROUTESを検索
+        """
         route_path = e.route.split("?")[0]
 
         page.title = "ドア開閉システム"
         logger.info("%sに遷移しました", route_path)
 
+        # URLに対応するView生成関数をとる
         builder = _ROUTES.get(route_path)
         error_message = None
 
@@ -101,6 +108,7 @@ def route(page: ft.Page):
                 next_view = _fallback_view(route_path)
                 error_message = "画面の表示中にエラーが発生しました"
 
+        # この順番じゃないと画面全体がホワイトアウトする🤯
         page.views.clear()
         page.views.append(next_view)
         page.update()

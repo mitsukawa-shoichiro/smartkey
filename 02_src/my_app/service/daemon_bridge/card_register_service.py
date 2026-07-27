@@ -11,7 +11,7 @@ import logging
 from dataclasses import dataclass
 from typing import Optional
 
-import db.repository as repo
+import my_app.db.repository as repo
 from my_app.service.daemon_bridge import thread_state
 from my_app.service.daemon_bridge import register_listener
 

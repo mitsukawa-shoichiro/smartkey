@@ -14,12 +14,10 @@ card_config_path = os.path.join(BASE_DIR, "..", "..", "config", "usb_settings.js
 
 with open(camera_config_path, "r", encoding="utf-8") as fc:
     camera_config = json.load(fc)
-print(camera_config)
 
 
 with open(card_config_path, "r", encoding="utf-8") as cc:
     card_config = json.load(cc)
-print(card_config)
 
 
 #endregion

@@ -115,7 +115,7 @@ def get_reader():
     logged = False
     while not stop_event.is_set():
         reader_list = get_readers()  # [(reader, serial), ...]
-        if len(reader_list) >= COUNT_READER:
+        if len(reader_list) >= 1:
             logger.info("カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。")
             return reader_list
 
@@ -215,7 +215,7 @@ def reader_loop():
                         if state == "registering":
                             # 登録モード中は通常の認証フローに流さず、
                             # 出口リーダーで読めたIDmだけGUIへ通知する。
-                            if reader_serial == REGISTER_READER_SERIAL:
+                            if len(reader_list) == 1 or reader_serial == REGISTER_READER_SERIAL:
                                 notify_registered_card(idm)
                         else:
                             event_q.put((idm, reader_serial))

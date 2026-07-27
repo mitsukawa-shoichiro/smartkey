@@ -4,7 +4,7 @@ import numpy as np
 
 class LivenessGate:
     """
-    それが本物の人間の顔かどうかを確認してください。
+    本物の顔かどうか確認する
     """
     def __init__(self, config):
         self.ir_min_mean = float(config["ir_min_mean"])
@@ -95,7 +95,7 @@ class LivenessGate:
 
     def check_ir_response(self, ir_frame, bbox, rgb_shape):
         """
-        确认在RGB图像中检测到的人脸位置是否存在IR响应
+        RGB画像で検出された顔の位置にIR反応があるかどうか確認する
         """
         if ir_frame is None:
             return False, {"reason": "ir_frame_missing"}

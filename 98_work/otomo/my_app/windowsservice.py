@@ -24,12 +24,15 @@ import logging
 # server_dir = os.path.dirname(os.path.abspath(__file__))
 # card_reader_path = os.path.join(server_dir, "nfcutils", "card_check.py")
 # backsys_path = os.path.join(server_dir, "sendmail", "back_system.py")
+
+#設定パス
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),   'config', 'backend', 'shutdown.json'))
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     data = json.load(f)
     shutdown_time = data["shutdown_time"]
     shutdown_bool = bool(data["auto_shutdown"])
 
+#時間情報
 def reboot_computer_at_time():
     try:
         reboot_hour, reboot_minute = map(int, shutdown_time.split(':'))
