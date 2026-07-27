@@ -39,11 +39,11 @@ class PassivePad:
         if not self.model_paths:
             raise FileNotFoundError(f"PADモデルないよ～ {PAD_MODEL_DIRECTORY}")
 
-        # ONNX模型仅在启动时加载一次
+        # ONNXモデルは起動時に一度だけ読み込まれます
         self.models = []
 
         for model_path in self.model_paths:
-            # 由于原函数预期使用的是.pth文件名, 因此只将扩展名改回.pth
+            # 元の関数は.pthファイル名を使うことを想定していたので、拡張子を.pthに戻しただけだよ
             pth_name = model_path.with_suffix(".pth").name
             input_height, input_width, _, scale = (self.parse_model_name(pth_name))
 
@@ -86,7 +86,7 @@ class PassivePad:
 
             face_crop = self.cropper.crop(**crop_parameters)
 
-            # 与原始ToTensor相同, 保持BGR格式并转换为float32
+            # 元のToTensorと同じで、BGR形式を保ったままfloat32に変換する
             input_tensor = np.ascontiguousarray(face_crop.transpose(2, 0, 1)[None, ...], dtype = np.float32)
 
             model_prediction = model["session"].run([model["output_name"]],{model["input_name"]: input_tensor},)[0]

@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class FaceAuthenticator:
     """
-    统一处理多张人脸、IR、PAD 和连续判定
+    複数の顔、IR、PAD、連続判定を一括で処理する
     """
 
     def __init__(self, face_dir, config):
