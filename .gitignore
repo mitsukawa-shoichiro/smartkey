@@ -12,3 +12,4 @@ __pycache__/
 usb_settings.json
 *.jpg
 02_src/my_app/vendor/Silent-Face-Anti-Spoofing/
+*.onnx
