@@ -102,7 +102,7 @@ def registering(page: ft.Page):
         register_service.start_registration_session()
 
         loading_text = ft.Text(
-            "登録するカードをカードリーダーにかざしてください",
+            "カード登録を待機しています",
             size=22,
             color=Theme.TEXT,
             weight=ui_theme.FONT_WEIGHT,
@@ -125,7 +125,7 @@ def registering(page: ft.Page):
         )
 
         reader_hint = ft.Text(
-            "カードをかざしてください",
+            "登録するカードをカードリーダーにかざしてください",
             size=12,
             color=Theme.TEXT_MUTED,
             font_family=ui_theme.FONT_FAMILY,

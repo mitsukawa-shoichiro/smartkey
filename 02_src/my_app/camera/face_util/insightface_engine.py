@@ -2,20 +2,50 @@ import math
 import numpy as np
 import cv2
 from insightface.app import FaceAnalysis
+from pathlib import Path
 
+INSIGHTFACE_ROOT = (
+    Path(__file__).resolve().parents[2]
+    / "storage"
+    / "insightface"
+)
 
 class InsightFaceEngine:
     """
     使用InsightFace进行人脸检测并提取特征向量
     """
-    def __init__(self, model_name = "buffalo_l", det_size = (320, 320)):
-        self.app = FaceAnalysis(
-            name = model_name,
-            providers = ["CPUExecutionProvider"],
-            allowed_modules = ["detection", "recognition"]
+    def __init__(self, model_name="buffalo_l", det_size=(320, 320)):
+        model_dir = INSIGHTFACE_ROOT / "models" / model_name
+
+        required_files = (
+            "det_10g.onnx",
+            "w600k_r50.onnx",
         )
 
-        self.app.prepare(ctx_id = -1, det_size = tuple(det_size))
+        missing_files = [
+            file_name
+            for file_name in required_files
+            if not (model_dir / file_name).is_file()
+        ]
+
+        if missing_files:
+            raise FileNotFoundError(
+                "InsightFaceモデルが不足しています。"
+                f" model_dir={model_dir}"
+                f" missing={missing_files}"
+            )
+
+        self.app = FaceAnalysis(
+            name=model_name,
+            root=str(INSIGHTFACE_ROOT),
+            providers=["CPUExecutionProvider"],
+            allowed_modules=["detection", "recognition"],
+        )
+
+        self.app.prepare(
+            ctx_id=-1,
+            det_size=tuple(det_size),
+        )
 
     def detect_faces(self, bgr_frame):
         if bgr_frame is None:

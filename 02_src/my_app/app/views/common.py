@@ -59,7 +59,8 @@ class Theme:
     RADIUS = 8
     RADIUS_SM = 8
 
-
+# 画面URLごとの表示情報
+# app_view()とroute_page_title()が参照
 _ROUTE_META = {
     "/management": (
         "管理",
@@ -125,10 +126,20 @@ _ROUTE_META = {
 
 
 def tinted_shadow(color: str, alpha: int):
+    """
+    #RRGGBB形式の色へ透明度を付け、Flet用の#AARRGGBB形式に変換
+
+    カードの枠線や影をアクセント色に合わせるために使用
+    """
     return f"#{alpha:02X}{color.lstrip('#')}"
 
 
 def card_shadow(accent: str = Theme.SKY, hovering=False):
+    """
+    共通カードへ設定する影を生成
+
+    hovering=Trueの場合、影を少し広げる
+    """
     return ft.BoxShadow(
         blur_radius=22 if hovering else 17,
         spread_radius=0,
@@ -149,6 +160,12 @@ def card(
     padding: int = 24,
     accent: str = Theme.SKY,
 ):
+    """
+    各画面で使用する共通カードコンテナを生成
+
+    ホバー時に位置、拡大率、影、枠線を同時に変更
+    上方向に少しだけ浮かす
+    """
     panel = ft.Container(
         content=content,
         padding=padding,
@@ -207,6 +224,10 @@ def section_title(
     subtitle: str = None,
     accent: str = Theme.SKY,
 ):
+    """
+    セクション名、左側の色付きバー、右側の区切り線を生成
+    subtitleが指定された場合のみ、見出しの下へ補足分を表示
+    """
     title_row = ft.Row(
         controls=[
             ft.Container(
@@ -250,6 +271,10 @@ def section_title(
 
 
 def responsive_cards(cards_with_cols):
+    """
+    カード内容とcol設定をResponsiveRowへ変換
+    画面幅に応じたカード配置を、各Viewで重複実装させない用
+    """
     return ft.ResponsiveRow(
         controls=[
             card(content, col=col)
@@ -261,6 +286,9 @@ def responsive_cards(cards_with_cols):
 
 
 def primary_button(text: str, on_click, icon=None):
+    """
+    保存・登録などのボタンを生成
+    """
     return ft.ElevatedButton(
         text=text,
         icon=icon,
@@ -281,6 +309,9 @@ def primary_button(text: str, on_click, icon=None):
 
 
 def secondary_button(text: str, on_click, icon=None):
+    """
+    検索・再読み込みなどのボタンを生成
+    """
     return ft.OutlinedButton(
         text=text,
         icon=icon,
@@ -307,6 +338,9 @@ def secondary_button(text: str, on_click, icon=None):
 
 
 def danger_button(text: str, on_click, icon=None):
+    """
+    削除・キャンセルなどのボタンを生成
+    """
     return ft.ElevatedButton(
         text=text,
         icon=icon,
@@ -334,6 +368,10 @@ def back_button(
     route: str = "/index",
     on_click=None,
 ):
+    """
+    画面左下に配置する共通の戻るボタンを生成
+    on_clickが指定されている場合、カメラ停止などの画面固有の終了処理を優先
+    """
     handler = (
         on_click
         if on_click is not None
