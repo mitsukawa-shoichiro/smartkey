@@ -3,6 +3,7 @@ from email.mime.text import MIMEText
 import os, sys
 import logging
 import json
+from pathlib import Path
 
 #2階層上の絶対パスを取得してモジュール検索パスの先頭に追加する
 LOGS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -23,9 +24,7 @@ port = mail_config['port']
 
 logger = logging.getLogger(__name__)  # logに書き込む用
 
-# mail.json の絶対パスを指定
-MAIL_CONFIG_PATH = r"C:\smartkey\02_src\my_app\config\backend\mail.json"
-
+MAIL_CONFIG_PATH = Path(__file__).resolve().parent.parent.parent / "config" / "backend" / "mail.json"
 
 def send_mail(TITLE, TEXT):
     '''

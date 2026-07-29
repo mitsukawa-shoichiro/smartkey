@@ -15,7 +15,7 @@ import my_app.logs.log_config_service
 import logging
 
 # 顔認証とICカード認証は同じ解除と自動ロックの処理を共有する
-from my_app.service.card_sys import request_unlock
+from my_app.service.utils.lock_control import request_unlock
 
 # 複数の登録画像との距離とその平均を使って顔認識する
 # from my_app.camera.face_util.face_stable import recognize_image_average

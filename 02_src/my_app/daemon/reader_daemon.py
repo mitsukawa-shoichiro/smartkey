@@ -1,16 +1,7 @@
 # reader_daemon.py
-from my_app.service import card_sys
-import my_app.logs.log_config_service
 import time
-import json
 import threading
 import queue
-import requests
-import hashlib
-from smartcard.System import readers
-from smartcard.Exceptions import NoCardException
-from smartcard.util import toHexString
-from my_app.service.utils.usb_card_readers import get_readers
 import time
 import sys
 import os
@@ -18,6 +9,11 @@ import logging
 import socket
 import pythoncom
 import sqlite3
+from smartcard.Exceptions import NoCardException
+
+from my_app.config.config_loader import load_frontend_config
+from my_app.service.utils.usb_card_readers import get_readers
+from my_app.service import card_sys
 
 now = time.time()
 HEARTBEAT_ERROR_GAP_S = 10
@@ -41,12 +37,7 @@ REGISTERING_TIMEOUT_S = 45
 
 state_changed_at = time.time()
 
-
-BASE_DIR = os.path.dirname(__file__) + "\\..\\config"
-config_path = os.path.join(BASE_DIR, "usb_settings.json")
-
-with open(config_path, "r", encoding="utf-8") as f:
-    config = json.load(f)
+config = load_frontend_config("usb_settings.json")
 
 COUNT_READER = config["設置台数"]
 
@@ -76,9 +67,7 @@ if LOGS_PATH not in sys.path:
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-
-POLL = [0x00, 0xFF, 0xFF, 0x01, 0x00]    # FeliCaポーリング
-
+GET_IDM_APDU = [0xFF, 0xCA, 0x00, 0x00, 0x00]
 
 event_q = queue.Queue()
 
@@ -129,32 +118,51 @@ def get_reader():
     return []
 
 
+VALID_STATES = {"registering", "authenticating"}
+
 def receiver():
     """
-    GUI側(card_register)からくる認証/登録切り替えを受け取る関数
-
+    GUI(register.py)からのUDPを待ち受け、認証/登録モードの切り替えを受け取る。
+    受信した文字列はVALID_STATESで検証したうえでchangeState()へ渡す。
     """
     try:
         sock_check = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock_check.bind((DAEMON_HOST, DAEMON_PORT))
-        sock_check.settimeout(1)
-        while not stop_event.is_set():
-            try:
-                #ここで受け取り
-                data, addr = sock_check.recvfrom(100)
-            except socket.timeout:
-                continue
-            message = data.decode('utf-8')
-            if not message:
-                continue
-            logger.info(f"状態:{message},{addr}")
-            #実際に変更
-            changeState(message)
+    except OSError:
+        logger.exception("受信ソケットの生成に失敗")
+        return
 
-    except Exception as e:
-        logger.error(f"reader_daemonがメッセージ受信失敗: {e}")
+    try:
+        with sock_check:                       # ← with が close を保証
+            sock_check.bind((DAEMON_HOST, DAEMON_PORT))
+            sock_check.settimeout(1)
+            logger.info("receiver待受開始: %s:%s", DAEMON_HOST, DAEMON_PORT)
+
+            while not stop_event.is_set():
+                try:
+                    data, addr = sock_check.recvfrom(100)
+                except TimeoutError:
+                    continue
+                except OSError:
+                    logger.exception("recvfromでエラー")
+                    break
+
+                message = data.decode("utf-8", errors="replace").strip()
+                if not message:
+                    continue
+
+                if message not in VALID_STATES:
+                    logger.warning("不正な状態指定を無視: %r (from %s)", message, addr)
+                    continue
+
+                try:
+                    changeState(message)       # ← 例外をループ内で閉じ込める
+                except Exception:
+                    logger.exception("状態変更に失敗: %r", message)
+
+    except OSError:
+        logger.exception("受信ソケットの初期化に失敗（多重起動の可能性）")
     finally:
-        sock_check.close()
+        logger.info("receiverを終了します")
 
 
 def send_message(message, host=HEARTBEAT_HOST, port=HEARTBEAT_PORT):
@@ -177,7 +185,6 @@ def notify_registered_card(idm: str):
     send_message(idm, host=REGISTER_NOTIFY_HOST, port=REGISTER_NOTIFY_PORT)
     logger.info(f"登録モード: IDmをGUIへ通知しました: {idm}")
 
-
 def reader_loop():
     """
     バックシステムの本体、この関数がスレッドで回り続けて
@@ -190,77 +197,66 @@ def reader_loop():
         eventq.put((idm, reader_serial)): 認証用スレッドへIDm(カード番号)を送信
         changeState(newState): 登録/認証状態の変更
     """
+    global now
+
+    pythoncom.CoInitialize()          # スレッドにつき1回
     try:
-        pythoncom.CoInitialize()
-        logger.info(f"設定台数: {COUNT_READER}")
-        get_reader()
+        logger.info("設定台数: %s", COUNT_READER)
+        get_reader()                  # 起動時にリーダーが揃うまで待つ
+
         while not stop_event.is_set():
-            reader_list = get_readers()
-            # 全てのカードリーダーをチェック
-            for reader, reader_serial in reader_list:
-                try:
+            try:
+                reader_list = get_readers()
 
-                    # カードリーダーに接続
-                    conn = reader.createConnection()
-                    conn.connect()
+                for reader, reader_serial in reader_list:
+                    conn = None
+                    try:
+                        conn = reader.createConnection()
+                        conn.connect()
+                        response, sw1, sw2 = conn.transmit(GET_IDM_APDU)
 
-                    # カードを読み取り
-                    GET_IDM_APDU = [0xFF, 0xCA, 0x00, 0x00, 0x00]
-                    response, sw1, sw2 = conn.transmit(GET_IDM_APDU)
+                        if [sw1, sw2] != [0x90, 0x00]:
+                            logger.debug("リーダー%s 応答異常 SW=%02X%02X", reader_serial, sw1, sw2)
+                            continue
 
-                    # 読み取り成功の場合
-                    if [sw1, sw2] == [0x90, 0x00]:
-                        idm = ''.join(format(byte, '02X') for byte in response)
+                        idm = bytes(response).hex().upper()
+                        logger.info("リーダー %s でカード検出 IDm: %s", reader_serial, idm)
 
                         if state == "registering":
-                            # 登録モード中は通常の認証フローに流さず、
-                            # 出口リーダーで読めたIDmだけGUIへ通知する。
                             if len(reader_list) == 1 or reader_serial == REGISTER_READER_SERIAL:
                                 notify_registered_card(idm)
                         else:
                             event_q.put((idm, reader_serial))
+                        break
+                    except NoCardException:
+                        pass                                     # カード無しは正常系
+                    except Exception:
+                        logger.exception("カードリーダー %s でエラー", reader_serial)
+                    finally:
+                        if conn is not None:
+                            try:
+                                conn.disconnect()
+                            except Exception:
+                                logger.exception("disconnect失敗 (リーダー%s)", reader_serial)
 
-                        logger.info(f"カードリーダー {reader_serial} でカードを検出、IDm: {idm}")
-                        conn.disconnect()
-                        break  # カードを検出したら他のリーダーをチェックしない
-                    else:
-                        conn.disconnect()
+                gap = time.time() - now
+                now = time.time()
+                if gap > HEARTBEAT_ERROR_GAP_S:
+                    logger.error("ポーリングが遅延しています: %.1f秒", gap)
 
-                except NoCardException:
-                    conn.disconnect()
-                except Exception as e:
-                    logger.error(f"カードリーダー {reader_serial} でエラー: {e}")
-                    continue
+                if state == "registering" and time.time() - state_changed_at > REGISTERING_TIMEOUT_S:
+                    logger.warning("登録状態が%s秒を超えたためauthenticatingへ戻します", REGISTERING_TIMEOUT_S)
+                    changeState("authenticating")
 
-            global now
-            gap = time.time() - now
-            now = time.time()
+                send_message("DEAD" if len(reader_list) < COUNT_READER else "ALIVE")
 
-            if gap > HEARTBEAT_ERROR_GAP_S:
-                logger.error("reader_daemon.pyのポーリングが遅延しています" + str(gap) + "秒")
-
-            # GUI側のAUTHENTICATING変更が何かしらで中断されたとき用
-            if state == "registering" and time.time() - state_changed_at > REGISTERING_TIMEOUT_S:
-                logger.warning(
-                    f"登録状態が{REGISTERING_TIMEOUT_S}を超えたため、"
-                    f"authenticatingへ強制変更します。"
-                )
-                changeState("authenticating")
-
-
-            if (len(reader_list) < COUNT_READER):
-                msg = "DEAD"
-                send_message(msg)
-            else:
-                msg = "ALIVE"
-                send_message(msg)
-
-            stop_event.wait(1)  # CPU負荷軽減
-            # break
-    except Exception as e:
-        logger.error(f"カードリーダーループでエラーが発生しました: {e}")
-        send_message("DEAD")
-        stop_event.wait(1)  # CPU負荷軽減
+            except Exception:
+                logger.exception("カードリーダーループでエラーが発生しました")
+                send_message("DEAD")
+            finally:
+                stop_event.wait(1)     # 正常・異常どちらでも必ず待つ
+    finally:
+        pythoncom.CoUninitialize()
 
 
 # REGISTERING = "registering"      # カード登録状態
