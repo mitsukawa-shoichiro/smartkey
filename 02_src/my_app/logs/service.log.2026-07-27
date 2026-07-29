@@ -1,0 +1,1496 @@
+2026-07-27 08:01:14 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-27 08:01:16 [INFO] windowsservice:69 - back_system thread started
+2026-07-27 08:01:16 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-27 08:01:16 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-27 08:01:16 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-27 08:01:16 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-27 08:01:16 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-27 08:01:16 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-27 08:01:16 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-27 08:01:16 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-27 08:01:17 [ERROR] my_app.daemon.reader_daemon:123 - カードリーダーの数が不足しているためカードの読み込みがスタートしていません: 0 / 1
+2026-07-27 08:01:17 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 95
+2026-07-27 08:01:17 [ERROR] my_app.service.backsys.back_system:219 - カードリーダーが指定台数分接続されていません
+2026-07-27 08:01:17 [INFO] my_app.service.backsys.back_system:223 - カードリーダー異常
+2026-07-27 08:01:17 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-27 08:01:17 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-27 08:01:17 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-27 08:01:17 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-27 08:01:17 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-27 08:01:18 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:18 [ERROR] my_app.camera.CameraModule:161 - カメラひらけん
+2026-07-27 08:01:18 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-27 08:01:18 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:18 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-27 08:01:18 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-27 08:01:20 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:22 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:27 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:28 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-27 08:01:28 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-27 08:01:29 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-27 08:01:29 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-27 08:01:30 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:33 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:35 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:38 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:40 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:43 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:45 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:48 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:50 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:53 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:56 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:01:58 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:01 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:03 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:11 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:14 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:16 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:19 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:21 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:24 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:26 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:29 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:33 [INFO] my_app.daemon.reader_daemon:119 - カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。
+2026-07-27 08:02:33 [ERROR] my_app.daemon.reader_daemon:240 - reader_daemon.pyのポーリングが遅延しています77.50831580162048秒
+2026-07-27 08:02:34 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:37 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:39 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:42 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:44 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:02:58 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6107 margin=0.6107 faces=1
+2026-07-27 08:02:58 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:02:58 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:03:03 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:03:07 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:10 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:27 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6327 margin=0.6327 faces=1
+2026-07-27 08:03:28 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:03:28 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:03:30 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:32 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:03:33 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:35 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:38 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:40 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:43 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:45 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:48 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:51 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:53 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:56 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:03:58 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:04:01 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:04:03 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:04:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:04:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:04:30 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6907 margin=0.6907 faces=1
+2026-07-27 08:04:30 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:04:30 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:04:34 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:04:37 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5114 margin=0.5114 faces=1
+2026-07-27 08:04:37 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:04:37 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:04:42 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:04:44 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4988 margin=0.4988 faces=1
+2026-07-27 08:04:44 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:04:44 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:04:48 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:04:50 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-27 08:04:51 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4796 margin=0.4796 faces=1
+2026-07-27 08:04:52 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:04:52 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:04:56 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:04:59 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5662 margin=0.5662 faces=1
+2026-07-27 08:04:59 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:04:59 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:05:03 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:05:06 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6913 margin=0.6913 faces=1
+2026-07-27 08:05:06 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:05:06 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:05:11 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:05:14 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6211 margin=0.6211 faces=1
+2026-07-27 08:05:14 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:05:14 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:05:18 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:05:23 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6672 margin=0.6672 faces=1
+2026-07-27 08:05:23 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:05:23 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:05:27 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:05:30 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6546 margin=0.6546 faces=1
+2026-07-27 08:05:30 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:05:30 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:05:35 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:05:37 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6495 margin=0.6495 faces=1
+2026-07-27 08:05:38 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:05:38 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:05:42 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:05:45 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6551 margin=0.6551 faces=1
+2026-07-27 08:05:45 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:05:45 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:05:50 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:05:52 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6215 margin=0.6215 faces=1
+2026-07-27 08:05:53 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:05:53 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:05:57 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:06:00 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6694 margin=0.6694 faces=1
+2026-07-27 08:06:00 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:06:00 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:06:01 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:06:01 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:06:02 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:06:02 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:06:04 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:06:04 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:06:04 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:06:05 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:06:05 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:06:06 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:06:06 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:06:07 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6829 margin=0.6829 faces=1
+2026-07-27 08:06:07 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:06:07 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:06:08 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:06:08 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:06:09 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:06:09 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:06:12 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:06:15 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6367 margin=0.6367 faces=1
+2026-07-27 08:06:15 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:06:15 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:06:20 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:06:23 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6181 margin=0.6181 faces=1
+2026-07-27 08:06:23 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:06:23 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:06:27 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:06:31 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.7150 margin=0.7150 faces=1
+2026-07-27 08:06:31 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:06:31 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:06:35 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:06:38 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6234 margin=0.6234 faces=1
+2026-07-27 08:06:38 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:06:38 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:06:42 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:06:45 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5343 margin=0.5343 faces=1
+2026-07-27 08:06:45 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:06:45 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:06:50 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:06:59 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4818 margin=0.4818 faces=1
+2026-07-27 08:06:59 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:06:59 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:07:04 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:08:25 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6077 margin=0.6077 faces=1
+2026-07-27 08:08:25 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:08:25 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:08:30 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:08:32 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6338 margin=0.6338 faces=1
+2026-07-27 08:08:33 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:08:33 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:08:37 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:08:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5185 margin=0.5185 faces=1
+2026-07-27 08:08:41 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:08:41 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:08:45 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:08:51 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5358 margin=0.5358 faces=1
+2026-07-27 08:08:51 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:08:51 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:08:55 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:09:01 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4817 margin=0.4817 faces=1
+2026-07-27 08:09:02 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:09:02 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:09:06 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:09:07 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4467 margin=0.4467 faces=1
+2026-07-27 08:09:08 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:09:08 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:09:12 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:09:15 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5712 margin=0.5712 faces=1
+2026-07-27 08:09:16 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:09:16 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:09:20 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:09:25 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5941 margin=0.5941 faces=1
+2026-07-27 08:09:26 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:09:26 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:09:30 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:09:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5073 margin=0.5073 faces=1
+2026-07-27 08:09:41 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:09:41 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:09:45 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:09:48 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5079 margin=0.5079 faces=1
+2026-07-27 08:09:48 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:09:48 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:09:52 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:09:56 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5596 margin=0.5596 faces=1
+2026-07-27 08:09:56 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:09:56 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:10:00 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:10:03 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6447 margin=0.6447 faces=1
+2026-07-27 08:10:04 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:10:04 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:10:08 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:10:11 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6416 margin=0.6416 faces=1
+2026-07-27 08:10:11 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:10:11 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:10:15 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:10:18 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6381 margin=0.6381 faces=1
+2026-07-27 08:10:18 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:10:18 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:10:23 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:10:26 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6748 margin=0.6748 faces=1
+2026-07-27 08:10:26 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:10:26 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:10:30 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:10:33 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4691 margin=0.4691 faces=1
+2026-07-27 08:10:33 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:10:33 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:10:38 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:10:39 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.7020 margin=0.7020 faces=1
+2026-07-27 08:10:39 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:10:39 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:10:44 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:10:47 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6381 margin=0.6381 faces=1
+2026-07-27 08:10:47 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:10:47 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:10:51 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:10:54 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6489 margin=0.6489 faces=1
+2026-07-27 08:10:54 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:10:54 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:10:59 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:11:01 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6875 margin=0.6875 faces=1
+2026-07-27 08:11:02 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:11:02 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:11:06 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:11:09 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5497 margin=0.5497 faces=1
+2026-07-27 08:11:09 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:11:09 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:11:13 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:12:32 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4477 margin=0.4477 faces=1
+2026-07-27 08:12:32 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:12:32 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:12:37 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:12:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4273 margin=0.4273 faces=1
+2026-07-27 08:12:41 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:12:41 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:12:45 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:12:54 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5544 margin=0.5544 faces=1
+2026-07-27 08:12:54 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:12:54 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:12:58 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:13:10 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6298 margin=0.6298 faces=1
+2026-07-27 08:13:10 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:13:10 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:13:15 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:13:17 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6058 margin=0.6058 faces=1
+2026-07-27 08:13:17 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:13:17 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:13:21 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:13:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5846 margin=0.5846 faces=1
+2026-07-27 08:13:41 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:13:41 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:13:45 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:13:48 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5616 margin=0.5616 faces=1
+2026-07-27 08:13:48 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:13:48 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:13:52 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:13:55 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5655 margin=0.5655 faces=1
+2026-07-27 08:13:56 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:13:56 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:14:00 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:14:03 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5690 margin=0.5690 faces=1
+2026-07-27 08:14:03 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:14:03 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:14:07 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:14:10 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5521 margin=0.5521 faces=1
+2026-07-27 08:14:10 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:14:10 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:14:15 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:14:17 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4999 margin=0.4999 faces=1
+2026-07-27 08:14:18 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:14:18 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:14:22 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:14:25 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5170 margin=0.5170 faces=1
+2026-07-27 08:14:25 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:14:25 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:14:29 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:14:30 [INFO] my_app.service.backsys.back_system:228 - カードリーダーが指定台数接続されました
+2026-07-27 08:14:36 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6328 margin=0.6328 faces=1
+2026-07-27 08:14:37 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:14:37 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:14:41 [ERROR] my_app.service.backsys.back_system:219 - カードリーダーが指定台数分接続されていません
+2026-07-27 08:14:41 [INFO] my_app.service.backsys.back_system:223 - カードリーダー異常
+2026-07-27 08:14:41 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:14:41 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-27 08:14:41 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-27 08:16:08 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6914 margin=0.6914 faces=1
+2026-07-27 08:16:09 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:16:09 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:16:13 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:16:31 [INFO] my_app.service.backsys.back_system:228 - カードリーダーが指定台数接続されました
+2026-07-27 08:16:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6512 margin=0.6512 faces=1
+2026-07-27 08:16:40 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:16:40 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:16:40 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:16:40 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:16:41 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:16:41 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:16:42 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:16:42 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:16:44 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:16:44 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:16:45 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:16:45 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:16:45 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:16:46 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:16:46 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:16:47 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 08:16:47 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 08:16:48 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6930 margin=0.6930 faces=1
+2026-07-27 08:16:48 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:16:48 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:16:49 [ERROR] my_app.daemon.reader_daemon:232 - カードリーダー 0476720 でエラー: Unable to connect with protocol: T0 or T1. デバイスがコマンドを認識できません。 : デバイスがコマンドを認識できません。  (0x00000016)
+2026-07-27 08:16:52 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:17:00 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6812 margin=0.6812 faces=1
+2026-07-27 08:17:01 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:17:01 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:17:05 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:17:08 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.7169 margin=0.7169 faces=1
+2026-07-27 08:17:08 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:17:08 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:17:12 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:17:15 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6719 margin=0.6719 faces=1
+2026-07-27 08:17:16 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:17:16 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:17:20 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:17:25 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5176 margin=0.5176 faces=1
+2026-07-27 08:17:26 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:17:26 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:17:30 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:17:35 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5144 margin=0.5144 faces=1
+2026-07-27 08:17:35 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:17:35 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:17:40 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:17:42 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.7079 margin=0.7079 faces=1
+2026-07-27 08:17:43 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:17:43 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:17:47 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:17:50 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6754 margin=0.6754 faces=1
+2026-07-27 08:17:50 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:17:50 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:17:54 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:17:57 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6953 margin=0.6953 faces=1
+2026-07-27 08:17:58 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:17:58 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:18:02 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:18:05 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4865 margin=0.4865 faces=1
+2026-07-27 08:18:05 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:18:05 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:18:09 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:18:11 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5255 margin=0.5255 faces=1
+2026-07-27 08:18:12 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:18:12 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:18:16 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:18:19 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5002 margin=0.5002 faces=1
+2026-07-27 08:18:19 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:18:19 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:18:24 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:18:26 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6762 margin=0.6762 faces=1
+2026-07-27 08:18:26 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:18:26 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:18:31 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:18:33 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6926 margin=0.6926 faces=1
+2026-07-27 08:18:34 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:18:34 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:18:38 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:18:41 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6717 margin=0.6717 faces=1
+2026-07-27 08:18:41 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:18:41 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:18:45 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:18:51 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.7046 margin=0.7046 faces=1
+2026-07-27 08:18:51 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:18:51 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:18:56 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:18:58 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6842 margin=0.6842 faces=1
+2026-07-27 08:18:59 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:18:59 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:19:02 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:03 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:19:04 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:07 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:10 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:12 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:15 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:17 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:20 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:22 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:27 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:30 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:33 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:35 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:38 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:40 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:43 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:45 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:48 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:50 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:53 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:55 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:19:58 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:00 [ERROR] my_app.service.backsys.back_system:219 - カードリーダーが指定台数分接続されていません
+2026-07-27 08:20:00 [INFO] my_app.service.backsys.back_system:223 - カードリーダー異常
+2026-07-27 08:20:00 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-27 08:20:00 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-27 08:20:01 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:03 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:11 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:13 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:16 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:18 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:21 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:23 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:26 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:29 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:34 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:36 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:39 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:41 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:44 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:46 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:49 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:51 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:54 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:57 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:20:59 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:02 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:04 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:06 [INFO] my_app.service.backsys.back_system:228 - カードリーダーが指定台数接続されました
+2026-07-27 08:21:07 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:09 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:12 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:14 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:17 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:19 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:22 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:27 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:30 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:32 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:35 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:37 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:40 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:42 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:45 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:47 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:50 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:53 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:55 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:21:58 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:00 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:03 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:05 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:10 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:13 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:15 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:18 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:21 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:23 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:26 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:28 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:33 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:36 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:38 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:41 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:43 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:46 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:49 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:51 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:54 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:56 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:22:59 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:01 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:04 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:09 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:11 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:14 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:17 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:19 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:22 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:24 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:27 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:29 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:32 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:34 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:37 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:39 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:42 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:45 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:47 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:50 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:51 [ERROR] my_app.service.backsys.back_system:219 - カードリーダーが指定台数分接続されていません
+2026-07-27 08:23:51 [INFO] my_app.service.backsys.back_system:223 - カードリーダー異常
+2026-07-27 08:23:51 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-27 08:23:51 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-27 08:23:52 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:55 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:23:57 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:00 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:02 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:05 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:07 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:10 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:13 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:15 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:18 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:20 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:23 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:28 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:30 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:33 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:35 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:38 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:41 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:43 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:46 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:48 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:51 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:53 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:56 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:24:58 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:01 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:03 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:09 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:11 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:14 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:16 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:19 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:21 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:24 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:26 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:29 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:34 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:37 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:39 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:42 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:44 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:47 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:49 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:52 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:54 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:25:57 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 08:26:06 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6241 margin=0.6241 faces=1
+2026-07-27 08:26:06 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:26:06 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:26:10 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:26:13 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6075 margin=0.6075 faces=1
+2026-07-27 08:26:14 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:26:14 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:26:18 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:26:21 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6057 margin=0.6057 faces=1
+2026-07-27 08:26:21 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:26:21 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:26:25 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:26:28 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6087 margin=0.6087 faces=1
+2026-07-27 08:26:28 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:26:28 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:26:33 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:26:35 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5572 margin=0.5572 faces=1
+2026-07-27 08:26:36 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:26:36 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:26:40 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:26:43 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6601 margin=0.6601 faces=1
+2026-07-27 08:26:44 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:26:44 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:26:48 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:26:49 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6496 margin=0.6496 faces=1
+2026-07-27 08:26:50 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:26:50 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:26:54 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:26:57 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6661 margin=0.6661 faces=1
+2026-07-27 08:26:57 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:26:57 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:27:01 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:27:04 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6194 margin=0.6194 faces=1
+2026-07-27 08:27:04 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:27:04 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:27:09 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:27:11 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6193 margin=0.6193 faces=1
+2026-07-27 08:27:12 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:27:12 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:27:16 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:27:19 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6128 margin=0.6128 faces=1
+2026-07-27 08:27:19 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:27:19 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:27:24 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:27:25 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4984 margin=0.4984 faces=1
+2026-07-27 08:27:25 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:27:25 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:27:30 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:27:33 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6577 margin=0.6577 faces=1
+2026-07-27 08:27:33 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:27:33 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:27:37 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:27:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6545 margin=0.6545 faces=1
+2026-07-27 08:27:40 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:27:40 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:27:44 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:27:47 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5753 margin=0.5753 faces=1
+2026-07-27 08:27:48 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:27:48 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:27:52 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:27:55 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6504 margin=0.6504 faces=1
+2026-07-27 08:27:55 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:27:55 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:27:59 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:28:02 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5358 margin=0.5358 faces=1
+2026-07-27 08:28:02 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:28:02 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:28:07 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:28:10 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6359 margin=0.6359 faces=1
+2026-07-27 08:28:10 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:28:10 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:28:14 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:28:17 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6141 margin=0.6141 faces=1
+2026-07-27 08:28:18 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:28:18 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:28:22 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:28:25 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4635 margin=0.4635 faces=1
+2026-07-27 08:28:25 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:28:25 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:28:30 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:28:33 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6297 margin=0.6297 faces=1
+2026-07-27 08:28:33 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:28:33 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:28:37 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:28:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6314 margin=0.6314 faces=1
+2026-07-27 08:28:41 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:28:41 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:28:45 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:28:48 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6519 margin=0.6519 faces=1
+2026-07-27 08:28:48 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:28:48 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:28:52 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:28:55 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6701 margin=0.6701 faces=1
+2026-07-27 08:28:55 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:28:55 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:29:00 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:29:02 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6416 margin=0.6416 faces=1
+2026-07-27 08:29:03 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:29:03 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:29:07 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:29:10 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6687 margin=0.6687 faces=1
+2026-07-27 08:29:10 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:29:10 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:29:14 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:29:17 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6384 margin=0.6384 faces=1
+2026-07-27 08:29:18 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:29:18 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:29:22 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:29:25 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5987 margin=0.5987 faces=1
+2026-07-27 08:29:25 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:29:25 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:29:29 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:29:32 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6441 margin=0.6441 faces=1
+2026-07-27 08:29:32 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:29:32 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:29:37 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:29:39 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5896 margin=0.5896 faces=1
+2026-07-27 08:29:40 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:29:40 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:29:44 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:29:47 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5716 margin=0.5716 faces=1
+2026-07-27 08:29:47 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:29:47 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:29:52 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:29:54 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6318 margin=0.6318 faces=1
+2026-07-27 08:29:55 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:29:55 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:29:59 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:30:02 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6450 margin=0.6450 faces=1
+2026-07-27 08:30:02 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:30:02 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:30:06 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:30:09 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5942 margin=0.5942 faces=1
+2026-07-27 08:30:10 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:30:10 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:30:14 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:30:15 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4416 margin=0.4416 faces=1
+2026-07-27 08:30:15 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:30:15 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:30:20 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:30:23 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6186 margin=0.6186 faces=1
+2026-07-27 08:30:23 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:30:23 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:30:27 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:30:30 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6603 margin=0.6603 faces=1
+2026-07-27 08:30:30 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:30:30 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:30:35 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:30:37 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6533 margin=0.6533 faces=1
+2026-07-27 08:30:38 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:30:38 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:30:42 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:30:45 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6500 margin=0.6500 faces=1
+2026-07-27 08:30:45 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:30:45 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:30:49 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:30:52 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6335 margin=0.6335 faces=1
+2026-07-27 08:30:53 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:30:53 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:30:57 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:31:00 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6446 margin=0.6446 faces=1
+2026-07-27 08:31:00 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:31:00 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:31:04 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:31:07 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6450 margin=0.6450 faces=1
+2026-07-27 08:31:07 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:31:07 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:31:11 [INFO] my_app.service.backsys.back_system:228 - カードリーダーが指定台数接続されました
+2026-07-27 08:31:12 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:31:15 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6159 margin=0.6159 faces=1
+2026-07-27 08:31:15 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:31:15 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:31:19 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:31:28 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4498 margin=0.4498 faces=1
+2026-07-27 08:31:29 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:31:29 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:31:33 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:31:36 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4370 margin=0.4370 faces=1
+2026-07-27 08:31:36 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:31:36 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:31:40 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:31:44 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6066 margin=0.6066 faces=1
+2026-07-27 08:31:45 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:31:45 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:31:49 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:31:52 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6317 margin=0.6317 faces=1
+2026-07-27 08:31:52 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:31:52 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:31:56 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:31:59 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6254 margin=0.6254 faces=1
+2026-07-27 08:31:59 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:31:59 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:32:04 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:32:05 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6579 margin=0.6579 faces=1
+2026-07-27 08:32:06 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:32:06 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:32:10 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:32:13 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6172 margin=0.6172 faces=1
+2026-07-27 08:32:13 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:32:13 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:32:18 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:32:20 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6332 margin=0.6332 faces=1
+2026-07-27 08:32:21 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:32:21 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:32:25 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:32:28 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6882 margin=0.6882 faces=1
+2026-07-27 08:32:28 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:32:28 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:32:32 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:32:42 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6773 margin=0.6773 faces=1
+2026-07-27 08:32:43 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:32:43 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:32:47 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:32:50 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6809 margin=0.6809 faces=1
+2026-07-27 08:32:50 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:32:50 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:32:54 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:32:57 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6562 margin=0.6562 faces=1
+2026-07-27 08:32:57 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:32:57 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:33:02 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:33:20 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4645 margin=0.4645 faces=1
+2026-07-27 08:33:21 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:33:21 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:33:25 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:33:28 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4493 margin=0.4493 faces=1
+2026-07-27 08:33:28 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:33:28 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:33:32 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:33:44 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5352 margin=0.5352 faces=1
+2026-07-27 08:33:45 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:33:45 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:33:49 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:33:52 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5997 margin=0.5997 faces=1
+2026-07-27 08:33:52 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:33:52 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:33:56 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:35:07 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4405 margin=0.4405 faces=1
+2026-07-27 08:35:07 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:35:07 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:35:11 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:44:19 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6346 margin=0.6346 faces=1
+2026-07-27 08:44:20 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:44:20 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:44:24 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:44:27 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6675 margin=0.6675 faces=1
+2026-07-27 08:44:27 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:44:27 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:44:32 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:44:53 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6100 margin=0.6100 faces=1
+2026-07-27 08:44:53 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:44:53 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:44:58 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:45:00 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6368 margin=0.6368 faces=1
+2026-07-27 08:45:01 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:45:01 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:45:05 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:45:08 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6584 margin=0.6584 faces=1
+2026-07-27 08:45:08 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:45:08 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:45:12 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:45:29 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6343 margin=0.6343 faces=1
+2026-07-27 08:45:29 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:45:29 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:45:33 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:45:37 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6245 margin=0.6245 faces=1
+2026-07-27 08:45:37 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:45:37 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:45:41 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:45:59 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5859 margin=0.5859 faces=1
+2026-07-27 08:46:00 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:46:00 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:46:04 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:46:15 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5465 margin=0.5465 faces=1
+2026-07-27 08:46:15 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:46:15 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:46:20 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:46:27 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5979 margin=0.5979 faces=1
+2026-07-27 08:46:28 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:46:28 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:46:32 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 08:46:37 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5964 margin=0.5964 faces=1
+2026-07-27 08:46:37 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 08:46:37 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 08:46:41 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 09:00:00 [INFO] windowsservice:62 - パソコン再起動します
+2026-07-27 09:00:10 [ERROR] my_app.daemon.reader_daemon:261 - カードリーダーループでエラーが発生しました: <x_wmi: Unexpected COM Error (-2147023781, 'システム シャットダウンが実行中です。', None, None)>
+2026-07-27 09:00:12 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 09:00:15 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 09:02:40 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-27 09:02:41 [INFO] windowsservice:69 - back_system thread started
+2026-07-27 09:02:41 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-27 09:02:41 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-27 09:02:41 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-27 09:02:41 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-27 09:02:41 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-27 09:02:41 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-27 09:02:41 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-27 09:02:41 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-27 09:02:41 [INFO] my_app.daemon.reader_daemon:119 - カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。
+2026-07-27 09:02:42 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 95
+2026-07-27 09:02:42 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-27 09:02:42 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-27 09:02:42 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-27 09:02:42 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-27 09:02:42 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-27 09:02:42 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-27 09:02:53 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-27 09:02:53 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-27 09:02:54 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-27 09:02:54 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-27 10:02:42 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 95
+2026-07-27 10:22:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 10:22:28 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 10:22:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 10:22:34 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 10:22:36 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 10:22:39 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 10:22:42 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:30:57 [ERROR] my_app.daemon.reader_daemon:240 - reader_daemon.pyのポーリングが遅延しています4095.107978105545秒
+2026-07-27 11:30:58 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:00 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:03 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:11 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:13 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:16 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:18 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:21 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:24 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:26 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:29 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:34 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:37 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:39 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:42 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:44 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:47 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:49 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:52 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:55 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:31:57 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:00 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:02 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:05 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:10 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:13 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:15 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:18 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:20 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:23 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:26 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:28 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:33 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:36 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:39 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:41 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:44 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:46 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:49 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:51 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:54 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:57 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:32:59 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:02 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:04 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:07 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:09 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:12 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:15 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:17 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:20 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:22 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:33:43 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5815 margin=0.5815 faces=1
+2026-07-27 11:33:43 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:33:43 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:33:47 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:34:06 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6024 margin=0.6024 faces=2
+2026-07-27 11:34:07 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:34:07 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:34:12 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:34:14 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5904 margin=0.5904 faces=1
+2026-07-27 11:34:15 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:34:15 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:34:19 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:34:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 11:34:33 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5869 margin=0.5869 faces=1
+2026-07-27 11:34:33 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:34:33 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:34:38 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:34:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5491 margin=0.5491 faces=1
+2026-07-27 11:34:41 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:34:41 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:34:45 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:34:48 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6008 margin=0.6008 faces=1
+2026-07-27 11:34:48 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:34:48 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:34:52 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:35:04 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5833 margin=0.5833 faces=1
+2026-07-27 11:35:04 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:35:04 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:35:08 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:35:12 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5681 margin=0.5681 faces=1
+2026-07-27 11:35:12 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:35:12 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:35:16 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:35:20 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5516 margin=0.5516 faces=1
+2026-07-27 11:35:20 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:35:20 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:35:24 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:35:31 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6409 margin=0.6409 faces=1
+2026-07-27 11:35:32 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:35:32 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:35:36 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:37:13 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5342 margin=0.5342 faces=2
+2026-07-27 11:37:13 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:37:13 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:37:17 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:37:45 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5800 margin=0.5800 faces=2
+2026-07-27 11:37:45 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:37:45 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:37:50 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:37:58 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6280 margin=0.6280 faces=2
+2026-07-27 11:37:58 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:37:58 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:38:03 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:39:03 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4616 margin=0.4616 faces=2
+2026-07-27 11:39:03 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:39:03 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:39:07 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:39:09 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6082 margin=0.6082 faces=2
+2026-07-27 11:39:10 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:39:10 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:39:14 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:39:17 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6163 margin=0.6163 faces=2
+2026-07-27 11:39:18 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:39:18 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:39:23 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:44:51 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4822 margin=0.4822 faces=3
+2026-07-27 11:44:51 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:44:51 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:44:55 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:44:58 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5466 margin=0.5466 faces=3
+2026-07-27 11:44:58 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:44:58 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:45:02 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:45:06 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6502 margin=0.6502 faces=2
+2026-07-27 11:45:06 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:45:06 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:45:10 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:45:12 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6091 margin=0.6091 faces=1
+2026-07-27 11:45:12 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:45:12 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:45:16 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:45:42 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 11:45:42 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 11:45:43 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 11:45:43 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 11:45:44 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6067 margin=0.6067 faces=1
+2026-07-27 11:45:44 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:45:44 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:45:44 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 11:45:44 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 11:45:46 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 11:45:46 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 11:45:47 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 11:45:47 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 11:45:48 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 11:45:48 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 11:45:49 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:45:49 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 11:45:49 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 11:45:51 [ERROR] my_app.daemon.reader_daemon:232 - カードリーダー 0476720 でエラー: Unable to connect with protocol: T0 or T1. デバイスがコマンドを認識できません。 : デバイスがコマンドを認識できません。  (0x00000016)
+2026-07-27 11:46:38 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5924 margin=0.5924 faces=4
+2026-07-27 11:46:38 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:46:38 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:46:42 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:46:44 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6043 margin=0.6043 faces=2
+2026-07-27 11:46:44 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:46:44 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:46:49 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:46:51 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4474 margin=0.4474 faces=2
+2026-07-27 11:46:52 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:46:52 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:46:56 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:46:59 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5791 margin=0.5791 faces=2
+2026-07-27 11:46:59 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:46:59 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:47:03 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:47:07 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5974 margin=0.5974 faces=2
+2026-07-27 11:47:07 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:47:07 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:47:11 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:47:14 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5999 margin=0.5999 faces=3
+2026-07-27 11:47:14 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:47:14 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:47:19 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:47:21 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5346 margin=0.5346 faces=1
+2026-07-27 11:47:22 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:47:22 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:47:26 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:47:29 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5441 margin=0.5441 faces=1
+2026-07-27 11:47:29 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:47:29 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:47:33 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:47:36 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5632 margin=0.5632 faces=3
+2026-07-27 11:47:36 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:47:36 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:47:41 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:47:44 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5815 margin=0.5815 faces=2
+2026-07-27 11:47:44 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:47:44 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:47:48 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:47:51 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6286 margin=0.6286 faces=2
+2026-07-27 11:47:52 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:47:52 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:47:56 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:47:59 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6043 margin=0.6043 faces=2
+2026-07-27 11:47:59 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:47:59 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:48:03 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:48:05 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5863 margin=0.5863 faces=1
+2026-07-27 11:48:06 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:48:06 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:48:10 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:48:23 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6153 margin=0.6153 faces=2
+2026-07-27 11:48:24 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:48:24 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:48:28 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:48:38 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6054 margin=0.6054 faces=2
+2026-07-27 11:48:38 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:48:38 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:48:43 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:48:46 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5012 margin=0.5012 faces=2
+2026-07-27 11:48:46 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:48:46 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:48:50 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:48:52 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5765 margin=0.5765 faces=2
+2026-07-27 11:48:53 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:48:53 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:48:57 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:49:01 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5793 margin=0.5793 faces=2
+2026-07-27 11:49:01 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:49:01 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:49:05 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:49:07 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5613 margin=0.5613 faces=3
+2026-07-27 11:49:07 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:49:07 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:49:12 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 11:49:13 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4858 margin=0.4858 faces=2
+2026-07-27 11:49:14 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 11:49:14 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 11:49:18 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 12:10:57 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 95
+2026-07-27 12:39:53 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6128 margin=0.6128 faces=1
+2026-07-27 12:39:54 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 12:39:54 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 12:39:58 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 12:40:00 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6596 margin=0.6596 faces=2
+2026-07-27 12:40:00 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 12:40:00 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 12:40:05 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 12:40:07 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5218 margin=0.5218 faces=1
+2026-07-27 12:40:08 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 12:40:08 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 12:40:14 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 13:06:36 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6266 margin=0.6266 faces=1
+2026-07-27 13:06:37 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 13:06:37 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 13:06:42 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 13:06:44 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6346 margin=0.6346 faces=1
+2026-07-27 13:06:44 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 13:06:44 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 13:06:48 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 13:10:57 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 95
+2026-07-27 13:36:26 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5867 margin=0.5867 faces=1
+2026-07-27 13:36:27 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 13:36:27 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 13:36:31 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 14:02:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5045 margin=0.5045 faces=1
+2026-07-27 14:02:40 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 14:02:40 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 14:02:44 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 14:10:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:28 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:33 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:36 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:38 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:41 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:43 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:46 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:48 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:51 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:53 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:56 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:10:57 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 95
+2026-07-27 14:10:59 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:01 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:04 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:09 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:11 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:14 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:16 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:19 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:21 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:24 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:27 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:29 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:32 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:34 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:37 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:39 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:42 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:44 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:47 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:49 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:52 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:55 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:11:57 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:00 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:02 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:05 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:07 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:10 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:12 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:15 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:17 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:20 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:23 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:28 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:30 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:33 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:35 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:38 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:40 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:43 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:45 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:48 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:51 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:53 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:56 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:12:58 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:01 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:03 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:11 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:13 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:16 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:19 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:21 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:24 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:26 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:29 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:34 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:36 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:39 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:41 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:44 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:47 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:49 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:52 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:54 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:57 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:13:59 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:02 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:04 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:07 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:09 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:12 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:15 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:17 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:20 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:22 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:27 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:30 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:32 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:35 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:38 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:40 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:43 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:45 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:48 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:50 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:53 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:55 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:14:58 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:00 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:03 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:11 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:13 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:16 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:18 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:21 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:23 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:26 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:28 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:34 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:36 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:39 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:41 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:44 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:46 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:49 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:51 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:54 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:56 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:15:59 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:02 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:04 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:07 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:09 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:12 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:14 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:17 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:19 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:22 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:24 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:27 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:30 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:32 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:35 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:37 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:40 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:42 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:45 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:47 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:50 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:52 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:55 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:16:58 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:00 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:03 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:05 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:10 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:13 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:15 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:18 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:20 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:23 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:26 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:28 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:31 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:33 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:36 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:38 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:41 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:43 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:46 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:48 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:51 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:54 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:56 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:17:59 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:18:01 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:18:04 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:18:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:18:09 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-27 14:18:25 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6262 margin=0.6262 faces=1
+2026-07-27 14:18:25 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 14:18:25 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 14:18:29 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 14:18:33 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6172 margin=0.6172 faces=1
+2026-07-27 14:18:33 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 14:18:33 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 14:18:38 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 14:18:41 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6220 margin=0.6220 faces=1
+2026-07-27 14:18:41 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 14:18:41 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 14:18:46 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 14:19:04 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 14:19:04 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 14:19:04 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6054 margin=0.6054 faces=1
+2026-07-27 14:19:04 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 14:19:04 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 14:19:05 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 14:19:05 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 14:19:07 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 14:19:07 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 14:19:08 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 14:19:08 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 14:19:09 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 14:19:09 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 14:19:09 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 14:19:10 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 14:19:10 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 14:19:12 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6573 margin=0.6573 faces=1
+2026-07-27 14:19:12 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 14:19:12 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 14:19:16 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 15:10:24 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6317 margin=0.6317 faces=1
+2026-07-27 15:10:24 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 15:10:24 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 15:10:29 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 15:10:31 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6382 margin=0.6382 faces=1
+2026-07-27 15:10:34 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 15:10:34 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 15:10:38 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5244 margin=0.5244 faces=1
+2026-07-27 15:10:39 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 15:10:57 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 95
+2026-07-27 15:36:02 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6236 margin=0.6236 faces=1
+2026-07-27 15:36:02 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 15:36:02 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 15:36:06 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 15:36:09 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5981 margin=0.5981 faces=1
+2026-07-27 15:36:10 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 15:36:10 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 15:36:14 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 15:36:17 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5817 margin=0.5817 faces=1
+2026-07-27 15:36:18 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 15:36:18 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 15:36:22 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 15:44:44 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5925 margin=0.5925 faces=1
+2026-07-27 15:44:45 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 15:44:45 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 15:44:49 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 15:44:51 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6238 margin=0.6238 faces=1
+2026-07-27 15:44:51 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 15:44:51 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 15:44:55 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 16:10:58 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 95
+2026-07-27 16:42:56 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5806 margin=0.5806 faces=1
+2026-07-27 16:42:56 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 16:42:56 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 16:43:00 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 16:43:03 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6142 margin=0.6142 faces=1
+2026-07-27 16:43:03 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 16:43:03 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 16:43:07 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 17:10:58 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 95
+2026-07-27 17:56:05 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6208 margin=0.6208 faces=2
+2026-07-27 17:56:06 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 17:56:06 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 17:56:10 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 17:56:13 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6471 margin=0.6471 faces=2
+2026-07-27 17:56:13 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 17:56:13 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 17:56:17 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 17:56:21 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6237 margin=0.6237 faces=3
+2026-07-27 17:56:21 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 17:56:21 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 17:56:25 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 17:56:28 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6813 margin=0.6813 faces=3
+2026-07-27 17:56:29 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 17:56:29 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 17:56:33 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 18:02:22 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6128 margin=0.6128 faces=1
+2026-07-27 18:02:22 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 18:02:22 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 18:02:27 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 18:02:29 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6342 margin=0.6342 faces=3
+2026-07-27 18:02:29 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 18:02:29 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 18:02:33 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 18:02:36 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6454 margin=0.6454 faces=4
+2026-07-27 18:02:36 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 18:02:36 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 18:02:41 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 18:02:58 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5254 margin=0.5254 faces=3
+2026-07-27 18:02:59 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 18:02:59 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 18:03:03 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 18:03:35 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 18:03:35 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 18:03:35 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5782 margin=0.5782 faces=2
+2026-07-27 18:03:36 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 18:03:36 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 18:03:36 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 18:03:36 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 18:03:37 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 18:03:37 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 18:03:38 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 18:03:38 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 18:03:40 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 18:03:40 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 18:03:40 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 18:03:41 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 18:03:41 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 18:03:42 [INFO] my_app.daemon.reader_daemon:223 - カードリーダー 0476720 でカードを検出、IDm: 011004104C1DAB26
+2026-07-27 18:03:42 [INFO] my_app.daemon.reader_daemon:101 - 送信成功（リーダー476721）
+2026-07-27 18:03:43 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6342 margin=0.6342 faces=3
+2026-07-27 18:03:43 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-27 18:03:43 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-27 18:03:47 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-27 18:10:58 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 95
+2026-07-27 19:10:59 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-27 20:10:59 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-27 21:11:00 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-27 22:11:00 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-27 23:11:00 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94

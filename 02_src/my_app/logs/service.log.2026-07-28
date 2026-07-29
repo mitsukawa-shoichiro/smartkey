@@ -1,0 +1,430 @@
+2026-07-28 00:11:01 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 00:15:16 [ERROR] my_app.service.backsys.back_system:219 - カードリーダーが指定台数分接続されていません
+2026-07-28 00:15:16 [INFO] my_app.service.backsys.back_system:223 - カードリーダー異常
+2026-07-28 00:15:17 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-28 00:15:17 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-28 00:39:18 [INFO] my_app.service.backsys.back_system:228 - カードリーダーが指定台数接続されました
+2026-07-28 01:11:01 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 02:11:01 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 03:11:02 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 04:11:02 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 05:11:02 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 06:11:02 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 07:11:03 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 07:55:03 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6542 margin=0.6542 faces=1
+2026-07-28 07:55:04 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 07:55:04 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 07:55:08 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 07:55:11 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6016 margin=0.6016 faces=1
+2026-07-28 07:55:11 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 07:55:11 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 07:55:15 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 07:55:21 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6263 margin=0.6263 faces=1
+2026-07-28 07:55:22 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 07:55:22 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 07:55:26 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 07:55:29 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6046 margin=0.6046 faces=1
+2026-07-28 07:55:29 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 07:55:29 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 07:55:33 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 07:55:37 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6082 margin=0.6082 faces=1
+2026-07-28 07:55:37 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 07:55:37 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 07:55:41 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 07:55:44 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6191 margin=0.6191 faces=1
+2026-07-28 07:55:44 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 07:55:44 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 07:55:48 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 07:55:53 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6083 margin=0.6083 faces=1
+2026-07-28 07:55:53 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 07:55:53 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 07:55:57 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 07:55:59 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6151 margin=0.6151 faces=1
+2026-07-28 07:55:59 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 07:55:59 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 07:56:03 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 07:56:06 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6171 margin=0.6171 faces=1
+2026-07-28 07:56:07 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 07:56:07 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 07:56:11 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 08:11:03 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 09:11:03 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 10:07:53 [INFO] windowsservice:62 - パソコン再起動します
+2026-07-28 10:07:57 [ERROR] my_app.daemon.reader_daemon:261 - カードリーダーループでエラーが発生しました: <x_wmi: Unexpected COM Error (-2147023781, 'システム シャットダウンが実行中です。', None, None)>
+2026-07-28 10:08:00 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 10:08:02 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 10:10:26 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 10:10:27 [INFO] windowsservice:69 - back_system thread started
+2026-07-28 10:10:27 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-28 10:10:27 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-28 10:10:27 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-28 10:10:27 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-28 10:10:27 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-28 10:10:27 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-28 10:10:27 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-28 10:10:27 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-28 10:10:28 [INFO] my_app.daemon.reader_daemon:119 - カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。
+2026-07-28 10:10:28 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 10:10:28 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-28 10:10:28 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-28 10:10:28 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-28 10:10:28 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-28 10:10:28 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-28 10:10:29 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-28 10:10:40 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-28 10:10:40 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-28 10:10:40 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-28 10:10:40 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-28 11:10:28 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 12:10:29 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 12:46:25 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 12:46:27 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 12:46:30 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 13:10:30 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 14:10:30 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 14:24:45 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 14:24:46 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-28 14:24:47 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました
+2026-07-28 14:24:54 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 14:25:01 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 14:25:02 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 14:25:02 [INFO] windowsservice:69 - back_system thread started
+2026-07-28 14:25:02 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-28 14:25:02 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-28 14:25:02 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-28 14:25:02 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-28 14:25:02 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-28 14:25:02 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-28 14:25:02 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-28 14:25:02 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-28 14:25:03 [INFO] my_app.daemon.reader_daemon:119 - カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。
+2026-07-28 14:25:03 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 14:25:03 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-28 14:25:03 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-28 14:25:03 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-28 14:25:03 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-28 14:25:03 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-28 14:25:04 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-28 14:25:14 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-28 14:25:14 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-28 14:25:15 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-28 14:25:15 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-28 14:25:38 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 14:25:41 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 14:25:44 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 14:26:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 14:26:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 14:26:11 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 14:27:33 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 14:27:34 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-28 14:27:34 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました
+2026-07-28 17:38:29 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:39:39 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:39:41 [INFO] windowsservice:69 - back_system thread started
+2026-07-28 17:39:41 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-28 17:39:41 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-28 17:39:41 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-28 17:39:41 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-28 17:39:41 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-28 17:39:41 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-28 17:39:41 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-28 17:39:41 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-28 17:39:41 [INFO] my_app.daemon.reader_daemon:119 - カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。
+2026-07-28 17:39:42 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-28 17:39:42 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-28 17:39:42 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-28 17:39:42 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-28 17:39:42 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-28 17:39:42 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 17:39:43 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-28 17:39:44 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:39:45 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-28 17:39:46 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました
+2026-07-28 17:40:08 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:40:09 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:40:10 [INFO] windowsservice:69 - back_system thread started
+2026-07-28 17:40:10 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-28 17:40:10 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-28 17:40:10 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-28 17:40:10 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-28 17:40:10 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-28 17:40:10 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-28 17:40:10 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-28 17:40:10 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-28 17:40:11 [INFO] my_app.daemon.reader_daemon:119 - カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。
+2026-07-28 17:40:11 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 17:40:12 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-28 17:40:12 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-28 17:40:12 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-28 17:40:12 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-28 17:40:12 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-28 17:40:12 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-28 17:40:24 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-28 17:40:24 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-28 17:40:24 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-28 17:40:24 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-28 17:42:00 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:42:01 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-28 17:42:02 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました
+2026-07-28 17:42:25 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:42:27 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:42:28 [INFO] windowsservice:69 - back_system thread started
+2026-07-28 17:42:28 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-28 17:42:28 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-28 17:42:28 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-28 17:42:28 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-28 17:42:28 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-28 17:42:28 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-28 17:42:28 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-28 17:42:28 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-28 17:42:29 [INFO] my_app.daemon.reader_daemon:119 - カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。
+2026-07-28 17:42:29 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-28 17:42:29 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-28 17:42:29 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-28 17:42:29 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-28 17:42:29 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-28 17:42:30 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 17:42:30 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-28 17:42:40 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-28 17:42:40 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-28 17:42:41 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-28 17:42:41 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-28 17:43:10 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6650 margin=0.6650 faces=1
+2026-07-28 17:43:10 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:43:10 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:43:15 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:43:16 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6362 margin=0.6362 faces=1
+2026-07-28 17:43:16 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:43:16 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:43:21 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:43:23 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6032 margin=0.6032 faces=1
+2026-07-28 17:43:24 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:43:24 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:43:28 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:43:31 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6081 margin=0.6081 faces=1
+2026-07-28 17:43:32 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:43:32 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:43:36 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:43:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6053 margin=0.6053 faces=1
+2026-07-28 17:43:40 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:43:40 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:43:45 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:43:50 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5868 margin=0.5868 faces=1
+2026-07-28 17:43:51 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:43:51 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:43:55 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:43:58 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6623 margin=0.6623 faces=1
+2026-07-28 17:43:58 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:43:58 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:44:02 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:44:04 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6482 margin=0.6482 faces=1
+2026-07-28 17:44:04 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:44:04 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:44:09 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:44:11 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6914 margin=0.6914 faces=1
+2026-07-28 17:44:12 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:44:12 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:44:16 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:44:19 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6947 margin=0.6947 faces=1
+2026-07-28 17:44:19 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:44:19 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:44:23 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:44:26 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6532 margin=0.6532 faces=1
+2026-07-28 17:44:26 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:44:26 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:44:31 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:44:39 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5539 margin=0.5539 faces=1
+2026-07-28 17:44:39 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:44:39 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:44:44 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:44:46 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6322 margin=0.6322 faces=1
+2026-07-28 17:44:47 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:44:47 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:44:51 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:44:54 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6226 margin=0.6226 faces=1
+2026-07-28 17:44:54 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:44:54 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:44:59 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:45:01 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5223 margin=0.5223 faces=1
+2026-07-28 17:45:02 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:45:02 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:45:06 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:45:09 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5911 margin=0.5911 faces=1
+2026-07-28 17:45:10 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:45:10 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:45:14 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:45:17 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5785 margin=0.5785 faces=1
+2026-07-28 17:45:17 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:45:17 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:45:22 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:45:24 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5711 margin=0.5711 faces=1
+2026-07-28 17:45:24 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:45:24 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:45:28 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:45:30 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5770 margin=0.5770 faces=1
+2026-07-28 17:45:30 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:45:30 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:45:35 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:45:37 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6671 margin=0.6671 faces=1
+2026-07-28 17:45:38 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:45:38 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:45:42 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:45:45 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5959 margin=0.5959 faces=1
+2026-07-28 17:45:45 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:45:45 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:45:50 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:45:52 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6540 margin=0.6540 faces=1
+2026-07-28 17:45:53 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:45:53 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:45:58 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:46:04 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6000 margin=0.6000 faces=1
+2026-07-28 17:46:04 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:46:04 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:46:09 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:46:11 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5237 margin=0.5237 faces=1
+2026-07-28 17:46:12 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:46:12 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:46:16 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:46:19 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6298 margin=0.6298 faces=1
+2026-07-28 17:46:19 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:46:19 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:46:23 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:46:26 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6339 margin=0.6339 faces=1
+2026-07-28 17:46:27 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:46:27 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:46:31 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:46:33 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:46:34 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6175 margin=0.6175 faces=1
+2026-07-28 17:46:34 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:46:34 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:46:35 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-28 17:46:35 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました
+2026-07-28 17:48:46 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:48:47 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:48:48 [INFO] windowsservice:69 - back_system thread started
+2026-07-28 17:48:48 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-28 17:48:48 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-28 17:48:48 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-28 17:48:48 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-28 17:48:48 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-28 17:48:48 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-28 17:48:48 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-28 17:48:48 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-28 17:48:49 [INFO] my_app.daemon.reader_daemon:119 - カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。
+2026-07-28 17:48:50 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 17:48:50 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-28 17:48:50 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-28 17:48:50 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-28 17:48:50 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-28 17:48:50 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-28 17:48:50 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:48:50 [ERROR] my_app.camera.CameraModule:161 - カメラひらけん
+2026-07-28 17:48:50 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-28 17:48:50 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:48:52 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:48:55 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:48:57 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:00 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:01 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-28 17:49:01 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-28 17:49:01 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-28 17:49:01 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-28 17:49:03 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:05 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:08 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:11 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:13 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:16 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:19 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:21 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:24 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:27 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:29 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:32 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:35 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:37 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:40 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:42 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:45 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:48 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:51 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:53 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:56 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:49:58 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:50:01 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:50:04 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:50:06 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:50:08 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:50:09 [ERROR] my_app.camera.CameraModule:476 - RGBカメラひらけん index=1
+2026-07-28 17:50:10 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-28 17:50:10 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました
+2026-07-28 17:50:23 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:50:24 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:50:25 [INFO] windowsservice:69 - back_system thread started
+2026-07-28 17:50:25 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-28 17:50:25 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-28 17:50:25 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-28 17:50:25 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-28 17:50:25 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-28 17:50:25 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-28 17:50:25 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-28 17:50:25 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-28 17:50:27 [INFO] my_app.daemon.reader_daemon:119 - カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。
+2026-07-28 17:50:27 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-28 17:50:27 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-28 17:50:27 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-28 17:50:27 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-28 17:50:27 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-28 17:50:27 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 17:50:27 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-28 17:50:30 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6416 margin=0.6416 faces=1
+2026-07-28 17:50:30 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:50:30 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:50:35 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:50:37 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6420 margin=0.6420 faces=1
+2026-07-28 17:50:38 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-28 17:50:38 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-28 17:50:38 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:50:38 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:50:38 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-28 17:50:38 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-28 17:50:42 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:50:45 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6610 margin=0.6610 faces=1
+2026-07-28 17:50:45 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 17:50:45 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 17:50:49 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 17:50:50 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 17:50:51 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-28 17:50:52 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました
+2026-07-28 18:04:28 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 18:04:29 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-28 18:04:30 [INFO] windowsservice:69 - back_system thread started
+2026-07-28 18:04:30 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-28 18:04:30 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-28 18:04:30 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-28 18:04:30 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-28 18:04:30 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-28 18:04:30 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-28 18:04:30 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-28 18:04:30 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-28 18:04:31 [INFO] my_app.daemon.reader_daemon:119 - カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。
+2026-07-28 18:04:32 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 18:04:32 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-28 18:04:32 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-28 18:04:32 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-28 18:04:32 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-28 18:04:32 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-28 18:04:33 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-28 18:04:37 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6315 margin=0.6315 faces=1
+2026-07-28 18:04:37 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-28 18:04:37 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-28 18:04:41 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-28 18:04:44 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-28 18:04:44 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-28 18:04:44 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-28 18:04:44 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-28 19:04:32 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 20:04:32 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 21:04:34 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 22:04:34 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
+2026-07-28 23:04:34 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
