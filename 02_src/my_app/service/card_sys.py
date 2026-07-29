@@ -6,12 +6,14 @@ import time
 from enum import Enum
 import asyncio
 import logging
-import threading
 from my_app.service.utils.sesame import open_sesame, lock_sesame
 import json
 from my_app.db import repository as repo
 from my_app.models import ENUMS
 from my_app.models.entity.access_log import AccessLog
+from my_app.service.utils.lock_control import request_unlock
+from my_app.config.config_loader import load_frontend_config, load_backend_config, get_value
+
 
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(
@@ -36,6 +38,14 @@ AUTO_LOCK_SECONDS = 10      # 開錠から自動施錠までの時間
 
 # グローバル状態管理
 current_state = CardReaderState.AUTHENTICATING  # デフォルト状態
+
+_reader_cfg = load_frontend_config("usb_settings.json")
+_serial_cfg = get_value(_reader_cfg, "serial", None,  int)
+
+_sesame_cfg = load_frontend_config("sesame_config.json")
+_method_cfg = get_value(_sesame_cfg, "method", {}, dict)
+_connect_cfg = get_value(_method_cfg, "sesame_connect", "wifi", str)
+
 
 #カードリーダー設定読み込み
 def load_config():
@@ -96,9 +106,9 @@ def resolve_event_type(reader_serial: int) -> int:
     :return: イベントタイプ（1: 入室, 0: 退室）
     """
     config = load_config()
-    if config["出口"]["serial"] == reader_serial:
+    if _serial_cfg == reader_serial:
         return ENUMS.EventType.EXIT
-    elif config["入口"]["serial"] == reader_serial:
+    elif _serial_cfg == reader_serial:
         return ENUMS.EventType.ENTRY
     else:
         logger.error(f"不明なリーダーIDです: {reader_serial}")
@@ -129,10 +139,10 @@ def receive_card(card_number: str, reader_serial: int):
 
             user_id = repo.find_user_id_by_card_id(card_id)
 
+            event_type = resolve_event_type(reader_serial)
+
             if not request_unlock(user_id):
                 return
-
-            event_type = resolve_event_type(reader_serial)
 
             log = AccessLog(
                 id=None,
@@ -142,34 +152,16 @@ def receive_card(card_number: str, reader_serial: int):
                 user_id=user_id,
                 card_id=card_id
             )
-
-            repo.insert_access_log(log) #入退室ログに書き込み
+            try:
+                repo.insert_access_log(log) #入退室ログに書き込み
+            except Exception:
+                logger.exception("解錠後のログ書き込みを失敗user_id=%s card_id=%s", user_id, card_id)
 
             logger.info(f"カード認証成功: {card_id} (リーダーID: {reader_serial})")
 
-def request_unlock(user_id: int) -> bool:
-    """
-    解錠方式を判別、ユーザーIDと成功判定を橋渡しする関数
-
-    Args:
-        user_id (int): ユーザーID(ログに残す用)
-
-    Returns:
-        bool: 成功 -> True 失敗 -> False
-    """
-    if connect_config == "wifi":
-        success = unlock(user_id)
-    elif connect_config == "bluetooth":
-        success = unlock_bt(user_id)
     else:
-        logger.error(f"不明な接続方式です: {connect_config}")
-        return False
+        logger.warning("未登録カード: %s (リーダー%s)", card_number, reader_serial)
 
-    if success:
-        logger.info(f"{connect_config}での解錠完了")
-    else:
-        logger.error(f"{connect_config}での解錠失敗")
-    return success
 
 def request_lock(user_id: int):
     """

@@ -6,38 +6,17 @@
 """
 import asyncio
 import logging
-import json
-from pathlib import Path
+
 
 from my_app.service.utils.sesame import open_sesame, lock_sesame
 from my_app.service.utils.sesame_bluetooth import open_sesame_bt
+from my_app.config.config_loader import load_backend_config, get_value
 
 logger = logging.getLogger(__name__)
 
-
-
-
-CONFIG_PATH = Path(__file__).resolve().parent.parent.parent / "config" / "backend" / "sesame_config.json"
-
-def _load_connect_config() -> str:
-    """接続方式を設定から読む。読めなければ wifi をデフォルトにする。"""
-    try:
-        with CONFIG_PATH.open("r", encoding="utf-8") as f:
-            data = json.load(f)
-        method = data.get("method", {}).get("sesame_connect")
-        if method not in ("wifi", "bluetooth"):
-            logger.warning("不明な接続方式 '%s'。wifiにフォールバック", method)
-            return "wifi"
-        return method
-    except FileNotFoundError:
-        logger.error("設定ファイルが見つかりません: %s。wifiにフォールバック", CONFIG_PATH)
-        return "wifi"
-    except (json.JSONDecodeError, OSError):
-        logger.exception("設定ファイルの読み込みに失敗。wifiにフォールバック")
-        return "wifi"
-
-
-connect_config = _load_connect_config()
+_cfg = load_backend_config("sesame_config.json")
+method_cfg = get_value(_cfg, "method", {}, expected_type=dict)
+connect_config = get_value(method_cfg, "sesame_connect", "wifi", valid_values=("wifi", "bluetooth"))
 
 def unlock_by_config(user_id: int) -> bool:
     """

@@ -77,17 +77,16 @@ def user_view(page: ft.Page):
     )
 
     # 検索欄定義
-    search_zone = ft.Row(
-        controls=[search_box, search_button],
-        alignment=ft.MainAxisAlignment.CENTER,
-        spacing=16,
-    )
-
-    # リセットボタン含め検索欄を再定義
     search_zone_row = ft.Row(
-        controls=[search_zone, reset_btn],
-        alignment=ft.MainAxisAlignment.START,
-        spacing=50,
+        controls=[
+            search_box,
+            search_button,
+            reset_btn,
+        ],
+        spacing=16,
+        run_spacing=12,
+        wrap=True,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
     )
 
     # ページ遷移ボタン定義
@@ -181,7 +180,7 @@ def user_view(page: ft.Page):
     def next_page(e):
         """次ページへ遷移"""
         nonlocal offset
-        if (offset + 1) != all_page:
+        if (offset + 1) < all_page:
             offset += 1
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
@@ -204,6 +203,13 @@ def user_view(page: ft.Page):
             ITEMS_PER_PAGE,
             offset * ITEMS_PER_PAGE,
         )
+
+        while not users and offset > 0:
+            offset -= 1
+            users, total = repo.find_users_with_total(
+                search_text, table.sort_ascending,
+                ITEMS_PER_PAGE, offset * ITEMS_PER_PAGE,
+            )
 
         all_page = max(
             1,
@@ -256,7 +262,7 @@ def user_view(page: ft.Page):
             f"（全{total}件）"
         )
         prev_btn.disabled = offset == 0
-        next_btn.disabled = (offset + 1) == all_page
+        next_btn.disabled = (offset + 1) >= all_page
         page.update()
 
     def save_user(user_id, name_field, kana_field):
@@ -268,7 +274,7 @@ def user_view(page: ft.Page):
             logger.info(f"user_id={user_id}を更新しました")
         except sqlite3.Error:
             logger.exception("ユーザー情報の更新に失敗しました: user_id=%s", user_id)
-            show_error_dialog(page, "変更の保存に失敗しました。しばらくしてから再度お試しください。")
+            show_error_dialog(page, "変更の保存に失敗しました。しばらくしてから再度お試しください")
             load_table()   # 保存できていないので、DBの内容に戻す
 
     # ===================================================
@@ -281,7 +287,7 @@ def user_view(page: ft.Page):
         selected_ids = [uid for uid, cb in checkbox_refs.items() if cb.value]
 
         if not selected_ids:
-            show_info_dialog(page, "削除する行が選択されていません。", title="削除の確認")
+            show_info_dialog(page, "削除する行が選択されていません", title="削除の確認")
             return
 
         show_confirm_dialog(
@@ -303,12 +309,22 @@ def user_view(page: ft.Page):
                 logger.info(f"user_id={user_id}が削除されました")
         except sqlite3.Error:
             logger.exception("ユーザー情報の削除に失敗しました")
-            show_error_dialog(page, "削除に失敗しました。しばらくしてから再度お試しください。")
+            show_error_dialog(page, "削除に失敗しました。しばらくしてから再度お試しください")
             load_table()   # 途中まで消えている可能性があるので一覧を最新化しておく
             return
 
         load_table()
-        show_info_dialog(page, f"{len(selected_ids)} 件を削除しました。", title="削除完了")
+
+        refresh_tabs = getattr(
+            page,
+            "_refresh_management_tabs",
+            None,
+        )
+
+        if callable(refresh_tabs):
+            refresh_tabs()
+
+        show_info_dialog(page, f"{len(selected_ids)} 件を削除しました", title="削除完了")
 
     # ===================================================
     # レイアウト定義、実際に配置

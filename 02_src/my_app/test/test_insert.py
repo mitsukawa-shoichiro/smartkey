@@ -39,7 +39,7 @@ def insert_test_cards(cards_per_user: int = 2):
 
             card_id = repo.insert_card(idm, card_type, user.id)
             print(f"  card_id={card_id}: idm={idm}, type={card_type.value}, "
-                  f"user={user.user_name}(id={user.id})")
+                f"user={user.user_name}(id={user.id})")
 
             counter += 1
             inserted += 1

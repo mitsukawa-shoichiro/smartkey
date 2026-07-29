@@ -239,7 +239,7 @@ def cardView(page: ft.Page):
     def next_page(e):
         """次ページへ遷移"""
         nonlocal offset
-        if (offset + 1) != all_page:
+        if (offset + 1) < all_page:
             offset += 1
         load_table()
         scroll_table.scroll_to(offset=0, duration=0)
@@ -261,6 +261,15 @@ def cardView(page: ft.Page):
             ITEMS_PER_PAGE,
             offset * ITEMS_PER_PAGE,
         )
+
+        while not cards and offset > 0:
+            offset -= 1
+            cards, total = repo.find_cards_with_total(
+                search_text,
+                table.sort_ascending,
+                ITEMS_PER_PAGE,
+                offset * ITEMS_PER_PAGE,
+            )
 
         all_page = max(
             1,
@@ -286,7 +295,7 @@ def cardView(page: ft.Page):
             f"（全{total}件）"
         )
         prev_btn.disabled = offset == 0
-        next_btn.disabled = (offset + 1) == all_page
+        next_btn.disabled = (offset + 1) >= all_page
         page.update()
 
     # ===================================================
@@ -331,17 +340,25 @@ def cardView(page: ft.Page):
             )
             show_error_dialog(
                 page,
-                "削除に失敗しました。"
-                "しばらくしてから再度お試しください。",
+                "削除に失敗しました。しばらくしてから再度お試しください",
             )
             load_table()
             return
 
         load_table()
 
+        refresh_tabs = getattr(
+            page,
+            "_refresh_management_tabs",
+            None,
+        )
+
+        if callable(refresh_tabs):
+            refresh_tabs()
+
         show_info_dialog(
             page,
-            f"{len(selected_ids)} 件を削除しました。",
+            f"{len(selected_ids)} 件を削除しました",
             title="削除完了",
         )
 

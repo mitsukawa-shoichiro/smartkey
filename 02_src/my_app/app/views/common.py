@@ -9,6 +9,7 @@ from my_app.ui import theme as ui_theme
 import flet as ft
 from my_app.app.utils import japanese_text as jt
 
+import time
 import logging
 import my_app.db.repository as repo
 
@@ -58,7 +59,8 @@ class Theme:
     RADIUS = 8
     RADIUS_SM = 8
 
-
+# 画面URLごとの表示情報
+# app_view()とroute_page_title()が参照
 _ROUTE_META = {
     "/management": (
         "管理",
@@ -124,10 +126,20 @@ _ROUTE_META = {
 
 
 def tinted_shadow(color: str, alpha: int):
+    """
+    #RRGGBB形式の色へ透明度を付け、Flet用の#AARRGGBB形式に変換
+
+    カードの枠線や影をアクセント色に合わせるために使用
+    """
     return f"#{alpha:02X}{color.lstrip('#')}"
 
 
 def card_shadow(accent: str = Theme.SKY, hovering=False):
+    """
+    共通カードへ設定する影を生成
+
+    hovering=Trueの場合、影を少し広げる
+    """
     return ft.BoxShadow(
         blur_radius=22 if hovering else 17,
         spread_radius=0,
@@ -148,6 +160,12 @@ def card(
     padding: int = 24,
     accent: str = Theme.SKY,
 ):
+    """
+    各画面で使用する共通カードコンテナを生成
+
+    ホバー時に位置、拡大率、影、枠線を同時に変更
+    上方向に少しだけ浮かす
+    """
     panel = ft.Container(
         content=content,
         padding=padding,
@@ -206,6 +224,10 @@ def section_title(
     subtitle: str = None,
     accent: str = Theme.SKY,
 ):
+    """
+    セクション名、左側の色付きバー、右側の区切り線を生成
+    subtitleが指定された場合のみ、見出しの下へ補足分を表示
+    """
     title_row = ft.Row(
         controls=[
             ft.Container(
@@ -249,6 +271,10 @@ def section_title(
 
 
 def responsive_cards(cards_with_cols):
+    """
+    カード内容とcol設定をResponsiveRowへ変換
+    画面幅に応じたカード配置を、各Viewで重複実装させない用
+    """
     return ft.ResponsiveRow(
         controls=[
             card(content, col=col)
@@ -260,6 +286,9 @@ def responsive_cards(cards_with_cols):
 
 
 def primary_button(text: str, on_click, icon=None):
+    """
+    保存・登録などのボタンを生成
+    """
     return ft.ElevatedButton(
         text=text,
         icon=icon,
@@ -280,6 +309,9 @@ def primary_button(text: str, on_click, icon=None):
 
 
 def secondary_button(text: str, on_click, icon=None):
+    """
+    検索・再読み込みなどのボタンを生成
+    """
     return ft.OutlinedButton(
         text=text,
         icon=icon,
@@ -306,6 +338,9 @@ def secondary_button(text: str, on_click, icon=None):
 
 
 def danger_button(text: str, on_click, icon=None):
+    """
+    削除・キャンセルなどのボタンを生成
+    """
     return ft.ElevatedButton(
         text=text,
         icon=icon,
@@ -333,6 +368,10 @@ def back_button(
     route: str = "/index",
     on_click=None,
 ):
+    """
+    画面左下に配置する共通の戻るボタンを生成
+    on_clickが指定されている場合、カメラ停止などの画面固有の終了処理を優先
+    """
     handler = (
         on_click
         if on_click is not None
@@ -518,19 +557,62 @@ MANAGEMENT_ROUTES = frozenset(
     item[0] for item in _MANAGEMENT_TABS
 )
 
+_MANAGEMENT_COUNTS_CACHE_TTL_SEC = 2.0
 
-def management_tabs(page, active_route, on_change=None):
+
+def invalidate_management_counts(page):
+    """登録件数キャッシュを破棄する"""
+    page._management_counts_cache = None
+
+
+def _get_management_counts(
+    page,
+    force_refresh=False,
+):
+    now = time.monotonic()
+    cached = getattr(
+        page,
+        "_management_counts_cache",
+        None,
+    )
+
+    if (
+        not force_refresh
+        and isinstance(cached, tuple)
+        and len(cached) == 2
+    ):
+        cached_at, counts = cached
+
+        if (
+            now - cached_at
+            < _MANAGEMENT_COUNTS_CACHE_TTL_SEC
+        ):
+            return counts
+
     try:
-        counts = repo.get_management_registration_counts()
+        counts = (
+            repo.get_management_registration_counts()
+        )
     except Exception:
-        logger.exception("登録状況を取得できませんでした")
-        counts = {}
+        logger.exception(
+            "登録状況を取得できませんでした"
+        )
+        return {}
 
+    page._management_counts_cache = (
+        now,
+        counts,
+    )
+    return counts
+
+def management_tabs(page, active_route, on_change=None, force_refresh=False):
     page.session.set("management_last_route", active_route)
+
+    counts = _get_management_counts(page, force_refresh=force_refresh)
 
     def count(key, unit):
         value = counts.get(key)
-        return "-" if value is None else f"{value}{unit}"
+        return ("-" if value is None else f"{value}{unit}")
 
     status_texts = {
         "/user": f"登録者数 {count('users', '人')}",

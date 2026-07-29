@@ -78,11 +78,15 @@ class UnlockGate:
         ポーリングスレッドを開始する関数。
         既にある時は作成しない、ハンドルも設定
         """
-        if self._poll_thread is not None and self._poll_thread.is_alive():
-            return
-        self._poll_thread = threading.Thread(
-            target=self._watch_until_locked, name="SesameLockWatch", daemon=True
-        )
+        now = time.monotonic
+        with self._lock:
+            if self._poll_thread is not None and self._poll_thread.is_alive():
+                return
+            self._waiting_for_lock = True
+            self._unlocked_at = now
+            self._poll_thread = threading.Thread(
+                target=self._watch_until_locked, name="SesameLockWatch", daemon=True
+            )
         self._poll_thread.start()
 
     def _watch_until_locked(self):

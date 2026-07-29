@@ -32,6 +32,7 @@ logger = logging.getLogger(__name__)
 from my_app.ui.theme import apply_page_theme
 def main(page: ft.Page):
     apply_page_theme(page)
+    page._app_closing = False
     page.title = "ドア開閉システム"
 
     route(page)
@@ -40,10 +41,17 @@ def main(page: ft.Page):
     create_database()
 
     logger.info("GUI起動")
-    def on_disconnect(_):
-        send_camera_message(
-            "finishRegistering"
+    async def on_disconnect(_):
+        page._app_closing = True
+        page._index_summary_generation = (
+            getattr(page, "_index_summary_generation", 0) + 1
         )
+
+        task = getattr(page, "_index_summary_task", None)
+        if task is not None and not task.done():
+            task.cancel()
+
+        send_camera_message("finishRegistering")
 
     page.on_disconnect = on_disconnect
 

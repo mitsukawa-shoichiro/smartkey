@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 2026-07-29 00:04:35 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
 2026-07-29 01:04:35 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
 2026-07-29 02:04:36 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 94
@@ -496,11 +497,137 @@ Traceback (most recent call last):
   File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 977, in getaddrinfo
     for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+=======
+<<<<<<< HEAD
+2026-07-24 08:19:56 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:43:50 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:43:51 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:43:52 [INFO] windowsservice:69 - back_system thread started
+2026-07-24 13:43:52 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-24 13:43:52 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-24 13:43:52 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-24 13:43:52 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-24 13:43:52 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-24 13:43:52 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-24 13:43:52 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-24 13:43:52 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-24 13:43:52 [ERROR] my_app.daemon.reader_daemon:123 - カードリーダーの数が不足しているためカードの読み込みがスタートしていません: 0 / 1
+2026-07-24 13:43:53 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 92
+2026-07-24 13:43:53 [ERROR] my_app.service.backsys.back_system:219 - カードリーダーが指定台数分接続されていません
+2026-07-24 13:43:53 [INFO] my_app.service.backsys.back_system:223 - カードリーダー異常
+2026-07-24 13:43:53 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-24 13:43:53 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-24 13:43:53 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-24 13:43:53 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-24 13:43:53 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-24 13:43:54 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-24 13:43:54 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-24 13:43:54 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-24 13:43:56 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5867 margin=0.5867 faces=1
+2026-07-24 13:43:57 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:43:57 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:01 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:04 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5805 margin=0.5805 faces=1
+2026-07-24 13:44:04 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:04 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:04 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-24 13:44:04 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-24 13:44:05 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-24 13:44:05 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-24 13:44:08 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:10 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.4789 margin=0.4789 faces=1
+2026-07-24 13:44:11 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:11 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:15 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:18 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.7804 margin=0.7804 faces=1
+2026-07-24 13:44:18 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:18 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:22 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:25 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6967 margin=0.6967 faces=1
+2026-07-24 13:44:25 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:25 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:30 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:33 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6955 margin=0.6955 faces=1
+2026-07-24 13:44:33 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:33 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:37 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:44:40 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5996 margin=0.5996 faces=1
+2026-07-24 13:44:40 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:44:40 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:44:41 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:44:42 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-24 13:44:43 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました
+2026-07-24 13:50:12 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:50:13 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:50:13 [INFO] windowsservice:69 - back_system thread started
+2026-07-24 13:50:13 [INFO] my_app.service.backsys.back_system:270 - ⏱️ sesameのバッテリーとサーバー状態を確認中...
+2026-07-24 13:50:13 [INFO] windowsservice:73 - reader_daemon thread started
+2026-07-24 13:50:13 [INFO] my_app.service.backsys.back_system:104 - check_sesame_battery 開始
+2026-07-24 13:50:13 [INFO] windowsservice:82 - かめらわーかーすれっどすたーと
+2026-07-24 13:50:13 [INFO] my_app.service.backsys.back_system:188 - check_alive 開始
+2026-07-24 13:50:13 [INFO] my_app.camera.CameraModule:138 - CameraWorker初期化
+2026-07-24 13:50:13 [INFO] my_app.service.backsys.back_system:193 - 死活監視システム起動...
+2026-07-24 13:50:13 [INFO] my_app.daemon.reader_daemon:195 - 設定台数: 1
+2026-07-24 13:50:14 [ERROR] my_app.daemon.reader_daemon:123 - カードリーダーの数が不足しているためカードの読み込みがスタートしていません: 0 / 1
+2026-07-24 13:50:14 [INFO] my_app.service.backsys.back_system:127 - バッテリー残量: 92
+2026-07-24 13:50:14 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=1
+2026-07-24 13:50:14 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=2
+2026-07-24 13:50:14 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=3
+2026-07-24 13:50:14 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=4
+2026-07-24 13:50:14 [WARNING] my_app.service.face_service:151 - 顔画像なし: face_id=5
+2026-07-24 13:50:15 [ERROR] my_app.service.backsys.back_system:219 - カードリーダーが指定台数分接続されていません
+2026-07-24 13:50:15 [INFO] my_app.service.backsys.back_system:223 - カードリーダー異常
+2026-07-24 13:50:15 [INFO] my_app.camera.CameraModule:248 - カメラ起動！
+2026-07-24 13:50:15 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-24 13:50:15 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-24 13:50:17 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.7145 margin=0.7145 faces=1
+2026-07-24 13:50:17 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:50:17 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:50:21 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:50:23 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6526 margin=0.6526 faces=1
+2026-07-24 13:50:23 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:50:23 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:50:26 [ERROR] my_app.service.backsys.back_system:249 - 解錠システム異常
+2026-07-24 13:50:26 [INFO] my_app.service.backsys.back_system:253 - システム異常
+2026-07-24 13:50:26 [INFO] my_app.service.backsys.sendmail:54 - メール送信成功
+2026-07-24 13:50:26 [INFO] my_app.service.backsys.sendmail:57 - メール送信完了
+2026-07-24 13:50:28 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:50:30 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5184 margin=0.5184 faces=1
+2026-07-24 13:50:31 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:50:31 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:50:35 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:50:38 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6424 margin=0.6424 faces=1
+2026-07-24 13:50:38 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:50:38 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:50:43 [INFO] my_app.service.utils.lock_control:105 - 施錠の確認、施錠待ちの解除(所要 4.0秒)
+2026-07-24 13:50:45 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.6308 margin=0.6308 faces=1
+2026-07-24 13:50:46 [INFO] my_app.service.utils.sesame_dispatch:61 - wifiでの解錠完了
+2026-07-24 13:50:46 [INFO] my_app.service.utils.lock_control:70 - 解錠コマンド送信成功、施錠待ち開始 user_id=6
+2026-07-24 13:50:46 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 13:50:47 [INFO] my_app.daemon.reader_daemon:296 - reader_daemonの停止を開始します
+2026-07-24 13:50:47 [INFO] my_app.daemon.reader_daemon:311 - reader_daemonを停止しました
+=======
+2026-07-24 09:07:01 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 09:07:03 [INFO] __main__:247 - ⏱️ open_sensorのバッテリーとサーバー状態を確認中...
+2026-07-24 09:07:03 [INFO] __main__:102 - check_sesame_battery 開始
+2026-07-24 09:07:03 [ERROR] __main__:169 - 不明エラー
+Traceback (most recent call last):
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\util\connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>>>>>> aa0d33f6cfded1d534e95dcf3479499bfa52b52a
 socket.gaierror: [Errno 11001] getaddrinfo failed
 
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
+<<<<<<< HEAD
   File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 788, in urlopen
     response = self._make_request(
         conn,
@@ -521,10 +648,28 @@ Traceback (most recent call last):
   File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 211, in _new_conn
     raise NameResolutionError(self.host, self, e) from e
 urllib3.exceptions.NameResolutionError: HTTPSConnection(host='app.candyhouse.co', port=443): Failed to resolve 'app.candyhouse.co' ([Errno 11001] getaddrinfo failed)
+=======
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\connectionpool.py", line 788, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\connectionpool.py", line 488, in _make_request
+    raise new_e
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\connectionpool.py", line 1106, in _validate_conn
+    conn.connect()
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\connection.py", line 759, in connect
+    self.sock = sock = self._new_conn()
+                       ^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\connection.py", line 211, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: HTTPSConnection(host='app.candyhouse.co.api', port=443): Failed to resolve 'app.candyhouse.co.api' ([Errno 11001] getaddrinfo failed)
+>>>>>>> aa0d33f6cfded1d534e95dcf3479499bfa52b52a
 
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
+<<<<<<< HEAD
   File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 667, in send
     resp = conn.urlopen(
         method=request.method,
@@ -539,10 +684,23 @@ Traceback (most recent call last):
     raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='app.candyhouse.co', port=443): Max retries exceeded with url: /api/sesame2/11200413-0002-0611-3F00-9200FFFFFFFF/cmd (Caused by NameResolutionError("HTTPSConnection(host='app.candyhouse.co', port=443): Failed to resolve 'app.candyhouse.co' ([Errno 11001] getaddrinfo failed)"))
+=======
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\adapters.py", line 667, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\connectionpool.py", line 842, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\util\retry.py", line 543, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='app.candyhouse.co.api', port=443): Max retries exceeded with url: /sesame2/11200509-0108-0802-3900-8700FFFFFFFF (Caused by NameResolutionError("HTTPSConnection(host='app.candyhouse.co.api', port=443): Failed to resolve 'app.candyhouse.co.api' ([Errno 11001] getaddrinfo failed)"))
+>>>>>>> aa0d33f6cfded1d534e95dcf3479499bfa52b52a
 
 During handling of the above exception, another exception occurred:
 
 Traceback (most recent call last):
+<<<<<<< HEAD
   File "C:\smartkey\02_src\my_app\service\utils\sesame.py", line 72, in send_sesame_command
     res = requests.post(url, json=body, headers=headers, timeout=10)
   File "C:\Users\kaisy\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 115, in post
@@ -3544,3 +3702,29 @@ requests.exceptions.ConnectionError: HTTPSConnectionPool(host='app.candyhouse.co
 2026-07-29 13:51:14 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5389 margin=0.5389 faces=1
 2026-07-29 13:51:21 [INFO] my_app.camera.CameraModule:555 - びじゅいいじゃん user_id=6 name=光川 score=0.5419 margin=0.5419 faces=1
 2026-07-29 13:51:22 [WARNING] my_app.service.utils.lock_control:99 - 施錠確認がタイムアウト(30秒)、施錠待ちを解除
+=======
+  File "c:\smartkey\02_src\my_app\service\backsys\opensensor_back_system.py", line 112, in check_open_sensor_battery
+    response = requests.get(open_sensor_url, headers = headers, timeout = 10)   #10秒でタイムアウト
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kaisy\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\adapters.py", line 700, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='app.candyhouse.co.api', port=443): Max retries exceeded with url: /sesame2/11200509-0108-0802-3900-8700FFFFFFFF (Caused by NameResolutionError("HTTPSConnection(host='app.candyhouse.co.api', port=443): Failed to resolve 'app.candyhouse.co.api' ([Errno 11001] getaddrinfo failed)"))
+2026-07-24 09:17:29 [INFO] my_app.logs.log_config_service:38 - Log configuration loaded successfully
+2026-07-24 09:17:30 [INFO] __main__:198 - ⏱️ open_sensorのバッテリーとサーバー状態を確認中...
+2026-07-24 09:17:30 [INFO] __main__:102 - check_sesame_battery 開始
+2026-07-24 09:17:30 [INFO] __main__:126 - バッテリー残量: 取得失敗
+2026-07-24 09:17:30 [ERROR] __main__:165 - メール送信エラー
+>>>>>>> origin/develop_2026
+>>>>>>> aa0d33f6cfded1d534e95dcf3479499bfa52b52a
