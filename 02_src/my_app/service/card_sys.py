@@ -105,7 +105,6 @@ def resolve_event_type(reader_serial: int) -> int:
     :param reader_serial: リーダーシリアル番号
     :return: イベントタイプ（1: 入室, 0: 退室）
     """
-    config = load_config()
     if _serial_cfg == reader_serial:
         return ENUMS.EventType.EXIT
     elif _serial_cfg == reader_serial:
@@ -172,9 +171,9 @@ def request_lock(user_id: int):
     """
     # wifiの時SESAME APIであける
     try:
-        if connect_config == "wifi":
+        if _connect_cfg == "wifi":
             lock(user_id)
-        elif connect_config == "bluetooth":
+        elif _connect_cfg == "bluetooth":
             logger.warning("Bluetooth lock is not implemented")
             #Bluetoothでは未実装
     except Exception as e:
