@@ -1,18 +1,17 @@
 # reader_daemon.py
-import time
 import threading
 import queue
 import time
-import sys
-import os
+
 import logging
 import socket
 import pythoncom
 import sqlite3
 from smartcard.Exceptions import NoCardException
 
-from my_app.config.config_loader import load_frontend_config
-from my_app.service.utils.usb_card_readers import get_readers
+import my_app.logs.log_config_service
+from my_app.config.reader_config import READER_COUNT, REGISTER_SERIAL, norm_serial
+from my_app.service.utils.usb_card_readers import resolve_readers
 from my_app.service import card_sys
 
 now = time.time()
@@ -32,45 +31,16 @@ DAEMON_HOST = '127.0.0.1'
 DAEMON_PORT = 10000
 
 state = "authenticating"
-
 REGISTERING_TIMEOUT_S = 45
-
 state_changed_at = time.time()
 
-config = load_frontend_config("usb_settings.json")
-
-COUNT_READER = config["設置台数"]
-
-devices = config.get("devices", {})
-
-register_device = (devices.get("出口") or devices.get("入口") or devices.get("テスト"))
-
-if register_device is None:
-    raise ValueError("カードリーダー設定なし")
-
-REGISTER_READER_SERIAL = register_device["serial"]
-
-# 登録モードでIDmを受け付けるのは「出口」リーダーのみ(GUI案内文と一致させる)。
-# get_readers()が返す reader_serial は config["devices"]["出口"]["serial"] と同じ値になる。
 
 stop_event = threading.Event()
-
 _threads = []
 
-# region logs
-# logs ディレクトリのパスを sys.path に追加
-LOGS_PATH = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..', '..'))
-if LOGS_PATH not in sys.path:
-    sys.path.insert(0, LOGS_PATH)
-# endregion
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 GET_IDM_APDU = [0xFF, 0xCA, 0x00, 0x00, 0x00]
-
 event_q = queue.Queue()
-
 logger = logging.getLogger(__name__)  # logに書き込む用
 
 def sender():
@@ -96,26 +66,26 @@ def sender():
             logger.exception(f"不明なエラーにより送信失敗: {e}")
 
 
-def get_reader():
+def wait_readers() -> None:
     """
     カードリーダーを確認してJSONファイルで設定した数より少ない場合に停止状態にする関数です。
     reader_loopの最初で呼ばれています。
     """
     logged = False
     while not stop_event.is_set():
-        reader_list = get_readers()  # [(reader, serial), ...]
+        reader_list = resolve_readers()  # [(reader, serial), ...]
         if len(reader_list) >= 1:
             logger.info("カードリーダーの数が設定台数と一致しましたのでカードの読み込みがスタートしました。")
             return reader_list
 
         if  not logged:
             logger.error(
-                f"カードリーダーの数が不足しているためカードの読み込みがスタートしていません: {len(reader_list)} / {COUNT_READER}")
+                f"カードリーダーの数が不足しているためカードの読み込みがスタートしていません: {len(reader_list)} / {READER_COUNT}")
             logged = True
         msg = "DEAD"
         send_message(msg)
         stop_event.wait(1)
-    return []
+
 
 
 VALID_STATES = {"registering", "authenticating"}
@@ -201,12 +171,12 @@ def reader_loop():
 
     pythoncom.CoInitialize()          # スレッドにつき1回
     try:
-        logger.info("設定台数: %s", COUNT_READER)
-        get_reader()                  # 起動時にリーダーが揃うまで待つ
+        logger.info("設定台数: %s", READER_COUNT)
+        wait_readers()                  # 起動時にリーダーが揃うまで待つ
 
         while not stop_event.is_set():
             try:
-                reader_list = get_readers()
+                reader_list = resolve_readers()
 
                 for reader, reader_serial in reader_list:
                     conn = None
@@ -223,7 +193,7 @@ def reader_loop():
                         logger.info("リーダー %s でカード検出 IDm: %s", reader_serial, idm)
 
                         if state == "registering":
-                            if len(reader_list) == 1 or reader_serial == REGISTER_READER_SERIAL:
+                            if len(reader_list) == 1 or norm_serial(reader_serial) == REGISTER_SERIAL:
                                 notify_registered_card(idm)
                         else:
                             event_q.put((idm, reader_serial))
@@ -248,7 +218,7 @@ def reader_loop():
                     logger.warning("登録状態が%s秒を超えたためauthenticatingへ戻します", REGISTERING_TIMEOUT_S)
                     changeState("authenticating")
 
-                send_message("DEAD" if len(reader_list) < COUNT_READER else "ALIVE")
+                send_message("DEAD" if len(reader_list) < READER_COUNT else "ALIVE")
 
             except Exception:
                 logger.exception("カードリーダーループでエラーが発生しました")
@@ -257,10 +227,6 @@ def reader_loop():
                 stop_event.wait(1)     # 正常・異常どちらでも必ず待つ
     finally:
         pythoncom.CoUninitialize()
-
-
-# REGISTERING = "registering"      # カード登録状態
-# AUTHENTICATING = "authenticating"  # カード認証状態
 
 
 def changeState(newState):
@@ -280,6 +246,7 @@ def main():
     ]
     for t in _threads:
         t.start()
+
 
 def stop(timeout: float = 5.0):
     """
@@ -308,4 +275,9 @@ def stop(timeout: float = 5.0):
 
 
 if __name__ == "__main__":
-    now = time.time()
+    main()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        stop()

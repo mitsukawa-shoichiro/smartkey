@@ -4,7 +4,7 @@ from smartcard.Exceptions import NoCardException
 import json
 import os
 import pythoncom
-from my_app.service.utils.usb_card_readers import get_readers
+from my_app.service.utils.usb_card_readers import resolve_readers
 import logging
 
 logger = logging.getLogger(__name__)  # logに書き込む用
@@ -30,7 +30,7 @@ def load_config():
 
 def register_reader():
     config = load_config()
-    reader_list = get_readers()
+    reader_list = resolve_readers()
 
     if not reader_list:
         logger.info("カードリーダーが見つかりませんでした")
@@ -82,48 +82,13 @@ def scan_card():
         logger.info(f"登録用リーダーでエラーが発生しました: {e}")
         return None
 
-def scan_cardreader_old() -> int:
+
+def scan_card_reader() -> int:
     """
     複数のカードリーダーを走査し、カードIDを取得できた
     リーダーのインデックスを返す。見つからなければ -1。
     """
-    reader_list = readers()
-
-    for idx, reader in enumerate(reader_list):
-        print(idx)
-        conn = None
-        try:
-            conn = reader.createConnection()
-            conn.connect()
-
-            GET_IDM_APDU = [0xFF, 0xCA, 0x00, 0x00, 0x00]
-            response, sw1, sw2 = conn.transmit(GET_IDM_APDU)
-
-            if [sw1, sw2] == [0x90, 0x00] and response:
-                idm = ''.join(format(byte, '02X') for byte in response)
-                print(f"カードリーダーでカードを検出、IDm:{idm} / ReaderIndex:{idx}")
-                return idx  # ← 検出できたリーダーのindexを返す
-
-        except NoCardException:
-            continue
-        except Exception as e:
-            print(f"エラー: {e}")
-            continue
-        finally:
-            try:
-                if conn:
-                    conn.disconnect()
-            except Exception:
-                pass
-    print("no card")
-    return -1  # どのリーダーでも検出できなかった
-
-def scan_cardreader() -> int:
-    """
-    複数のカードリーダーを走査し、カードIDを取得できた
-    リーダーのインデックスを返す。見つからなければ -1。
-    """
-    reader_list = get_readers()
+    reader_list = resolve_readers()
 
     for idx, (reader, serial) in enumerate(reader_list):
         print(idx)
