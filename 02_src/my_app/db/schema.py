@@ -15,9 +15,6 @@ get_connection() は with 文で使うことを前提とした
 呼び出し側は commit / rollback / close を一切書く必要がありません。^^
 """
 
-
-import os
-import sqlite3
 import logging
 from .db_manager import get_connection
 
@@ -101,11 +98,6 @@ def create_database():
             idx_access_logs_timestamp_event
             ON access_logs(timestamp, event_type)
         """)
-
-
-        # faceテーブルが存在するか確認
-        c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='face';")
-        exists = c.fetchone() is not None
 
         # faceテーブル作成(既に存在する場合は作成しない)
         c.execute("""

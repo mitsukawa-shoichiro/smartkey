@@ -7,55 +7,79 @@ GUI操作は一切行わない。
 """
 import socket
 import asyncio
+import time
 import logging
 from dataclasses import dataclass
+from enum import Enum
 from typing import Optional
 
 import my_app.db.repository as repo
-from my_app.service.daemon_bridge import thread_state
-from my_app.service.daemon_bridge import register_listener
+from my_app.service.daemon_bridge import thread_state, register_listener
+from my_app.service.daemon_bridge.protocol import DAEMON_MODE_PORT, LOCALHOST, MODE_AUTHENTICATING, MODE_REGISTERING
+"""
+DAEMON_MODE_PORT : 登録状態変更受信ポート番号
+LOCALHOST : ローカルホスト用IPアドレス
+MODE_REGISTERING : 登録状態変更の合言葉
+MODE_AUTHENTICATING : 認証状態変更の合言葉
+"""
 
 logger = logging.getLogger(__name__)
 
-DAEMON_HOST = '127.0.0.1'
-DAEMON_PORT = 10000  # reader_daemon.pyのreceiver()が待ち受けているポート
 
-# wait_for_new_card の戻り値ステータス
-STATUS_SUCCESS = "success"      # 未登録の新しいカードを検知した
-STATUS_DUPLICATE = "duplicate"  # 既に登録済みのカードだった
-STATUS_TIMEOUT = "timeout"      # 30秒待っても検知できなかった
-STATUS_CANCELLED = "cancelled"  # ユーザーがキャンセルした
+class RegisterStatus(str, Enum):
+    """
+    wait_for_new_card の結果。
+    strを継承しているので、呼び出し側が文字列と比較しても従来どおり動く。
+    """
+    SUCCESS = "success"        # 未登録の新しいカードを検知した
+    DUPLICATE = "duplicate"    # 既に登録済みのカードだった
+    TIMEOUT = "timeout"        # 制限時間内に検知できなかった
+    CANCELLED = "cancelled"    # ユーザーがキャンセルした
+    UNAVAILABLE = "unavailable"  # 受信ポートを確保できず登録を開始できなかった
+
+
+# 旧名の互換エイリアス(呼び出し側の置き換えが済んだら削除)
+STATUS_SUCCESS = RegisterStatus.SUCCESS
+STATUS_DUPLICATE = RegisterStatus.DUPLICATE
+STATUS_TIMEOUT = RegisterStatus.TIMEOUT
+STATUS_CANCELLED = RegisterStatus.CANCELLED
 
 
 @dataclass
 class CardWaitResult:
-    status: str                  # STATUS_* のいずれか
-    idm: Optional[str] = None    # 検知できた場合のIDm(タイムアウト/キャンセル時はNone)
+    status: RegisterStatus
+    idm: Optional[str] = None    # 検知できた場合のIDm(それ以外はNone)
 
 
-def send_daemon_state(message: str):
+def send_daemon_mode(mode: str):
     """
-    daemonへ状態(registering/authenticating)をUDPで通知する。
-    送信ごとに新しいソケットを使う(daemon側のsend_messageと同じ流儀。
-    ソケットを使い回さないことで、複数スレッドから呼ばれても安全)。
+    daemonへモード(registering/authenticating)をUDPで通知する。
+    送信ごとに新しいソケットを使う(複数スレッドから呼ばれても安全)。
     """
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(message.encode('utf-8'), (DAEMON_HOST, DAEMON_PORT))
-        sock.close()
-        logger.info(f"daemonへ状態を送信しました: {message}")
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+            sock.sendto(mode.encode('utf-8'), (LOCALHOST, DAEMON_MODE_PORT))
+        logger.info("daemonへモードを送信しました: %s", mode)
     except OSError:
-        logger.exception(f"daemonへの状態送信に失敗しました: {message}")
+        logger.exception("daemonへのモード送信に失敗しました: %s", mode)
 
 
-def start_registration_session():
+def start_registration_session() -> bool:
     """
     登録セッションを開始する。
-    daemonを登録モードへ切り替え、GUI側の受信リスナーを起動する。
+    GUI側の受信リスナーを起動し、成功した場合のみdaemonを登録モードへ切り替える。
+
+    Returns:
+        bool: 開始できた -> True / 受信ポートを確保できなかった -> False
     """
     thread_state.stop_event.clear()
-    register_listener.start_listener()
-    send_daemon_state("registering")
+
+    if not register_listener.start_listener():
+        logger.error("受信リスナーを起動できないため登録セッションを開始しません")
+        return False
+
+    send_daemon_mode(MODE_REGISTERING)
+    return True
 
 
 def cancel_registration_session():
@@ -65,7 +89,7 @@ def cancel_registration_session():
     """
     thread_state.stop_event.set()
     register_listener.stop_listener()
-    send_daemon_state("authenticating")
+    send_daemon_mode(MODE_AUTHENTICATING)
 
 
 async def wait_for_new_card(timeout_total_s: int = 30) -> CardWaitResult:
@@ -73,47 +97,46 @@ async def wait_for_new_card(timeout_total_s: int = 30) -> CardWaitResult:
     daemonからのIDm通知を最大timeout_total_s秒待ち、結果を返す。
     daemon側は検知時に必ずAPDU応答を確認済みなので、2回連続一致確認は不要。
 
-    このループの間、thread_state.stop_event が立てられたら
-    STATUS_CANCELLED として即座に抜ける(キャンセルボタン対応)。
+    thread_state.stop_event が立てられたらCANCELLEDで即座に抜ける(キャンセルボタン対応)。
+    どの経路で抜けても、finallyでリスナー停止とdaemonの認証モード復帰を行う。
 
     Returns:
-        CardWaitResult(データクラス): status , 検知できた場合はidm
+        CardWaitResult: status と、検知できた場合はidm
     """
-    for _ in range(timeout_total_s):
-        if thread_state.stop_event.is_set():
-            return CardWaitResult(status=STATUS_CANCELLED)
+    deadline = time.monotonic() + timeout_total_s
+    try:
+        while time.monotonic() < deadline:
+            if thread_state.stop_event.is_set():
+                return CardWaitResult(status=RegisterStatus.CANCELLED)
 
-        idm = await asyncio.to_thread(register_listener.wait_for_card_number, 1.0)
-        if idm is None:
-            continue
+            idm = await asyncio.to_thread(register_listener.receive_idm, 1.0)
+            if idm is None:
+                continue
 
-        # 未登録/登録済みに関わらず、以降の再スキャンは不要なので登録モードを抜ける
-        register_listener.stop_listener()
-        send_daemon_state("authenticating")
+            if repo.check_card(idm):
+                return CardWaitResult(status=RegisterStatus.DUPLICATE, idm=idm)
+            return CardWaitResult(status=RegisterStatus.SUCCESS, idm=idm)
 
-        if repo.check_card(idm):
-            return CardWaitResult(status=STATUS_DUPLICATE, idm=idm)
-        return CardWaitResult(status=STATUS_SUCCESS, idm=idm)
-
-    # timeout_total_s秒経ってもカードが検知できなかった場合
-    register_listener.stop_listener()
-    send_daemon_state("authenticating")
-    return CardWaitResult(status=STATUS_TIMEOUT)
+        return CardWaitResult(status=RegisterStatus.TIMEOUT)
+    finally:
+        # joinで最大2秒待つ可能性があるため、イベントループを止めないよう別スレッドで実行
+        await asyncio.to_thread(register_listener.stop_listener)
+        send_daemon_mode(MODE_AUTHENTICATING)
 
 
-def register_card(card_number: str, card_type, user_id: int):
+def register_card(idm: str, card_type, user_id: int) -> int:
     """
     カードを登録する(DB挿入)。バリデーションは呼び出し側(GUI)の責務。
 
     Args:
-        card_number (str): 読み取ったIDm
+        idm (str): 読み取ったIDm
         card_type (CardType): カード種別
         user_id (int): 所有者のユーザーID
 
     Returns:
-        int: 挿入されたカードのID
+        int: 挿入されたカードの行ID
     """
-    card_id = repo.insert_card(card_number, card_type, user_id)
-    register_listener.clear_card_number()#これ今登録受信箱に入ってる値を空にするので結構大事
-    logger.info(f"カードを登録しました: card_number={card_number}, user_id={user_id}")
-    return card_id
+    card_row_id = repo.insert_card(idm, card_type, user_id)
+    register_listener.clear_idm()  # 受信箱に残った値を消す(次の登録に影響するので大事)
+    logger.info("カードを登録しました: idm=%s, user_id=%s", idm, user_id)
+    return card_row_id

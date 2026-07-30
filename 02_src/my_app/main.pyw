@@ -12,13 +12,11 @@ import flet as ft
 import my_app.logs.log_config_app
 from my_app.app.views.router import route
 from my_app.db.schema import create_database
+from my_app.service.daemon_bridge.protocol import DAEMON_MODE_PORT, LOCALHOST, MODE_AUTHENTICATING
 
 from my_app.app.utils.front_camera_moduel import (
     send_message as send_camera_message,
 )
-
-HOST = '127.0.0.1'
-PORT = 10000
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -62,8 +60,8 @@ def _on_exit():
         "finishRegistering"
     )
     try:
-        sock.connect((HOST, PORT))
-        msg = "authenticating"
+        sock.connect((LOCALHOST, DAEMON_MODE_PORT))
+        msg = MODE_AUTHENTICATING
         sock.sendall(msg.encode('utf-8'))
         logger.info(f"Sent message: {msg}")
     except Exception as e:

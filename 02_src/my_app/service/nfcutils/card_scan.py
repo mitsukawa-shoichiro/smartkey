@@ -28,6 +28,7 @@ def load_config():
         return json.load(f)
 
 
+
 def register_reader():
     config = load_config()
     reader_list = resolve_readers()

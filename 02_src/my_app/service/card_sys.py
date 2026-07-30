@@ -7,6 +7,7 @@ from my_app.models.entity.access_log import AccessLog
 from my_app.service.utils.lock_control import request_unlock
 from my_app.config.reader_config import (
     EXIT_SERIAL, ENTRY_SERIAL, norm_serial)
+from my_app.service.daemon_bridge.protocol import MODE_REGISTERING, MODE_AUTHENTICATING
 
 
 #logに書き込む用
@@ -14,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class CardReaderState(Enum):
-    REGISTERING = "registering"      # カード登録状態
-    AUTHENTICATING = "authenticating"  # カード認証状態
+    REGISTERING = MODE_REGISTERING      # カード登録状態
+    AUTHENTICATING = MODE_AUTHENTICATING  # カード認証状態
 
 # グローバル状態管理
 current_state = CardReaderState.AUTHENTICATING  # デフォルト状態
@@ -27,9 +28,9 @@ def set_state(state: str):
     :return: 現在の状態文字列
     """
     global current_state
-    if state == "registering":
+    if state == MODE_REGISTERING:
         current_state = CardReaderState.REGISTERING
-    elif state == "authenticating":
+    elif state == MODE_AUTHENTICATING:
         current_state = CardReaderState.AUTHENTICATING
     else:
         raise ValueError(

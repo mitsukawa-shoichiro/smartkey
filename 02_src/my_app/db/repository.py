@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 # ===================================================
-# ユーザーテーブル
+# region ユーザーテーブル
 # ===================================================
 
 def insert_user(user_name, user_kana):
@@ -177,7 +177,7 @@ def find_users_with_total(search_text, asc: bool, limit, offset):
 
 
 # ===================================================
-# カードテーブル
+# region カードテーブル
 # ===================================================
 
 def check_card(cardIDM):
@@ -309,61 +309,6 @@ def find_cards_with_total(user_id, asc: bool, limit: int, offset: int):
         raise
 
 
-def count_all_card():
-    """
-    find_all_cards()をGUIで表示する際の全体件数を取得する関数
-
-    Returns:
-        int: 件数
-    """
-    try:
-        with get_connection() as conn:
-            c = conn.cursor()
-            c.execute("SELECT COUNT(*) FROM card")
-            return c.fetchone()[0]
-    except sqlite3.Error:
-        logger.exception("カード件数取得エラー")
-        raise
-
-
-def find_cards_by_user_id(user_id: int, asc: bool, offset: int):
-    """
-    指定されたユーザーIDに関連するカード情報を、ページングして取得する関数
-    (Autocompleteでユーザーが選択された時のGUI表示用)
-
-    Args:
-        user_id (int): 取得するカード情報に関連するユーザーのID
-        asc (bool): 昇順 -> true, 降順 -> false
-        offset (int): GUIで表示するためのページ区分
-
-    Returns:
-        list[Card]: カード情報のリスト
-    """
-    order = "ASC" if asc else "DESC"
-    try:
-        with get_connection() as conn:
-            c = conn.cursor()
-            c.execute(
-                f"""
-                SELECT card.id, card_type, card_number, register_date, user_id, user.user_name
-                FROM card
-                LEFT JOIN user ON user_id = user.id
-                WHERE user_id = ?
-                ORDER BY card.id {order} LIMIT 100 OFFSET ?
-                """,
-                (user_id, offset)
-            )
-            rows = c.fetchall()
-            return [
-                CardWithUser(id=row[0], card_type=CardType(row[1]), card_number=row[2],
-                    register_date=row[3], user_id=row[4], user_name=row[5])
-                for row in rows
-            ]
-    except sqlite3.Error:
-        logger.exception("カード取得エラー: user_id=%s", user_id)
-        raise
-
-
 def count_cards_by_user_id(user_id: int):
     """
     find_cards_by_user_id()をGUIで表示する際の件数を取得する関数
@@ -466,7 +411,7 @@ def find_user_id_by_card_id(card_id):
 
 
 # ===================================================
-# 入退室ログテーブル
+# region 入退室ログテーブル
 # ===================================================
 
 def get_last_date_time(card_id, event_type: EventType):
@@ -868,59 +813,8 @@ def get_today_entry_ranking(limit: int = 10):
 
 
 # ===================================================
-# 顔テーブル
+# region 顔テーブル
 # ===================================================
-
-
-# 顔ユーザー結合カラム一覧、明示しないとインデックスがわかりずらいので示しておく。
-_FACE_COLUMNS = "face.id, face.register_date, face.user_id, user.user_name"
-
-def find_faces_with_totals(user_id, asc: bool, limit: int, offset: int):
-    """
-    顔 + ユーザー情報のリストと、総件数を返す関数、
-    user_idがNoneの場合は全検索する
-    Args:
-        user_id (int): ユーザーID
-
-    Returns:
-        tuple[list[FaceWithUser], int]: 顔 + ユーザー情報のリストと、総件数
-    """
-    order = "ASC" if asc else "DESC"
-
-    where = ""
-    params = ""
-    if user_id is not None:
-        where = "AND face.user_id = ?"
-        params.append(user_id)
-    sql = f"""
-        SELECT COUNT(*) OVER () AS total, {_FACE_COLUMNS}
-        FROM face
-        LEFT JOIN user ON face.face_id = user.id
-        WHERE 1 = 1 {where}
-        ORDER BY face.id {order}
-        LIMIT ? OFFSET ?
-    """
-    params += [limit, offset]
-
-    try:
-        with get_connection() as conn:
-            c = conn.cursor()
-            c.execute(sql, params)
-            rows = c.fetchall()
-
-            total = rows[0][0] if rows else 0
-            return [
-                FaceWithUser(
-                    id=row[1],
-                    register_date=row[2],
-                    user_id=row[3],
-                    user_name=row[4],
-                )
-                for row in rows
-            ], total
-    except sqlite3.Error:
-        logger.exception("顔情報検索エラー: user_id=%s", user_id)
-        raise
 
 
 def find_faces_with_total(search_text, asc: bool, limit: int, offset: int):

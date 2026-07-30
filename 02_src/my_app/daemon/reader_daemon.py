@@ -13,24 +13,25 @@ import my_app.logs.log_config_service
 from my_app.config.reader_config import READER_COUNT, REGISTER_SERIAL, norm_serial
 from my_app.service.utils.usb_card_readers import resolve_readers
 from my_app.service import card_sys
+from my_app.service.daemon_bridge.protocol import (
+    MODE_REGISTERING, MODE_AUTHENTICATING, VALID_MODES, LOCALHOST,
+    HEARTBEAT_PORT, REGISTER_NOTIFY_PORT, DAEMON_MODE_PORT,
+)
+"""
+MODE_REGISTERING : 登録状態変更の合言葉
+MODE_AUTHENTICATING : 認証状態変更の合言葉
+VALID_MODES : 状態変更合言葉の辞書
+LOCALHOST : ローカルホスト用IPアドレス
+HEARTBEAT_PORT : 死活監視用受信ポート
+REGISTER_NOTIFY_PORT : フロントへ登録カードIDm通知
+DAEMON_MODE_PORT : 登録状態変更受信ポート番号
+"""
 
 now = time.time()
 HEARTBEAT_ERROR_GAP_S = 10
-HEARTBEAT_HOST = '127.0.0.1'
-HEARTBEAT_PORT = 54321
 heart_beat_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# 登録モード中、検知したIDmをGUI(register.py)へ送り返すための宛先。
-# GUI側はこのポートでUDP受信待ちをする(daemon -> GUIの一方向通知)。
-REGISTER_NOTIFY_HOST = '127.0.0.1'
-REGISTER_NOTIFY_PORT = 10001
-
-#localhost指定
-DAEMON_HOST = '127.0.0.1'
-#受信ポート番号
-DAEMON_PORT = 10000
-
-state = "authenticating"
+state = MODE_AUTHENTICATING
 REGISTERING_TIMEOUT_S = 45
 state_changed_at = time.time()
 
@@ -87,9 +88,6 @@ def wait_readers() -> None:
         stop_event.wait(1)
 
 
-
-VALID_STATES = {"registering", "authenticating"}
-
 def receiver():
     """
     GUI(register.py)からのUDPを待ち受け、認証/登録モードの切り替えを受け取る。
@@ -103,9 +101,9 @@ def receiver():
 
     try:
         with sock_check:                       # ← with が close を保証
-            sock_check.bind((DAEMON_HOST, DAEMON_PORT))
+            sock_check.bind((LOCALHOST, DAEMON_MODE_PORT))
             sock_check.settimeout(1)
-            logger.info("receiver待受開始: %s:%s", DAEMON_HOST, DAEMON_PORT)
+            logger.info("receiver待受開始: %s:%s", LOCALHOST, DAEMON_MODE_PORT)
 
             while not stop_event.is_set():
                 try:
@@ -120,12 +118,12 @@ def receiver():
                 if not message:
                     continue
 
-                if message not in VALID_STATES:
+                if message not in VALID_MODES:
                     logger.warning("不正な状態指定を無視: %r (from %s)", message, addr)
                     continue
 
                 try:
-                    changeState(message)       # ← 例外をループ内で閉じ込める
+                    change_state(message)       # ← 例外をループ内で閉じ込める
                 except Exception:
                     logger.exception("状態変更に失敗: %r", message)
 
@@ -135,7 +133,7 @@ def receiver():
         logger.info("receiverを終了します")
 
 
-def send_message(message, host=HEARTBEAT_HOST, port=HEARTBEAT_PORT):
+def send_message(message, host=LOCALHOST, port=HEARTBEAT_PORT):
     """
     UDPで1回だけメッセージを送る汎用関数。
     宛先を省略すると、check_aliveへのハートビート送信になる。
@@ -152,7 +150,7 @@ def notify_registered_card(idm: str):
     登録モード中に出口リーダーで検知したIDmを、GUI(register.py)へ通知する。
     通常の認証フロー(event_q/card_sys.receive_card)は一切経由しない。
     """
-    send_message(idm, host=REGISTER_NOTIFY_HOST, port=REGISTER_NOTIFY_PORT)
+    send_message(idm, host=LOCALHOST, port=REGISTER_NOTIFY_PORT)
     logger.info(f"登録モード: IDmをGUIへ通知しました: {idm}")
 
 def reader_loop():
@@ -161,11 +159,11 @@ def reader_loop():
     各関数の呼び出し等の音頭を取っています。
 
     主要関数一覧
-        get_reader(): カードリーダー状態確認
-        get_readers(): カードリーダー情報読み取り
+        resolve_reader(): カードリーダー状態確認
+        wait_readers(): カードリーダー情報読み取り
         notify_registered_card(idm): 登録用スレッドへIDm(カード番号)を送信
         eventq.put((idm, reader_serial)): 認証用スレッドへIDm(カード番号)を送信
-        changeState(newState): 登録/認証状態の変更
+        change_state(newState): 登録/認証状態の変更
     """
     global now
 
@@ -192,7 +190,7 @@ def reader_loop():
                         idm = bytes(response).hex().upper()
                         logger.info("リーダー %s でカード検出 IDm: %s", reader_serial, idm)
 
-                        if state == "registering":
+                        if state == MODE_REGISTERING:
                             if len(reader_list) == 1 or norm_serial(reader_serial) == REGISTER_SERIAL:
                                 notify_registered_card(idm)
                         else:
@@ -214,9 +212,9 @@ def reader_loop():
                 if gap > HEARTBEAT_ERROR_GAP_S:
                     logger.error("ポーリングが遅延しています: %.1f秒", gap)
 
-                if state == "registering" and time.time() - state_changed_at > REGISTERING_TIMEOUT_S:
+                if state == MODE_REGISTERING and time.time() - state_changed_at > REGISTERING_TIMEOUT_S:
                     logger.warning("登録状態が%s秒を超えたためauthenticatingへ戻します", REGISTERING_TIMEOUT_S)
-                    changeState("authenticating")
+                    change_state(MODE_AUTHENTICATING)
 
                 send_message("DEAD" if len(reader_list) < READER_COUNT else "ALIVE")
 
@@ -229,7 +227,7 @@ def reader_loop():
         pythoncom.CoUninitialize()
 
 
-def changeState(newState):
+def change_state(newState):
     global state, state_changed_at
     state = newState
     state_changed_at = time.time()
@@ -262,7 +260,7 @@ def stop(timeout: float = 5.0):
     # receiverはrecvfromでブロックしている可能性があるため、
     # 自分自身にダミーを送って起こす(settimeoutでも起きるが、こちらの方が速い)
     try:
-        heart_beat_socket.sendto(b"", (DAEMON_HOST, DAEMON_PORT))
+        heart_beat_socket.sendto(b"", (LOCALHOST, DAEMON_MODE_PORT))
     except OSError:
         pass
 

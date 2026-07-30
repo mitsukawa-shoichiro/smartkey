@@ -14,9 +14,9 @@ from my_app.config.config_loader import load_backend_config, get_value
 
 logger = logging.getLogger(__name__)
 
-_cfg = load_backend_config("sesame_config.json")
-method_cfg = get_value(_cfg, "method", {}, expected_type=dict)
-connect_config = get_value(method_cfg, "sesame_connect", "wifi", valid_values=("wifi", "bluetooth"))
+sesame_cfg = load_backend_config("sesame_config.json")
+method_cfg = get_value(sesame_cfg, "method", {}, expected_type=dict)
+connect_cfg = get_value(method_cfg, "sesame_connect", "wifi", valid_values=("wifi", "bluetooth"))
 
 def unlock_by_config(user_id: int) -> bool:
     """
@@ -28,18 +28,18 @@ def unlock_by_config(user_id: int) -> bool:
     Returns:
         bool: 成功 -> True / 失敗・不明な方式 -> False
     """
-    if connect_config == "wifi":
+    if connect_cfg == "wifi":
         success = open_sesame(user_id)
-    elif connect_config == "bluetooth":
+    elif connect_cfg == "bluetooth":
         success = asyncio.run(open_sesame_bt(user_id))
     else:
-        logger.error("不明な接続方式です: %s", connect_config)
+        logger.error("不明な接続方式です: %s", connect_cfg)
         return False
 
     if success:
-        logger.info("%sでの解錠完了", connect_config)
+        logger.info("%sでの解錠完了", connect_cfg)
     else:
-        logger.error("%sでの解錠失敗", connect_config)
+        logger.error("%sでの解錠失敗", connect_cfg)
     return success
 
 
@@ -54,13 +54,13 @@ def lock_by_config(user_id: int) -> bool:
         bool: 成功 -> True / 失敗・未実装・不明な方式 -> False
     """
     try:
-        if connect_config == "wifi":
+        if connect_cfg == "wifi":
             return bool(lock_sesame(user_id))
-        elif connect_config == "bluetooth":
+        elif connect_cfg == "bluetooth":
             logger.warning("Bluetoothでの施錠は未実装です")
             return False
         else:
-            logger.error("不明な接続方式です: %s", connect_config)
+            logger.error("不明な接続方式です: %s", connect_cfg)
             return False
     except Exception:
         logger.exception("施錠に失敗しました user_id=%s", user_id)
