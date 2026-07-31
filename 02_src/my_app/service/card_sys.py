@@ -1,3 +1,10 @@
+"""
+カード側の認証窓口
+認証フローの呼び出し、結果をみてログに書き込む
+実質card_serviceです。リファクタしてないからこんな名前なだけです。
+元々はもっと大層なモジュールだったんですけどね、、、こんなに瘦せ細っちゃって、、、
+"""
+
 import time
 from enum import Enum
 import logging
@@ -20,30 +27,6 @@ class CardReaderState(Enum):
 
 # グローバル状態管理
 current_state = CardReaderState.AUTHENTICATING  # デフォルト状態
-
-def set_state(state: str):
-    """
-    現在のカードリーダー状態を設定します。
-    :param state: "registering" または "authenticating"
-    :return: 現在の状態文字列
-    """
-    global current_state
-    if state == MODE_REGISTERING:
-        current_state = CardReaderState.REGISTERING
-    elif state == MODE_AUTHENTICATING:
-        current_state = CardReaderState.AUTHENTICATING
-    else:
-        raise ValueError(
-            "Invalid state: must be 'registering' or 'authenticating'")
-    return current_state.value
-
-
-def get_state() -> str:
-    """
-    現在のカードリーダー状態を取得します。
-    :return: 現在の状態文字列
-    """
-    return current_state.value
 
 
 last_card_id = None

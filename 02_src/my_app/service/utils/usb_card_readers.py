@@ -1,3 +1,7 @@
+"""
+リーダー状態管理モジュール
+WMIを使ってリーダーを認識するのは時間がかかってしまうので基本キャッシュで節約
+"""
 import logging
 import re
 import threading

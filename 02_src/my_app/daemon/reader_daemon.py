@@ -1,4 +1,10 @@
 # reader_daemon.py
+"""
+カードリーダー用スレッドモジュール
+TODO: もう少し薄くしたいところではある
+なるだけスレッド以外の責務は持たなくていいようにしたい
+詳細は各関数参照
+"""
 import threading
 import queue
 import time
@@ -18,8 +24,8 @@ from my_app.service.daemon_bridge.protocol import (
     HEARTBEAT_PORT, REGISTER_NOTIFY_PORT, DAEMON_MODE_PORT,
 )
 """
-MODE_REGISTERING : 登録状態変更の合言葉
-MODE_AUTHENTICATING : 認証状態変更の合言葉
+MODE_REGISTERING : 登録状態に変更する合言葉
+MODE_AUTHENTICATING : 認証状態に変更する合言葉
 VALID_MODES : 状態変更合言葉の辞書
 LOCALHOST : ローカルホスト用IPアドレス
 HEARTBEAT_PORT : 死活監視用受信ポート
@@ -37,7 +43,7 @@ state_changed_at = time.time()
 
 
 stop_event = threading.Event()
-_threads = []
+_threads = [] # 止めるとき用の取っ手
 
 
 GET_IDM_APDU = [0xFF, 0xCA, 0x00, 0x00, 0x00]

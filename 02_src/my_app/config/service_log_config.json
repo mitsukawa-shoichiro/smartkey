@@ -1,14 +1,12 @@
 {
   "version": 1,
   "disable_existing_loggers": false,
-
   "formatters": {
     "stdFormatter": {
       "format": "%(asctime)s [%(levelname)s] %(name)s:%(lineno)d - %(message)s",
       "datefmt": "%Y-%m-%d %H:%M:%S"
     }
   },
-
   "handlers": {
     "consoleHandler": {
       "class": "logging.StreamHandler",
@@ -18,7 +16,7 @@
     },
     "fileHandler": {
       "class": "logging.handlers.TimedRotatingFileHandler",
-      "level": "DEBUG",
+      "level": "INFO",
       "formatter": "stdFormatter",
       "filename": "service.log",
       "when": "midnight",
@@ -26,9 +24,11 @@
       "encoding": "utf-8"
     }
   },
-
   "root": {
-    "level": "INFO",
-    "handlers": ["consoleHandler", "fileHandler"]
+    "level": "DEBUG",
+    "handlers": [
+      "consoleHandler",
+      "fileHandler"
+    ]
   }
 }

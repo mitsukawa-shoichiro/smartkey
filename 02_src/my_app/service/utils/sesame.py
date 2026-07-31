@@ -51,6 +51,7 @@ def send_sesame_command(cmd, user_id):
         }
 
         res = requests.post(url, json=body, headers=headers, timeout=10)
+        logger.info("SESAME応答: status=%s body=%s", res.status_code, res.text[:300])
         res.raise_for_status()
         return True
         #print(res.status_code, res.text)

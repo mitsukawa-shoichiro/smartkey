@@ -1,0 +1,144 @@
+{
+    "reader": {
+        "count": 1,
+        "devices": {
+            "exit": {
+                "name": "SONY FeliCa Port/PaSoRi 4.0",
+                "vid": "054C",
+                "pid": "0DC9",
+                "serial": "0476720"
+            }
+        }
+    },
+    "camera": {
+        "count": 1,
+        "devices": {
+            "entry": {
+                "index": 0
+            }
+        }
+    },
+    "sesame": {
+        "device": {
+            "sesame_id": "11200514-0801-0925-DA00-DC00FFFFFFFF",
+            "x_api_key": "aPHW6iZxsrdQBSC2vMTHh1Ex1BQDy6SjmJ6SyIrU",
+            "secret_key": "24956b95b8f261c74e64555b95af23f2",
+            "mac_addr": "E5:E6:CB:16:E5:17",
+            "max_retry_count": 5,
+            "notify_interval": 1.0
+        },
+        "method": {
+            "sesame_connect": "wifi",
+            "__comment": "bluetooth or wifi"
+        }
+    },
+    "mail": {
+        "mail_address": "m-naito@try-ltd.co.jp",
+        "password": "mnaito@try145",
+        "mail_to": "m-naito@try-ltd.co.jp",
+        "smtp_server": "try-ltd.sakura.ne.jp",
+        "port": 465
+    },
+    "liveness": {
+        "battery_monitor": {
+            "battery_limit": 50,
+            "sleep_time": 3600
+        },
+        "battery_mail": {
+            "TITLE": "SESAME電池交換のお知らせ",
+            "TEXT": "SESAMEのバッテリー残量が設定値を下回りました。早めの電池交換をお願いします。"
+        },
+        "sesame_mail": {
+            "TITLE": "SESAME接続エラー",
+            "TEXT": "システムからSESAMEの接続が確認できなくなりました。SESAMEやwifiモジュールを確認してください。"
+        },
+        "open_sensor_mail": {
+            "TITLE": "OPEN SENSOR接続エラー",
+            "TEXT": "システムからOPEN SENSORの接続が確認できなくなりました。OPEN SENSORやモジュールを確認してください。"
+        },
+        "cardreader_mail": {
+            "TITLE": "カードリーダー接続エラー",
+            "TEXT": "システムからカードリーダーの接続が確認できなくなりました。カードリーダ、USBハブを確認してください"
+        },
+        "system_mail": {
+            "TITLE": "システム停止",
+            "TEXT": "開錠システムが停止しました。Windowsサービスの再起動をお願いします。"
+        }
+    },
+    "shutdown": {
+        "auto_shutdown": true,
+        "shutdown_time": "09:00"
+    },
+    "account": {
+        "username": "admin",
+        "password": "password"
+    },
+    "app_log": {
+        "version": 1,
+        "disable_existing_loggers": false,
+        "formatters": {
+            "stdFormatter": {
+                "format": "%(asctime)s [%(levelname)s] %(name)s:%(lineno)d - %(message)s",
+                "datefmt": "%Y-%m-%d %H:%M:%S"
+            }
+        },
+        "handlers": {
+            "consoleHandler": {
+                "class": "logging.StreamHandler",
+                "level": "DEBUG",
+                "formatter": "stdFormatter",
+                "stream": "ext://sys.stdout"
+            },
+            "fileHandler": {
+                "class": "logging.handlers.TimedRotatingFileHandler",
+                "level": "DEBUG",
+                "formatter": "stdFormatter",
+                "filename": "service.log",
+                "when": "midnight",
+                "backupCount": 10,
+                "encoding": "utf-8"
+            }
+        },
+        "root": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler",
+                "fileHandler"
+            ]
+        }
+    },
+    "service_log": {
+        "version": 1,
+        "disable_existing_loggers": false,
+        "formatters": {
+            "stdFormatter": {
+                "format": "%(asctime)s [%(levelname)s] %(name)s:%(lineno)d - %(message)s",
+                "datefmt": "%Y-%m-%d %H:%M:%S"
+            }
+        },
+        "handlers": {
+            "consoleHandler": {
+                "class": "logging.StreamHandler",
+                "level": "DEBUG",
+                "formatter": "stdFormatter",
+                "stream": "ext://sys.stdout"
+            },
+            "fileHandler": {
+                "class": "logging.handlers.TimedRotatingFileHandler",
+                "level": "DEBUG",
+                "formatter": "stdFormatter",
+                "filename": "service.log",
+                "when": "midnight",
+                "backupCount": 10,
+                "encoding": "utf-8"
+            }
+        },
+        "root": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler",
+                "fileHandler"
+            ]
+        }
+    }
+}
